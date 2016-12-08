@@ -13,7 +13,7 @@ let implicitInteger = 70
 let implicitDouble = 70.0
 let explicitDouble: Double = 70
 ```
-> Експеримент:
+> **Експеримент**
 > 
 > Створіть константу з явним типом `Float` і значенням `4`.
 
@@ -23,7 +23,7 @@ let explicitDouble: Double = 70
  let width = 94
  let widthLabel = label + String(width)
 ```
-> Експеримент:
+> **Експеримент**
 >
 > Спробуйте прибрати конвертацію до `String` в останньому рядку. Яку помилку ви отримаєте?
 
@@ -34,7 +34,7 @@ let explicitDouble: Double = 70
  let appleSummary = "I have \(apples) apples."
  let fruitSummary = "I have \(apples + oranges) pieces of fruit."
 ```
-> Експеримент:
+> **Експеримент**
 >
 > Використайте `\()` щоб включити розрахунок з плаваючою точкою в рядок, а також щоб включити чиєсь ім'я до привітання.
 
