@@ -1,3 +1,6 @@
-# Summary
+# Зміст
 
-* [First Chapter](chapter1.md)
+* Ласкаво просимо до Swift
+    * [Про Swift](README.md)
+    * [Тур по Swift](chapter1.md)
+  
