@@ -1,5 +1,5 @@
 # Summary
-* [Ласкаво просимо до Swift]([welcome_to_swift].md)
+* [Ласкаво просимо до Swift](welcome_to_swift.md)
     * [Про Swift](about_swift.md)
     * [Тур по Swift](chapter1.md)
         * [Прості значення](simple_values.md)
