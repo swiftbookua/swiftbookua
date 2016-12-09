@@ -1,7 +1,7 @@
 # Summary
 * [Ласкаво просимо до Swift](welcome_to_swift/welcome_to_swift.md)
     * [Про Swift](about_swift.md)
-    * [Тур по Swift](chapter1.md)
+    * [Тур по Swift](swift_tour/swift_tour.md)
         * [Прості значення](simple_values.md)
         * [Потік керування](control_flow.md)
         * [Функції та Замикання](functions_and_closures.md)
