@@ -13,4 +13,6 @@
 * [Керівництво з мови](1_language_guide/language_guide.md)
     * [Основи](1_language_guide/0_the_basics.md)
     * [Базові оператори](1_language_guide/1_base_operators.md)
+    * [Рядки та Символи](1_language_guide/2_strings_and_characters.md)
+    * [Колекції](1_language_guide/3_collection_types.md)
 
