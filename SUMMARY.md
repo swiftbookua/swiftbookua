@@ -10,7 +10,7 @@
         * [Протоколи і Розширення](0_welcome_to_swift/swift_tour/протоколи-і-розширення.md)
         * [Обробка Помилок](0_welcome_to_swift/swift_tour/error_handling.md)
         * [Шаблони](0_welcome_to_swift/swift_tour/generics.md)
-* [Керівництво з мови](language_guide.md)
-    * [Основи](0_the_basics.md)
-    * [Базові оператори](1_base_operators.md)
+* [Керівництво з мови](1_language_guide/language_guide.md)
+    * [Основи](1_language_guide/0_the_basics.md)
+    * [Базові оператори](1_language_guide/1_base_operators.md)
 
