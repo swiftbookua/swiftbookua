@@ -12,9 +12,19 @@
 
 Мова Swift типобезпечна, тобто мова допомагає вам виражатись ясно щодо типів значень, з якими  працює ваш код. Якщо частина вашого коду очікує `String`, типобезпечність не дасть вам помилково передати в нього `Int`. Подібним чином типобезпечність не дасть вам помилково передати опціональний `String` в частину коду, котра очікує неопціональний `String`. Типобезпечність дозволяє в процесі розробки відловлювати і виправляти помилки як можна раніше.
 
-### Constants and VariablesConstants and variables associate a name (such as `maximumNumberOfLoginAttempts` or `welcomeMessage`) with a value of a particular type (such as the number `10` or the string `"Hello"`). The value of a constant cannot be changed once it is set, whereas a variable can be set to a different value in the future.####Declaring Constants and VariablesConstants and variables must be declared before they are used. You declare constants with the `let` keyword and variables with the `var` keyword. Here’s an example of how constants and variables can be used to track the number of login attempts a user has made:
+### Константи і змінні
 
-```swiftlet maximumNumberOfLoginAttempts = 10var currentLoginAttempt = 0```This code can be read as:
+Константи і змінні асоціюють ім'я (як, наприклад, `maximumNumberOfLoginAttempts` чи `welcomeMessage`) із значенням певного типу (такі як число `10` чи рядок `"Hello"`). Як тільки значення константи задано, воно не може бути змінене, тоді як значення змінної може бути змінене на інше в майбутньому.
+
+#### Оголошення констант та змінних
+
+Константи і змінні повинні бути оголошені до того, як вони будуть вжиті. Константи оголошуються за допомогою ключового слова `let`, а змінні - за допомогою ключового слова `var`. Ось приклад того, як константи і змінні можуть бути використані для того, щоб відслідковувати кількість спроб користувача увійти в систему.  
+
+```swift
+let maximumNumberOfLoginAttempts = 10var currentLoginAttempt = 0
+```
+
+This code can be read as:
 “Declare a new constant called `maximumNumberOfLoginAttempts`, and give it a value of `10`. Then, declare a new variable called `currentLoginAttempt`, and give it an initial value of `0`.”In this example, the maximum number of allowed login attempts is declared as a constant, because the maximum value never changes. The current login attempt counter is declared as a variable, because this value must be incremented after each failed login attempt.You can declare multiple constants or multiple variables on a single line, separated by commas:```swiftvar x = 0.0, y = 0.0, z = 0.0```> **Note**
 > > If a stored value in your code is not going to change, always declare it as a constant with the `let` keyword. Use variables only for storing values that need to be able to change.####Type AnnotationsYou can provide a type annotation when you declare a constant or variable, to be clear about the kind of values the constant or variable can store. Write a type annotation by placing a colon after the constant or variable name, followed by a space, followed by the name of the type to use.This example provides a type annotation for a variable called `welcomeMessage`, to indicate that the variable can store `String` values:```swiftvar welcomeMessage: String
 ```
@@ -221,7 +231,7 @@ Here, the value of the constant `three` is used to create a new value of type `D
 
 ```swiftlet http200Status = (statusCode: 200, description: "OK")If you name the elements in a tuple, you can use the element names to access the values of those elements:print("The status code is \(http200Status.statusCode)")// Prints "The status code is 200"print("The status message is \(http200Status.description)")// Prints "The status message is OK"
 ```
-Tuples are particularly useful as the return values of functions. A function that tries to retrieve a web page might return the `(Int, String)` tuple type to describe the success or failure of the page retrieval. By returning a tuple with two distinct values, each of a different type, the function provides more useful information about its outcome than if it could only return a single value of a single type. For more information, see Functions with Multiple Return Values.
+Tuples are particularly useful as the return values of functions. A function that tries to retrieve a web page might return the `(Int, String)` tuple type to describe the success or failure of the page retrieval. By returning a tuple with two distinct values, each of a different type, the function provides more useful information about its outcome than if it could only return a single value of a single type. For more information, see Functions with Multiple Return Values.
 
 > **Note**
 > 
