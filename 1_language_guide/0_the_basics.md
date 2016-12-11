@@ -53,11 +53,15 @@
 > **Note**> 
 > All options you can use with string interpolation are described in String Interpolation.#### CommentsUse comments to include nonexecutable text in your code, as a note or reminder to yourself. Comments are ignored by the Swift compiler when your code is compiled.Comments in Swift are very similar to comments in C. Single-line comments begin with two forward-slashes (`//`):
 
-```swift// This is a comment.
+```swift
+// This is a comment.
 ```
+
 Multiline comments start with a forward-slash followed by an asterisk (`/*`) and end with an asterisk followed by a forward-slash (`*/`):
 
-```swift/* This is also a comment but is written over multiple lines. */
+```swift
+/* This is also a comment
+ but is written over multiple lines. */
 ```
 Unlike multiline comments in C, multiline comments in Swift can be nested inside other multiline comments. You write nested comments by starting a multiline comment block and then starting a second multiline comment within the first block. The second block is then closed, followed by the first block:
 
@@ -66,22 +70,29 @@
 
 #### SemicolonsUnlike many other languages, Swift does not require you to write a semicolon (`;`) after each statement in your code, although you can do so if you wish. However, semicolons *are* required if you want to write multiple separate statements on a single line:
 
-```swiftlet cat = "🐱"; print(cat)// Prints "🐱"```
+```swift
+let cat = "🐱"; print(cat)// Prints "🐱"
+```
 
 #### Integers*Integers* are whole numbers with no fractional component, such as `42` and `-23`. Integers are either *signed* (positive, zero, or negative) or *unsigned* (positive or zero).
 Swift provides signed and unsigned integers in 8, 16, 32, and 64 bit forms. These integers follow a naming convention similar to C, in that an 8-bit unsigned integer is of type `UInt8`, and a 32-bit signed integer is of type `Int32`. Like all types in Swift, these integer types have capitalized names.
 
 #### Integer BoundsYou can access the minimum and maximum values of each integer type with its `min` and `max` properties:
 
-```swiftlet minValue = UInt8.min  // minValue is equal to 0, and is of type UInt8let maxValue = UInt8.max  // maxValue is equal to 255, and is of type UInt8
-```The values of these properties are of the appropriate-sized number type (such as `UInt8` in the example above) and can therefore be used in expressions alongside other values of the same type.
+```swift
+let minValue = UInt8.min  // minValue is equal to 0, and is of type UInt8let maxValue = UInt8.max  // maxValue is equal to 255, and is of type UInt8
+```
+
+The values of these properties are of the appropriate-sized number type (such as `UInt8` in the example above) and can therefore be used in expressions alongside other values of the same type.
 #### IntIn most cases, you don’t need to pick a specific size of integer to use in your code. Swift provides an additional integer type, `Int`, which has the same size as the current platform’s native word size:
  + On a 32-bit platform, `Int` is the same size as `Int32`. 
  + On a 64-bit platform, `Int` is the same size as `Int64`.
 	Unless you need to work with a specific size of integer, always use `Int` for integer values in your code. This aids code consistency and interoperability. Even on 32-bit platforms, `Int` can store any value between `-2,147,483,648` and `2,147,483,647`, and is large enough for many integer ranges.#### UIntSwift also provides an unsigned integer type, `UInt`, which has the same size as the current platform’s native word size:
+
  + On a 32-bit platform, `UInt` is the same size as `UInt32`.
  + On a 64-bit platform, `UInt` is the same size as `UInt64`.
- > **Note**
+ 
+> **Note**
 > 
 > Use `UInt` only when you specifically need an unsigned integer type with the same size as the platform’s native word size. If this is not the case, `Int` is preferred, even when the values to be stored are known to be non-negative. A consistent use of `Int` for integer values aids code interoperability, avoids the need to convert between different number types, and matches integer type inference, as described in [Type Safety and Type Inference]().
  
@@ -89,4 +100,7 @@
  
  + Double represents a 64-bit floating-point number. + Float represents a 32-bit floating-point number.
  > **Note**> 
-> `Double` has a precision of at least 15 decimal digits, whereas the precision of `Float` can be as little as 6 decimal digits. The appropriate floating-point type to use depends on the nature and range of values you need to work with in your code. In situations where either type would be appropriate, `Double` is preferred.#### Type Safety and Type InferenceSwift is a type-safe language. A type safe language encourages you to be clear about the types of values your code can work with. If part of your code expects a String, you can’t pass it an Int by mistake.
+> `Double` has a precision of at least 15 decimal digits, whereas the precision of `Float` can be as little as 6 decimal digits. The appropriate floating-point type to use depends on the nature and range of values you need to work with in your code. In situations where either type would be appropriate, `Double` is preferred.
+
+#### Type Safety and Type Inference
+Swift is a type-safe language. A type safe language encourages you to be clear about the types of values your code can work with. If part of your code expects a String, you can’t pass it an Int by mistake.
