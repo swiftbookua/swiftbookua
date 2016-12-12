@@ -23,29 +23,40 @@
 ```swift
 let maximumNumberOfLoginAttempts = 10var currentLoginAttempt = 0
 ```
+Даний код можна прочитати так: 
 
-This code can be read as:
-“Declare a new constant called `maximumNumberOfLoginAttempts`, and give it a value of `10`. Then, declare a new variable called `currentLoginAttempt`, and give it an initial value of `0`.”In this example, the maximum number of allowed login attempts is declared as a constant, because the maximum value never changes. The current login attempt counter is declared as a variable, because this value must be incremented after each failed login attempt.You can declare multiple constants or multiple variables on a single line, separated by commas:```swiftvar x = 0.0, y = 0.0, z = 0.0```> **Note**
-> > If a stored value in your code is not going to change, always declare it as a constant with the `let` keyword. Use variables only for storing values that need to be able to change.####Type AnnotationsYou can provide a type annotation when you declare a constant or variable, to be clear about the kind of values the constant or variable can store. Write a type annotation by placing a colon after the constant or variable name, followed by a space, followed by the name of the type to use.This example provides a type annotation for a variable called `welcomeMessage`, to indicate that the variable can store `String` values:```swiftvar welcomeMessage: String
+“Оголошуємо нову константу під іменем `maximumNumberOfLoginAttempts` (максимальна кількість спроб увійти), і надаємо їх значення `10`. Потім оголошуємо нову змінну під іменем `currentLoginAttempt` (поточна кількість спроб увійти), і надаємо їй початкове значення `0`.”
+
+У цьому прикладі максимальна кількість спроб увійти оголошено константою, тому що максимальна кількість спроб ніколи не зміниться. Поточна кількість спроб увійти оголошено змінною, бо це значення має збільшуватись на одиницю після кожної невдалої спроби користувача увійти в систему.
+
+Ми можемо оголосити кілька констант чи змінних в один рядок, відділивши їх комами: ```swiftvar x = 0.0, y = 0.0, z = 0.0```> **Примітка**
+> 
+> Якщо значення, що зберігається у вашому коді, наврядчи зміниться, завжди оголошуйте його як константу за допомогою ключового слова `let`. Вживайте змінні тільки для зберігання значень, які реально повинні змінюватись.#### Анотації типів
+
+Можна вживати анотації типів під час оголошення констант чи змінних, щоб було зрозуміло, який тип даних може зберігати константа чи змінна. Анотацію типу можна вказати, поставивши двокрапку після імені константи чи змінної, пробіл та ім'я бажаного типу.
+
+У наступному прикладі ми надаємо анотацію типу змінній `welcomeMessage`, щоб позначити, що ця змінна може зберігати значення типу `String`:```swiftvar welcomeMessage: String
 ```
-The colon in the declaration means “…of type…,” so the code above can be read as:
-“Declare a variable called `welcomeMessage` that is of type `String`.”
-The phrase “of type `String`” means “can store any `String` value.” Think of it as meaning “the type of thing” (or “the kind of thing”) that can be stored.
-The `welcomeMessage` variable can now be set to any string value without error:
+Двокрапка в оголошення означає “…що має тип…,” тобто код вище можна прочитати так:
+
+“Оголошуємо змінну з іменем `welcomeMessage` що має тип `String`.”
+
+Фраза “що має тип `String`” означає “може зберігати будь-які значення типу `String`.” Це слід розуміти як “тип речі” (чи “вид речі”) що може зберігатись.Тепер змінній `welcomeMessage` можна присвоїти будь-яке рядкове значення без помилок:
 
 ```swiftwelcomeMessage = "Hello"
 ```
-You can define multiple related variables of the same type on a single line, separated by commas, with a single type annotation after the final variable name:
+
+Можна оголосити кілька пов'язаних змінних одного типу в один рядок, відділивши їх імена комами, та вказавши єдину анотацію типу після останнього імені змінної:
 
 ```swiftvar red, green, blue: Double
-```> **Note**
-> > It is rare that you need to write type annotations in practice. If you provide an initial value for a constant or variable at the point that it is defined, Swift can almost always infer the type to be used for that constant or variable, as described in [Type Safety and Type Inference](). In the `welcomeMessage` example above, no initial value is provided, and so the type of the `welcomeMessage` variable is specified with a type annotation rather than being inferred from an initial value.
- 
+```> **Примітка**
+> 
+> На практиці анотаціями типів доводиться користуватись рідко. Якщо надати початкове значення константі чи змінній в момент оголошення, мова Swift майже завжди може визначити тип, який повинна мати дана константа чи змінна. Це більш детально описано в [Типобезпечність та Визначення Типів](). У прикладі вище в оголошенні `welcomeMessage` не вказано початкове значення, тому тип змінної `welcomeMessage` визначається анотацією типу. 
 
-####Naming Constants and VariablesConstant and variable names can contain almost any character, including Unicode characters:
+#### Іменування констант і зміннихІмена констант і змінних можуть містити майже будь-які символи, в тому числі символи Unicode:
 
 ```swiftlet π = 3.14159let 你好 = "你好世界"let 🐶🐮 = "dogcow"
-```Constant and variable names cannot contain whitespace characters, mathematical symbols, arrows, private-use (or invalid) Unicode code points, or line- and box-drawing characters. Nor can they begin with a number, although numbers may be included elsewhere within the name.
+```Імена констант та змінних не можуть містити пробільних символів, математичних символів, стрілок, приватні (чи недійсні) коди Unicode, символи для малювання ліній та рамок. Змінні також не можуть починатись з цифри, хоча цифри можуть бути входити в ім'я в будь-якому іншому місці. Constant and variable names cannot contain whitespace characters, mathematical symbols, arrows, private-use (or invalid) Unicode code points, or line- and box-drawing characters. Nor can they begin with a number, although numbers may be included elsewhere within the name.
 Once you’ve declared a constant or variable of a certain type, you can’t redeclare it again with the same name, or change it to store values of a different type. Nor can you change a constant into a variable or a variable into a constant.> **Note**>
 > If you need to give a constant or variable the same name as a reserved Swift keyword, surround the keyword with backticks (`` ` ``) when using it as a name. However, avoid using keywords as names unless you have absolutely no choice.You can change the value of an existing variable to another value of a compatible type. In this example, the value of friendlyWelcome is changed from "Hello!" to "Bonjour!":
 
@@ -54,7 +65,7 @@ This code can be read as:
 
 ```swiftlet languageName = "Swift"languageName = "Swift++"// This is a compile-time error: languageName cannot be changed.```
 
-####Printing Constants and VariablesYou can print the current value of a constant or variable with the `print(_:separator:terminator:)` function:```swiftprint(friendlyWelcome)// Prints "Bonjour!"
+#### Printing Constants and VariablesYou can print the current value of a constant or variable with the `print(_:separator:terminator:)` function:```swiftprint(friendlyWelcome)// Prints "Bonjour!"
 ``` 
 The `print(_:separator:terminator:)` function is a global function that prints one or more values to an appropriate output. In Xcode, for example, the `print(_:separator:terminator:)` function prints its output in Xcode’s “console” pane. The separator and terminator parameter have default values, so you can omit them when you call this function. By default, the function terminates the line it prints by adding a line break. To print a value without a line break after it, pass an empty string as the terminator—for example, `print(someValue, terminator: "")`. For information about parameters with default values, see [Default Parameter Values]().Swift uses *string interpolation* to include the name of a constant or variable as a placeholder in a longer string, and to prompt Swift to replace it with the current value of that constant or variable. Wrap the name in parentheses and escape it with a backslash before the opening parenthesis:
 
@@ -104,7 +115,7 @@ The values of these properties are of the appropriate-sized number type (such as
  
 > **Note**
 > 
-> Use `UInt` only when you specifically need an unsigned integer type with the same size as the platform’s native word size. If this is not the case, `Int` is preferred, even when the values to be stored are known to be non-negative. A consistent use of `Int` for integer values aids code interoperability, avoids the need to convert between different number types, and matches integer type inference, as described in [Type Safety and Type Inference]().
+> Use `UInt` only when you specifically need an unsigned integer type with the same size as the platform’s native word size. If this is not the case, `Int` is preferred, even when the values to be stored are known to be non-negative. A consistent use of `Int` for integer values aids code interoperability, avoids the need to convert between different number types, and matches integer type inference, as described in [Типобезпечність та Визначення Типів]().
  
 #### Floating-Point NumbersFloating-point numbers are numbers with a fractional component, such as `3.14159`, `0.1`, and `-273.15`.Floating-point types can represent a much wider range of values than integer types, and can store numbers that are much larger or smaller than can be stored in an `Int`. Swift provides two signed floating-point number types:
  
@@ -112,7 +123,8 @@ The values of these properties are of the appropriate-sized number type (such as
  > **Note**> 
 > `Double` has a precision of at least 15 decimal digits, whereas the precision of `Float` can be as little as 6 decimal digits. The appropriate floating-point type to use depends on the nature and range of values you need to work with in your code. In situations where either type would be appropriate, `Double` is preferred.
 
-#### Type Safety and Type Inference
+#### Типобезпечність та Визначення Типів
+
 Swift is a type-safe language. A type safe language encourages you to be clear about the types of values your code can work with. If part of your code expects a String, you can’t pass it an Int by mistake.
 
 Because Swift is type safe, it performs type checks when compiling your code and flags any mismatched types as errors. This enables you to catch and fix errors as early as possible in the development process.
