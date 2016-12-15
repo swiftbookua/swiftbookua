@@ -51,7 +51,7 @@ let maximumNumberOfLoginAttempts = 10var currentLoginAttempt = 0
 ```swiftvar red, green, blue: Double
 ```> **Примітка**
 > 
-> На практиці анотаціями типів доводиться користуватись рідко. Якщо надати початкове значення константі чи змінній в момент оголошення, мова Swift майже завжди може визначити тип, який повинна мати дана константа чи змінна. Це більш детально описано в [Типобезпечність та Визначення Типів](). У прикладі вище в оголошенні `welcomeMessage` не вказано початкове значення, тому тип змінної `welcomeMessage` визначається анотацією типу. 
+> На практиці анотаціями типів доводиться користуватись рідко. Якщо надати початкове значення константі чи змінній в момент оголошення, мова Swift майже завжди може визначити тип, який повинна мати дана константа чи змінна. Це більш детально описано в [Типобезпечність та Визначення Типів](#типобезпечність-та-визначення-типів). У прикладі вище в оголошенні `welcomeMessage` не вказано початкове значення, тому тип змінної `welcomeMessage` визначається анотацією типу. 
 
 #### Іменування констант і зміннихІмена констант і змінних можуть містити майже будь-які символи, в тому числі символи Unicode:
 
@@ -65,41 +65,48 @@ let maximumNumberOfLoginAttempts = 10var currentLoginAttempt = 0
 ```Навідміну від змінних, як тільки значення константи задано - його неможливо змінити. Спроба зміни значення виллється в помилку компіляції:
 ```swiftlet languageName = "Swift"languageName = "Swift++"// Це помилка часу компіляції: languageName не може бути змінено.```
 
-#### Printing Constants and VariablesМожна надрукувати поточне значення константи чи змінної за допомогою функції `print(_:separator:terminator:)`:```swiftprint(friendlyWelcome)// Надрукує "Вітаю!"
+#### Друк констант та зміннихМожна надрукувати поточне значення константи чи змінної за допомогою функції `print(_:separator:terminator:)`:```swiftprint(friendlyWelcome)// Надрукує "Вітаю!"
 ``` 
-Функція `print(_:separator:terminator:)` є глобальною функцією, що друкує одне або кілька значень у відповідний вивід. У Xcode, наприклад, функція `print(_:separator:terminator:)` друкує у "консольну" панель. Параметри  `separator` (символ-розділювач) та `terminator` (символ-закінчення) мають значення за замовчуванням, тому їх можна пропустити під час виклику функції. За замовчуванням, функція закінчує рядок, що друкує, символом переходу на новий рядок. Щоб вивести значення без переходу на новий рядок у кінці, можна передати порожній рядок в якості параметра `terminator`. Наприклад, `print(someValue, terminator: "")`. Для більш детальної інформації про параметри із значенням за замовчуванням, дивіться [Значення параметрів за замовчуванням](). [Default Parameter Values]().
+Функція `print(_:separator:terminator:)` є глобальною функцією, що друкує одне або кілька значень у відповідний вивід. У Xcode, наприклад, функція `print(_:separator:terminator:)` друкує у "консольну" панель. Параметри  `separator` (символ-розділювач) та `terminator` (символ-закінчення) мають значення за замовчуванням, тому їх можна пропустити під час виклику функції. За замовчуванням, функція закінчує рядок, що друкує, символом переходу на новий рядок. Щоб вивести значення без переходу на новий рядок у кінці, можна передати порожній рядок в якості параметра `terminator`. Наприклад, `print(someValue, terminator: "")`. Для більш детальної інформації про параметри із значенням за замовчуванням, дивіться [Значення параметрів за замовчуванням](1_language_guide/5_functions.md#значення-параметрів-за-замовчуванням).
 
-У мові використовується *інтерполяція рядків*
-Swift uses *string interpolation* to include the name of a constant or variable as a placeholder in a longer string, and to prompt Swift to replace it with the current value of that constant or variable. Wrap the name in parentheses and escape it with a backslash before the opening parenthesis:
-Swift uses *string interpolation* to include the name of a constant or variable as a placeholder in a longer string, and to prompt Swift to replace it with the current value of that constant or variable. Wrap the name in parentheses and escape it with a backslash before the opening parenthesis:
+У мові Swift є механізм *інтерполяції рядків*, що дозволяє включити і'мя константи чи змінної у більш довгий рядок як заповнювач, що буде замінено на поточне значення константи чи змінної. Для цього потрібно огорнути ім'я у круглі дужки, поставивши перед дужкою, що відкривається, 
+Swift uses *string interpolation* to include the name of a constant or variable as a placeholder in a longer string, and to prompt Swift to replace it with the current value of that constant or variable. Wrap the name in parentheses and escape it with a зворотній слеш `\`:
 
-```swiftprint("The current value of friendlyWelcome is \(friendlyWelcome)")// Prints "The current value of friendlyWelcome is Bonjour!"
+```swiftprint("The current value of friendlyWelcome is \(friendlyWelcome)")// Надрукує "The current value of friendlyWelcome is Вітаю!"
 ```
 > **Note**> 
-> All options you can use with string interpolation are described in String Interpolation.#### CommentsUse comments to include nonexecutable text in your code, as a note or reminder to yourself. Comments are ignored by the Swift compiler when your code is compiled.Comments in Swift are very similar to comments in C. Single-line comments begin with two forward-slashes (`//`):
+> Детальніше ознайомитись з можливостями інтерполяції рядків можна у розділі [Інтерполяція рядків](1_language_guide/2_strings_and_characters.md#iнтерполяція-рядків)
+### Коментарі
+
+Коментарі - це блоки тексту у коді, що не впливають на виконнання коду. Їх вживають як примітки чи нагадування для себе. Коментарі ігноруються компілятором Swift. 
+
+Коментарі у мові Swift дуже схожі на коментарі в мові C. Однорядкові коментарі починаються з подвійного прямого слеша (`//`):
 
 ```swift
-// This is a comment.
+// Це коментар.
 ```
 
-Multiline comments start with a forward-slash followed by an asterisk (`/*`) and end with an asterisk followed by a forward-slash (`*/`):
+Багаторядкові коментарі починаються із символів слешу та зірочки (`/*`) і закінчуються символами зірочки та слешу (`*/`):
 
 ```swift
-/* This is also a comment
- but is written over multiple lines. */
+/* Це також коментар,
+ але написаний у кілька рядків. */
 ```
-Unlike multiline comments in C, multiline comments in Swift can be nested inside other multiline comments. You write nested comments by starting a multiline comment block and then starting a second multiline comment within the first block. The second block is then closed, followed by the first block:
 
-```swift/* This is the start of the first multiline comment. /* This is the second, nested multiline comment. */ This is the end of the first multiline comment. */
-```Nested multiline comments enable you to comment out large blocks of code quickly and easily, even if the code already contains multiline comments.
+Навідміну від коментарів у мові C, багаторядкові коментарі в мові Swift можуть бути вкладені в інші багаторядкові коментарі. Щоб написати вкладені коментарі, слід просто розпочати блок багаторядкових коментарів, а потім розпочати ще один блок багаторядкових коментарів усередині першого блоку. Потім слід закрити спочатку вкладений блок коментарів, а потім перший блок: 
 
-#### SemicolonsUnlike many other languages, Swift does not require you to write a semicolon (`;`) after each statement in your code, although you can do so if you wish. However, semicolons *are* required if you want to write multiple separate statements on a single line:
+```swift
+/* Це початок першого багаторядкового коментаря. /* Це другий, вкладений багаторядковий коментар. */
+ Це кінець першого багаторядкового коментаря. */
+```Вкладені багаторядкові коментарі дозволяють закоментувати великі блоки коду швидко і легко, навіть якщо код уже містить багаторядкові коментарі.
+
+### SemicolonsUnlike many other languages, Swift does not require you to write a semicolon (`;`) after each statement in your code, although you can do so if you wish. However, semicolons *are* required if you want to write multiple separate statements on a single line:
 
 ```swift
 let cat = "🐱"; print(cat)// Prints "🐱"
 ```
 
-#### Integers*Integers* are whole numbers with no fractional component, such as `42` and `-23`. Integers are either *signed* (positive, zero, or negative) or *unsigned* (positive or zero).
+### Integers*Integers* are whole numbers with no fractional component, such as `42` and `-23`. Integers are either *signed* (positive, zero, or negative) or *unsigned* (positive or zero).
 Swift provides signed and unsigned integers in 8, 16, 32, and 64 bit forms. These integers follow a naming convention similar to C, in that an 8-bit unsigned integer is of type `UInt8`, and a 32-bit signed integer is of type `Int32`. Like all types in Swift, these integer types have capitalized names.
 
 #### Integer BoundsYou can access the minimum and maximum values of each integer type with its `min` and `max` properties:
@@ -119,7 +126,7 @@ The values of these properties are of the appropriate-sized number type (such as
  
 > **Note**
 > 
-> Use `UInt` only when you specifically need an unsigned integer type with the same size as the platform’s native word size. If this is not the case, `Int` is preferred, even when the values to be stored are known to be non-negative. A consistent use of `Int` for integer values aids code interoperability, avoids the need to convert between different number types, and matches integer type inference, as described in [Типобезпечність та Визначення Типів]().
+> Use `UInt` only when you specifically need an unsigned integer type with the same size as the platform’s native word size. If this is not the case, `Int` is preferred, even when the values to be stored are known to be non-negative. A consistent use of `Int` for integer values aids code interoperability, avoids the need to convert between different number types, and matches integer type inference, as described in [Типобезпечність та Визначення Типів](#типобезпечність-та-визначення-типів).
  
 #### Floating-Point NumbersFloating-point numbers are numbers with a fractional component, such as `3.14159`, `0.1`, and `-273.15`.Floating-point types can represent a much wider range of values than integer types, and can store numbers that are much larger or smaller than can be stored in an `Int`. Swift provides two signed floating-point number types:
  
@@ -182,7 +189,7 @@ let decimalDouble = 12.1875let exponentDouble = 1.21875e1let hexadecimalDouble
 ```swiftlet twoThousand: UInt16 = 2_000let one: UInt8 = 1let twoThousandAndOne = twoThousand + UInt16(one)
 ```
 Because both sides of the addition are now of type `UInt16`, the addition is allowed. The output constant (`twoThousandAndOne`) is inferred to be of type `UInt16`, because it is the sum of two `UInt16` values.
-`SomeType(ofInitialValue)` is the default way to call the initializer of a Swift type and pass in an initial value. Behind the scenes, `UInt16` has an initializer that accepts a `UInt8` value, and so this initializer is used to make a new `UInt16` from an existing `UInt8`. You can’t pass in any type here, however—it has to be a type for which `UInt16` provides an initializer. Extending existing types to provide initializers that accept new types (including your own type definitions) is covered in [Extensions]().
+`SomeType(ofInitialValue)` is the default way to call the initializer of a Swift type and pass in an initial value. Behind the scenes, `UInt16` has an initializer that accepts a `UInt8` value, and so this initializer is used to make a new `UInt16` from an existing `UInt8`. You can’t pass in any type here, however—it has to be a type for which `UInt16` provides an initializer. Extending existing types to provide initializers that accept new types (including your own type definitions) is covered in [Extensions](1_language_guide/20_extensions.md).
 
 ##### Integer and Floating-Point Conversion
 Conversions between integer and floating-point numeric types must be made explicit:
@@ -217,7 +224,7 @@ Here, the value of the constant `three` is used to create a new value of type `D
 
 ```swiftif turnipsAreDelicious {    print("Mmm, tasty turnips!")} else {    print("Eww, turnips are horrible.")}// Prints "Eww, turnips are horrible."
 ```
-Conditional statements such as the if statement are covered in more detail in [Control Flow]().Swift’s type safety prevents non-Boolean values from being substituted for `Bool`. The following example reports a compile-time error:
+Conditional statements such as the if statement are covered in more detail in [Control Flow](1_language_guide/4_control_flow.md).Swift’s type safety prevents non-Boolean values from being substituted for `Bool`. The following example reports a compile-time error:
 
 ```swiftlet i = 1if i {    // this example will not compile, and will report an error}
 ```
@@ -225,7 +232,7 @@ Here, the value of the constant `three` is used to create a new value of type `D
 
 ```swiftlet i = 1if i == 1 {    // this example will compile successfully}
 ```
-The result of the `i == 1` comparison is of type `Bool`, and so this second example passes the type-check. Comparisons like `i == 1` are discussed in [Basic Operators]().As with other examples of type safety in Swift, this approach avoids accidental errors and ensures that the intention of a particular section of code is always clear.
+The result of the `i == 1` comparison is of type `Bool`, and so this second example passes the type-check. Comparisons like `i == 1` are discussed in [Basic Operators](1_language_guide/1_base_operators.md).As with other examples of type safety in Swift, this approach avoids accidental errors and ensures that the intention of a particular section of code is always clear.
 
 ####Tuples
 *Tuples* group multiple values into a single compound value. The values within a tuple can be of any type and do not have to be of the same type as each other.In this example, `(404, "Not Found")` is a tuple that describes an HTTP *status code*. An HTTP status code is a special value returned by a web server whenever you request a web page. A status code of `404 Not Found` is returned if you request a webpage that doesn’t exist.
@@ -251,6 +258,6 @@ Here, the value of the constant `three` is used to create a new value of type `D
 
 > **Note**
 > 
-> Tuples are useful for temporary groups of related values. They are not suited to the creation of complex data structures. If your data structure is likely to persist beyond a temporary scope, model it as a class or structure, rather than as a tuple. For more information, see [Classes and Structures]().
+> Tuples are useful for temporary groups of related values. They are not suited to the creation of complex data structures. If your data structure is likely to persist beyond a temporary scope, model it as a class or structure, rather than as a tuple. For more information, see [Classes and Structures](1_language_guide/8_classes_and_structures.md).
 
 
