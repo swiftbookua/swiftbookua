@@ -100,40 +100,50 @@ Swift uses *string interpolation* to include the name of a constant or variable 
  Це кінець першого багаторядкового коментаря. */
 ```Вкладені багаторядкові коментарі дозволяють закоментувати великі блоки коду швидко і легко, навіть якщо код уже містить багаторядкові коментарі.
 
-### SemicolonsUnlike many other languages, Swift does not require you to write a semicolon (`;`) after each statement in your code, although you can do so if you wish. However, semicolons *are* required if you want to write multiple separate statements on a single line:
+### Крапка з комою
+
+Навідміну від багатьох інших мов, у мові Swift не вимагається ставити крапку з комою (`;`) після кожної інструкції у коді, хоча її і можна ставити за бажанням.  
+Однак крапку з комою ставити *обов'язково* якщо потрібно написати кілька окремих інструкцій в один рядок:
 
 ```swift
-let cat = "🐱"; print(cat)// Prints "🐱"
+let cat = "🐱"; print(cat)// Друкує "🐱"
 ```
 
-### Integers*Integers* are whole numbers with no fractional component, such as `42` and `-23`. Integers are either *signed* (positive, zero, or negative) or *unsigned* (positive or zero).
-Swift provides signed and unsigned integers in 8, 16, 32, and 64 bit forms. These integers follow a naming convention similar to C, in that an 8-bit unsigned integer is of type `UInt8`, and a 32-bit signed integer is of type `Int32`. Like all types in Swift, these integer types have capitalized names.
+### Цілі числа
+*Цілими числами* є числа без дробової частини, такі як `42` та `-23`. Цілі числа бувають або *знаковими* (додатні, від'ємні та нуль), або *беззнаковими* (додатні та нуль).
 
-#### Integer BoundsYou can access the minimum and maximum values of each integer type with its `min` and `max` properties:
+У мові Swift знакові та беззнакові цілі можна зберігати у 8-, 16-, 32-, та 64-бітній формах. Назви типів цілих відповідають нормам кодування, схожим на відповідні норми в мові С: 8-бітний беззнаковий цілий тим має назву `UInt8`, а 32-бітний знаковий цілий тип має назву `Int32`. Як і всі інші типи у мові Swift, цілі типи мають імена, що пишуться у [ВерхньомуВерблюжомуРегістрі](https://uk.wikipedia.org/wiki/Верблюжий_регістр).
 
+#### Межі цілих чисел
+
+Доступитись до найбільшого і найменшого можливого значення кожного з цілих типів можна за властивостями `min` та `max`:
 ```swift
-let minValue = UInt8.min  // minValue is equal to 0, and is of type UInt8let maxValue = UInt8.max  // maxValue is equal to 255, and is of type UInt8
+let minValue = UInt8.min  // minValue дорівнює 0, і має тип UInt8let maxValue = UInt8.max  // maxValue дорівнює 255, і має тип UInt8
 ```
 
-The values of these properties are of the appropriate-sized number type (such as `UInt8` in the example above) and can therefore be used in expressions alongside other values of the same type.
-#### IntIn most cases, you don’t need to pick a specific size of integer to use in your code. Swift provides an additional integer type, `Int`, which has the same size as the current platform’s native word size:
- + On a 32-bit platform, `Int` is the same size as `Int32`. 
- + On a 64-bit platform, `Int` is the same size as `Int64`.
-	Unless you need to work with a specific size of integer, always use `Int` for integer values in your code. This aids code consistency and interoperability. Even on 32-bit platforms, `Int` can store any value between `-2,147,483,648` and `2,147,483,647`, and is large enough for many integer ranges.#### UIntSwift also provides an unsigned integer type, `UInt`, which has the same size as the current platform’s native word size:
+Значення цих властивостей мають числовий тип відповідного розміру (такий як `UInt8` у прикладі вище), і можуть далі використовуватись у виразах разом із іншими значеннями того ж типу. 
+#### Int
 
- + On a 32-bit platform, `UInt` is the same size as `UInt32`.
- + On a 64-bit platform, `UInt` is the same size as `UInt64`.
+У більшості випадків не потрібно обирати конкретний розмір цілочисельного типу. Мова Swift надає додатковий цілочислельний тип `Int`, що має такий же розмір, що і розмір машинного слова на поточній платформі. 
+  + На 32-бітній платформі, тип `Int` має тикий же розмір, що і `Int32`. 
+ + На 64-бітній платформі, тип `Int` має тикий же розмір, що і `Int64`. 
+
+Окрім випадків, де потрібно працювати з конкретним розміром цілочисельного типу, слід користуватись типом `Int` для цілих значень у коді. Це допомагає коду бути консистентним і сумісним. Навіть на 32-бітній платформі, тип `Int` може зберігати значення від  `-2 147 483 648` до `2 147 483 647`, що є більш ніж достатньо для багатьох цілочислельних діапазонів. #### UInt
+
+Мова Swift також надає беззнаковий цілочисельний тип `UInt`, що має такий же розмір, що і розмір машинного слова на поточній платформі:
+ + На 32-бітній платформі, тип `UInt` має тикий же розмір, що і `UInt32`. 
+ + На 64-бітній платформі, тип `UInt` має тикий же розмір, що і `UInt64`. 
  
-> **Note**
+> **Примітка**
 > 
-> Use `UInt` only when you specifically need an unsigned integer type with the same size as the platform’s native word size. If this is not the case, `Int` is preferred, even when the values to be stored are known to be non-negative. A consistent use of `Int` for integer values aids code interoperability, avoids the need to convert between different number types, and matches integer type inference, as described in [Типобезпечність та Визначення Типів](#типобезпечність-та-визначення-типів).
+> Слід уживати `UInt` тільки тоді, коли конкретно потрібен беззнаковий цілочисельний тип розміру, що співпадає з розміром машинного слова поточної платформи. Якщо це не ваш випадок, слід надавати перевагу типові `Int`, навіть якщо значення, що буде зберігатись, точно не може бути від'ємним. Послідовне вживання типу `Int` для цілих значень допомагає коду бути сумісним, оминати необхідність постійно конвертувати один числовий тип у інший, і відповідає цілочисельному визначенню типів, як описано у розділі [Типобезпечність та Визначення Типів](#типобезпечність-та-визначення-типів).
  
-#### Floating-Point NumbersFloating-point numbers are numbers with a fractional component, such as `3.14159`, `0.1`, and `-273.15`.Floating-point types can represent a much wider range of values than integer types, and can store numbers that are much larger or smaller than can be stored in an `Int`. Swift provides two signed floating-point number types:
- 
- + Double represents a 64-bit floating-point number. + Float represents a 32-bit floating-point number.
- > **Note**> 
-> `Double` has a precision of at least 15 decimal digits, whereas the precision of `Float` can be as little as 6 decimal digits. The appropriate floating-point type to use depends on the nature and range of values you need to work with in your code. In situations where either type would be appropriate, `Double` is preferred.
+#### Числа з рухомою комою
 
+Числами з рухомою комою є числа з дробовою частино, такі як `3.14159`, `0.1`, та `-273.15`.Числа з рухомою комою можуть представити набагато більший діапазон значень, ніж цілочисельні типи, і може зберігати числа, що набагато більші чи менші ніж ті, що можуть зберігатись у типі `Int`. Мова Swift надає два знакових типи для числе з рухомою комою:  
+ + `Double` представляє 64-бітні числа з рухомою комою. + `Float` представляє 32-бітні числа з рухомою комою.
+ > **Примітка**> 
+> Тип `Double` має точнісь у як мінімум 15 десяткових цифр, тоді як точність типу `Float` може бути всього лише 6 десяткових цифр. Доречний вибір типу чисел з рухомою комою залежить від природи і діапазону значень, з якими потрібно працювати у коді. У ситуаціях коли обидва типи можуть бути доречними, слід надавати перевагу типу `Double`.
 #### Типобезпечність та Визначення Типів
 
 Swift is a type-safe language. A type safe language encourages you to be clear about the types of values your code can work with. If part of your code expects a String, you can’t pass it an Int by mistake.
