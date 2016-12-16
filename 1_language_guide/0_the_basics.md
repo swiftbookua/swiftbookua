@@ -238,38 +238,51 @@ let decimalDouble = 12.1875let exponentDouble = 1.21875e1let hexadecimalDouble
 
 Значення з рухомою комою завжди усікаються під час ініціалізації цілих значень таким чином. Тобто `4.75` стане `4`, і `-3.9` стане `-3`.> **Примітка**>
 > Правила поєднання числових констант і змінних відрізняються від правил для числових літералів. Літеральне значення `3` може бути додане прямо до літерального значення `0.14159`, бо числові літерали не мають явного типу самі по собі. Їх тип визначається тільки в момент, коли вони оцінюються компілятором.  
-### Type Aliases
-*Type aliases* define an alternative name for an existing type. You define type aliases with the typealias `keyword`.
-Type aliases are useful when you want to refer to an existing type by a name that is contextually more appropriate, such as when working with data of a specific size from an external source:
+### Псевдоніми типів
+
+*Псевдоніми типів* визначають альтернативне ім'я для існуючого типу. Псевдоніми типів визначаються за допомогою ключового слова `typealias`.
+
+Псевдоніми типів корисні, коли потрібно посилатись на існуючий тип за іменем, що більш доречне в даному контексті. Наприклад, при роботі з інформацією фіксованого розміру із зовнішнього джерела:
 
 ```swifttypealias AudioSample = UInt16
 ```
-Once you define a type alias, you can use the alias anywhere you might use the original name:
 
-```swiftvar maxAmplitudeFound = AudioSample.min// maxAmplitudeFound is now 0
+Як тільки було оголошено псевдонім типу, його можна використовувати будь-де замість початкового імені: 
+```swiftvar maxAmplitudeFound = AudioSample.min// maxAmplitudeFound тепер дорівнює 0
 ```
 
-Here, `AudioSample` is defined as an alias for `UInt16`. Because it is an alias, the call to `AudioSample.min` actually calls `UInt16.min`, which provides an initial value of `0` for the `maxAmplitudeFound` variable.#### Booleans
-Swift has a basic *Boolean* type, called `Bool`. Boolean values are referred to as *logical*, because they can only ever be true or false. Swift provides two Boolean constant values, `true` and `false`:
+Тут `AudioSample` визначено як псевдонім до типу `UInt16`. Оскільки це псевдонім, виклик `AudioSample.min` насправді викликає `UInt16.min`, котрий надає початкове значення `0` змінній `maxAmplitudeFound`.### Булевий тип даних
+
+Мова Swift має базовий *булевий* тип, що називається `Bool`. Булеві значення ще називають *логічними*, бо вони можуть бути лише істиною чи хибною. Мова Swift надає два булевих константних значення, `true` (істина) та `false` (хиба):
+
 
 ```swiftlet orangesAreOrange = truelet turnipsAreDelicious = false
 ```
-The types of `orangesAreOrange` and `turnipsAreDelicious` have been inferred as `Bool` from the fact that they were initialized with Boolean literal values. As with `Int` and `Double` above, you don’t need to declare constants or variables as `Bool` if you set them to `true` or `false` as soon as you create them. Type inference helps make Swift code more concise and readable when it initializes constants or variables with other values whose type is already known.
-Boolean values are particularly useful when you work with conditional statements such as the `if` statement:
 
-```swiftif turnipsAreDelicious {    print("Mmm, tasty turnips!")} else {    print("Eww, turnips are horrible.")}// Prints "Eww, turnips are horrible."
+Типи констант `orangesAreOrange` та `turnipsAreDelicious` було визначено як `Bool` через те, що їх було проініціалізовано булевими літералами. Так само як і  з типами `Int` та `Double` вище, не потрібно явно вказувати тип `Bool` якщо їм присвоюється значення `true` чи `false` одразу після створення. Визначення типів дозволяє робити код мовою Swift більш коротким та читабельним під час ініціалізації констант чи змінних значеннями, чий тип відомо. 
+
+Булеві значення зокрема корисні під час роботи з умовними інструкціями, такими як інструкція `if`:
+
+```swiftif turnipsAreDelicious {    print("Mmm, tasty turnips!")} else {    print("Eww, turnips are horrible.")}// Надрукує "Eww, turnips are horrible."
 ```
-Conditional statements such as the if statement are covered in more detail in [Control Flow](1_language_guide/4_control_flow.md).Swift’s type safety prevents non-Boolean values from being substituted for `Bool`. The following example reports a compile-time error:
 
-```swiftlet i = 1if i {    // this example will not compile, and will report an error}
+Умовні інструкції, такі як інструкція `if` описані більш детально у розділі  [Потік керування](1_language_guide/4_control_flow.md).
+
+Типобезпечність мови Swift запобігає підстановці небулевих значеня замість булевих. Наступний приклад призведе до повідомлення про помилку компіляції: 
+
+```swiftlet i = 1if i {    // Цей приклад не скомпілюється, і буде повідомлено про помилку.}
 ```
-However, the alternative example below is valid:
 
-```swiftlet i = 1if i == 1 {    // this example will compile successfully}
+Однак, альтернативний приклад нижче є дійсним: 
+
+```swiftlet i = 1if i == 1 {    // Цей приклад успішно скомпілюється}
 ```
-The result of the `i == 1` comparison is of type `Bool`, and so this second example passes the type-check. Comparisons like `i == 1` are discussed in [Basic Operators](1_language_guide/1_base_operators.md).As with other examples of type safety in Swift, this approach avoids accidental errors and ensures that the intention of a particular section of code is always clear.
 
-####Tuples
+Результат порівняння `i == 1` має тип `Bool`, і тому другий приклад проходить перевірку типу. Порівняння на кшталт `i == 1` описано у розділі [Базові оператори](1_language_guide/1_base_operators.md).
+
+Як і в інших прикладах типобезпечності у мові Swift, цей підхід запобігає випадковим помилкам і гарантує, що намір у окремій секції коду є завжди зрозумілим.
+
+### Tuples
 *Tuples* group multiple values into a single compound value. The values within a tuple can be of any type and do not have to be of the same type as each other.In this example, `(404, "Not Found")` is a tuple that describes an HTTP *status code*. An HTTP status code is a special value returned by a web server whenever you request a web page. A status code of `404 Not Found` is returned if you request a webpage that doesn’t exist.
 
 ```swiftlet http404Error = (404, "Not Found")// http404Error is of type (Int, String), and equals (404, "Not Found")
