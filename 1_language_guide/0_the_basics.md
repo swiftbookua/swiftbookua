@@ -146,24 +146,31 @@ let minValue = UInt8.min  // minValue дорівнює 0, і має тип UInt8
 > Тип `Double` має точнісь у як мінімум 15 десяткових цифр, тоді як точність типу `Float` може бути всього лише 6 десяткових цифр. Доречний вибір типу чисел з рухомою комою залежить від природи і діапазону значень, з якими потрібно працювати у коді. У ситуаціях коли обидва типи можуть бути доречними, слід надавати перевагу типу `Double`.
 #### Типобезпечність та Визначення Типів
 
-Swift is a type-safe language. A type safe language encourages you to be clear about the types of values your code can work with. If part of your code expects a String, you can’t pass it an Int by mistake.
+Мова Swift - типобезбечна. Типобезпечна мова заохочує розробників бути ясними щодо типів значень, з якими може працювати їх код. Якщо частина коду очікує рядок (`String`), неможливо помилково передати в нього число (`Int`). 
 
-Because Swift is type safe, it performs type checks when compiling your code and flags any mismatched types as errors. This enables you to catch and fix errors as early as possible in the development process.
-Type-checking helps you avoid errors when you’re working with different types of values. However, this doesn’t mean that you have to specify the type of every constant and variable that you declare. If you don’t specify the type of value you need, Swift uses *type inference* to work out the appropriate type. Type inference enables a compiler to deduce the type of a particular expression automatically when it compiles your code, simply by examining the values you provide.
-Because of type inference, Swift requires far fewer type declarations than languages such as C or Objective-C. Constants and variables are still explicitly typed, but much of the work of specifying their type is done for you.Type inference is particularly useful when you declare a constant or variable with an initial value. This is often done by assigning a *literal value* (or *literal*) to the constant or variable at the point that you declare it. (A literal value is a value that appears directly in your source code, such as `42` and `3.14159` in the examples below.)
-For example, if you assign a literal value of `42` to a new constant without saying what type it is, Swift infers that you want the constant to be an `Int`, because you have initialized it with a number that looks like an integer:
+Оскільки мова Swift - типобезпечна, перевірка типів відбувається під час компіляції коду, і несумісні типи сигналізуються помилками. Це дозволяє відловлювати і виправляти помилки в процесі розробки на стільки рано, на скільки це можливо.
 
-```swiftlet meaningOfLife = 42// meaningOfLife is inferred to be of type Int
-```
-Likewise, if you don’t specify a type for a floating-point literal, Swift infers that you want to create a `Double`:
+Перевірка типів допомагає уникати помилок під час роботи з різними типами значень. Однка це не означає, що потрібно вказувати тип кожної константи та змінної, що оголошується. Якщо тип потрібного значення не вказано, мова Swift вираховує потрібний тип за допомогою механізму *визначення типів*. Визначення типів дозволяє компілятору вивести тип певного виразу автоматично під час компіляції коду, просто вивчивши надані вами значення.
 
-```swiftlet pi = 3.14159// pi is inferred to be of type Double
+Через визначення типів мова Swift вимагає набагато меншої кількості оголошень типів, аніж інші мови, такі як C чи Objective-C. Константи та змінні є все ще явно типізовані, але більша частина роботи по вказанню типу робиться за вас. 
+
+Зокрема, визначення типів є корисним під час оголошень констант чи змінних із вказанням початкового значення. Це часто робиться через присвоєння *літерального значення* (або *літералу*) константі чи змінній під час її оголошення. (Літеральним значенням називають значення, що з'являється у коді прямо, наприклад числа `42` та `3.14159` у прикладах нижче.)
+
+Наприклад, якщо присвоїти літеральне значення `42` новій костанті і не вказати, якого вона типу, мова Swift визначить, що константа повинна мати тип `Int`, бо вона ініціалізована числом, що схоже на ціле:
+```swiftlet meaningOfLife = 42// визначено, що meaningOfLife матиме тип Int
 ```
-Swift always chooses `Double` (rather than `Float`) when inferring the type of floating-point numbers.
-If you combine integer and floating-point literals in an expression, a type of `Double` will be inferred from the context:```swiftlet anotherPi = 3 + 0.14159// anotherPi is also inferred to be of type Double
+
+Аналогічно, якщо не вказано тип для літералу з рухомою комою, Swift визначить, що тут був намір створити `Double`:
+
+```swiftlet pi = 3.14159// визначено, що pi матиме тип Double
 ```
-The literal value of `3` has no explicit type in and of itself, and so an appropriate output type of `Double` is inferred from the presence of a floating-point literal as part of the addition.
-####Numeric LiteralsInteger literals can be written as:
+
+Swift завжди обирає `Double` (а не `Float`) під час визначення типу числа з рухомою комою.
+
+Якщо поєднати цілочисельний літерал з літералом з рухомою комою у виразі, з контексту буде визначено тип `Double`:```swiftlet anotherPi = 3 + 0.14159// anotherPi також визначається як значення типу Double
+```
+
+Літеральне значення `3` не має явного типу саме по собі, і тому відповідний вихідний тип `Double` визначено з присутності літералу з рухомою комою в частині виразу.#### Numeric LiteralsInteger literals can be written as:
  + A decimal number, with no prefix + A binary number, with a 0b prefix + An octal number, with a 0o prefix + A hexadecimal number, with a 0x prefix
 	All of these integer literals have a decimal value of `17`:
 
