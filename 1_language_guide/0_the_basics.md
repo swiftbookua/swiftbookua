@@ -203,7 +203,7 @@ let decimalDouble = 12.1875let exponentDouble = 1.21875e1let hexadecimalDouble
 Слід вживати тип `Int` для всіх цілочисельних констант і змінних загального призначення, навіть якщо відомо, що вони точно додатні. Вживаючи цілочисельний тип за замовчуванням в щоденних ситуаціях ми отримуємо константи і змінні, які є одразу сумісні у коді і підходять до типу, що виводиться з цілочисельних літеральних значень. 
 
 Слід користуватись іншими цілочисельними типами тільки тоді, коли для задачі  потрібні конкретно сами вони. Наприклад, для обробки даних явного розміру із зовнішнього джерела, або для оптимізації швидкодії, пам'яті чи іншої необхідної оптимізації. Користування типами явного розміру у цих ситуаціях допомагає відловити будь-які несподівані переповнення значень і неявно документує природу інформації, яка використовується. 
-##### Перетворення цілих чисел
+#### Перетворення цілих чисел
 
 Діапазон чисел, що можуть зберігатись у цілочисельній константі чи змінній є різним для кожного чисельного типу. Константа чи змінна типу `Int8` може зберігати значенням між `-128` та `127`, тоді як константа чи змінна типу `UInt8` може зберігати значенням між `0` та `255`. Якщо число не вміщується в розмір цілочисельного типу константи чи змінної, під час компіляції коду буде повідомлено про помилку:
 
@@ -224,18 +224,20 @@ let decimalDouble = 12.1875let exponentDouble = 1.21875e1let hexadecimalDouble
 Вираз виду `ЯкийсьТип(зЯкимосьПочатковимЗначенням)` є звичайним способом виклакати ініціалізатор типу у Swift, і передати йому початкове значення. 
 За лаштунками, тип `UInt16` має ініціалізатор, що приймає значення типу `UInt8`, і тому цей ініціалізатор вживається для створення нового значення типу `UInt16` з існуючого значення типу `UInt8`. Сюди не можна передати будь-яке значення, це має бути такий тип, для якого у `UInt16` є ініціалізатор. Однак у мові Swift є можливість розширити існуючий тип, додавши до нього новий ініціалізатор, що приймає новий тип (включаючи користувацький тип). Детальніше про це можна прочитати у розділі [Розширення](1_language_guide/20_extensions.md).
 
-##### Integer and Floating-Point Conversion
-Conversions between integer and floating-point numeric types must be made explicit:
+#### Перетворення цілих чисел та чисел з рухомою комою
 
-```swiftlet three = 3let pointOneFourOneFiveNine = 0.14159let pi = Double(three) + pointOneFourOneFiveNine// pi equals 3.14159, and is inferred to be of type Double```
+Перетворення між цілочисельними числовими типами та типами з рухомою комою має відбуватись явно:
+```swiftlet three = 3let pointOneFourOneFiveNine = 0.14159let pi = Double(three) + pointOneFourOneFiveNine// константа pi дорівнює 3.14159, і її тип визначено як Double```
 
-Here, the value of the constant `three` is used to create a new value of type `Double`, so that both sides of the addition are of the same type. Without this conversion in place, the addition would not be allowed.
-Floating-point to integer conversion must also be made explicit. An integer type can be initialized with a `Double` or `Float` value:
+Тут значення константи `three` використано для того, щоб створити нове значення типу `Double`, і тому обидва доданки мають однаковий тип. Якби це перетворення не мало місця, додавання не було б дозволено.
 
-```swiftlet integerPi = Int(pi)// integerPi equals 3, and is inferred to be of type Int
+Перетворення чисел з рухомою комою на цілі також має бути явним. Ціле число можна проініціалізувати значенням типу `Double` чи `Float`:
+
+```swiftlet integerPi = Int(pi)// константа integerPi дорівнює 3, і її тип визначено як Int
 ```
-Floating-point values are always truncated when used to initialize a new integer value in this way. This means that `4.75` becomes `4`, and `-3.9` becomes `-3`.> Note>
-> The rules for combining numeric constants and variables are different from the rules for numeric literals. The literal value 3 can be added directly to the literal value `0.14159`, because number literals do not have an explicit type in and of themselves. Their type is inferred only at the point that they are evaluated by the compiler.
+
+Значення з рухомою комою завжди усікаються під час ініціалізації цілих значень таким чином. Тобто `4.75` стане `4`, і `-3.9` стане `-3`.> **Примітка**>
+> Правила поєднання числових констант і змінних відрізняються від правил для числових літералів. Літеральне значення `3` може бути додане прямо до літерального значення `0.14159`, бо числові літерали не мають явного типу самі по собі. Їх тип визначається тільки в момент, коли вони оцінюються компілятором.  
 ### Type Aliases
 *Type aliases* define an alternative name for an existing type. You define type aliases with the typealias `keyword`.
 Type aliases are useful when you want to refer to an existing type by a name that is contextually more appropriate, such as when working with data of a specific size from an external source:
