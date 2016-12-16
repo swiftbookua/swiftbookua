@@ -4,3 +4,5 @@
 + [Шаблон](2_language_reference/08_patterns.md) (pattern) - 
 + Інтерполяція рядків (string interpolation)
 + Типобезпечність та Визначення Типів (Type Safety and Type Inference)
++ Числа з рухомою комою (Floating-point numbers)
++ Ініціалізатор (initializer)
