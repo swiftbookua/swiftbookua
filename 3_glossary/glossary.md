@@ -6,3 +6,5 @@
 + Типобезпечність та Визначення Типів (Type Safety and Type Inference)
 + Числа з рухомою комою (Floating-point numbers)
 + Ініціалізатор (initializer)
++ Примусове розгортання (Forced Unwrapping)
++ Ранній вихід (Early Exit)

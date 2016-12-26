@@ -316,60 +316,79 @@ print("Код статусу дорівнює \(http200Status.statusCode)")// �
 > Кортежі зручно вживати для тимчасових груп пов'язаних значень. Вони не підходять для створення складних структур даних. Якщо структура даних може жити поза тимчасовим контекстом, слід можелювати її за допомогою класу чи структури, а не кортежу. Більш детальну інформацію можна знайти у розділі [Класи і структури](1_language_guide/8_classes_and_structures.md).
 
 
-### Optionals
-You use *optionals* in situations where a value may be absent. An optional represents two possibilities: Either there *is* a value, and you can unwrap the optional to access that value, or there *isn’t* a value at all.> Note
-> > The concept of optionals doesn’t exist in C or Objective-C. The nearest thing in Objective-C is the ability to return `nil` from a method that would otherwise return an object, with `nil` meaning “the absence of a valid object.” However, this only works for objects—it doesn’t work for structures, basic C types, or enumeration values. For these types, Objective-C methods typically return a special value (such as `NSNotFound`) to indicate the absence of a value. This approach assumes that the method’s caller knows there is a special value to test against and remembers to check for it. Swift’s optionals let you indicate the absence of a value for *any type at all*, without the need for special constants.
-Here’s an example of how optionals can be used to cope with the absence of a value. Swift’s `Int` type has an initializer which tries to convert a `String` value into an `Int` value. However, not every string can be converted into an integer. The string `"123"` can be converted into the numeric value `123`, but the string `"hello, world"` does not have an obvious numeric value to convert to.
-The example below uses the initializer to try to convert a `String` into an `Int`:
+### Опціонали
 
-```swiftlet possibleNumber = "123"let convertedNumber = Int(possibleNumber)// convertedNumber is inferred to be of type "Int?", or "optional Int"
-```
-Because the initializer might fail, it returns an optional `Int`, rather than an `Int`. An optional `Int` is written as `Int?`, not `Int`. The question mark indicates that the value it contains is optional, meaning that it might contain *some* `Int` value, or it might contain *no value at all*. (It can’t contain anything else, such as a `Bool` value or a `String` value. It’s either an `Int`, or it’s nothing at all.)#### nilYou set an optional variable to a valueless state by assigning it the special value `nil`:
-
-```swiftvar serverResponseCode: Int? = 404// serverResponseCode contains an actual Int value of 404serverResponseCode = nil// serverResponseCode now contains no value
-```
-> **Note**
-> > `nil` cannot be used with nonoptional constants and variables. If a constant or variable in your code needs to work with the absence of a value under certain conditions, always declare it as an optional value of the appropriate type.
-If you define an optional variable without providing a default value, the variable is automatically set to `nil` for you:
-
-```swiftvar surveyAnswer: String?// surveyAnswer is automatically set to nil
-```
-> **Note**> 
-> Swift’s `nil` is not the same as `nil` in Objective-C. In Objective-C, `nil` is a pointer to a nonexistent object. In Swift, `nil` is not a pointer—it is the absence of a value of a certain type. Optionals of *any* type can be set to `nil`, not just object types.
-#### If Statements and Forced Unwrapping
-You can use an `if` statement to find out whether an optional contains a value by comparing the optional against nil. You perform this comparison with the “equal to” operator (`==`) or the “not equal to” operator (`!=`).
-If an optional has a value, it is considered to be “not equal to” `nil`:
-
-```swiftif convertedNumber != nil {    print("convertedNumber contains some integer value.")}// Prints "convertedNumber contains some integer value."
-```
-Once you’re sure that the optional *does* contain a value, you can access its underlying value by adding an exclamation mark (`!`) to the end of the optional’s name. The exclamation mark effectively says, “I know that this optional definitely has a value; please use it.” This is known as *forced unwrapping* of the optional’s value:
-
-```swiftif convertedNumber != nil {    print("convertedNumber has an integer value of \(convertedNumber!).")}// Prints "convertedNumber has an integer value of 123."
-```
-For more on the `if` statement, see [Control Flow](4_control_flow.md).
-> **Note**
+*Опціонали* слід вживати, коли значення може бути відсутнє. Опціонали відображають дві можливості: або *існує* значення, і можна його розрогнути щоб отримати це значення, або *не існує* жодного значення. > **Примітка**
 > 
-> Trying to use `!` to access a nonexistent optional value triggers a runtime error. Always make sure that an optional contains a non-nil value before using ! to force-unwrap its value.
+> Концепція опціоналів не існує у мовах C чи Objective-C. Найближчим поняттям у Objective-C є можливість повернути `nil` із методу, що зазвичай повертає об'єкт, в такому випадку `nil` означає "відсутність валідного об'єкту". Однак це працює лише з об'єктами, і не працює ні з структурами, ні з базовими типами мови C, ні з перечисленнями. Для таких типів методи Objective-C як правило повертають спеціальне значення (таке як `NSNotFound`) щоб позначити відсутність значення. Цей підхід базується на припущенні, що той, хто викликає метод, знає про це спеціальне значення, і пам'ятає, що слід його перевірити. Опціонали у мові Swift дозволяють вказувати на відсутність значення *взагалі для будь-якого типу*, без необхідності у спеціальних константах.
 
-#### Optional Binding
-You use *optional binding* to find out whether an optional contains a value, and if so, to make that value available as a temporary constant or variable. Optional binding can be used with `if` and `while` statements to check for a value inside an optional, and to extract that value into a constant or variable, as part of a single action. if and while statements are described in more detail in [Control Flow](4_control_flow.md).Write an optional binding for an `if` statement as follows:
 
-```swiftif let <constantName> = <someOptional> {    <statements>}
+Ось приклад того як опціонали можнуть бути використані щоб впоратись із відсутністю значення. Тип `Int` у Swift має ініціалізатор, що намагається конвертувати рядкове значення `String` у значення `Int`. Однак не кожний рядок можна конвертувати у ціле число. Рядок `"123"` можна конвертувати у числове значення `123`, але рядок `"привіт, світ"` не можна очевидним чином конвертувати у рядок.
+
+У наступному прикладі ініціалізатор використовується для конвертації рядку `String` у число `Int`:
+
+```swiftlet possibleNumber = "123"let convertedNumber = Int(possibleNumber)
+// тип convertedNumber визначено як "Int?", тобто "опціональний Int"
 ```
-You can rewrite the `possibleNumber` example from the [Optionals](#optionals) section to use optional binding rather than forced unwrapping:
 
-```swiftif let actualNumber = Int(possibleNumber) {    print("\"\(possibleNumber)\" has an integer value of \(actualNumber)")} else {    print("\"\(possibleNumber)\" could not be converted to an integer")}// Prints ""123" has an integer value of 123"
+Оскільки ініціалізатор може провалитись, він повертає опціональне значення  `Int`, замість простого `Int`. Опціональний тип `Int` пишеться як `Int?`, а не `Int`. Знак питання позначає те, що значення містить опціонал, і означає, що воно може містити *деяке* значення `Int`, або може не містити *жодного значення взагалі*. (Воно не може містити будь-що інше, будь то значення типу `Bool` чи `String`. Воно може містити або `Int`, або нічого взагалі.)#### nilЩоб опціональна змінна не містила жодного значення взагалі, слід присвоїти їй спеціальне значення `nil`:
+
+```swiftvar serverResponseCode: Int? = 404// serverResponseCode містить фактичне значення 404 типу IntserverResponseCode = nil// serverResponseCode тепер не містить жодного значення
 ```
-This code can be read as:“If the optional `Int` returned by `Int(possibleNumber)` contains a value, set a new constant called actualNumber to the value contained in the optional.”
-If the conversion is successful, the `actualNumber` constant becomes available for use within the first branch of the if statement. It has already been initialized with the value contained *within* the optional, and so there is no need to use the `!` suffix to access its value. In this example, `actualNumber` is simply used to print the result of the conversion.
-You can use both constants and variables with optional binding. If you wanted to manipulate the value of `actualNumber` within the first branch of the `if` statement, you could write `if var actualNumber` instead, and the value contained within the optional would be made available as a variable rather than a constant.
-You can include as many optional bindings and Boolean conditions in a single `if` statement as you need to, separated by commas. If any of the values in the optional bindings are nil or any Boolean condition evaluates to `false`, the whole `if` statement’s condition is considered to be `false`. The following `if` statements are equivalent:
+> **Примітка**
+> 
+> `nil` не може вживатись із неопціональними константами та змінними. Якщо константа чи змінни в коді повинна опрацьовувати відсутність значення у деяких умовах, слід завжди оголошувати її як опціональне значення певного типу. 
+
+Якщо оголосити опціональну змінну без зазначення значення за замовчуванням, змінна автоматично набуває значення `nil`:
+
+```swiftvar surveyAnswer: String?// surveyAnswer автоматично набуває значення nil
+```
+> **Примітка**> 
+> `nil` у Swift - це не те ж саме, що `nil` у Objective-C. У Objective-C, `nil` - це вказівник на неіснуючий об'єкт. У Swift, `nil` - це не вказівник, це відсутність значення певного типу. Опціонали *будь-якого* типу можуть набувати значення `nil`, а не лише опціонали об'єктних типів.
+#### Інструкція If та Примусове розгортання
+
+Щоб визначити, чи містить опціонал значення, можна вживати інструкцію `if`, порівнявши опціонал зі значенням `nil`. Цю операцию можна виконати за допомогою оператора “дорівнює” (`==`) або оператора “не дорівнює” (`!=`).
+
+Якщо опціонал має значення, вважається що він "не дорівнює" `nil`:
+
+```swiftif convertedNumber != nil {    print("convertedNumber містить деяке цілочисельне значення.")}// Надрукує "convertedNumber містить деяке цілочисельне значення."
+```
+
+Як тільки ми впевнені, що опціонал *містить* значення, можна отримати це значення, додавши знак оклику (`!`) наприкінці імені опціоналу. Знак оклику фактично говорить "Я знаю, що цей опціонал точно має значення, будь-ласка, використовуйте його." Ця операція відома як *примусове розгортання* значення опціоналу: 
+
+```swiftif convertedNumber != nil {    print("convertedNumber має цілочисельне значення \(convertedNumber!).")}// Prints "convertedNumber має цілочисельне значення 123."
+```
+
+Більш детально ознайомитись із інструкцією `if` можна в розділі [Потік керування](4_control_flow.md).
+> **Примітка**
+> 
+> Спроба використати `!` для доступу до неіснуючого значення опціоналу призведе до помилки часу виконання. Перед тим, як вживати `!` для примусового розгортання значення опціоналу, слід упевнитись, що він містить не `nil`.
+
+#### Опціональне зв'язування
+
+Опціональне зв'язування вживається щоб дізнатись, чи містить опціонал значення, і якщо містить, зробити це значення доступним як тимчасова константа чи змінна. Опціональне зв'язування може вживатись із інструкціями `if` та `while` щоб перевірити опціонал на наявність значення, витягти це значення у константу чи змінну, і все це у вигляді єдиної дії. Інструкції `if` та `while` більш детально описані у розділі [Потік керування](4_control_flow.md).Синтаксис опціонального зв'язування для інструкції `if` виглядає наступним чином:
+
+```swiftif let <ім'яКонстанти> = <якийсьОпціонал> {    <інструкції>}
+```
+
+Можна переписати приклад з `possibleNumber` із секції [Опціонали](#опціонали) використовуючи опціональне зв'язування замість примусового розгортання:
+
+```swiftif let actualNumber = Int(possibleNumber) {    print("\"\(possibleNumber)\" має цілочисельне значення \(actualNumber)")} else {    print("\"\(possibleNumber)\" не можна конвертувати у ціле число")}// Надрукує ""123" має цілочисельне значення 123"
+```
+
+Цей код можна прочитати так:“Якщо опціональний `Int`, що повертається з `Int(possibleNumber)`, містить значення, створити нову константу з назвою `actualNumber` і ініціалізувати її значенням, що міститься у опціоналі.”
+
+Якщо перетворення успішне, константа `actualNumber` стає доступною для використання всередині першої гілки інструкції `if`. Її вже було проініціалізовано значенням, що містилось *всередині* опціоналу, і тому непотрібно використовувати суфікс `!` для доступу до значення. У цьому прикладі  `actualNumber` просто використовується для друку результату перетворення. 
+
+З опціональним зв'язуванням можна використовувати як константи, так і змінні. Якщо необхідно маніпулювати значенням `actualNumber` всередині першої гілки інструкції `if`, можна просто замість `if let actualNumber` написати `if var actualNumber`, і значення, що міститься всередині опціоналу стане досупною у вигляді змінної замість константи.
+
+В єдину інструкцію `if` можна включити стільки опціональних зв'язувань і булевих умов, скільки потрібно, розділивши їх комами. Якщо будь-яке із значень у опціональних зв'язуванняє є `nil`, або будь-яка булева умова виявиться хибною (`false`), вся умова інструкції `if` вважається хибною (`false`). Наступні інструкції `if` є еквівалентними:
 ```swift
-if let firstNumber = Int("4"), let secondNumber = Int("42"), firstNumber < secondNumber && secondNumber < 100 {    print("\(firstNumber) < \(secondNumber) < 100")}// Prints "4 < 42 < 100" if let firstNumber = Int("4") {    if let secondNumber = Int("42") {        if firstNumber < secondNumber && secondNumber < 100 {            print("\(firstNumber) < \(secondNumber) < 100")        }    }}// Prints "4 < 42 < 100"
+if let firstNumber = Int("4"), let secondNumber = Int("42"), firstNumber < secondNumber && secondNumber < 100 {    print("\(firstNumber) < \(secondNumber) < 100")}// Надрукує "4 < 42 < 100" if let firstNumber = Int("4") {    if let secondNumber = Int("42") {        if firstNumber < secondNumber && secondNumber < 100 {            print("\(firstNumber) < \(secondNumber) < 100")        }    }}// Надрукує "4 < 42 < 100"
 ```
-> **Note**
+> **Примітка**
 > 
-> Constants and variables created with optional binding in an `if` statement are available only within the body of the `if` statement. In contrast, the constants and variables created with a `guard` statement are available in the lines of code that follow the `guard` statement, as described in [Early Exit](4_control_flow.md#early-exit).#### Implicitly Unwrapped OptionalsAs described above, optionals indicate that a constant or variable is allowed to have “no value”. Optionals can be checked with an `if` statement to see if a value exists, and can be conditionally unwrapped with optional binding to access the optional’s value if it does exist.
+> Константи і змінні, створені за допомогою опціонального зв'язування у інструкції `if` є доступними лише у тілі інструкції `if`. На відміну від цього, константи і змінні створені у інструкції `guard` є доступними у рядках коду, що слідують за інструкцією `guard`, як описано у розділі [Ранній вихід](4_control_flow.md#ранній-вихід).#### Implicitly Unwrapped OptionalsAs described above, optionals indicate that a constant or variable is allowed to have “no value”. Optionals can be checked with an `if` statement to see if a value exists, and can be conditionally unwrapped with optional binding to access the optional’s value if it does exist.
 Sometimes it is clear from a program’s structure that an optional will *always* have a value, after that value is first set. In these cases, it is useful to remove the need to check and unwrap the optional’s value every time it is accessed, because it can be safely assumed to have a value all of the time.
 These kinds of optionals are defined as *implicitly unwrapped optionals*. You write an implicitly unwrapped optional by placing an exclamation mark (`String!`) rather than a question mark (`String?`) after the type that you want to make optional.
 Implicitly unwrapped optionals are useful when an optional’s value is confirmed to exist immediately after the optional is first defined and can definitely be assumed to exist at every point thereafter. The primary use of implicitly unwrapped optionals in Swift is during class initialization, as described in [Unowned References and Implicitly Unwrapped Optional Properties](15_automatic_reference_counting.md#unowned-references-and-implicitly-unwrapped-optional-properties).
