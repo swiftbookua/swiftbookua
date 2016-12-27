@@ -1,18 +1,57 @@
-# Summary
+# Зміст
+* [Ласкаво просимо до Swift](0_welcome_to_swift/welcome_to_swift.md)
+    * [Про Swift](0_welcome_to_swift/about_swift.md)
+    * [Тур по Swift](0_welcome_to_swift/swift_tour/swift_tour.md)
+        * [Прості значення](0_welcome_to_swift/swift_tour/simple_values.md)
+        * [Потік керування](0_welcome_to_swift/swift_tour/control_flow.md)
+        * [Функції та Замикання](0_welcome_to_swift/swift_tour/functions_and_closures.md)
+        * [Об'єкти та Класи](0_welcome_to_swift/swift_tour/обєкти-та-класи.md)
+        * [Перечислення і Структури](0_welcome_to_swift/swift_tour/перечислення-і-структури.md)
+        * [Протоколи і Розширення](0_welcome_to_swift/swift_tour/протоколи-і-розширення.md)
+        * [Обробка Помилок](0_welcome_to_swift/swift_tour/error_handling.md)
+        * [Узагальнення](0_welcome_to_swift/swift_tour/generics.md)
+* [Керівництво з мови](1_language_guide/language_guide.md)
+    * [Основи](1_language_guide/0_the_basics.md)
+    * [Базові оператори](1_language_guide/1_base_operators.md)
+    * [Рядки та cимволи](1_language_guide/2_strings_and_characters.md)
+    * [Колекції](1_language_guide/3_collection_types.md)
+    * [Потік керування](1_language_guide/4_control_flow.md)
+    * [Функції](1_language_guide/5_functions.md)
+    * [Замикання](1_language_guide/6_closures.md)
+    * [Перечислення](1_language_guide/7_enumerations.md)
+    * [Класи і структури](1_language_guide/8_classes_and_structures.md)
+    * [Властивості](1_language_guide/9_properties.md)
+    * [Методи](1_language_guide/10_methods.md)
+    * [Індекси](1_language_guide/11_subscripts.md)
+    * [Наслідування](1_language_guide/12_inheritance.md)
+    * [Ініціалізація](1_language_guide/13_initialization.md)
+    * [Деініціалізація](1_language_guide/14_deinitialization.md)
+    * [Автоматичний підрахунок посилань](1_language_guide/15_automatic_reference_counting.md)
+    * [Ланцюжки опціоналів](1_language_guide/16_optional_chaining.md)
+    * [Обробка помилок](1_language_guide/17_error_handling.md)
+    * [Приведення типів](1_language_guide/18_type_casting.md)
+    * [Вкладені типи](1_language_guide/19_nested_types.md)
+    * [Розширення](1_language_guide/20_extensions.md)
+    * [Протоколи](1_language_guide/21_protocols.md)
+    * [Узагальнення](1_language_guide/22_generics.md)
+    * [Контроль доступу](1_language_guide/23_access_controll.md)
+    * [Розширені оператори](1_language_guide/24_advanced_operators.md)
+* [Специфікація мови](2_language_reference/language_reference.md)
+    * [Про специфікацію мови](2_language_reference/01_about_the_language_reference.md)
+    * [Лексична структура](2_language_reference/02_lexical_structure.md)
+    * [Типи](2_language_reference/03_types.md)
+    * [Вирази](2_language_reference/04_expressions.md)
+    * [Інструкції](2_language_reference/05_statements.md)
+    * [Оголошення](2_language_reference/06_declarations.md)
+    * [Атрибути](2_language_reference/07_attributes.md)
+    * [Шаблони](2_language_reference/08_patterns.md)
+    * [Параметри і аргументи узагальнень](2_language_reference/09_generic_parameters_and_arguments.md)
+    * [Конспект граматики](2_language_reference/10_summary_of_the_grammar.md)
+* [Глосарій](3_glossary/glossary.md)
+* [Історія ревізій](4_revision_history/revision_history.md)
+* [Торгові марки](5_trademarks/copyright_and_notices.md)
 
-* [Introduction](README.md)
-* [[Ласкаво просимо до Swift]]([welcome_to_swift].md)
-   * [Про Swift](about_swift.md)
-   * [Тур по Swift](chapter1.md)
-       * [Прості значення](simple_values.md)
-       * [Потік керування](control_flow.md)
-       * [Функції та Замикання](functions_and_closures.md)
-       * Об'єкти та Класи
-       * Перечислення і Структури
-       * Протоколи і Розширення
-       * Обробка Помилок
-       * Шаблони
-   * Керівництво з мови
-       * Основи
-       * Базові оператори
+
+
+
 
