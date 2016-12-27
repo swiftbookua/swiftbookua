@@ -388,7 +388,7 @@ if let firstNumber = Int("4"), let secondNumber = Int("42"), firstNumber < secon
 ```
 > **Примітка**
 > 
-> Константи і змінні, створені за допомогою опціонального зв'язування у інструкції `if` є доступними лише у тілі інструкції `if`. На відміну від цього, константи і змінні створені у інструкції `guard` є доступними у рядках коду, що слідують за інструкцією `guard`, як описано у розділі [Ранній вихід](4_control_flow.md#ранній-вихід).
+> Константи і змінні, створені за допомогою опціонального зв'язування у інструкції `if` є доступними лише у тілі інструкції `if`. На відміну від цього, константи і змінні створені у інструкції `guard` є доступними у рядках коду, що слідують за інструкцією `guard`, як описано у розділі [Ранній вихід](4_control_flow.md#ранній-вихід).
 
 #### Опціонали, що розгортаються неявно
 
@@ -458,3 +458,4 @@ if let firstNumber = Int("4"), let secondNumber = Int("42"), firstNumber < secon
   See also [Subscripts](11_subscripts.md) and [Functions](5_functions.md).
 > **Note**
 > > Assertions cause your app to terminate and are not a substitute for designing your code in such a way that invalid conditions are unlikely to arise. Nonetheless, in situations where invalid conditions are possible, an assertion is an effective way to ensure that such conditions are highlighted and noticed during development, before your app is published.
+
