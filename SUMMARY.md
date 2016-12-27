@@ -1,4 +1,4 @@
-# Summary
+# Зміст
 * [Ласкаво просимо до Swift](0_welcome_to_swift/welcome_to_swift.md)
     * [Про Swift](0_welcome_to_swift/about_swift.md)
     * [Тур по Swift](0_welcome_to_swift/swift_tour/swift_tour.md)
