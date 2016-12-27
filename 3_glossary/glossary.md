@@ -8,3 +8,5 @@
 + Ініціалізатор (initializer)
 + Примусове розгортання (Forced Unwrapping)
 + Ранній вихід (Early Exit)
++ Опціонали, що розгортаються неявно (Implicitly Unwrapped Optionals)
++ Безхазяйні посилання (Unowned References)
