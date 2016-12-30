@@ -397,23 +397,28 @@ if let firstNumber = Int("4"), let secondNumber = Int("42"), firstNumber < secon
 Такі види опціоналів є *опціоналами, що розгорбтаються неявно*. Щоб створити опціонал, що розгортається неявно, слід додати знак оклику (`String!`) замість знаку питання (`String?`) після типу, котрий потрібно зробити опціональним.
 
 Опціонали, що розрогтаються неявно, зручно вживати коли існування значення опціоналу підтверджено одразу після оголошення, і можна точно припустити, що воно буде і надалі існувати. В основному опціонали, що розгортаються неявно, використовуються у мові Swift під час ініціалізації класів, як описано у розділі [Чужинні посилання та опціонали, що розгортаються неявно](15_automatic_reference_counting.md#безхазяйні-посилання-та-опціонали-що-розгортаються-неявно).
-An implicitly unwrapped optional is a normal optional behind the scenes, but can also be used like a nonoptional value, without the need to unwrap the optional value each time it is accessed. The following example shows the difference in behavior between an optional string and an implicitly unwrapped optional string when accessing their wrapped value as an explicit `String`:
 
-```swiftlet possibleString: String? = "An optional string."let forcedString: String = possibleString! // requires an exclamation mark let assumedString: String! = "An implicitly unwrapped optional string."let implicitString: String = assumedString // no need for an exclamation mark
-```
-You can think of an implicitly unwrapped optional as giving permission for the optional to be unwrapped automatically whenever it is used. Rather than placing an exclamation mark after the optional’s name each time you use it, you place an exclamation mark after the optional’s type when you declare it.
-> **Note**> 
-> If an implicitly unwrapped optional is `nil` and you try to access its wrapped value, you’ll trigger a runtime error. The result is exactly the same as if you place an exclamation mark after a normal optional that does not contain a value.
-You can still treat an implicitly unwrapped optional like a normal optional, to check if it contains a value:
+За лаштунками опціонали, що розрортаються неявно, є звичайними опціоналами, але їх також можна використовувати як неопціональні значення, без необхідності кожного разу розгортати значення опціоналу. Наступний приклад демонструє різницю у поведінці між опціональним рядком та опціональним рядком, що розгортається неявно, під час доступу до їх внутрішнього значення типу `String`:
 
-```swiftif assumedString != nil {    print(assumedString)}// Prints "An implicitly unwrapped optional string."
+```swiftlet possibleString: String? = "Опціональний рядок."let forcedString: String = possibleString! // потрібен знак оклику let assumedString: String! = "Опціональний рядок, що розгортається неявно."let implicitString: String = assumedString // не потрібен знак оклику
 ```
-You can also use an implicitly unwrapped optional with optional binding, to check and unwrap its value in a single statement:
 
-```swiftif let definiteString = assumedString {    print(definiteString)}// Prints "An implicitly unwrapped optional string."
+Опцінали, що розгортаються неявно, можна розглядати як право опціоналу розгортатись автоматично там, де він використовується. Замість того, щоб писати знак оклику після імені опціоналу кожного разу, де він використовується, ми ставимо знак оклику після типу опціоналу під час оголошення. 
+> **Примітка**> 
+> Якщо опціонал, що розгортається неявно, дорівнює `nil`, під час спроби доступу до його значення відбудеться помилка часу виконання. Результат буде точно такий же як і при спробі поставити знак оклику після звичайного опціоналу, що не містить значення.
+
+З опціоналом, що розгортається неявно, можна поводитись так само, як і зі звичайним опціоналом, зокрема, можна перевірити наявність значення:
+
+```swiftif assumedString != nil {    print(assumedString)}// Надрукує "Опціональний рядок, що розгортається неявно."
 ```
-> **Note**
-> > Do not use an implicitly unwrapped optional when there is a possibility of a variable becoming `nil` at a later point. Always use a normal optional type if you need to check for a `nil` value during the lifetime of a variable.
+
+Також з опціоналами, що розгортаються неявно, можна застосовувати опціональне зв'язування, щоб перевірити і розгорнути значення однією інструкцією:
+
+```swiftif let definiteString = assumedString {    print(definiteString)}// Prints "Опціональний рядок, що розгортається неявно."
+```
+> **Примітка**
+> 
+> Не слід використовувати опцінали, що розгортаються неявно, коли є можливість що змінна стане `nil` пізніше. Потрібно завжди використовувати звичайні опціональні типи, якщо потрібно перевіряти змінну на `nil` під час її життєвого циклу. 
 ### Error Handling
 You use *error handling* to respond to error conditions your program may encounter during execution.
 In contrast to optionals, which can use the presence or absence of a value to communicate success or failure of a function, error handling allows you to determine the underlying cause of failure, and, if necessary, propagate the error to another part of your program.
