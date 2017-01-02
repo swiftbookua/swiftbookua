@@ -419,48 +419,67 @@ if let firstNumber = Int("4"), let secondNumber = Int("42"), firstNumber < secon
 > **Примітка**
 > 
 > Не слід використовувати опцінали, що розгортаються неявно, коли є можливість що змінна стане `nil` пізніше. Потрібно завжди використовувати звичайні опціональні типи, якщо потрібно перевіряти змінну на `nil` під час її життєвого циклу. 
-### Error Handling
-You use *error handling* to respond to error conditions your program may encounter during execution.
-In contrast to optionals, which can use the presence or absence of a value to communicate success or failure of a function, error handling allows you to determine the underlying cause of failure, and, if necessary, propagate the error to another part of your program.
-When a function encounters an error condition, it *throws* an error. That function’s caller can then *catch* the error and respond appropriately.
+### Обробка помилок
 
-```swiftfunc canThrowAnError() throws {    // this function may or may not throw an error}
-```
-A function indicates that it can throw an error by including the `throws` keyword in its declaration. When you call a function that can throw an error, you prepend the `try` keyword to the expression.
-Swift automatically propagates errors out of their current scope until they are handled by a catch clause.
+*Обробка помилок* - це механізм, що дозволяє відповідати помилковим умовам, з якими може зіткнутись програми під час виконання. 
 
-```swiftdo {    try canThrowAnError()    // no error was thrown} catch {    // an error was thrown}
+Опціонали присутністю або відсутністю значення можуть повідомляти про успіх чи невдачу у функції. На відміну від них, обробка помилок дозволяє визначити причину невдачі, і, якщо потрібно, поширити цю помилку до інших частин програми. 
+
+Коли функція стикається із помилковими умовами, вона *викидає* помилку. Викликач цієї функції може *перехопити* помилку і відповідним чином прореагувати. 
+
+```swiftfunc canThrowAnError() throws {
+    // ця функція може або викинути помилку, або відпрацювати успішно.}
 ```
-A `do` statement creates a new containing scope, which allows errors to be propagated to one or more `catch` clauses.
-Here’s an example of how error handling can be used to respond to different error conditions:
+
+Функції повідомляють про можливість викинути помилку за допомого ключового слова  `throws` у оголошенні. Викликаючи функцію, що може викинути помилку, слід додавати ключове слово `try` перед її іменем.
+
+У мові Swift помилки автоматично поширюються назовню від їх поточного контексту до тих пір, поки вони не будуть оброблені у блоці `catch`.
+
+```swiftdo {    try canThrowAnError()    // помилку не викинуто} catch {    // помилку викинуто}
+```
+
+Інструкція `do` створює новий контекст, що дозволяє помилкам бути поширеними до одного чи кілької блоків `catch`.
+
+Ось приклад того, як обробка помилок може бути використаною, щоб відповідати до різних помилкових умов:
 
 ```swiftfunc makeASandwich() throws {    // ...} do {    try makeASandwich()    eatASandwich()} catch SandwichError.outOfCleanDishes {    washDishes()} catch SandwichError.missingIngredients(let ingredients) {    buyGroceries(ingredients)}
 ```
-In this example, the `makeASandwich()` function will throw an error if no clean dishes are available or if any ingredients are missing. Because `makeASandwich()` can throw an error, the function call is wrapped in a `try` expression. By wrapping the function call in a `do` statement, any errors that are thrown will be propagated to the provided `catch` clauses.
-If no error is thrown, the `eatASandwich()` function is called. If an error is thrown and it matches the `SandwichError.outOfCleanDishes` case, then the `washDishes()` function will be called. If an error is thrown and it matches the `SandwichError.missingIngredients` case, then the `buyGroceries(_:)` function is called with the associated `[String]` value captured by the `catch` pattern.Throwing, catching, and propagating errors is covered in greater detail in [Error Handling](17_error_handling.md).
-### Assertions
-In some cases, it is simply not possible for your code to continue execution if a particular condition is not satisfied. In these situations, you can trigger an *assertion* in your code to end code execution and to provide an opportunity to debug the cause of the absent or invalid value.
-#### Debugging with Assertions
-An assertion is a runtime check that a Boolean condition definitely evaluates to true. Literally put, an assertion “asserts” that a condition is `true`. You use an assertion to make sure that an essential condition is satisfied before executing any further code. If the condition evaluates to `true`, code execution continues as usual; if the condition evaluates to `false`, code execution ends, and your app is terminated.
-If your code triggers an assertion while running in a debug environment, such as when you build and run an app in Xcode, you can see exactly where the invalid state occurred and query the state of your app at the time that the assertion was triggered. An assertion also lets you provide a suitable debug message as to the nature of the assert.
-You write an assertion by calling the Swift standard library global `assert(_:_:file:line:)` function. You pass this function an expression that evaluates to `true` or `false` and a message that should be displayed if the result of the condition is `false`:
 
-```swiftlet age = -3assert(age >= 0, "A person's age cannot be less than zero")// this causes the assertion to trigger, because age is not >= 0
+У даному прикладі, функція `makeASandwich()` ("зробити сендвіч") викине помилку, якщо немає чистих тарілок, або якщо не вистачає певних інгредієнтів. Оскільки 
+функція `makeASandwich()` може викинути помилку, виклик функції огонуто у вираз `try`. При огортанні виклику функції в блок інструкції `do`, будь-які помилки, викинуті цією функцією, будуть передані до прописаних нижче блоків `catch`.
+
+Якщо не викинуто жодної помилки, буде викликано функцію `eatASandwich()` (з'їсти сендвіч). Якщо викинуто помилку, і вона відповідає випадку `SandwichError.outOfCleanDishes`, тоді буде викликано функцію `washDishes()`. 
+Якщо викинуто помилку, і вона відповідає випадку `SandwichError.missingIngredients`, тоді буде викликано функцію `buyGroceries(_:)` із асоційованим значенням `[String]`, захопленим за допомогою паттерну `catch`. Викидання, перехоплення і передача помилок розкрито біль детально у розділі [Обробка помилок](17_error_handling.md).
+### Припущення
+
+У деяких випадках неможливо продовжити виконання коду, якщо не виконуються певні умови. У таких випадках слід викликати *припущення* у коді, щоб завершити виконання коду, та надати можливість дослідити причину невиконання умови. 
+
+#### [Зневадження] з припущеннями
+
+Припущення - це перевірка часу виконання, що булева умова точно виконується як `true`. Буквально, припущення "припускає", що умова є `true`. Слід вживати припущення, щоб упевнитись, що важлива умова буде задоволена до виконання подальшого коду. Якщо умова є `true`, виконання коду продовжується як звичайно; якщо умова є `false`, виконання коду припиняється, а програма завершується.
+
+Якщо код викликає припущення під час виконання у [зневаджувальному] середовищі, як, наприклад, під час побудови і запуску програми у Xcode, можна бачити точне місце, де було досягнуто хибного стану, і запросити стан програми під час виклику припущення. Припущення також дають можливість надати доречне [зневаджувальне] повідомлення, що пояснить причину припущення.
+
+Щоб написати припущення, треба викликати функцію стандартної бібліотеки Swift  `assert(_:_:file:line:)`. Слід передати в цю функцію вираз, що обчислиться як `true` або `false`, та повідомлення, що слід відобразити у випадку, якщо результат умови буде `false`:
+
+```swiftlet age = -3assert(age >= 0, "Вік особи не може бути меншим від нуля")// це призведе до виклику припущення, бо вік не >= 0
 ```
-In this example, code execution will continue only if `age >= 0` evaluates to `true`, that is, if the value of age is non-negative. If the value of `age` is negative, as in the code above, then `age >= 0` evaluates to false, and the assertion is triggered, terminating the application.
-The assertion message can be omitted if desired, as in the following example:
+У даному прикладі, виконання коду продовжиться тільки якщо `age >= 0` обчислиться як `true`, тобто якщо значення віку `age` невід'ємне. Якщо значення  `age` від'ємне, як у коді вище, тоді `age >= 0` обчислиться як `false`, і припущення буде викликано, завершуючи програму.
+
+Повідомлення у припущенні може бути пропущене, якщо потрібно, як у наступному прикладі:
 
 ```swiftassert(age >= 0)
 ```
-> **Note**
+> **Примітка**
 > 
-> Assertions are disabled when your code is compiled with optimizations, such as when building with an app target’s default Release configuration in Xcode.#### When to Use Assertions
-Use an assertion whenever a condition has the potential to be false, but must *definitely* be true in order for your code to continue execution. Suitable scenarios for an assertion check include:
+> Припущення відключаються, якщо код скомпільовано з оптимізаціями, як наприклад під час побудови програми у конфігурації Release за замовчуванням у Xcode.#### Коли слід вживати припущення
 
- + An integer subscript index is passed to a custom subscript implementation, but the subscript index value could be too low or too high.
- + A value is passed to a function, but an invalid value means that the function cannot fulfill its task.
- + An optional value is currently nil, but a non-nil value is essential for subsequent code to execute successfully.
-  See also [Subscripts](11_subscripts.md) and [Functions](5_functions.md).
-> **Note**
-> > Assertions cause your app to terminate and are not a substitute for designing your code in such a way that invalid conditions are unlikely to arise. Nonetheless, in situations where invalid conditions are possible, an assertion is an effective way to ensure that such conditions are highlighted and noticed during development, before your app is published.
+Слід вживати припущення завжди коли існує можливість, що умова може бути `false`, але при цьому умова має *точно* бути `true` для того, щоб код продовжив виконання. Доречні сценарії для перевірок припущень включають:
 
+ + Цілочисельний індекс передоно до власної реалізації оператору індексу, але значення індексу може бути занадто мале чи занадто велике.
+ + Значення передано функції, але при деяких значеннях функція не може виконати своє завдання. 
+ + Опціональне значення наразі `nil`, коду для успішного виконання потрібно значення, що не доріврює `nil`. 
+
+Дивіться також [Індекси](11_subscripts.md) та [Функції](5_functions.md).  > **Примітка**
+> 
+> Припущення призводять до термінового завершення програми, вони не підходять для проектування коду в такий спосіб, що невалідні умови наврядчи трапляться. Тим не менше, у ситуаціях, коли невалідні умови можливі, припущення - це ефективний спосіб впевнитись, що такі умови виділені і помічені під час розробки, до часу публікації програми. 

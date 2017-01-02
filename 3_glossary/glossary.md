@@ -10,3 +10,6 @@
 + Ранній вихід (Early Exit)
 + Опціонали, що розгортаються неявно (Implicitly Unwrapped Optionals)
 + Безхазяйні посилання (Unowned References)
++ Обробка помилок (error handling)
++ Припущення (Assertions) 
++ 
