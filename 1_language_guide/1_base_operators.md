@@ -66,71 +66,90 @@
 `-9` = (`4` x `-2`) + `-1`звідки значення остачі дорівнює `-1`.
 
 Знак числа `b` ігнорується для від'ємних значень `b`. Тобто `a % b` та `a % -b` завжди дають одну і ту ж відповідь.
-#### Unary Minus Operator
-The sign of a numeric value can be toggled using a prefixed `-`, known as the *unary minus operator*:
+#### Унарний мінус
 
-```swiftlet three = 3let minusThree = -three       // minusThree equals -3let plusThree = -minusThree   // plusThree equals 3, or "minus minus three"
+Знак числового значення можна змінити за допомогою профіксу `-`, відомого як *оператор унарного мінусу*.
+```swiftlet three = 3let minusThree = -three       // minusThree дорівнює -3let plusThree = -minusThree   // plusThree дорівнює 3, або "мінус мінус три"
 ```
-The unary minus operator (`-`) is prepended directly before the value it operates on, without any white space.#### Unary Plus Operator
-The *unary plus operator* (`+`) simply returns the value it operates on, without any change:
 
-```swiftlet minusSix = -6let alsoMinusSix = +minusSix  // alsoMinusSix equals -6
-```
-Although the unary plus operator doesn’t actually do anything, you can use it to provide symmetry in your code for positive numbers when also using the unary minus operator for negative numbers.
-### Compound Assignment Operators
-Like C, Swift provides *compound assignment* operators that combine assignment (`=`) with another operation. One example is the *addition assignment operator* (`+=`):
+Оператор унарного мінусу (`-`) додається прямо перед значенням, до якого він застосовується, без жодних пробілів. #### Унарний плюс
+*Оператор унарного плюсу* (`+`) просто повертає значення, до якого він застосовується, без жодних змін:
 
-```swiftvar a = 1a += 2// a is now equal to 3
+```swiftlet minusSix = -6let alsoMinusSix = +minusSix  // alsoMinusSix дорівнює -6
 ```
-The expression `a += 2` is shorthand for `a = a + 2`. Effectively, the addition and the assignment are combined into one operator that performs both tasks at the same time.
-> Note
+
+Хоча унарний плюс фактично нічого не змінює, його доречно вживати, щоб надати симетрії коду для додатніх чисел, коли поруч вживається унарний мінус для від'ємних чисел. 
+### Складені оператори присвоєння
+
+Як і в мові C, у мові Swift є *складені оператори присвоєння*, що поєднують присвоєння (`=`) із іншою операцією. Одним із прикладів таких операторів є  *оператор додавання з присвоєнням* (`+=`):
+
+```swiftvar a = 1a += 2// a тепер дорівнює 3
+```
+
+Вираз `a += 2` є скороченим записом `a = a + 2`. Фактично, додавання і присвоєння поєднано в один оператор, що виконує обидві задачі одночасно. 
+> **Примітка**
 > 
-> The compound assignment operators do not return a value. For example, you cannot write `let b = a += 2`.For a complete list of the compound assignment operators provided by the Swift standard library, see Swift *Standard Library Operators Reference*.
-### Comparison Operators
-Swift supports all standard C *comparison operators*:
-+ Equal to (`a == b`)+ Not equal to (`a != b`)+ Greater than (`a > b`)+ Less than (`a < b`)+ Greater than or equal to (`a >= b`)+ Less than or equal to (`a <= b`)> Note>
-> Swift also provides two *identity operators* (`===` and `!==`), which you use to test whether two object references both refer to the same object instance. For more information, see [Класи і структури](8_classes_and_structures.md).
-Each of the comparison operators returns a `Bool` value to indicate whether or not the statement is true:
+> Складені оператори присвоєння не повертають значення. Наприклад, не можна написати `let b = a += 2`. Повний список складених операторів присвоєння стандартної бібліотеки Swift можна знайти у [Standard Library Operators Reference](https://developer.apple.com/reference/swift/swift_standard_library_operators)
+### Оператори порівняння
 
-```swifr1 == 1   // true because 1 is equal to 12 != 1   // true because 2 is not equal to 12 > 1    // true because 2 is greater than 11 < 2    // true because 1 is less than 21 >= 1   // true because 1 is greater than or equal to 12 <= 1   // false because 2 is not less than or equal to 1
-```
-Comparison operators are often used in conditional statements, such as the `if` statement:
+Мова Swift підтримує всі стандартні *оператори порівняння* мови C:
++ Дорівнює (`a == b`)+ Не дорівнює (`a != b`)+ Більше (`a > b`)+ Менше (`a < b`)+ Більше або дорівнює (`a >= b`)+ Менше або дорівнює (`a <= b`)> **Примітка**>
+> Мова Swift також підтримує два *оператори тотожності* (`===` та `!==`), котрий слід вживати, що перевірити, що два об'єктних посилання посилаються на один і той же об'єкт. Детальніше це описано у розділі [Класи і структури](8_classes_and_structures.md).
 
-```swiftlet name = "world"if name == "world" {    print("hello, world")} else {    print("I'm sorry \(name), but I don't recognize you")}// Prints "hello, world", because name is indeed equal to "world".
-```
-For more on the if statement, see [Потік керування](4_control_flow.md).
-You can also compare tuples that have the same number of values, as long as each of the values in the tuple can be compared. For example, both `Int` and `String` can be compared, which means tuples of the type `(Int, String)` can be compared. In contrast, `Bool` can’t be compared, which means tuples that contain a Boolean value can’t be compared.
-Tuples are compared from left to right, one value at a time, until the comparison finds two values that aren’t equal. Those two values are compared, and the result of that comparison determines the overall result of the tuple comparison. If all the elements are equal, then the tuples themselves are equal. For example:
+Кожен оператор порівняння повертає значення типу `Bool` щоб вказати, чи істинний вираз:
 
-```swift(1, "zebra") < (2, "apple")   // true because 1 is less than 2; "zebra" and "apple" are not compared(3, "apple") < (3, "bird")    // true because 3 is equal to 3, and "apple" is less than "bird"(4, "dog") == (4, "dog")      // true because 4 is equal to 4, and "dog" is equal to "dog"
+```swift1 == 1   // true, істина, бо 1 дорівнює 12 != 1   // true, істина, бо 2 не дорівнює 12 > 1    // true, істина, бо 2 більше ніж 11 < 2    // true, істина, бо 1 менше ніж 21 >= 1   // true, істина, бо 1 більше або дорівнює 12 <= 1   // false, хиба, бо 2 не менше або дорівнює 1
 ```
-In the example above, you can see the left-to-right comparison behavior on the first line. Because `1` is less than `2`, `(1, "zebra")` is considered less than `(2, "apple")`, regardless of any other values in the tuples. It doesn’t matter that `"zebra"` isn’t less than `"apple"`, because the comparison is already determined by the tuples’ first elements. However, when the tuples’ first elements are the same, their second elements *are* compared — this is what happens on the second and third line.> Note
+
+Оператори порівняння часто використовуються в умовних інструкціях, таких як інструкція `if`:
+
+```swiftlet name = "world"if name == "world" {    print("hello, world")} else {    print("I'm sorry \(name), but I don't recognize you")}// Друкує "hello, world", бо name звісно дорівнює "world".
+```
+
+Детальніше із інструкцією `if` можна ознайомитись у розділі [Потік керування](4_control_flow.md).
+
+Можна також порівнювати кортежі, що мають однакову кількість значень, якщо кожну пару із значень можна порівняти. Наприклад, значення типу `Int` можуть порівнюватись, і значення типу `String` теж можуть порівнюватись, а тому і кортежі типу `(Int, String)` можуть порівнюватись. На відміну від них, значення типу `Bool` не можна порівнювати (тобто `true` < `false` не має сенсу), тому не можна порівнювати кортежі, що містять значення типу `Bool`.
+
+Кортежі порівнюються зліва направо, по одній парі значеннь за раз, допоки не зустрінеться пара значень, що не дорівнюють одне одному. Ці два значення порівнюються, і результат цього порівняння визначає весь результат порівняння кортежів. Якщо всі елементи рівні, тоді і кортежі в свою чергу теж рівні. Наприклад: 
+
+```swift(1, "zebra") < (2, "apple")   // істина, бо 1 менше ніж 2; "zebra" та "apple" не порівнюються(3, "apple") < (3, "bird")    // істина, бо 3 дорівнює 3, а "apple" менше ніж "bird"(4, "dog") == (4, "dog")      // істина, бо 4 дорівнює 4, а "dog" дорівнює "dog"
+```
+
+У прикладі вище, можна бачити як працює порівняння зліва направо у першому рядку. Оскільки `1` менше ніж `2`, кортеж `(1, "zebra")` вважається меншим, ніж `(2, "apple")`, незважаючи на інші значення у кортежі. Не має значення, що  `"zebra"` не менше ніж `"apple"`, тому що результат порівняння кортежів вже визначено по парі перших елементів кортежів. Однак, коли перші елементи кортежів дорівнюють одне одному, друга пара елементів *порівнюється* — що й відбувається у другому і третьому рядках.
+> **Примітка**
 > 
-> The Swift standard library includes tuple comparison operators for tuples with fewer than seven elements. To compare tuples with seven or more elements, you must implement the comparison operators yourself.
-### Ternary Conditional Operator
-The *ternary conditional operator* is a special operator with three parts, which takes the form `question ? answer1 : answer2`. It is a shortcut for evaluating one of two expressions based on whether question is `true` or `false`. If question is `true`, it evaluates `answer1` and returns its value; otherwise, it evaluates `answer2` and returns its value.The ternary conditional operator is shorthand for the code below:
+> Стандартна бібліотека мови Swift включає оператори порівняння кортежів із кількістю елементів до семи. Щоб порівнювати кортежі із сімома чи більше елементами, слід самому реалізувати оператори порівняння для них. 
+### Тернарний умовний оператор
+*Тернарний умовний оператор* є особливим оператором із трьома частинами, що має форму `питання ? відповідь1 : відповідь2`. Це скорочення від виконання одного із двох виразів в залежності від того, чи питання є `true` або `false`. Якщо питання є `true`, буде виконано `відповідь1` і повернуто відповідне значення; у іншому випадку, буде виконано `відповідь2` і повернуто її значення.Тернарний умовний оператор є скороченим записом наступного коду:
 
-```swiftif question {    answer1} else {    answer2}
+```swiftif питання {    відповідь1} else {    відповідь2}
 ```
-Here’s an example, which calculates the height for a table row. The row height should be 50 points taller than the content height if the row has a header, and 20 points taller if the row doesn’t have a header:
 
-```swiftlet contentHeight = 40let hasHeader = truelet rowHeight = contentHeight + (hasHeader ? 50 : 20)// rowHeight is equal to 90
-```
-The preceding example is shorthand for the code below:
+Ось приклад, де підраховується висота рядку в таблиці. Висота рядку має бути на 50 точок вище ніж висота контенту, якщо у рядку є заголовок, і на 20 точок вище, якщо рядок не має заголовку: 
 
-```swiftlet contentHeight = 40let hasHeader = truelet rowHeight: Intif hasHeader {    rowHeight = contentHeight + 50} else {    rowHeight = contentHeight + 20}// rowHeight is equal to 90
+```swiftlet contentHeight = 40				// висота контентуlet hasHeader = true				// чи має рядок заголовокlet rowHeight = contentHeight + (hasHeader ? 50 : 20)// rowHeight дорівнює 90
 ```
-The first example’s use of the ternary conditional operator means that `rowHeight` can be set to the correct value on a single line of code, which is more concise than the code used in the second example.
-The ternary conditional operator provides an efficient shorthand for deciding which of two expressions to consider. Use the ternary conditional operator with care, however. Its conciseness can lead to hard-to-read code if overused. Avoid combining multiple instances of the ternary conditional operator into one compound statement.
-### Nil-Coalescing Operator
-The *nil-coalescing operator* (`a ?? b`) unwraps an optional `a` if it contains a value, or returns a default value `b` if `a` is `nil`. The expression `a` is always of an optional type. The expression `b` must match the type that is stored inside `a`.
-The nil-coalescing operator is shorthand for the code below:
+
+Попередній приклад є скороченням від наступного коду:
+
+```swiftlet contentHeight = 40let hasHeader = truelet rowHeight: Intif hasHeader {    rowHeight = contentHeight + 50} else {    rowHeight = contentHeight + 20}// rowHeight дорівнює 90
+```
+
+Використання тернарного умовного оператору в першому прикладі дає можливість задати правильне значення `rowHeight` одним рядком коду, що більше лаконічно, ніж код у другому прикладі. 
+
+Тернарний умовний оператор надає ефективне скорочення, щоб вибрати, який із виразів обчислювати. Однак тернарних умовний оператор слід вживати обережно. При надмірному вживанні його стислість може призвезти до коду, який важко читати. Слід уникати поєднання кількох тернарних умовних операторів у одну складену інструкцію.  
+### Оператор поглинання nil
+
+*Оператор поглинання nil* (`a ?? b`) розгортає опціонал `a` якщо він містить значення, або повертає значення за замовчуванням `b`, якщо `a` є `nil`. Вираз `a` завжди має опціональний тип. Вираз `b` має мати тип, що співпадає з типом, що зберігається всередині `a`.
+Оператор поглинання nil є скороченням наступного коду: 
 
 ```swifta != nil ? a! : b
 ```
-The code above uses the ternary conditional operator and forced unwrapping (`a!`) to access the value wrapped inside a when a is not `nil`, and to return `b` otherwise. The nil-coalescing operator provides a more elegant way to encapsulate this conditional checking and unwrapping in a concise and readable form.> Note
+
+Код вище використовує тернарний умовний оператор і примусове розгортання (`a!`) 
+щоб отримати значення, загорнуте всередині коли `a` не `nil`, і повернути `b` у іншому випадку. Оператор поглинання nil надає більш елегантний спосіб інкупсулювати цю умовну перевірку та розгортання у лаконічну і легку для читання форму.> **Примітка**
 > 
-> If the value of `a` is non-`nil`, the value of `b` is not evaluated. This is known as *short-circuit evaluation*.
+> Якщо значення `a` не `nil`, значення `b` не обчислюється. Це відомо як [обчислення за коротким обходом](https://en.wikipedia.org/wiki/Short-circuit_evaluation).
 The example below uses the nil-coalescing operator to choose between a default color name and an optional user-defined color name:
 
 ```swiftlet defaultColorName = "red"var userDefinedColorName: String?   // defaults to nil var colorNameToUse = userDefinedColorName ?? defaultColorName// userDefinedColorName is nil, so colorNameToUse is set to the default of "red"
