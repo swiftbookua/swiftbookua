@@ -1,51 +1,71 @@
 ## Базові оператори
 
-An operator is a special symbol or phrase that you use to check, change, or combine values. For example, the addition operator (`+`) adds two numbers, as in `let i = 1 + 2`, and the logical AND operator (`&&`) combines two Boolean values, as in `if enteredDoorCode && passedRetinaScan`.
-Swift supports most standard C operators and improves several capabilities to eliminate common coding errors. The assignment operator (`=`) does not return a value, to prevent it from being mistakenly used when the equal to operator (`==`) is intended. Arithmetic operators (`+`, `-`, `*`, `/`, `%` and so forth) detect and disallow value overflow, to avoid unexpected results when working with numbers that become larger or smaller than the allowed value range of the type that stores them. You can opt in to value overflow behavior by using Swift’s overflow operators, as described in [Оператори переповнення](24_advanced_operators.md#оператори-переповнення).
-Swift also provides two range operators (`a..<b` and `a...b`) not found in C, as a shortcut for expressing a range of values.
-This chapter describes the common operators in Swift. [Розширені оператори](24_advanced_operators.md) covers Swift’s advanced operators, and describes how to define your own custom operators and implement the standard operators for your own custom types.
-### Terminology
-Operators are unary, binary, or ternary:
- + Unary operators operate on a single target (such as `-a`). Unary prefix operators appear immediately before their target (such as `!b`), and unary postfix operators appear immediately after their target (such as `c!`).
-	 + Binary operators operate on two targets (such as `2 + 3`) and are infix because they appear in between their two targets. + Ternary operators operate on three targets. Like C, Swift has only one ternary 
-operator, the ternary conditional operator (`a ? b : c`).
-The values that operators affect are operands. In the expression `1 + 2`, the `+` symbol is a binary operator and its two operands are the values `1` and `2`.### Assignment OperatorThe *assignment* operator (`a = b`) initializes or updates the value of `a` with the value of `b`:```swiftlet b = 10var a = 5a = b// a is now equal to 10```
 
-If the right side of the assignment is a tuple with multiple values, its elements can be decomposed into multiple constants or variables at once:
-```swiftlet (x, y) = (1, 2)// x is equal to 1, and y is equal to 2```Unlike the assignment operator in C and Objective-C, the assignment operator in Swift does not itself return a value. The following statement is not valid:
+Оператор - це спеціальний символ або фраза, що вживається для перевірки, зміни чи об'єднання значень. Наприклад, оператор додавання (`+`) додає два числа, як   `let i = 1 + 2`, і оператор логічного "і" (`&&`) об'єднує два булевих значення, як `if enteredDoorCode && passedRetinaScan`.
 
-```swiftif x = y {    // This is not valid, because x = y does not return a value.}
-```
-This feature prevents the assignment operator (`=`) from being used by accident when the equal to operator (`==`) is actually intended. By making `if x = y` invalid, Swift helps you to avoid these kinds of errors in your code.
-### Arithmetic Operators
-Swift supports the four standard *arithmetic operators* for all number types: + Addition (+) + Subtraction (-) + Multiplication (*) + Division (/)
+Мова Swift підтримує більшість стандартних операторів мови C та покращує можливості деяких із них, щоб позбутись типових помилок програмування. Оператор присвоєння (`=`) не повертає значення, щоб недопустити його випадкове вживання замість оператора порівняння (`==`). Арифметичні оператори (`+`, `-`, `*`, `/`, `%` і так далі) виявляють і недопускають переповнення значення, щоб уникнути 
+неочікуваних результатів під час роботи з числами, що стають більшими чи меншими, ніж найбільше чи найменше значення з діапазону значень типу, що їх зберігають. Переповнення змінних можна увімкнути за допомогою операторів переповнення мови Swift, як описано в розділі [Оператори переповнення](24_advanced_operators.md#оператори-переповнення).
+Мова Swift також надає два оператори діапазонів (`a..<b` та `a...b`), котрих нема у мові C, як скорочення для оголошення діапазону значень. 
 
-```swift1 + 2       // equals 35 - 3       // equals 22 * 3       // equals 610.0 / 2.5  // equals 4.0
+Даний розділ описує типові оператори у мові Swift. Розділ [Розширені оператори](24_advanced_operators.md) покриває розширені оператори мови Swift, а також описує способи створення власних операторів та реалізації стандартних операторів для власних типів. 
+
+### Термінологія
+
+Оператори бувають унарні, бінарні та тернарні: 
+
+ + *Унарні* оператори оперують єдиним операндом (наприклад, `-a`). Унарні префіксні оператори ставляться безпосередньо перед їх операндами (наприклад, `!b`), а унарні постфіксні оператори ставляться безпосередньо після їх операндів (наприклад, `c!`).
+	 + *Бінарні* оператори оперують двома операндами (наприклад, `2 + 3`), і є інфіксними, бо вони ставляться між їх операндами. + *Тернарні* оператори оперують трьома операндами. Як і мова C, Swift має лише один тернарний оператор, тернарний умовний оператор (`a ? b : c`).
+
+Значення, на які діє оператор, називаються *операндами*. У виразі `1 + 2`, символ `+` є бінарним оператором, а його операндами є значення `1` і `2`.### Оператор присвоєння
+
+Оператор *присвоєння* (`a = b`) ініціалізує чи оновлює значення `a` значенням  `b`:```swiftlet b = 10var a = 5a = b// a тепер дорівнює 10```
+
+Якщо права сторона присвоєння є кортежем з кількома значеннями, його елементи 
+розкладаються у кілька констант чи змінних одночасно: 
+```swiftlet (x, y) = (1, 2)// x тепер дорівнює 1, а y тепер дорівнює 2```На відміну від оператору присвоєння у мовах C та Objective-C, оператор присвоєння у мові Swift сам по собі не повертає значення. Наступні інструкції некоректні:
+
+```swiftif x = y {    // Це не коректно, бо x = y не повертає значення.}
 ```
-Unlike the arithmetic operators in C and Objective-C, the Swift arithmetic operators do not allow values to overflow by default. You can opt in to value overflow behavior by using Swift’s overflow operators (such as `a &+ b`). See [Оператори переповнення](24_advanced_operators.md#оператори-переповнення).
-The addition operator is also supported for String concatenation:```swift
-"hello, " + "world"  // equals "hello, world"
+
+Ця особливість унеможливлює випадкове використання оператору присвоєння (`=`) у випадках, коли мається на увазі оператор порівняння (`==`). Роблячи `if x = y` некоректним, мова Swift допомагає уникати помилок такого роду у коді.
+
+### Арифметичні оператори
+
+Мова Swift підтримує чотири стандартні *арифметичні оператори* для всіх числових типів: + Додавання (`+`) + Віднімання (`-`) + Множення (`*`) + Ділення (`/`)
+
+```swift1 + 2       // дорівнює 35 - 3       // дорівнює 22 * 3       // дорівнює 610.0 / 2.5  // дорівнює 4.0
 ```
-#### Remainder Operator
-The *remainder operator* (`a % b`) works out how many multiples of `b` will fit inside `a` and returns the value that is left over (known as the remainder).
-> Note
+
+На відміну від арифметичних операторів у мовах C та Objective-C, арифметичні оператори мови Swift не дозволяють переповлення змінних за замовчуванням. Можна увімкнути переповнення за допомогою операторів переповнення мови Swift (як, наприклад, `a &+ b`). Детальніше з ними можна ознайомитись у розділі [Оператори переповнення](24_advanced_operators.md#оператори-переповнення).
+
+Оператор додавання також підтримується для конкатенації рядків (`String`):```swift
+"hello, " + "world"  // дорівнює "hello, world"
+```
+#### Оператор остачі
+
+*Оператор остачі* (`a % b`) обчислює, скільки разів `b` поміститься в `a` і повертає значення, що залишиться (відоме також як остача).
+> **Примітка**
 > 
-> The remainder operator (`%`) is also known as a modulo operator in other languages. However, its behavior in Swift for negative numbers means that it is, strictly speaking, a remainder rather than a modulo operation.
-Here’s how the remainder operator works. To calculate `9 % 4`, you first work out how many `4`s will fit inside `9`:￼
-![](images/remainderInteger_2x.png)
-You can fit two `4`s inside `9`, and the remainder is `1` (shown in orange).In Swift, this would be written as:```swift
-9 % 4    // equals 1
-```
-To determine the answer for `a % b`, the `%` operator calculates the following equation and returns remainder as its output:`a` = (`b` x `some multiplier`) + `remainder`
-where `some multiplier` is the largest number of multiples of `b` that will fit inside `a`.
-Inserting `9` and `4` into this equation yields:
-`9` = (`4` x `2`) + `1`The same method is applied when calculating the remainder for a negative value of `a`:
+> Оператор остачі (`%`) також відомий як оператор модулю у інших мовах. Однак його поведінка у мові Swift для від'ємних значень значить більше відповідає саме оператору остачі, а не оператору модуля, якщо говорити строго.
 
-```swift-9 % 4   // equals -1
+Ось як працює оператор остачі. Щоб обчислити `9 % 4`, слід спочатку обчислити скільки разів `4` вміститься всередині `9`:￼
+![](images/remainderInteger_2x.png)
+Всередині `9` можна вмістити `4` два рази, а залишок буде `1` (показано оранжевим).У мові Swift, це можна описати як:```swift
+9 % 4    // дорівнює 1
 ```
-Inserting `-9` and `4` into the equation yields:
-`-9` = (`4` x `-2`) + `-1`giving a remainder value of `-1`.
-The sign of `b` is ignored for negative values of `b`. This means that `a % b` and `a % -b` always give the same answer.
+
+Щоб визначити відповідь для `a % b`, оператор `%` розв'язує наступне рівняння і повертає остачу як вихідне значення:`a` = (`b` x `якийсь множник`) + `остача`
+де `якийсь множник ` - це найбільше число, що помножене на `b`не перевищує `a`.
+
+Підставивши `9` та `4` у дане рівняння, отримаємо:
+`9` = (`4` x `2`) + `1`Точно такий же метод застосовується для обчислення остачі для від'ємного значення `a`:
+
+```swift-9 % 4   // дорівнює -1
+```
+Підставивши `-9` та `4` у рівняння, отримаємо:
+`-9` = (`4` x `-2`) + `-1`звідки значення остачі дорівнює `-1`.
+
+Знак числа `b` ігнорується для від'ємних значень `b`. Тобто `a % b` та `a % -b` завжди дають одну і ту ж відповідь.
 #### Unary Minus Operator
 The sign of a numeric value can be toggled using a prefixed `-`, known as the *unary minus operator*:
 
