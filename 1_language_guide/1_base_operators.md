@@ -150,14 +150,17 @@
 щоб отримати значення, загорнуте всередині коли `a` не `nil`, і повернути `b` у іншому випадку. Оператор поглинання nil надає більш елегантний спосіб інкупсулювати цю умовну перевірку та розгортання у лаконічну і легку для читання форму.> **Примітка**
 > 
 > Якщо значення `a` не `nil`, значення `b` не обчислюється. Це відомо як [обчислення за коротким обходом](https://en.wikipedia.org/wiki/Short-circuit_evaluation).
-The example below uses the nil-coalescing operator to choose between a default color name and an optional user-defined color name:
 
-```swiftlet defaultColorName = "red"var userDefinedColorName: String?   // defaults to nil var colorNameToUse = userDefinedColorName ?? defaultColorName// userDefinedColorName is nil, so colorNameToUse is set to the default of "red"
+У приклад нижче оператор поглинання nil використовується, щоб вибрати між назвою кольору за замовчанням і назвою кольору, опціонально заданою користувачем:
+
+```swiftlet defaultColorName = "red"var userDefinedColorName: String?   // nil за замовчуванням var colorNameToUse = userDefinedColorName ?? defaultColorName// userDefinedColorName дорівнює nil, тому colorNameToUse присвоєно колір за замовчуванням "red"
 ```
-The `userDefinedColorName` variable is defined as an optional `String`, with a default value of `nil`. Because `userDefinedColorName` is of an optional type, you can use the nil-coalescing operator to consider its value. In the example above, the operator is used to determine an initial value for a `String` variable called `colorNameToUse`. Because userDefinedColorName is nil, the expression `userDefinedColorName ?? defaultColorName` returns the value of `defaultColorName`, or `"red"`.
-If you assign a non-`nil` value to `userDefinedColorName` and perform the nil-coalescing operator check again, the value wrapped inside `userDefinedColorName` is used instead of the default:
 
-```swiftuserDefinedColorName = "green"colorNameToUse = userDefinedColorName ?? defaultColorName// userDefinedColorName is not nil, so colorNameToUse is set to "green"
+Змінну `userDefinedColorName` визначено як опціональний `String`, із значенням `nil` за замовчуванням. Оскільки змінна `userDefinedColorName` має опціональний тип, до неї можна застосувати оператор поглинання nil. У прикладі вище цей оператор вживається, щоб визначити початкове значення змінної `colorNameToUse` типу `String`. Оскільки `userDefinedColorName` містить `nil`, вираз `userDefinedColorName ?? defaultColorName` повертає значення `defaultColorName`, або `"red"`.
+
+Якщо присвоїти певне значення, що не є `nil`, змінній `userDefinedColorName`, і провести операцію поглинання nil знову, значення загорнуте у опціонал `userDefinedColorName` буде використано замість значення за замовчуванням:
+
+```swiftuserDefinedColorName = "green"colorNameToUse = userDefinedColorName ?? defaultColorName// userDefinedColorName не дорівнює nil, тому colorNameToUse присвоєно значення "green"
 ```
 ### Range Operators
 Swift includes two *range operators*, which are shortcuts for expressing a range of values.
