@@ -162,38 +162,49 @@
 
 ```swiftuserDefinedColorName = "green"colorNameToUse = userDefinedColorName ?? defaultColorName// userDefinedColorName не дорівнює nil, тому colorNameToUse присвоєно значення "green"
 ```
-### Range Operators
-Swift includes two *range operators*, which are shortcuts for expressing a range of values.
-#### Closed Range Operator
-The *closed range operator* (`a...b`) defines a range that runs from `a` to `b`, and includes the values `a` and `b`. The value of `a` must not be greater than `b`.The closed range operator is useful when iterating over a range in which you want all of the values to be used, such as with a `for`-`in` loop:
+### Оператори діапазонів
 
-```swiftfor index in 1...5 {    print("\(index) times 5 is \(index * 5)")}// 1 times 5 is 5// 2 times 5 is 10// 3 times 5 is 15// 4 times 5 is 20// 5 times 5 is 25
+Мова Swift включає два *оператори діапазонів*, котрі скорочують вираження діапазону значень.
+#### Оператор закритого діапазону
+
+*Оператор закритого діапазону* (`a...b`) визначає діапазон від `a` до `b`, і включає значення `a` та `b`. Значення `a` має бути не більшим за значення `b`. Оператор закритого діапазону зручно вживати для ітерування діапазону, в якому бажано пройтись по всім значенням, як то, наприклад, у циклі `for`-`in`:
+
+```swiftfor index in 1...5 {    print("\(index) помножити на 5 дорівнює \(index * 5)")}// 1 помножити на 5 дорівнює 5// 2 помножити на 5 дорівнює 10// 3 помножити на 5 дорівнює 15// 4 помножити на 5 дорівнює 20// 5 помножити на 5 дорівнює 25
 ```
-For more on `for`-`in` loops, see [Потік керування](4_control_flow.md).#### Half-Open Range Operator
-The *half-open range operator* (`a..<b`) defines a range that runs from `a` to `b`, but does not include `b`. It is said to be *half-open* because it contains its first value, but not its final value. As with the closed range operator, the value of `a` must not be greater than `b`. If the value of `a` is equal to `b`, then the resulting range will be empty.
-Half-open ranges are particularly useful when you work with zero-based lists such as arrays, where it is useful to count up to (but not including) the length of the list:
 
-```swiftlet names = ["Anna", "Alex", "Brian", "Jack"]let count = names.countfor i in 0..<count {    print("Person \(i + 1) is called \(names[i])")}// Person 1 is called Anna// Person 2 is called Alex// Person 3 is called Brian// Person 4 is called Jack
+Детальніше з циклом `for`-`in` можна ознайомитись у розділі [Потік керування](4_control_flow.md).#### Оператор напіввідкритого діапазону
+
+*Оператор напіввідкритого діапазону* (`a..<b`) визначає діапазон від `a` до `b`, котрий включає `a`, але не включає `b`. Його називають *напіввідкритим*, бо він включає перше значення, але не включає останнє. Як і з оператором закритого діапазону, значення `a` не може бути більшим за значення `b`. Якщо значення `a` дорівнює значенню `b`, тоді результатом буде порожній діапазон.
+
+Напіввідкриті діапазони зокрема зручно вживати під час роботи із списками, проіндексовиними починаючи з нуля, наприклад, із масивами, де зручно рахувати до довжини списку (але не включно):
+
+```swiftlet names = ["Ганна", "Олекса", "Борис", "Жорж"]let count = names.countfor i in 0..<count {    print("Особу \(i + 1) звати \(names[i])")}// Особу 1 звати Ганна// Особу 2 звати Олекса// Особу 3 звати Борис// Особу 4 звати Жорж
 ```
-Note that the array contains four items, but `0..<count` only counts as far as `3` (the index of the last item in the array), because it is a half-open range. For more on arrays, see [Arrays](3_collection_types.md#масиви).
 
-### Logical Operators
-*Logical operators* modify or combine the Boolean logic values `true` and `false`. Swift supports the three standard logical operators found in C-based languages:
- + Logical NOT (`!a`) + Logical AND (`a && b`) + Logical OR (`a || b`) 
-#### Logical NOT Operator
- The *logical NOT operator* (`!a`) inverts a Boolean value so that `true` becomes `false`, and `false` becomes true.
-The logical NOT operator is a prefix operator, and appears immediately before the value it operates on, without any white space. It can be read as “not `a`”, as seen in the following example:
+Слід помітити, що масив містить чотири елементи, але діапазон `0..<count` дораховує лише до `3` (індекс останнього елемента в масиві), бо цей діапазон - *напіввідкритий*. Детальніше з масивами можна ознайомитись у розділі [Масиви](3_collection_types.md#масиви).
 
-```swiftlet allowedEntry = falseif !allowedEntry {    print("ACCESS DENIED")}// Prints "ACCESS DENIED"
+### Логічні оператори
+*Логічні оператори* змінюють чи поєднують Булеві значення `true` та `false`. Мова Swift підтримує три основні логічні оператори, що можна зустріти у C-подібних мовах:
+ + Логічне НЕ (`!a`) + Логічне І (`a && b`) + Логічне АБО (`a || b`) 
+#### Оператор логічного НЕ
+ 
+*Оператор логічного НЕ* (`!a`) інвертує Булеве значення, так що `true` стає `false`, а `false` стає `true`.
+
+Оператор логічного НЕ є префіксним оператором, і ставиться прямо перед значенням, над яким він оперує, без жодних пробілів. Його можна прочитати як “не `a`”, як видно в наступному прикладі:
+```swiftlet allowedEntry = false	// дозволено ввійтиif !allowedEntry {		   // не дозволено ввійти    print("ВХІД ЗАБОРОНЕНО")}// Надрукує "ВХІД ЗАБОРОНЕНО"
 ```
-The phrase `if !allowedEntry` can be read as “if not allowed entry.” The subsequent line is only executed if “not allowed entry” is `true`; that is, if `allowedEntry` is `false`.As in this example, careful choice of Boolean constant and variable names can help to keep code readable and concise, while avoiding double negatives or confusing logic statements.
-#### Logical AND Operator
-The *logical AND operator* (`a && b`) creates logical expressions where both values must be `true` for the overall expression to also be `true`.
-If either value is `афдыу`, the overall expression will also be `false`. In fact, if the first value is `false`, the second value won’t even be evaluated, because it can’t possibly make the overall expression equate to `true`. This is known as *short-circuit evaluation*.This example considers two `Bool` values and only allows access if both values are `true`:
 
-```swiftlet enteredDoorCode = truelet passedRetinaScan = falseif enteredDoorCode && passedRetinaScan {    print("Welcome!")} else {    print("ACCESS DENIED")}// Prints "ACCESS DENIED"```
-#### Logical OR Operator
-The *logical OR operator* (`a || b`) is an infix operator made from two adjacent pipe characters. You use it to create logical expressions in which only *one* of the two values has to be `true` for the overall expression to be `true`.
+Фраза `if !allowedEntry` читається “if not allowed entry.”, тобто “якщо не дозволено ввійти.” Наступний рядок виконується тільки якщо “не дозволено ввійти” дорівнює `true`; тобто, якщо `allowedEntry` дорівнює `false`.Як видно у цьому прикладі, акуратний вибір імен Булевих констант та змінних допомагає робити код виразним та зручним до читання, уникаючи подвійного заперечення та логічних конструкцій, що збивають з пантелику. 
+#### Оператор логічного І
+
+*Оператор логічного І* (`a && b`) створює логічний вираз, де обидва значення мають бути істинними (`true`), щоб увесь вираз був істинним (`true`).
+
+Якщо хоча б одне із значень хибне (`false`), увесь вираз теж буде хибним (`false`). Фактично, якщо перше значення є хибне (`false`), друге значення навіть не буде обчислене, бо воно вже не зможе зробити весь вираз істинним (`true`). Це відомо як [обчислення за коротким обходом](https://en.wikipedia.org/wiki/Short-circuit_evaluation).Наступний приклад розглядає два значення типу `Bool` і дозвоняє ввійти тільки тоді, коди обидва з них інстинні (`true`):
+
+```swiftlet enteredDoorCode = true			// введено дверний кодlet passedRetinaScan = false		// пройдено сканування сітківкиif enteredDoorCode && passedRetinaScan {    print("Вітаємо!")} else {    print("ВХІД ЗАБОРОНЕНО")}// Prints "ВХІД ЗАБОРОНЕНО"```
+#### Оператор логічного АБО
+
+*Оператор логічного АБО* (`a || b`) є інфіксний оператор, що пишеться як два символи труби підряд. Його вживають щоб створити логічний вираз, у якому хоча б *одне* із двох значень має бути істинним (`true`), щоб увесь вираз був істинним (`true`).
 Like the Logical AND operator above, the Logical OR operator uses short-circuit evaluation to consider its expressions. If the left side of a Logical OR expression is `true`, the right side is not evaluated, because it cannot change the outcome of the overall expression.
 In the example below, the first `Bool` value (`hasDoorKey`) is `false`, but the second value (`knowsOverridePassword`) is `true`. Because one value is `true`, the overall expression also evaluates to `true`, and access is allowed:
 
