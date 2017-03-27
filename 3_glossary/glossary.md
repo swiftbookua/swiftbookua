@@ -16,3 +16,6 @@
 + Оператор поглинання nil (Nil-Coalescing Operator) - 
 + Оператор закритого діапазону (Closed range operator)
 + Оператор напіввідкритого діапазону (Half-Open range operator)
++ Тип-значення (Value Type)
++ Тип-посилання (Reference Type)
++ Перечислення (Enumeration)
