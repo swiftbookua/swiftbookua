@@ -201,26 +201,35 @@
 
 Якщо хоча б одне із значень хибне (`false`), увесь вираз теж буде хибним (`false`). Фактично, якщо перше значення є хибне (`false`), друге значення навіть не буде обчислене, бо воно вже не зможе зробити весь вираз істинним (`true`). Це відомо як [обчислення за коротким обходом](https://en.wikipedia.org/wiki/Short-circuit_evaluation).Наступний приклад розглядає два значення типу `Bool` і дозвоняє ввійти тільки тоді, коди обидва з них інстинні (`true`):
 
-```swiftlet enteredDoorCode = true			// введено дверний кодlet passedRetinaScan = false		// пройдено сканування сітківкиif enteredDoorCode && passedRetinaScan {    print("Вітаємо!")} else {    print("ВХІД ЗАБОРОНЕНО")}// Prints "ВХІД ЗАБОРОНЕНО"```
+```swiftlet enteredDoorCode = true			// введено дверний кодlet passedRetinaScan = false		// пройдено сканування сітківкиif enteredDoorCode && passedRetinaScan {    print("Вітаємо!")} else {    print("ВХІД ЗАБОРОНЕНО")}// Надрукує "ВХІД ЗАБОРОНЕНО"```
 #### Оператор логічного АБО
 
 *Оператор логічного АБО* (`a || b`) є інфіксний оператор, що пишеться як два символи труби підряд. Його вживають щоб створити логічний вираз, у якому хоча б *одне* із двох значень має бути істинним (`true`), щоб увесь вираз був істинним (`true`).
-Like the Logical AND operator above, the Logical OR operator uses short-circuit evaluation to consider its expressions. If the left side of a Logical OR expression is `true`, the right side is not evaluated, because it cannot change the outcome of the overall expression.
-In the example below, the first `Bool` value (`hasDoorKey`) is `false`, but the second value (`knowsOverridePassword`) is `true`. Because one value is `true`, the overall expression also evaluates to `true`, and access is allowed:
 
-```swiftlet hasDoorKey = falselet knowsOverridePassword = trueif hasDoorKey || knowsOverridePassword {    print("Welcome!")} else {    print("ACCESS DENIED")}// Prints "Welcome!"
-```
-#### Combining Logical OperatorsYou can combine multiple logical operators to create longer compound expressions:
+Як і оператор логічного І вище, оператор логічного АБО виконує обчислення за коротким обходом. Якщо ліва частина оператора логічного АБО обчислюється як істинна (`true`), то права частина не обчислюється, бо вона не може змінити вихід всього виразу. 
 
-```swiftif enteredDoorCode && passedRetinaScan || hasDoorKey || knowsOverridePassword {    print("Welcome!")} else {    print("ACCESS DENIED")}// Prints "Welcome!"
-```
-This example uses multiple `&&` and `||` operators to create a longer compound expression. However, the `&&` and `||` operators still operate on only two values, so this is actually three smaller expressions chained together. The example can be read as:
-If we’ve entered the correct door code and passed the retina scan, or if we have a valid door key, or if we know the emergency override password, then allow access.
-Based on the values of `enteredDoorCode`, `passedRetinaScan`, and `hasDoorKey`, the first two subexpressions are `false`. However, the emergency override password is known, so the overall compound expression still evaluates to `true`.
-> NoteThe Swift logical operators `&&` and `||` are left-associative, meaning that compound expressions with multiple logical operators evaluate the leftmost subexpression first.
-#### Explicit Parentheses
-It is sometimes useful to include parentheses when they are not strictly needed, to make the intention of a complex expression easier to read. In the door access example above, it is useful to add parentheses around the first part of the compound expression to make its intent explicit:
+У прикладі нижче, перше булеве значення (`hasDoorKey`) дорівнює `false`, але друге значення (`knowsOverridePassword`) дорівнює `true`. Оскільки одне із значень дорівнює `true`, увесь вираз обчислюється як `true`, і вхід дозволяється:
 
-```swiftif (enteredDoorCode && passedRetinaScan) || hasDoorKey || knowsOverridePassword {    print("Welcome!")} else {    print("ACCESS DENIED")}// Prints "Welcome!"
+```swiftlet hasDoorKey = false					// має дверний ключlet knowsOverridePassword = true		// знає аварійний парольif hasDoorKey || knowsOverridePassword {    print("Вітаємо!")} else {    print("ВХІД ЗАБОРОНЕНО")}// Надрукує "Вітаємо!"
 ```
-The parentheses make it clear that the first two values are considered as part of a separate possible state in the overall logic. The output of the compound expression doesn’t change, but the overall intention is clearer to the reader. Readability is always preferred over brevity; use parentheses where they help to make your intentions clear.
+#### Поєднання логічних операторівМожна об'єднувати кілька логічних операторів, щоб створити довші складені вирази:
+
+```swiftif enteredDoorCode && passedRetinaScan || hasDoorKey || knowsOverridePassword {    print("Вітаємо!")} else {    print("ВХІД ЗАБОРОНЕНО")}// Надрукує "Вітаємо!"
+```
+
+У цьому прикладі кілька операторів `&&` та `||` використовуються для створення довшого складеного виразу. Однак, оператори `&&` та `||` все ж оперують тільки над двома значеннями, тож фактично це є три менші вирази поєднані разом у ланцюжок. Даний приклад можна прочитати так:
+
+Якщо введено правильний код дверей і пройдено сканування сітківки, або якщо ми маємо потрібний ключ від дверей, або якщо ми знаємо аварійний пароль, тоді вхід слід дозволити. 
+
+На основі значень `enteredDoorCode`, `passedRetinaScan`, та `hasDoorKey`, перші два підвирази обчислюються як `false`. Однак, аварійний пароль відомо (`knowsOverridePassword` дорівнює `true`), тому увесь складеный вираз обчислюється як `true`.
+> **Примітка**
+> 
+> Логічні оператори `&&` та `||` в мові Swift мають ліву асоціативність, тобто  складені оператори з кількома логічними операторами обчислюють спершку найбільш лівий підвираз.
+#### Явні дужки
+
+Іноді корисно включити круглі дужки, де вони не є строго необхідні, щоб зробити зручним для читання намір, з яким було створено складений вираз. У наведеному вище прикладі із доступом до дверей, було б корисно додати круглі дужки довкола першої частини складеного виразу, щоб зробити його намір явним: 
+
+```swiftif (enteredDoorCode && passedRetinaScan) || hasDoorKey || knowsOverridePassword {    print("Вітаємо!")} else {    print("ВХІД ЗАБОРОНЕНО")}// Надрукує "Вітаємо!"
+```
+
+Круглі дужки явно вказують на те, що перші два булеві значення розуміються як частина окремого можливого стану у загальній логіці. Значення складеного виразу не змінюється, але тепер читачу стає зрозумілішим намір, з яким його було створено. Зрозумілість завжди важливіша за лаконічність; слід вживати круглі дужки усюди, де вони допомагають зрозуміти ваш намір. 
