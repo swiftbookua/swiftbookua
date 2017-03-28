@@ -1,5 +1,5 @@
 .book .book-body .page-wrapper .page-inner section.normal code {
-
+    color: #508187;
 }
 
 .book .book-body .page-wrapper .page-inner section.normal code .hljs-keyword {
@@ -10,14 +10,10 @@
     color: #1C00CF;
 }
 
-.hljs-string {
+.book .book-body .page-wrapper .page-inner section.normal code .hljs-string {
     color: #C41A16;
 }
 
-.hljs-comment {
+.book .book-body .page-wrapper .page-inner section.normal code .hljs-comment {
     color: #008312;
-}
-
-.lang-swift {
-    color: #508187;
 }
