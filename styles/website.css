@@ -2,22 +2,22 @@
 
 }
 
-.book .book-body .page-wrapper .page-inner section.normal hljs-keyword {
+.book .book-body .page-wrapper .page-inner section.normal code hljs-keyword {
     color=#B833A1;
 }
 
-.book .book-body .page-wrapper .page-inner section.normal hljs-number {
+.book .book-body .page-wrapper .page-inner section.normal code hljs-number {
     color=#1C00CF;
 }
 
-.book .book-body .page-wrapper .page-inner section.normal hljs-string {
+.book .book-body .page-wrapper .page-inner section.normal code hljs-string {
     color=#C41A16;
 }
 
-.book .book-body .page-wrapper .page-inner section.normal hljs-comment {
+.book .book-body .page-wrapper .page-inner section.normal code hljs-comment {
     color=#008312;
 }
 
-.book .book-body .page-wrapper .page-inner section.normal lang-swift {
+.book .book-body .page-wrapper .page-inner section.normal code lang-swift {
     color=#508187;
 }
