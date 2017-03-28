@@ -2,22 +2,22 @@
 
 }
 
-hljs-keyword {
+.normal .markdown-section hljs-keyword {
     color=#B833A1;
 }
 
-hljs-number {
+.normal .markdown-section hljs-number {
     color=#1C00CF;
 }
 
-hljs-string {
+.normal .markdown-section hljs-string {
     color=#C41A16;
 }
 
-hljs-comment {
+.normal .markdown-section hljs-comment {
     color=#008312;
 }
 
-lang-swift {
+.normal .markdown-section lang-swift {
     color=#508187;
 }
