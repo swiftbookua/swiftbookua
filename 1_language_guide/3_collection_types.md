@@ -52,7 +52,11 @@ Arrays
 You access and modify an array through its methods and properties, or by using subscript syntax.
 To find out the number of items in an array, check its read-only `count` property:
 
-```swiftprint("The shopping list contains \(shoppingList.count) items.")// Prints "The shopping list contains 2 items."Use the Boolean isEmpty property as a shortcut for checking whether the count property is equal to 0:if shoppingList.isEmpty {    print("The shopping list is empty.")} else {    print("The shopping list is not empty.")}// Prints "The shopping list is not empty."
+```swiftprint("The shopping list contains \(shoppingList.count) items.")// Prints "The shopping list contains 2 items."
+```
+Use the Boolean isEmpty property as a shortcut for checking whether the count property is equal to `0`:
+
+```swiftif shoppingList.isEmpty {    print("The shopping list is empty.")} else {    print("The shopping list is not empty.")}// Prints "The shopping list is not empty."
 ```
 You can add a new item to the end of an array by calling the array’s `append(_:)` method:
 

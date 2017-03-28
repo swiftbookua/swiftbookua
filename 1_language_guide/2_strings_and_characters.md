@@ -11,6 +11,7 @@ let someString = "Some string literal value"
 ```
 
 Note that Swift infers a type of `String` for the `someString` constant, because it is initialized with a string literal value.> **Note**
+> 
 > For information about using special characters in string literals, see [Special Characters in String Literals](Special-Characters-in-String-Literals).### Initializing an Empty String
 To create an empty `String` value as the starting point for building a longer string, either assign an empty string literal to a variable, or initialize a new `String` instance with initializer syntax:
 
