@@ -2,15 +2,15 @@
 
 }
 
-.book .book-body .page-wrapper .page-inner section.normal code hljs-keyword {
+hljs-keyword {
     color: #B833A1;
 }
 
-.book .book-body .page-wrapper .page-inner section.normal code hljs-number {
+hljs-number {
     color: #1C00CF;
 }
 
-.book .book-body .page-wrapper .page-inner section.normal code hljs-string {
+hljs-string {
     color: #C41A16;
 }
 
