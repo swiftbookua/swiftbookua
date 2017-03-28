@@ -7,17 +7,17 @@
 }
 
 .book .book-body .page-wrapper .page-inner section.normal code hljs-number {
-    color=#1C00CF;
+    color: #1C00CF;
 }
 
 .book .book-body .page-wrapper .page-inner section.normal code hljs-string {
-    color=#C41A16;
+    color: #C41A16;
 }
 
 .book .book-body .page-wrapper .page-inner section.normal code hljs-comment {
-    color=#008312;
+    color: #008312;
 }
 
 .book .book-body .page-wrapper .page-inner section.normal code lang-swift {
-    color=#508187;
+    color: #508187;
 }
