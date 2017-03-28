@@ -2,6 +2,10 @@
     color: #508187;
 }
 
+.book .book-body .page-wrapper .page-inner section.normal a {
+    color: #0088CC;
+}
+
 .book .book-body .page-wrapper .page-inner section.normal code .hljs-built_in {
     color: #508187;
 }
