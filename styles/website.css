@@ -6,6 +6,10 @@ hljs-keyword {
     color=#B833A1;
 }
 
+hljs-number {
+    color=#1C00CF;
+}
+
 lang-swift {
     color=#508187;
 }
