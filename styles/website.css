@@ -14,10 +14,10 @@ hljs-string {
     color: #C41A16;
 }
 
-.book .book-body .page-wrapper .page-inner section.normal code hljs-comment {
+hljs-comment {
     color: #008312;
 }
 
-.book .book-body .page-wrapper .page-inner section.normal code lang-swift {
+lang-swift {
     color: #508187;
 }
