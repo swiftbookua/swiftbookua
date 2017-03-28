@@ -10,7 +10,8 @@
     color: #508187;
 }
 
-.book .book-body .page-wrapper .page-inner section.normal code .hljs-keyword {
+.book .book-body .page-wrapper .page-inner section.normal code .hljs-keyword,
+.book .book-body .page-wrapper .page-inner section.normal code .hljs-literal {
     color: #B833A1;
 }
 
@@ -22,6 +23,26 @@
     color: #C41A16;
 }
 
+.book .book-body .page-wrapper .page-inner section.normal code .hljs-subst {
+    color: #508187;
+}
+
 .book .book-body .page-wrapper .page-inner section.normal code .hljs-comment {
     color: #008312;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal code .hljs-type {
+    color: #6F41A7;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal code .hljs-class {
+
+}
+
+.book .book-body .page-wrapper .page-inner section.normal code .hljs-function {
+
+}
+
+.book .book-body .page-wrapper .page-inner section.normal code .hljs-title {
+
 }
