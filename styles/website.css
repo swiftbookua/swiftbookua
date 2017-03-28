@@ -2,22 +2,22 @@
 
 }
 
-.normal .markdown-section hljs-keyword {
+.book .book-body .page-wrapper .page-inner section.normal hljs-keyword {
     color=#B833A1;
 }
 
-.normal .markdown-section hljs-number {
+.book .book-body .page-wrapper .page-inner section.normal hljs-number {
     color=#1C00CF;
 }
 
-.normal .markdown-section hljs-string {
+.book .book-body .page-wrapper .page-inner section.normal hljs-string {
     color=#C41A16;
 }
 
-.normal .markdown-section hljs-comment {
+.book .book-body .page-wrapper .page-inner section.normal hljs-comment {
     color=#008312;
 }
 
-.normal .markdown-section lang-swift {
+.book .book-body .page-wrapper .page-inner section.normal lang-swift {
     color=#508187;
 }
