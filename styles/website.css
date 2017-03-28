@@ -11,39 +11,39 @@
 }
 
 .book .book-body .page-wrapper .page-inner section.normal h1 {
-    font-size: 22px;
+    /*font-size: 22px;*/
     font-style: bold;
 }
 .book .book-body .page-wrapper .page-inner section.normal h2 {
-    font-size: 17px;
+    /*font-size: 17px;*/
     font-style: bold;
 }
 .book .book-body .page-wrapper .page-inner section.normal h3 {
-    font-size: 15px;
+    /*font-size: 15px;*/
     font-style: bold;
 }
 .book .book-body .page-wrapper .page-inner section.normal h4 {
-    font-size: 12px;
+    /*font-size: 12px;*/
     font-style: bold;
 }
 .book .book-body .page-wrapper .page-inner section.normal h5 {
-    font-size: 11px;
+    /*font-size: 11px;*/
     font-style: bold;
 }
 .book .book-body .page-wrapper .page-inner section.normal h6 {
-    font-size: 11px;
+    /*font-size: 11px;*/
     font-style: bold;
 }
 
 .book .book-body .page-wrapper .page-inner section.normal p,
 .book .book-body .page-wrapper .page-inner section.normal a {
-    font-size: 11px;
+    /*font-size: 11px;*/
     font-style: normal;
     font-variant: normal;
 }
 
 .book .book-body .page-wrapper .page-inner section.normal blockquote {
-    font-size: 10px;
+    /*font-size: 10px;*/
     font-style: normal;
     font-variant: normal;
 }
