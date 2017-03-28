@@ -2,22 +2,22 @@
 
 }
 
-hljs-keyword {
+.hljs-keyword {
     color: #B833A1;
 }
 
-hljs-number {
+.hljs-number {
     color: #1C00CF;
 }
 
-hljs-string {
+.hljs-string {
     color: #C41A16;
 }
 
-hljs-comment {
+.hljs-comment {
     color: #008312;
 }
 
-lang-swift {
+.lang-swift {
     color: #508187;
 }
