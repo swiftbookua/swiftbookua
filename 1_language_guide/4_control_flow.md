@@ -250,7 +250,7 @@ Control FlowSwift provides a variety of control flow statements. These include
 ```swiftif #available(iOS 10, macOS 10.12, *) {    // Use iOS 10 APIs on iOS, and use macOS 10.12 APIs on macOS} else {    // Fall back to earlier iOS and macOS APIs}
 ```
 The availability condition above specifies that on iOS, the body of the `if` executes only on iOS 10 and later; on macOS, only on macOS 10.12 and later. The last argument, `*`, is required and specifies that on any other platform, the body of the `if` executes on the minimum deployment target specified by your target.
-In its general form, the availability condition takes a list of platform names and versions. You use platform names such as `iOS`, `macOS`, `watchOS`, and `tvOS` — for the full list, see [Declaration Attributes](). In addition to specifying major version numbers like iOS 8, you can specify minor versions numbers like iOS 8.3 and macOS 10.10.3.
+    In its general form, the availability condition takes a list of platform names and versions. You use platform names such as `iOS`, `macOS`, `watchOS`, and `tvOS` — for the full list, see [Declaration Attributes](). In addition to specifying major version numbers like iOS 8, you can specify minor versions numbers like iOS 8.3 and macOS 10.10.3.
 
 ```swiftif #available(platform name version, ..., *) {    statements to execute if the APIs are available} else {    fallback statements to execute if the APIs are unavailable}
 ```
