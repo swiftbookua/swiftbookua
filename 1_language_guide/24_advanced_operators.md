@@ -3,3 +3,5 @@
 ### Оператори переповнення
 
 ### Operator Methods
+
+### Equivalence Operators
