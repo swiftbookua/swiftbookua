@@ -1,133 +1,200 @@
 ## Рядки та cимволи
-A string is a series of characters, such as `"hello, world"` or `"albatross"`. Swift strings are represented by the `String` type. The contents of a `String` can be accessed in various ways, including as a collection of `Character` values.
-Swift’s `String` and `Character` types provide a fast, Unicode-compliant way to work with text in your code. The syntax for string creation and manipulation is lightweight and readable, with a string literal syntax that is similar to C. String concatenation is as simple as combining two strings with the `+` operator, and string mutability is managed by choosing between a constant or a variable, just like any other value in Swift. You can also use strings to insert constants, variables, literals, and expressions into longer strings, in a process known as string interpolation. This makes it easy to create custom string values for display, storage, and printing.Despite this simplicity of syntax, Swift’s `String` type is a fast, modern string implementation. Every string is composed of encoding-independent Unicode characters, and provides support for accessing those characters in various Unicode representations.
-> **Note**
+
+Рядком ми будемо називати послідовність символів, таку як  `"hello, world"` чи `"albatross"`. У Swift рядки представлені типом `String`. Вміст рядка `String` можна отримати у кілька різних способів, у тому числі через колекцію значень типу `Character`.
+
+У мові Swift, типи `String` та `Character` надають швидкий та сумісний з кодуванням [Unicode](https://uk.wikipedia.org/wiki/Юнікод) спосіб працювати із текстами у вашому коді. Синтаксис створення рядків та маніпуляцій з ними є легковісним, легким для читання, а синтаксис оголошення рядкових літералів є подібним до мови C. Для конкатенації, тобто поєднання рядків, достатньо просто поєднати дві рядкові змінні оператором `+`, а щоб керувати константністю/змінністю рядка, досить просто обрати між констаною чи змінною, як, власне, і з будь-яким іншим значенням в Swift. Ви можете також вставляти в рядки константи, змінні, літерали чи вирази за допомогою механізму відомого як інтерполяція рядків. Це дозволяє легко створювати власні рядкові значення для відображення, зберігання та виводу на екран. 
+
+Незважаючи на простоту синтаксису, тип `String` у Swift є швидкою та сучасною реалізацією рядка. Кожен рядок складається із незалежних від кодування символів Unicode, і надає підтримку доступу до цих символів у різних представленнях Unicode.> **Примітка**
 > 
-> Swift’s `String` type is bridged with Foundation’s `NSString` class. Foundation also extends `String` to expose methods defined by `NSString`. This means, if you import Foundation, you can access those `NSString` methods on `String` without casting.> 
-> For more information about using `String` with Foundation and Cocoa, see Working with Cocoa Data Types in *Using Swift with Cocoa and Objective-C (Swift 3.0.1)*.### String Literals
+> Тип `String` у Swift має міст із класом `NSString` в модулі Foundation. Модуль Foundation розширює тип `String` методами, визначеними в `NSString`. Це означає, що включивши модуль Foundation, ми можете користупитись методами `NSString` на значеннях типу `String` без приведення типів.
+> 
+> За додатковою інформацією щодо використання типу `String` із модулями Foundation та Cocoa, дивіться розділ "Working with Cocoa Data Types" в книзі *Using Swift with Cocoa and Objective-C (Swift 3.0.1)*### Рядкові літерали
+
+*Рядкові літерали* потрібні для того, щоб включати заздалегіть визначені значення `String` у ваш код. Рядковим літералом є фіксована послідовність тестових символів, оточена парою подвійних лапок (`""`).
 You can include predefined `String` values within your code as *string literals*. A string literal is a fixed sequence of textual characters surrounded by a pair of double quotes (`""`).
-Use a string literal as an initial value for a constant or variable:```swift
+
+Рядкових літерал можна використовувати як початкове значення для константи чи змінної:```swift
 let someString = "Some string literal value"
 ```
 
-Note that Swift infers a type of `String` for the `someString` constant, because it is initialized with a string literal value.> **Note**
+Слід помітити, що Swift визначає тип константи `someString` як `String`, бо вона ініціалізується за допомогою рядкового літерала.
+> **Примітка**
 > 
-> For information about using special characters in string literals, see [Special Characters in String Literals](Special-Characters-in-String-Literals).### Initializing an Empty String
-To create an empty `String` value as the starting point for building a longer string, either assign an empty string literal to a variable, or initialize a new `String` instance with initializer syntax:
+> Щоб дізнатися більше про використання спеціальних символів в рядкових літералах, дивіться підрозділ [Спеціальні символи в рядкових літералах](Спеціальні-символи-в-рядкових-літералах).
 
-```swiftvar emptyString = ""               // empty string literalvar anotherEmptyString = String()  // initializer syntax// these two strings are both empty, and are equivalent to each other
-```
-Find out whether a `String` value is empty by checking its Boolean `isEmpty` property:
+### Ініціалізація порожнього рядка
 
-```swiftif emptyString.isEmpty {    print("Nothing to see here")}// Prints "Nothing to see here"
+Щоб створити порожній рядок, як початковий крок в побудові довшого рядка, можна або присвоїти порожній рядковий літерал змінній, або створити новий екземпляр `String` за допомогою синтаксису ініціалізації:
+
+```swiftvar emptyString = ""               // порожній рядковий літералvar anotherEmptyString = String()  // синтаксис ініціалізації// обидва рядки порожні, і дорівнюють одне одному
 ```
-### String Mutability
+
+Щоб визначити, чи порожній рядок, слід перевірити Булеве значення властивості `isEmpty`:
+
+```swiftif emptyString.isEmpty {    print("Nothing to see here")}// Друкує "Nothing to see here"
+```
+
+### Змінюваність рядків
+
+Щоб вказати, чи можна змінити (або *мутувати*) певне значення `String`, слід або присвоїти це значення змінній (тоді його можна буде змінити), або присвоїти це значення константі (тоді його не можна буде змінити):
 You indicate whether a particular `String` can be modified (or *mutated*) by assigning it to a variable (in which case it can be modified), or to a constant (in which case it cannot be modified):
 
-```swiftvar variableString = "Horse"variableString += " and carriage"// variableString is now "Horse and carriage" let constantString = "Highlander"constantString += " and another Highlander"// this reports a compile-time error - a constant string cannot be modified
+```swiftvar variableString = "Horse"variableString += " and carriage"// змінна variableString тепер має значення "Horse and carriage" let constantString = "Highlander"constantString += " and another Highlander"
+// це призведе до помилки часу компіляції - константний рядок не можна змінювати
 ```
-> **Note**>> This approach is different from string mutation in Objective-C and Cocoa, where you choose between two classes (`NSString` and `NSMutableString`) to indicate whether a string can be mutated.
-### Strings Are Value Types
-Swift’s `String` type is a value type. If you create a new `String` value, that `String` value is *copied* when it is passed to a function or method, or when it is assigned to a constant or variable. In each case, a new copy of the existing `String` value is created, and the new copy is passed or assigned, not the original version. Value types are described in [Structures and Enumerations Are Value Types](8_classes_and_structures.md#структури_і_перечислення_як_типи-значення).Swift’s copy-by-default `String` behavior ensures that when a function or method passes you a `String` value, it is clear that you own that exact `String` value, regardless of where it came from. You can be confident that the string you are passed will not be modified unless you modify it yourself.
-Behind the scenes, Swift’s compiler optimizes string usage so that actual copying takes place only when absolutely necessary. This means you always get great performance when working with strings as value types.### Робота із символами
-Working with Characters
-You can access the individual `Character` values for a `String` by iterating over its `characters` property with a `for-in` loop:
+> **Примітка**>
+> Даний підхід відрізняється від мутацій рядків в Objective-C та Cocoa, де ви обираєте між двома класами,  (`NSString` та `NSMutableString`), щоб вказати, чи можна змінювати рядок.
 
-```swiftfor character in "Dog!🐶".characters {    print(character)}// D// o// g// !// 🐶
+### Рядки є Типами-значенняТип `String` у Swift є типом-значення. Якщо створити нове значення `String`, це значення `String` буде *копіюватись* при передаванні до функції чи методу, чи при присвоєнні змінній чи константі. В кожному випадку буде створюватись нова копія існуючого значення `String`, і ця нова копія буде передаватись чи присвоюватись, не оригінальна версія. Типи-значення детальніше описані в розділі [Структури і Перечислення як Типи-значення](8_classes_and_structures.md#структури_і_перечислення_як_типи-значення).
+
+Поведінка копіювання за замовчанням рядків у Swift гарантує, що коли функція чи метод передає вам значення `String`, саме ви володієти цим точним значенням `String`, незалежно від того, звідки воно прийшло. Ви можете бути впервнені, що рядок, переданий вами, не буде змінено жодним чином, окрім як вами самими. 
+
+За лаштунками, компілятор Swift оптимізовує використання рядків таким чином, що фактичне копіювання відбувається тільки тоді, коли це дійсно необхідно. Це означає, що ви завжди отримаєте чудову швидкодію при роботі з рядками як із типами-значення. ### Робота із символами
+
+Отримати доступ до окремих символів `Character` у рядку `String` можна ітеруючи його властивість `characters` за допомогою циклу `for`-`in`:
+
+```swiftfor character in "Собака!🐶".characters {    print(character)}// С// о// б
+// а
+// к
+// а// !// 🐶
 ```
-The `for-in `loop is described in [For-In Loops](4_control_flow.md#Цикл-For-In).
-Alternatively, you can create a stand-alone `Character` constant or variable from a single-character string literal by providing a `Character` type annotation:
+
+Цикл `for`-`in` детально описаний в підрозділі [Цикл For-In](4_control_flow.md#Цикл-For-In).
+
+Як варіант, можна створити окремий символ `Character` у вигляді константи чи змінної із односимвольного рядкового літералу, вказавши анотацію типу `Character`:
 
 ```swiftlet exclamationMark: Character = "!"
 ```
-`String` values can be constructed by passing an array of `Character` values as an argument to its initializer:
 
-```swiftlet catCharacters: [Character] = ["C", "a", "t", "!", "🐱"]let catString = String(catCharacters)print(catString)// Prints "Cat!🐱"
+Значення `String` можна сконструювати, передавши масив символів `Character` як аргумент його ініціалізатора:
+
+```swiftlet catCharacters: [Character] = ["К", "и", "ц", "я", "!", "🐱"]let catString = String(catCharacters)print(catString)// Друкує "Киця!🐱"
 ```
-### Concatenating Strings and Characters`String` values can be added together (or *concatenated*) with the addition operator (`+`) to create a new `String` value:
 
-```swiftlet string1 = "hello"let string2 = " there"var welcome = string1 + string2// welcome now equals "hello there"
+### Конкатенація рядків та символівЗначення `String` можна з'єднувати разом (або *конкатенувати*) за допомогою оператора додавання (`+`), при цьому буде створено новий рядок:
+
+```swiftlet string1 = "hello"let string2 = " there"var welcome = string1 + string2// змінна welcome тепер дорівнює "hello there"
 ```
-You can also append a `String` value to an existing `String` variable with the addition assignment operator (`+=`):
 
-```swiftvar instruction = "look over"instruction += string2// instruction now equals "look over there"
+Ви можете також додавати значення `String` в кінець існуючої змінної `String` за допомогою оператора додавання з присвоєнням (`+=`):
+
+```swiftvar instruction = "look over"instruction += string2// змінна instruction тепер дорівнює "look over there"
 ```
-You can append a `Character` value to a `String` variable with the `String` type’s `append()` method:
 
-```swiftlet exclamationMark: Character = "!"welcome.append(exclamationMark)// welcome now equals "hello there!"
+Ви можете додати символ `Character` до змінної `String` за допомогою методу `append()` типу `String`:
+
+```swiftlet exclamationMark: Character = "!"welcome.append(exclamationMark)// змінна welcome тепер дорівнює "hello there!"
 ```
-> **Note**> 
-> You can’t append a `String` or `Character` to an existing `Character` variable, because a `Character` value must contain a single character only.### Інтерполяція рядків
-*String interpolation* is a way to construct a new `String` value from a mix of constants, variables, literals, and expressions by including their values inside a string literal. Each item that you insert into the string literal is wrapped in a pair of parentheses, prefixed by a backslash:
+> **Примітка**> 
+> Ви не можете додати рядок `String` чи символ `Character` до існуючої змінної `Character`, бо значення  `Character` можуть містити лише один символ.### Інтерполяція рядків
 
-```swiftlet multiplier = 3let message = "\(multiplier) times 2.5 is \(Double(multiplier) * 2.5)"// message is "3 times 2.5 is 7.5"
+*Інтерполяція рядків* є способом створити новий рядок `String` із комбінації констант, змінних, літералів та виразів, включаючи їх значення всередині рядкового літералу. Кожен елемент, що вставляється в рядковий літерал, має бути оточений парою дужок, перед якими йде зворотній слеш (`\`):
+
+```swiftlet multiplier = 3let message = "\(multiplier) рази по 2.5 дорівнює \(Double(multiplier) * 2.5)"// константа message дорівнює "3 рази по 2.5 дорівнюєи 7.5"
 ```
-In the example above, the value of `multiplier` is inserted into a string literal as `\(multiplier)`. This placeholder is replaced with the actual value of `multiplier` when the string interpolation is evaluated to create an actual string.
-The value of `multiplier` is also part of a larger expression later in the string. This expression calculates the value of `Double(multiplier) * 2.5` and inserts the result (`7.5`) into the string. In this case, the expression is written as `\(Double(multiplier) * 2.5)` when it is included inside the string literal.
-> **Note**> 
-> The expressions you write inside parentheses within an interpolated string cannot contain an unescaped backslash (`\`), a carriage return, or a line feed. However, they can contain other string literals.
- ### Unicode
-*Unicode* is an international standard for encoding, representing, and processing text in different writing systems. It enables you to represent almost any character from any language in a standardized form, and to read and write those characters to and from an external source such as a text file or web page. Swift’s `String` and `Character` types are fully Unicode-compliant, as described in this section.
-#### Unicode Scalars
-Behind the scenes, Swift’s native `String` type is built from Unicode scalar values. A Unicode scalar is a unique 21-bit number for a character or modifier, such as `U+0061` for `LATIN SMALL LETTER A` (`"a"`), or `U+1F425` for `FRONT-FACING BABY CHICK` (`"🐥"`).> **Note**
-> > A Unicode scalar is any Unicode *code point* in the range `U+0000` to `U+D7FF` inclusive or `U+E000` to `U+10FFFF` inclusive. Unicode scalars do not include the Unicode *surrogate pair* code points, which are the code points in the range `U+D800` to `U+DFFF` inclusive.
-Note that not all 21-bit Unicode scalars are assigned to a character—some scalars are reserved for future assignment. Scalars that have been assigned to a character typically also have a name, such as `LATIN SMALL LETTER A` and `FRONT-FACING BABY CHICK` in the examples above.#### Special Characters in String Literals
-String literals can include the following special characters:
-+ The escaped special characters `\0` (null character), `\\` (backslash), `\t` (horizontal tab), `\n` (line feed), `\r` (carriage return), `\"` (double quote) and `\'` (single quote)
-+ An arbitrary Unicode scalar, written as `\u{`n`}`, where n is a 1–8 digit hexadecimal number with a value equal to a valid Unicode code point
- The code below shows four examples of these special characters. The `wiseWords` constant contains two escaped double quote characters. The `dollarSign`, `blackHeart`, and `sparklingHeart` constants demonstrate the Unicode scalar format:
 
-```swiftlet wiseWords = "\"Imagination is more important than knowledge\" - Einstein"// "Imagination is more important than knowledge" - Einsteinlet dollarSign = "\u{24}"        // $,  Unicode scalar U+0024let blackHeart = "\u{2665}"      // ♥,  Unicode scalar U+2665let sparklingHeart = "\u{1F496}" // 💖, Unicode scalar U+1F496```
-#### Extended Grapheme Clusters
-Every instance of Swift’s `Character` type represents a single *extended grapheme cluster*. An extended grapheme cluster is a sequence of one or more Unicode scalars that (when combined) produce a single human-readable character.
-Here’s an example. The letter `é` can be represented as the single Unicode scalar `é` (`LATIN SMALL LETTER E WITH ACUTE`, or `U+00E9`). However, the same letter can also be represented as a pair of scalars—a standard letter `e` (`LATIN SMALL LETTER E`, or `U+0065`), followed by the `COMBINING ACUTE ACCENT` scalar (`U+0301`). The `COMBINING ACUTE ACCENT` scalar is graphically applied to the scalar that precedes it, turning an `e` into an `é` when it is rendered by a Unicode-aware text-rendering system.
-In both cases, the letter `é` is represented as a single Swift `Character` value that represents an extended grapheme cluster. In the first case, the cluster contains a single scalar; in the second case, it is a cluster of two scalars:
+У прикладі вище, значення `multiplier` вставляється в рядковий літерал як `\(multiplier)`. Цей заповнювач буде замінено фактичним значенням константи `multiplier` під час виконання інтерполяції рядку у ході створення даного рядка. 
 
-```swiftlet eAcute: Character = "\u{E9}"                         // élet combinedEAcute: Character = "\u{65}\u{301}"          // e followed by ́// eAcute is é, combinedEAcute is é
-```
-Extended grapheme clusters are a flexible way to represent many complex script characters as a single `Character` value. For example, Hangul syllables from the Korean alphabet can be represented as either a precomposed or decomposed sequence. Both of these representations qualify as a single `Character` value in Swift:
+Значення `multiplier` є також частиною більшого виразу далі в рядку. Цей вираз обчислює значення `Double(multiplier) * 2.5` і вставляє результат (`7.5`) в рядок. В цьому випадку, вираз записується як `\(Double(multiplier) * 2.5)` для включення в рядковий літерал. 
+> **Примітка**> 
+> Вирази, котрі ви пишете всередині дужок при інтерполяції рядків, не можуть містити неекранованих зворотніх слешів (`\`), символів зміни рядка (`\n`) чи символів повернення каретки (`\r`). Однак вони можуть містити інші рядкові літерали. 
+ ### Юнікод
 
-```swiftlet precomposed: Character = "\u{D55C}"                  // 한let decomposed: Character = "\u{1112}\u{1161}\u{11AB}"   // ᄒ, ᅡ, ᆫ// precomposed is 한, decomposed is 한
-```
-Extended grapheme clusters enable scalars for enclosing marks (such as `COMBINING ENCLOSING CIRCLE`, or `U+20DD`) to enclose other Unicode scalars as part of a single `Character` value:
+*Юнікод* - це міжнародний стандарт для кодування, представлення і обробки тексту в різних системах писемності. Він дозволяє вам представити практично будь-який символ з будь-якої мови у стандартизованій формі, зчитувати та виводити ці символи із будь-якого зовнішнього джерела в будь-яке інше зовнішнє джерело, такі як текстовий файл чи веб-сторінка. Типи `String` та `Character` у мові Swift є повністю сумісними із Юнікодом, про що й ітиме мова у даному підрозділі. 
+#### Юнікодові скаляри
 
-```swifrlet enclosedEAcute: Character = "\u{E9}\u{20DD}"// enclosedEAcute is é⃝
-```Unicode scalars for regional indicator symbols can be combined in pairs to make a single `Character` value, such as this combination of `REGIONAL INDICATOR SYMBOL LETTER U` (`U+1F1FA`) and `REGIONAL INDICATOR SYMBOL LETTER S` (`U+1F1F8`):
-
-```swiftlet regionalIndicatorForUS: Character = "\u{1F1FA}\u{1F1F8}"// regionalIndicatorForUS is 🇺🇸
-```### Counting Characters
-To retrieve a count of the `Character` values in a string, use the count property of the string’s characters property:
-
-```swiftlet unusualMenagerie = "Koala 🐨, Snail 🐌, Penguin 🐧, Dromedary 🐪"print("unusualMenagerie has \(unusualMenagerie.characters.count) characters")// Prints "unusualMenagerie has 40 characters"
-```
-Note that Swift’s use of extended grapheme clusters for `Character` values means that string concatenation and modification may not always affect a string’s character count.
-For example, if you initialize a new string with the four-character word `cafe`, and then append a `COMBINING ACUTE ACCENT` (`U+0301`) to the end of the string, the resulting string will still have a character count of `4`, with a fourth character of `é`, not `e`:
-
-```swiftvar word = "cafe"print("the number of characters in \(word) is \(word.characters.count)")// Prints "the number of characters in cafe is 4" word += "\u{301}"    // COMBINING ACUTE ACCENT, U+0301 print("the number of characters in \(word) is \(word.characters.count)")// Prints "the number of characters in café is 4"
-```
-> **Note**
-> > Extended grapheme clusters can be composed of one or more Unicode scalars. This means that different characters—and different representations of the same character—can require different amounts of memory to store. Because of this, characters in Swift do not each take up the same amount of memory within a string’s representation. As a result, the number of characters in a string cannot be calculated without iterating through the string to determine its extended grapheme cluster boundaries. If you are working with particularly long string values, be aware that the `characters` property must iterate over the Unicode scalars in the entire string in order to determine the characters for that string.
+За лаштунками, вбудований у Swift тип `String` будується із юнікодових скалярних значень. Юнікодовим скаляром є унікальне 21-бітне число для позначення символа чи модифікатора, як, наприклад, `U+0061` для `LATIN SMALL LETTER A` (`"a"`), або `U+1F425` для `FRONT-FACING BABY CHICK` (`"🐥"`).
+> **Примітка**
 > 
-> The count of the characters returned by the `characters` property is not always the same as the `length` property of an `NSString` that contains the same characters. The length of an `NSString` is based on the number of 16-bit code units within the string’s UTF-16 representation and not the number of Unicode extended grapheme clusters within the string.### Accessing and Modifying a String
-You access and modify a string through its methods and properties, or by using subscript syntax.#### String Indices
-Each `String` value has an associated *index type*, `String.Index`, which corresponds to the position of each `Character` in the string.
-As mentioned above, different characters can require different amounts of memory to store, so in order to determine which `Character` is at a particular position, you must iterate over each Unicode scalar from the start or end of that `String`. For this reason, Swift strings cannot be indexed by integer values.Use the `startIndex` property to access the position of the first `Character` of a `String`. The `endIndex` property is the position after the last character in a `String`. As a result, the `endIndex` property isn’t a valid argument to a string’s subscript. If a `String` is empty, `startIndex` and `endIndex` are equal.You access the indices before and after a given index using the `index(before:)` and `index(after:)` methods of `String`. To access an index farther away from the given index, you can use the `index(_:offsetBy:)` method instead of calling one of these methods multiple times.You can use subscript syntax to access the `Character` at a particular `String` index.```swiftlet greeting = "Guten Tag!"greeting[greeting.startIndex]// Ggreeting[greeting.index(before: greeting.endIndex)]// !greeting[greeting.index(after: greeting.startIndex)]// ulet index = greeting.index(greeting.startIndex, offsetBy: 7)greeting[index]// a
-```
-Attempting to access an index outside of a string’s range or a `Character` at an index outside of a string’s range will trigger a runtime error.
+> Юнікодовим скаляром є будь-яка *кодова позиція* у проміжку від `U+0000` до `U+D7FF` включно, або від `U+E000` до `U+10FFFF` включно. Юнікодові скаляри не включають кодові позиції *сурогатних пар*, котрі є кодовими позиціями у проміжку від `U+D800` до `U+DFFF` включно.
 
-```swiftgreeting[greeting.endIndex] // Errorgreeting.index(after: greeting.endIndex) // ErrorUse the indices property of the characters property to access all of the indices of individual characters in a string.for index in greeting.characters.indices {    print("\(greeting[index]) ", terminator: "")}// Prints "G u t e n   T a g ! "
-```
-> **Note**> 
-> You can use the `startIndex` and `endIndex` properties and the `index(before:)`, `index(after:)`, and `index(_:offsetBy:)` methods on any type that conforms to the `Collection` protocol. This includes `String`, as shown here, as well as collection types such as `Array`, `Dictionary`, and `Set`.#### Inserting and RemovingTo insert a single character into a string at a specified index, use the `insert(_:at:)` method, and to insert the contents of another string at a specified index, use the `insert(contentsOf:at:)` method.
+Слід відмітити, що не всі 21-бітні юнікодові скаляри присвоєні символам: деякі скаляри зарезервовано для майбунього використання. Скаляри, котрі були присвоєні символам, як правило також мають ім'я, як наприклад `LATIN SMALL LETTER A` та `FRONT-FACING BABY CHICK` у прикладах вище.
+#### Спеціальні символи в рядкових літералах
 
-```swiftvar welcome = "hello"welcome.insert("!", at: welcome.endIndex)// welcome now equals "hello!"welcome.insert(contentsOf:" there".characters, at: welcome.index(before: welcome.endIndex))// welcome now equals "hello there!"
-```
-To remove a single character from a string at a specified index, use the `remove(at:)` method, and to remove a substring at a specified range, use the `removeSubrange(_:)` method:
+Рядкові літерали можуть включати наступні спеціальні символи:
 
-```swiftwelcome.remove(at: welcome.index(before: welcome.endIndex))// welcome now equals "hello there" let range = welcome.index(welcome.endIndex, offsetBy: -6)..<welcome.endIndexwelcome.removeSubrange(range)// welcome now equals "hello"
++ Екрановані спеціальні символи: `\0` (нульовий символ), `\\` (зворотній слеш), `\t` (горизонтальний таб), `\n` (перенесення рядка), `\r` (повернення каретки), `\"` (подвійні лапки) та `\'` (оданарні лапки)
++ Довільний юнікодовий скаляр, записаний у формі `\u{`n`}`, де n - це 1–8-цифове число в шістнадцятковому записі зі значенням, що відповідає дійсній кодовій позиції Юнікоду.
+
+Код нижче показує чотири приклади спеціальних символів. Константа `wiseWords` містить пару екранованих подвійних лапок. Константи `dollarSign`, `blackHeart`, та `sparklingHeart` демонструють формат юнікодових скалярів:
+
+```swiftlet wiseWords = "\"Уява важливіша за знання\" - Ейнштейн"// "Уява важливіша за знанн" - Ейнштейнlet dollarSign = "\u{24}"        // $,  Unicode scalar U+0024let blackHeart = "\u{2665}"      // ♥,  Unicode scalar U+2665let sparklingHeart = "\u{1F496}" // 💖, Unicode scalar U+1F496```
+
+#### Розширені кластери графем
+
+Кожен екземпляр типу `Character` у Swift представляє єдиний *розширений кластер графем*. Розширений кластер графем - це послідовність одного чи більше юнікодових скалярів, котрі при об'єднанні дають єдиний графічний символ.
+
+Ось напридклад. Літера `é` може бути представлена як єдиний юнікодовий скаляр  `é` (`LATIN SMALL LETTER E WITH ACUTE`, або `U+00E9`). Однак, ця ж літера також може бути представлена як пара скалярів: стандарна літера `e` (`LATIN SMALL LETTER E`, або `U+0065`), і слідом за нею скаляр `COMBINING ACUTE ACCENT` (`U+0301`). Скаляр `COMBINING ACUTE ACCENT` графічно приміняється до скаляру, що йому передує, перетворюючи `e` в `é` при рендерингу в системі рендерингу тексту, сумісної з Юнікодом. 
+
+В обох випадках, літера  `é` представляється єдиним значенням `Character`, що представляє розширений кластер графем. В першому випадку, кластер містить єдиний скаляр, в другому випадку - це кластер із двох скалярів:
+
+
+```swiftlet eAcute: Character = "\u{E9}"                         // élet combinedEAcute: Character = "\u{65}\u{301}"          // e та слідом за нею  ́// eAcute дорівнює é, combinedEAcute дорівнює é
 ```
-> **Note**> 
-> You can use the the `insert(_:at:)`, `insert(contentsOf:at:)`, `remove(at:)`, and `removeSubrange(_:)` methods on any type that conforms to the `RangeReplaceableCollection` protocol. This includes `String`, as shown here, as well as collection types such as `Array`, `Dictionary`, and `Set`.### Comparing Strings
+
+Розширені кластери графем є гручким способом представити багато складних символів письма як єдине значення `Character`. Наприклад, склади Ханґиль із корейської абетки можуть бути представлені як у вигляді попередньо складеного єдиного юнікодового скаляру, так і у вигляді послідовності окремих юнікодових скалярів. Обидва представлення визначають одне й те ж саме значення `Character` у Swift:
+
+```swiftlet precomposed: Character = "\u{D55C}"                  // 한let decomposed: Character = "\u{1112}\u{1161}\u{11AB}"   // ᄒ, ᅡ, ᆫ// precomposed дорівнює 한, decomposed дорівнює 한
+```
+
+Розширені кластери графем дозволяють знакам обведення (таким як `COMBINING ENCLOSING CIRCLE`, або `U+20DD`) обводити інші юнікодові скаляри всередині єдиного значення `Character`:
+
+```swiftlet enclosedEAcute: Character = "\u{E9}\u{20DD}"// enclosedEAcute дорівнює é⃝
+```
+
+Юнікодові скаляри для символів індикації регіонів можуть поєднуватись у пари, щоб зібрати одне значення `Character`, як наприклад ця комбінація `REGIONAL INDICATOR SYMBOL LETTER U` (`U+1F1FA`) та `REGIONAL INDICATOR SYMBOL LETTER A` (`U+1F1E6`):
+
+```swiftlet regionalIndicatorForUA: Character = "\u{1F1FA}\u{1F1E6}"// regionalIndicatorForUA дорівнює 🇺🇦
+```### Counting Characters
+
+Щоб отримати кількість символів `Character` у рядку, слід використовувати властивість `count` властивості `characters` рядка. 
+
+
+```swiftlet unusualMenagerie = "Koala 🐨, Snail 🐌, Penguin 🐧, Dromedary 🐪"print("unusualMenagerie містить \(unusualMenagerie.characters.count) символів")// Друкує "unusualMenagerie містить 40 символів"
+```
+
+Варто зазначити, що використання розширених графемних кластерів для значень `Character` у Swift означає, що конкатенація та модифікація рядків не завжди впливає на кількість символів у рядку. 
+
+Наприклад, якщо ініціалізувати новий рядок чотирьохсимвольним словом `cafe`, а потім приєднати до його кінця символ `COMBINING ACUTE ACCENT` (`U+0301`), результуючий рядок буде все ще мати кількість символів `4`, із четвертим символом `é`, замість `e`:
+
+```swiftvar word = "cafe"print("кількість символів у \(word) дорівнює \(word.characters.count)")// Друкує "кількість символів у cafe дорівнює 4" word += "\u{301}"    // COMBINING ACUTE ACCENT, U+0301 print("кількість символів у \(word) дорівнює \(word.characters.count)")// Друкує "кількість символів у café дорівнює 4"
+```
+> **Примітка**
+> 
+> Розширені графемні кластери можуть складатись із одного чи більше юнікодових скалярів. Це означає що різні символи - і різні представлення одного й того ж самого символа - можуть потребувати різної кількості пам'яті для зберігання. Через це, різні символи у Swift займають різну кількість пам'яті всередині представлення рядка. Як результат, кількість символів у рядку не може бути обчисленою без ітерування самого рядка для визначення меж графемних кластерів. Якщо ви працюєти із досить довгими рядками, майте на увазі, що властивість `characters` повинна проітерувати всі юнікодові скаляри у всьому рядку, щоб визначити символи для даного рядка. 
+> 
+> Кількість символів, якуи поверне властивість `characters` не завжди дорівнює властивості `length` в екземплярі класу `NSString`, що містить ті ж само символи. Довжина `NSString` базується на кількості 16-бітних кодових одиниць в представленні рядка UTF-16, а не кількістю юнікодових розширених графемних кластерів всередині рядка. ### Доступ до елеменів рядка і його модифікація
+
+Маніпулювати рядком можна за допомогою його методів та властивостей, або за допомогою синтаксису індексації.#### Індекси рядка
+
+Кожен рядок `String` має асоційований *тип індекса*, `String.Index`, котрий відповідає позиції кожного символа `Character` в рядку. 
+
+Як зазначено вище, різні символи можуть вимагати різної кількості пам'яті для зберігання, тому для того, щоб визначити, який саме символ знаходиться за даною позицією, слід проітерувати кожен юнікодовий скаляр з початку чи з кінця цього рядка. З цієї причини, рядку у Swift не можуть мати цілочисельні індекси. 
+
+За допомогою властивості `startIndex` можна отримати позицію першого символа в рядку. Властивість `endIndex` є позицією після останнього символа в рядку. Як результат, властивість `endIndex` не є коректним агрументом для індексу рядка. Якщо рядок порожній, властивості `startIndex` та `endIndex` дорівнюють одна одній.
+
+Щоб отримати індекси перед та після даного індексу, слід використовувати методи `String` `index(before:)` та `index(after:)` відповідно. Щоб отримати індекс подалі від даного, слід використовувати метод `index(_:offsetBy:)` замість того, щоб викликати один з попередніх методів кілька разів. Щоб отримати символ рядка за даним індексом, слід використовувати синтаксис індексації (`[]`).```swiftlet greeting = "Guten Tag!"greeting[greeting.startIndex]// Ggreeting[greeting.index(before: greeting.endIndex)]// !greeting[greeting.index(after: greeting.startIndex)]// ulet index = greeting.index(greeting.startIndex, offsetBy: 7)greeting[index]// a
+```
+
+Спроби отримати індекс за межами діапазону символів рядка, чи звернутись до символу за межами рядка, призведе до помилки на етапі виконання.
+
+```swiftgreeting[greeting.endIndex] // Помилкаgreeting.index(after: greeting.endIndex) // ПомилкаUse the indices property of the characters property to access all of the indices of individual characters in a string.for index in greeting.characters.indices {    print("\(greeting[index]) ", terminator: "")}// Надрукує "G u t e n   T a g ! "
+```
+> **Примітка**> 
+> Можна користуватись властивостями `startIndex` та `endIndex`, а також методами `index(before:)`, `index(after:)`, та `index(_:offsetBy:)` на будь-якому типі, що реалізовує протокол `Collection`. Таким типом є `String`, як показано тут, так само такими є типи колекцій, такі як  `Array`, `Dictionary`, та `Set`.#### Вставка та видалення
+
+Щоб вставити один символ в рядок за визначеним індексом, можна користуватись методом `insert(_:at:)`, а щоб вставити вміст іншого рядка за визначеним індексом, можна скористатись методом  `insert(contentsOf:at:)`.
+
+```swiftvar welcome = "hello"welcome.insert("!", at: welcome.endIndex)// welcome тепер дорівнює "hello!"welcome.insert(contentsOf:" there".characters, at: welcome.index(before: welcome.endIndex))// welcome тепер дорівнює "hello there!"
+```
+
+Щоб видалити один символ із рядка за визначеним індексом, можна використати метод `remove(at:)`, а щоб видалити підрядок за визначеним діапазоном, можна скористатись методом `removeSubrange(_:)`:
+
+
+```swiftwelcome.remove(at: welcome.index(before: welcome.endIndex))// welcome тепер дорівнює "hello there" let range = welcome.index(welcome.endIndex, offsetBy: -6)..<welcome.endIndexwelcome.removeSubrange(range)// welcome тепер дорівнює "hello"
+```
+> **Примітка**> 
+> Методи `insert(_:at:)`, `insert(contentsOf:at:)`, `remove(at:)`, та `removeSubrange(_:)` можна використовувати на будь-якому типі, що реалізовує протокол `RangeReplaceableCollection`. Це включає `String`, як показано тут, так же як і типи колекцій, такі як `Array`, `Dictionary`, та `Set`.и### Comparing Strings
 Swift provides three ways to compare textual values: string and character equality, prefix equality, and suffix equality.#### Рівність рядків та символів
 String and Character Equality
 String and character equality is checked with the “equal to” operator (`==`) and the “not equal to” operator (`!=`), as described in Comparison Operators:
@@ -143,7 +210,7 @@ String and Character Equality
 
 ```swiftlet latinCapitalLetterA: Character = "\u{41}" let cyrillicCapitalLetterA: Character = "\u{0410}" if latinCapitalLetterA != cyrillicCapitalLetterA {    print("These two characters are not equivalent.")}// Prints "These two characters are not equivalent."
 ```
-> **Note**>
+> **Примітка**>
 > String and character comparisons in Swift are not locale-sensitive.#### Prefix and Suffix Equality
 To check whether a string has a particular string prefix or suffix, call the string’s `hasPrefix(_:)` and `hasSuffix(_:)` methods, both of which take a single argument of type `String` and return a Boolean value.
 The examples below consider an array of strings representing the scene locations from the first two acts of Shakespeare’s *Romeo and Juliet*:
@@ -158,7 +225,7 @@ String and Character Equality
 
 ```swiftvar mansionCount = 0var cellCount = 0for scene in romeoAndJuliet {    if scene.hasSuffix("Capulet's mansion") {        mansionCount += 1    } else if scene.hasSuffix("Friar Lawrence's cell") {        cellCount += 1    }}print("\(mansionCount) mansion scenes; \(cellCount) cell scenes")// Prints "6 mansion scenes; 2 cell scenes"
 ```
-> **Note**> 
+> **Примітка**> 
 > The `hasPrefix(_:)` and `hasSuffix(_:)` methods perform a character-by-character canonical equivalence comparison between the extended grapheme clusters in each string, as described in [Рівність рядків та символів](Рівність-рядків-та-символів).### Unicode Representations of StringsWhen a Unicode string is written to a text file or some other storage, the Unicode scalars in that string are encoded in one of several Unicode-defined *encoding forms*. Each form encodes the string in small chunks known as *code units*. These include the UTF-8 encoding form (which encodes a string as 8-bit code units), the UTF-16 encoding form (which encodes a string as 16-bit code units), and the UTF-32 encoding form (which encodes a string as 32-bit code units).
 Swift provides several different ways to access Unicode representations of strings. You can iterate over the string with a `for`-`in` statement, to access its individual `Character` values as Unicode extended grapheme clusters. This process is described in [Working with Characters](робота-із-символами).Alternatively, access a `String` value in one of three other Unicode-compliant representations:
  + A collection of UTF-8 code units (accessed with the string’s `utf8` property) + A collection of UTF-16 code units (accessed with the string’s `utf16` property) + A collection of 21-bit Unicode scalar values, equivalent to the string’s UTF-32 encoding form (accessed with the string’s `unicodeScalars` property)
@@ -181,7 +248,7 @@ String and Character Equality
 The fifth and sixth `codeUnit` values (`55357` and `56374`) are a UTF-16 surrogate pair representation of the `DOG FACE` character. These values are a high-surrogate value of `U+D83D` (decimal value `55357`) and a low-surrogate value of `U+DC36` (decimal value `56374`).#### Unicode Scalar RepresentationYou can access a Unicode scalar representation of a `String` value by iterating over its `unicodeScalars` property. This property is of type `UnicodeScalarView`, which is a collection of values of type `UnicodeScalar`.Each `UnicodeScalar` has a `value` property that returns the scalar’s 21-bit value, represented within a `UInt32` value:
 
 ![UTF-8 Representation example](images/UnicodeScalar_2x.png)￼
-```swiftfor scalar in dogString.unicodeScalars {    print("\(scalar.value) ", terminator: "")}print("")// Prints "68 111 103 8252 128054 "
+```swiftfor scalar in dogString.unicodeScalars {    print("\(scalar.value) ", terminator: "")}иprint("")// Prints "68 111 103 8252 128054 "
 ```
 The value properties for the first three `UnicodeScalar` values (`68`, `111`, `103`) once again represent the characters `D`, `o`, and `g`.
 The fourth `codeUnit` value (`8252`) is again a decimal equivalent of the hexadecimal value `203C`, which represents the Unicode scalar `U+203C` for the `DOUBLE EXCLAMATION MARK` character.

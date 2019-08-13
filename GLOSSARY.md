@@ -6,6 +6,7 @@
 + Типобезпечність та Визначення Типів (Type Safety and Type Inference)
 + Числа з рухомою комою (Floating-point numbers)
 + Ініціалізатор (initializer)
++ Синтаксис ініціалізації (initializer syntax)
 + Примусове розгортання (Forced Unwrapping)
 + Ранній вихід (Early Exit)
 + Опціонали, що розгортаються неявно (Implicitly Unwrapped Optionals)
@@ -19,3 +20,11 @@
 + Тип-значення (Value Type)
 + Тип-посилання (Reference Type)
 + Перечислення (Enumeration)
++ Міст (Bridging)
++ Приведення типів (Type casting) https://uk.wikipedia.org/wiki/Приведення_типів
++ Змінюваність (Mutability)
++ Оператор додавання з присвоєнням (`+=`) addition assignment operator
++ Юнікодовий скаляр - Unicode scalar 
++ кодові позиції - code point (https://uk.wikipedia.org/wiki/Юнікод)
++ Сурогатні пари - surrogate pair
++ кластер графем - Grapheme claster
