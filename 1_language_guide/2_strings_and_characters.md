@@ -194,12 +194,13 @@ let someString = "Some string literal value"
 ```swiftwelcome.remove(at: welcome.index(before: welcome.endIndex))// welcome тепер дорівнює "hello there" let range = welcome.index(welcome.endIndex, offsetBy: -6)..<welcome.endIndexwelcome.removeSubrange(range)// welcome тепер дорівнює "hello"
 ```
 > **Примітка**> 
-> Методи `insert(_:at:)`, `insert(contentsOf:at:)`, `remove(at:)`, та `removeSubrange(_:)` можна використовувати на будь-якому типі, що реалізовує протокол `RangeReplaceableCollection`. Це включає `String`, як показано тут, так же як і типи колекцій, такі як `Array`, `Dictionary`, та `Set`.и### Comparing Strings
-Swift provides three ways to compare textual values: string and character equality, prefix equality, and suffix equality.#### Рівність рядків та символів
-String and Character Equality
-String and character equality is checked with the “equal to” operator (`==`) and the “not equal to” operator (`!=`), as described in Comparison Operators:
+> Методи `insert(_:at:)`, `insert(contentsOf:at:)`, `remove(at:)`, та `removeSubrange(_:)` можна використовувати на будь-якому типі, що реалізовує протокол `RangeReplaceableCollection`. Це включає `String`, як показано тут, так же як і типи колекцій, такі як `Array`, `Dictionary`, та `Set`.и### Порівняння рядків
 
-```swiftlet quotation = "We're a lot alike, you and I."let sameQuotation = "We're a lot alike, you and I."if quotation == sameQuotation {    print("These two strings are considered equal")}// Prints "These two strings are considered equal"
+Swift надає три способи порівнювати текстові значення: рівність рядків та символів, рівність префіксів та рівність суфіксів.#### Рівність рядків та символів
+
+Рівність рядків та символів перевіряється оператором "дорівнює" (`==`) та оператором "не дорівнює", як показано в підрозділі [Оператори порівняння](1_base_operators.md/Оператори-порівняння):
+
+```swiftlet quotation = "We're a lot alike, you and I."let sameQuotation = "We're a lot alike, you and I."if quotation == sameQuotation {    print("Ці два рядки вважаються еквівалентними")}// Надрукує "Ці два рядки	 вважаються еквівалентними"
 ```
 Two `String` values (or two `Character` values) are considered equal if their extended grapheme clusters are *canonically equivalent*. Extended grapheme clusters are canonically equivalent if they have the same linguistic meaning and appearance, even if they are composed from different Unicode scalars behind the scenes.
 For example, `LATIN SMALL LETTER E WITH ACUTE` (`U+00E9`) is canonically equivalent to `LATIN SMALL LETTER E` (`U+0065`) followed by `COMBINING ACUTE ACCENT` (`U+0301`). Both of these extended grapheme clusters are valid ways to represent the character `é`, and so they are considered to be canonically equivalent:
