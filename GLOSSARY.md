@@ -28,3 +28,5 @@
 + кодові позиції - code point (https://uk.wikipedia.org/wiki/Юнікод)
 + Сурогатні пари - surrogate pair
 + кластер графем - Grapheme claster
++ форми кодування - Unicode-defined *encoding forms*
++ одиниці кодування - Code units

@@ -145,7 +145,7 @@ let someString = "Some string literal value"
 Юнікодові скаляри для символів індикації регіонів можуть поєднуватись у пари, щоб зібрати одне значення `Character`, як наприклад ця комбінація `REGIONAL INDICATOR SYMBOL LETTER U` (`U+1F1FA`) та `REGIONAL INDICATOR SYMBOL LETTER A` (`U+1F1E6`):
 
 ```swiftlet regionalIndicatorForUA: Character = "\u{1F1FA}\u{1F1E6}"// regionalIndicatorForUA дорівнює 🇺🇦
-```### Counting Characters
+```### Кількість символів
 
 Щоб отримати кількість символів `Character` у рядку, слід використовувати властивість `count` властивості `characters` рядка. 
 
@@ -202,59 +202,85 @@ Swift надає три способи порівнювати текстові �
 
 ```swiftlet quotation = "We're a lot alike, you and I."let sameQuotation = "We're a lot alike, you and I."if quotation == sameQuotation {    print("Ці два рядки вважаються еквівалентними")}// Надрукує "Ці два рядки	 вважаються еквівалентними"
 ```
-Two `String` values (or two `Character` values) are considered equal if their extended grapheme clusters are *canonically equivalent*. Extended grapheme clusters are canonically equivalent if they have the same linguistic meaning and appearance, even if they are composed from different Unicode scalars behind the scenes.
-For example, `LATIN SMALL LETTER E WITH ACUTE` (`U+00E9`) is canonically equivalent to `LATIN SMALL LETTER E` (`U+0065`) followed by `COMBINING ACUTE ACCENT` (`U+0301`). Both of these extended grapheme clusters are valid ways to represent the character `é`, and so they are considered to be canonically equivalent:
 
-```swift// "Voulez-vous un café?" using LATIN SMALL LETTER E WITH ACUTElet eAcuteQuestion = "Voulez-vous un caf\u{E9}?" // "Voulez-vous un café?" using LATIN SMALL LETTER E and COMBINING ACUTE ACCENTlet combinedEAcuteQuestion = "Voulez-vous un caf\u{65}\u{301}?" if eAcuteQuestion == combinedEAcuteQuestion {    print("These two strings are considered equal")}// Prints "These two strings are considered equal"
+Два рядки `String` (або два символи `Character`) вважаються еквівалентними, якщо їх розширені кластери графем є *канонічно еквівалентні*. Розширені кластери графем є канонічно еквівалентними, якщо вони мають однакові лінгвістичні значення та вигляд, навіть якщо вони складаються із різних юнікодових скалярів за лаштунками.
+
+Наприклад, символ, що складається зі скаляру `LATIN SMALL LETTER E WITH ACUTE` (`U+00E9`) є канонічно еквівалентним до символу, що складається зі скалярів `LATIN SMALL LETTER E` (`U+0065`) та `COMBINING ACUTE ACCENT` (`U+0301`). Обидва ці розширені графемні кластери преставляють символ `é`, тому вони вважаються канонічно еквівалентними:
+
+```swift// "Voulez-vous un café?" використовуючи 'LATIN SMALL LETTER E WITH ACUTE'let eAcuteQuestion = "Voulez-vous un caf\u{E9}?" // "Voulez-vous un café?" використовуючи 'LATIN SMALL LETTER E' та 'COMBINING ACUTE ACCENT'let combinedEAcuteQuestion = "Voulez-vous un caf\u{65}\u{301}?" if eAcuteQuestion == combinedEAcuteQuestion {    print("Ці два рядки вважаються еквівалентними")}// Надрукує "Ці два рядки вважаються еквівалентними"
 ```
-Conversely, `LATIN CAPITAL LETTER A` (`U+0041`, or `"A"`), as used in English, is not equivalent to `CYRILLIC CAPITAL LETTER A` (`U+0410`, or `"А"`), as used in Russian. The characters are visually similar, but do not have the same linguistic meaning:
 
-```swiftlet latinCapitalLetterA: Character = "\u{41}" let cyrillicCapitalLetterA: Character = "\u{0410}" if latinCapitalLetterA != cyrillicCapitalLetterA {    print("These two characters are not equivalent.")}// Prints "These two characters are not equivalent."
+І навпаки, `LATIN CAPITAL LETTER A` (`U+0041`, або `"A"`), що використовується в англійській мові, не є еквівалентним до `CYRILLIC CAPITAL LETTER A` (`U+0410`, або `"А"`), що використовується в українській мові. Ці символи візуально схожі, але мають різне лінгвістичне значення:
+```swiftlet latinCapitalLetterA: Character = "\u{41}" let cyrillicCapitalLetterA: Character = "\u{0410}" if latinCapitalLetterA != cyrillicCapitalLetterA {    print("Ці два символи не є еквівалентними.")}// Надрукує "Ці два символи не є еквівалентними."
 ```
 > **Примітка**>
-> String and character comparisons in Swift are not locale-sensitive.#### Prefix and Suffix Equality
-To check whether a string has a particular string prefix or suffix, call the string’s `hasPrefix(_:)` and `hasSuffix(_:)` methods, both of which take a single argument of type `String` and return a Boolean value.
-The examples below consider an array of strings representing the scene locations from the first two acts of Shakespeare’s *Romeo and Juliet*:
+> Порівняння рядків та символів у Swift не враховує поточну локаль.#### Рівність префіксів та суфіксів
+
+Щоб дізнатись, чи має рядок певний префікс чи суфікс, використовуйте методи `hasPrefix(_:)` та `hasSuffix(_:)` відповідно, обидва з яких приймають єдиний аргумент типу `String` та повертають булеве значення. 
+
+У прикладах нижче розглядається масив рядків, що представляє локації сцен із перших двох актів шекспірівської *Ромео і Джульєтта*:
 
 ```swiftlet romeoAndJuliet = [    "Act 1 Scene 1: Verona, A public place",    "Act 1 Scene 2: Capulet's mansion",    "Act 1 Scene 3: A room in Capulet's mansion",    "Act 1 Scene 4: A street outside Capulet's mansion",    "Act 1 Scene 5: The Great Hall in Capulet's mansion",    "Act 2 Scene 1: Outside Capulet's mansion",    "Act 2 Scene 2: Capulet's orchard",    "Act 2 Scene 3: Outside Friar Lawrence's cell",    "Act 2 Scene 4: A street in Verona",    "Act 2 Scene 5: Capulet's mansion",    "Act 2 Scene 6: Friar Lawrence's cell"]
 ```
-You can use the `hasPrefix(_:)` method with the `romeoAndJuliet` array to count the number of scenes in Act 1 of the play:
 
-```swiftvar act1SceneCount = 0for scene in romeoAndJuliet {    if scene.hasPrefix("Act 1 ") {        act1SceneCount += 1    }}print("There are \(act1SceneCount) scenes in Act 1")// Prints "There are 5 scenes in Act 1"
+Можна використати метод `hasPrefix(_:)` з масивом `romeoAndJuliet`, щоб підрахувати кількість сцен у першому акті п'єси:
+
+```swiftvar act1SceneCount = 0for scene in romeoAndJuliet {    if scene.hasPrefix("Act 1 ") {        act1SceneCount += 1    }}print("У першому акті \(act1SceneCount) сцен")// Надрукує "У першому акті 5 сцен"
 ```
-Similarly, use the `hasSuffix(_:)` method to count the number of scenes that take place in or around Capulet’s mansion and Friar Lawrence’s cell:
 
-```swiftvar mansionCount = 0var cellCount = 0for scene in romeoAndJuliet {    if scene.hasSuffix("Capulet's mansion") {        mansionCount += 1    } else if scene.hasSuffix("Friar Lawrence's cell") {        cellCount += 1    }}print("\(mansionCount) mansion scenes; \(cellCount) cell scenes")// Prints "6 mansion scenes; 2 cell scenes"
+Аналогічно, за допомогою методу `hasSuffix(_:)` можна підрахувати кількість сцен, що відбувається поблизу палацу Капулетті ("Capulet’s mansion") та келії брата Лоренцо (Friar Lawrence’s cell):
+
+```swiftvar mansionCount = 0var cellCount = 0for scene in romeoAndJuliet {    if scene.hasSuffix("Capulet's mansion") {        mansionCount += 1    } else if scene.hasSuffix("Friar Lawrence's cell") {        cellCount += 1    }}print("\(mansionCount) сцен біля палацу; \(cellCount) сцени у келії")// Prints "6 сцен біля палацу; 2 сцени у келії"
 ```
 > **Примітка**> 
-> The `hasPrefix(_:)` and `hasSuffix(_:)` methods perform a character-by-character canonical equivalence comparison between the extended grapheme clusters in each string, as described in [Рівність рядків та символів](Рівність-рядків-та-символів).### Unicode Representations of StringsWhen a Unicode string is written to a text file or some other storage, the Unicode scalars in that string are encoded in one of several Unicode-defined *encoding forms*. Each form encodes the string in small chunks known as *code units*. These include the UTF-8 encoding form (which encodes a string as 8-bit code units), the UTF-16 encoding form (which encodes a string as 16-bit code units), and the UTF-32 encoding form (which encodes a string as 32-bit code units).
-Swift provides several different ways to access Unicode representations of strings. You can iterate over the string with a `for`-`in` statement, to access its individual `Character` values as Unicode extended grapheme clusters. This process is described in [Working with Characters](робота-із-символами).Alternatively, access a `String` value in one of three other Unicode-compliant representations:
- + A collection of UTF-8 code units (accessed with the string’s `utf8` property) + A collection of UTF-16 code units (accessed with the string’s `utf16` property) + A collection of 21-bit Unicode scalar values, equivalent to the string’s UTF-32 encoding form (accessed with the string’s `unicodeScalars` property)
- Each example below shows a different representation of the following string, which is made up of the characters `D`, `o`, `g`, `‼` (`DOUBLE EXCLAMATION MARK`, or Unicode scalar `U+203C`), and the `🐶`character (`DOG FACE`, or Unicode scalar `U+1F436`):
+> Методи `hasPrefix(_:)` та `hasSuffix(_:)` виконують посимвольну перевірку на канонічну еквівалентність між розширеними кластерами графем в кожному рядку, як описано в [Рівність рядків та символів](Рівність-рядків-та-символів).и### Юнікодове представлення рядківКоли юнікодовий рядок записується в текстовий файл чи в якесь інше місце зберігання, юнікодові скаляри в цьому рядку кодуються за допомогою одної із *форм кодування* Юнікоду. Кожна форма кодує рядок маленькими порціями, котрі відомі як *одиниці кодування*. Вони включають форму кодування UTF-8 (котра кодує рядок 8-бітними одиницями кодування), форму кодування UTF-16 (котра кодує рядок 16-бітними кодовими одиницями), та форму кодування UTF-32 (котра кодує рядок 32-бітними кодовими одиницями).
+
+Мова Swift надає кілька різних способів отримати юнікодові представлення рядка. Можна ітерувати рядок за допомогою інструкції `for`-`in`, отримуючи окремі значення `Character` як юнікодові розширені кластери графем. Цей процес описано у підрозділі [Робота із символами](робота-із-символами).
+
+Іншим способом є доступ до трьох інших преставлень рядка `String`:
+
+ + колекція одиниць кодування UTF-8 (за допомогою властивості рядка `utf8`)
+ + колекція одиниць кодування UTF-16 (за допомогою властивості рядка `utf16`)
+ + колекція 21-бітних юнікодових скалярів, еквівалентних формі кодування UTF-32 (за допомогою властивості рядка `unicodeScalars `)
+
+Кожен приклад нижче демонструє різні представлення наступного рядка, що складається із символів `D`, `o`, `g`, `‼` (`DOUBLE EXCLAMATION MARK`, або юнікодовий скаляр `U+203C`) та символу `🐶`(`DOG FACE`, або юнікодовий скаляр `U+1F436`):
 
 ```swiftlet dogString = "Dog‼🐶"
-```#### UTF-8 RepresentationYou can access a UTF-8 representation of a `String` by iterating over its utf8 property. This property is of type `String.UTF8View`, which is a collection of unsigned 8-bit (`UInt8`) values, one for each byte in the string’s UTF-8 representation:
+```#### Представлення в UTF-8Отримаємо представлення в UTF-8 рядка `String` ітеруючи його властивість `utf8`. Ця властивість має тип `String.UTF8View`, котрий є колекцією беззнакових 8-бітних значень (`UInt8`), по одному на кожен байт у представлення в UTF-8:
 
 ![UTF-8 Representation example](images/UTF8_2x.png)
 
-￼```swiftfor codeUnit in dogString.utf8 {    print("\(codeUnit) ", terminator: "")}print("")// 68 111 103 226 128 188 240 159 144 182
+```swiftfor codeUnit in dogString.utf8 {    print("\(codeUnit) ", terminator: "")}print("")// Надрукує "68 111 103 226 128 188 240 159 144 182 "
 ```
-In the example above, the first three decimal `codeUnit` values (`68`, `111`, `103`) represent the characters `D`, `o`, and `g`, whose UTF-8 representation is the same as their ASCII representation. The next three decimal `codeUnit` values (`226`, `128`, `188`) are a three-byte UTF-8 representation of the `DOUBLE EXCLAMATION MARK` character. The last four codeUnit values (`240`, `159`, `144`, `182`) are a four-byte UTF-8 representation of the `DOG FACE` character.#### UTF-16 RepresentationYou can access a UTF-16 representation of a `String` by iterating over its `utf16` property. This property is of type `String.UTF16View`, which is a collection of unsigned 16-bit (`UInt16`) values, one for each 16-bit code unit in the string’s UTF-16 representation:￼
+
+У прикладі вище, перші три десяткові значення `codeUnit` (`68`, `111`, `103`) представляють символи `D`, `o`, та `g`, чиє представлення в UTF-8 співпадає із їх представленням у кодуванні [ASCII](https://uk.wikipedia.org/wiki/ASCII). Наступні три десяткові значення `codeUnit` (`226`, `128`, `188`) є трьохбайтовим представленням в UTF-8 символу `DOUBLE EXCLAMATION MARK`. Останні чотири значення `codeUnit` (`240`, `159`, `144`, `182`) є чотирьохбайтновим представленням в UTF-8 символу `DOG FACE`.#### Представлення в UTF-16
+
+Отримаємо представлення в UTF-16 рядка `String` ітеруючи його властивість `utf16`.  Ця властивість має тип `String.UTF16View `, котрий є колекцією беззнакових 16-бітних значень (`UInt16`), по одному на кожну 16-бітну одининцю кодування у представленні в UTF-16:
+
 ![UTF-8 Representation example](images/UTF16_2x.png)
 
-```swiftfor codeUnit in dogString.utf16 {    print("\(codeUnit) ", terminator: "")}print("")// Prints "68 111 103 8252 55357 56374 "
+```swiftfor codeUnit in dogString.utf16 {    print("\(codeUnit) ", terminator: "")}print("")// Надрукує "68 111 103 8252 55357 56374 "
 ```
-Again, the first three codeUnit values (`68`, `111`, `103`) represent the characters `D`, `o`, and `g`, whose UTF-16 code units have the same values as in the string’s UTF-8 representation (because these Unicode scalars represent ASCII characters).
-The fourth `codeUnit` value (`8252`) is a decimal equivalent of the hexadecimal value `203C`, which represents the Unicode scalar `U+203C` for the `DOUBLE EXCLAMATION MARK` character. This character can be represented as a single code unit in UTF-16.
-The fifth and sixth `codeUnit` values (`55357` and `56374`) are a UTF-16 surrogate pair representation of the `DOG FACE` character. These values are a high-surrogate value of `U+D83D` (decimal value `55357`) and a low-surrogate value of `U+DC36` (decimal value `56374`).#### Unicode Scalar RepresentationYou can access a Unicode scalar representation of a `String` value by iterating over its `unicodeScalars` property. This property is of type `UnicodeScalarView`, which is a collection of values of type `UnicodeScalar`.Each `UnicodeScalar` has a `value` property that returns the scalar’s 21-bit value, represented within a `UInt32` value:
+
+Знову, перші три десяткові значення `codeUnit` (`68`, `111`, `103`) представляють символи `D`, `o`, та `g`, чиє представлення в кодових одиницях UTF-16 співпадає із їх представленням у кодуванні UTF-8 (бо ці юнікодові скаляри представляють символи ASCII). 
+
+Четвертим значенням `codeUnit` (`8252`) є десятковий еквівалент шістнадцяткового значення `203C`, що представляє юнікодовий скаляр `U+203C` для символу `DOUBLE EXCLAMATION MARK`. Цей символ може бути представлено як єдина одиниця кодування в UTF-16.
+
+П'яте і шосте значення `codeUnit` (`55357` та `56374`) є представленням у вигляді сурогатної пари UTF-16 символу `DOG FACE`. Ці значення є вищим сурогатом `U+D83D` (із десятковим значенням `55357`) та нижчим сурогатом `U+DC36` (із десятковим значенням `56374`).#### Представлення в юнікодових скалярахОтримаємо представлення в юнікодових скалярах рядка `String` ітеруючи його властивість `unicodeScalars`. Ця властивість має тип `UnicodeScalarView`, котрий є колекцією значень типу `UnicodeScalar`.
+
+Кожен екземпляр `UnicodeScalar` має властивість `value`, що повертає 21-бітне значення скаляру, представлене у значенні типу `UInt32`:
 
 ![UTF-8 Representation example](images/UnicodeScalar_2x.png)￼
-```swiftfor scalar in dogString.unicodeScalars {    print("\(scalar.value) ", terminator: "")}иprint("")// Prints "68 111 103 8252 128054 "
+```swiftfor scalar in dogString.unicodeScalars {    print("\(scalar.value) ", terminator: "")}print("")// Надрукує "68 111 103 8252 128054 "
 ```
-The value properties for the first three `UnicodeScalar` values (`68`, `111`, `103`) once again represent the characters `D`, `o`, and `g`.
-The fourth `codeUnit` value (`8252`) is again a decimal equivalent of the hexadecimal value `203C`, which represents the Unicode scalar `U+203C` for the `DOUBLE EXCLAMATION MARK` character.
-The `value` property of the fifth and final `UnicodeScalar`, `128054`, is a decimal equivalent of the hexadecimal value `1F436`, which represents the Unicode scalar `U+1F436` for the `DOG FACE` character.
-As an alternative to querying their value properties, each `UnicodeScalar` value can also be used to construct a new `String` value, such as with string interpolation:
+
+Властивості `value` перших трьох значень `UnicodeScalar` (`68`, `111`, `103`) знову представляють символи `D`, `o`, та `g`.
+
+Четверте значення `UnicodeScalar` (`8252`) знову є десятковим еквівалентом шістнадцяткового значення `203C`, котре представляє юнікодовий скаляр `U+203C` для символу `DOUBLE EXCLAMATION MARK`.
+
+Значення п'ятого і останнього `UnicodeScalar` (`128054`) є десятковим еквівалентом шістнадцяткового значення `1F436`, що представляє юнікодовий скаляр `U+1F436` для символу `DOG FACE`.
+
+Також, замість як запитувати властивості `value` у значень `UnicodeScalar`, можна використовувати ці значення для створення нових рядків, зокрема за допомогою інтерполяції рядків:
 
 ```swiftfor scalar in dogString.unicodeScalars {    print("\(scalar) ")}// D// o// g// ‼// 🐶
 ```
