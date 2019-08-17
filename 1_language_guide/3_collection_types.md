@@ -27,7 +27,7 @@
 ```swiftvar someInts = [Int]()print("someInts має тип [Int] та містить \(someInts.count) елементів.")// Надрукує "someInts має тип [Int] та містить 0 елементів."
 ```
 
-Слід зазничити, що тип змінної `someInts` визачено як `[Int]` із типу ініціалізатора.Іншим способом, за умови що контекст вже надає інформацію про тип, наприклад як аргумент функції чи заздалегіть типізована змінна чи константа, є створення порожнього масиву за допомогою літерала порожнього масиву, що записується як `[]` (порожня пара квадратних дужок).
+Слід зазничити, що тип змінної `someInts` визачено як `[Int]` із типу ініціалізатора.Іншим способом ініціалізації, за умови що контекст вже надає інформацію про тип, наприклад як аргумент функції чи заздалегіть типізована змінна чи константа, є створення порожнього масиву за допомогою літерала порожнього масиву, що записується як `[]` (порожня пара квадратних дужок).
 
 ```swiftsomeInts.append(3)// someInts тепер містить 1 значення типу IntsomeInts = []// someInts тепер порожній масив, проте досі має тип [Int]
 ```
@@ -148,98 +148,134 @@
 ```swiftfor (index, value) in shoppingList.enumerated() {    print("Елемент \(index + 1): \(value)")}// Елемент 1: Шість яєць// Елемент 2: Молоко// Елемент 3: Борошно// Елемент 4: Пекарний порошок// Елемент 5: Банани
 ```
 
-Більше інформаціє про цикл `for`-`in` можна отримати у підрозділі [Цикл For-In](4_control_flow.md#Цикл-For-In).### Sets
-A *set* stores distinct values of the same type in a collection with no defined ordering. You can use a set instead of an array when the order of items is not important, or when you need to ensure that an item only appears once.
+Більше інформаціє про цикл `for`-`in` можна отримати у підрозділі [Цикл For-In](4_control_flow.md#Цикл-For-In).### Множини
+
+*Множини* зберігають неповторні значення одного типу в невпорядкованій колекції. Слід користуватись множинами замість масивів у випакдах, коли порядок елементів не є важливим, чи коли слід бути певних у тому, що елементи в колекції не повторюються. 
+
+> **Примітка**
+>
+> Існує міст між типом `Set` у  Swift та класом `NSSet` у Foundation.
+>  
+> За детальнішою інформацією про використання типу `Set` із Foundation та Cocoa, дивіться розділ "Working with Cocoa Data Types" в книзі *Using Swift with Cocoa and Objective-C (Swift 3.0.1)*.
+
+#### Значення хешу для множинних типів
+
+Для типу, що може зберігатись у множині, повинна бути визначена операція *хешування*. Іншими словами, тип повинен давати можливість обчислювати значення свого хешу. Значенням хешу є цілочисельне значення, котре співпадає для усіх однакових об'єкітв, тобто із `a == b`, слідує, що `a.hashValue == b.hashValue`.
+
+Усі базові типи у Swift (такі як `String`, `Int`, `Double`, та `Bool`), мають визначену операцію хешування за замовчанням, і можуть використовуватись як типи значень у множинах, чи як ключі у словниках. Випадки у перечисленнях без асоційованих значень (як описано в розділі [Перечислення](7_enumerations.md)) також визначають операцію хешування за замовчанням. 
 > **Примітка**
 > 
-> Swift’s `Set` type is bridged to Foundation’s `NSSet` class.
+> Ви можете використовувати ваші власні типи як значення у множинах чи як ключі у словниках, реалізувавши у них протокол `Hashable` зі стандартної бібліотеки Swift. Типи, що реалізовують протокол `Hashable`, повинні надати властивість для читання типу `Int` на ім'я `hashValue`. Значення, що повертає `hashValue` не обов'язково повинно бути однаковим під час різних запувків програми, чи у різних програмах. 
+>
+> Оскільки протокол `Hashable` наслідує протокол `Equatable`, типи, що реалізовують протокол `Hashable`, повинні також реалізовувати прокотол `Equatable`, тобто надавати реалізацію оператору рівності (`==`). Протокол `Equatable` вимагає, щоб реалізація оператору `==` була відношенням рівності. Це означає, що реалізація `==` повинна задовольняти три наступні умови для будь-яких значень `a`, `b` і `с`:
 > 
-> For more information about using `Set` with Foundation and Cocoa, see Working with Cocoa Data Types in *Using Swift with Cocoa and Objective-C (Swift 3.0.1)*.
-#### Hash Values for Set Types
-A type must be *hashable* in order to be stored in a set—that is, the type must provide a way to compute a *hash value* for itself. A hash value is an *Int* value that is the same for all objects that compare equally, such that if `a == b`, it follows that `a.hashValue == b.hashValue`.
-All of Swift’s basic types (such as `String`, `Int`, `Double`, and `Bool`) are hashable by default, and can be used as set value types or dictionary key types.   Enumerations case values without associated values (as described in [Перечислення](7_enumerations.md)) are also hashable by default.
-> **Примітка**
+> + `a == a` (Рефлексивність)
+> + Із `a == b` слідує `b == a` (Симетричність)
+> + Із `a == b && b == c` слідує `a == c` (Транзитивність)
 > 
-> You can use your own custom types as set value types or dictionary key types by making them conform to the Hashable protocol from Swift’s standard library. Types that conform to the Hashable protocol must provide a gettable Int property called hashValue. The value returned by a type’s hashValue property is not required to be the same across different executions of the same program, or in different programs.
-> 
-> Because the Hashable protocol conforms to Equatable, conforming types must also provide an implementation of the equals operator (==). The Equatable protocol requires any conforming implementation of == to be an equivalence relation. That is, an implementation of == must satisfy the following three conditions, for all values a, b, and c:
-> > + a == a (Reflexivity)
-> + a == b implies b == a (Symmetry)
-> + a == b && b == c implies a == c (Transitivity)
-> 
-> For more information about conforming to protocols, see [Протоколи](21_protocols.md).
- #### Set Type Syntax
-The type of a Swift set is written as `Set<Element>`, where `Element` is the type that the set is allowed to store. Unlike arrays, sets do not have an equivalent shorthand form.
-#### Creating and Initializing an Empty Set
-You can create an empty set of a certain type using initializer syntax:
-```swiftvar letters = Set<Character>()print("letters is of type Set<Character> with \(letters.count) items.")// Надрукує "letters is of type Set<Character> with 0 items."
+> За детальнішою інформацією про реалізацію протоколів, дивіться розділ [Протоколи](21_protocols.md).
+ 
+#### Синтаксис множин
+
+Типи множин у Swift записуються як `Set<Element>`, де `Element` є типом, котрий можна зберігати у множині. На відміну від масивів, множини не мають еквівалентної скороченої форми запису.
+
+#### Створення та ініціалізація порожньої множини
+
+Щоб створити порожню множину певного типу, слід використовувати наступний синтаксис:
+
+```swiftvar letters = Set<Character>()print("letters має тип Set<Character> і містить \(letters.count) елементів.")// Надрукує "letters має тип  Set<Character> і містить 0 елементів."
 ```> **Примітка**
-> > The type of the `letters` variable is inferred to be `Set<Character>`, from the type of the initializer.
- Alternatively, if the context already provides type information, such as a function argument or an already typed variable or constant, you can create an empty set with an empty array literal:
+> 
+> Тип змінної `letters` визначається як `Set<Character>`, за типом ініціалізатора.
 
-```swiftletters.insert("a")// letters now contains 1 value of type Characterletters = []// letters is now an empty set, but is still of type Set<Character>
-```
-#### Creating a Set with an Array Literal
-You can also initialize a set with an array literal, as a shorthand way to write one or more values as a set collection.
-The example below creates a set called `favoriteGenres` to store `String` values:
+Іншим способом ініціалізації, за умови що контекст вже надає інформацію про тип, наприклад як аргумент функції чи заздалегіть типізована змінна чи константа, можна створити порожню множину за допомогою літералу порожнього масиву:
 
-```swiftvar favoriteGenres: Set<String> = ["Rock", "Classical", "Hip hop"]// favoriteGenres has been initialized with three initial items
+```swiftletters.insert("a")// letters тепер містить 1 одне значення типу Characterletters = []// letters тепер порожня множина, і все ще має тип Set<Character>
 ```
-The `favoriteGenres` variable is declared as “a set of `String` values”, written as `Set<String>`. Because this particular set has specified a value type of `String`, it is *only* allowed to store `String` values. Here, the `favoriteGenres` set is initialized with three `String` values (`"Rock"`, `"Classical"`, and `"Hip hop"`), written within an array literal.
+
+#### Створення множини за допомогою літералу масиву
+
+Також можна ініціалізувати множину літералом масиву, як скорочений спосіб записати одне або кілька значень як множину. 
+
+У наступному прикладі створено множину з іменем `favoriteGenres` для зберігання значень типу `String`:
+
+```swiftvar favoriteGenres: Set<String> = ["Rock", "Classical", "Hip hop"]// змінну favoriteGenres було ініціалізовано як множину із трьома початковими елементами
+```
+
+Змінну `favoriteGenres` визначено як “множина значень типу `String`”, що пишеться як `Set<String>`. Оскільки ця конкретна множина визначає тип своїх значень як `String`, у ній можуть зберігатися *тільки* значення типу `String`. Тут, множину `favoriteGenres` ініціалізовано трьому значеннями типу `String` (`"Rock"`, `"Classical"`, та `"Hip hop"`), що записані у формі літералу масиву.
 > **Примітка**
-> > The `favoriteGenres` set is declared as a variable (with the `var` introducer) and not a constant (with the `let` introducer) because items are added and removed in the examples below.
-A set type cannot be inferred from an array literal alone, so the type `Set` must be explicitly declared. However, because of Swift’s type inference, you don’t have to write the type of the set if you’re initializing it with an array literal containing values of the same type. The initialization of `favoriteGenres `could have been written in a shorter form instead:
+> 
+> Множину `favoriteGenres` оголошено як змінну (за допомогою інструкції `var`), а не константою (за допомогою інструкції `let`), бо у наступних прикладах у неї будуть додаватись нові елементи.
 
-```swiftvar favoriteGenres: Set = ["Rock", "Classical", "Hip hop"]
-```
-Because all values in the array literal are of the same type, Swift can infer that `Set<String>` is the correct type to use for the `favoriteGenres` variable.#### Accessing and Modifying a Set
-You access and modify a set through its methods and properties.
-To find out the number of items in a set, check its read-only `count` property:
+Множинний тип не може бути визначено із самого по собі літералу масиву, тому тип `Set` оголошується явно. Однак, завдяки виведенню типів у Swift, не потрібно вказувати тип множини у випадку ініціалізації її за допомогою літералу масиву, що містить значення однакового типу. Ініціалізацію змінної `favoriteGenres` можна було би записати коротше наступним чином:
 
-```swiftprint("I have \(favoriteGenres.count) favorite music genres.")// Надрукує "I have 3 favorite music genres."
+```swiftvar favoriteGenres: Set = ["Поп", "Класика", "Хіп-хоп"]
 ```
-Use the Boolean `isEmpty` property as a shortcut for checking whether the `count` property is equal to `0`:```swiftif favoriteGenres.isEmpty {    print("As far as music goes, I'm not picky.")} else {    print("I have particular music preferences.")}// Надрукує "I have particular music preferences."
-```
-You can add a new item into a set by calling the set’s `insert(_:)` method:
 
-```swiftfavoriteGenres.insert("Jazz")// favoriteGenres now contains 4 items
-```
-You can remove an item from a set by calling the set’s `remove(_:)` method, which removes the item if it’s a member of the set, and returns the removed value, or returns `nil` if the set did not contain it. Alternatively, all items in a set can be removed with its `removeAll()` method.
+Оскільки всі значення в літералі масиву мають однаковий тип, Swift визначає, що єдиним коректним типом змінної `favoriteGenres` має бути `Set<String>`.
 
-```swiftif let removedGenre = favoriteGenres.remove("Rock") {    print("\(removedGenre)? I'm over it.")} else {    print("I never much cared for that.")}// Надрукує "Rock? I'm over it."
-```
-To check whether a set contains a particular item, use the `contains(_:)` method.
+#### Доступ до елементів множини та її модифікація
 
-```swiftif favoriteGenres.contains("Funk") {    print("I get up on the good foot.")} else {    print("It's too funky in here.")}// Надрукує "It's too funky in here."
-```
-#### Iterating Over a SetYou can iterate over the values in a set with a `for`-`in` loop.
+Щоб отримати доступ до елементів множини чи змінити їх, слід користуватись її методами і властивостями.
 
-```swiftfor genre in favoriteGenres {    print("\(genre)")}// Jazz// Hip hop// Classical
-```
-For more about the for-in loop, see [Цикл For-In](4_control_flow.md#Цикл-For-In).
-Swift’s `Set` type does not have a defined ordering. To iterate over the values of a set in a specific order, use the `sorted()` method, which returns the set’s elements as an array sorted using the `<` operator.
+Щоб дізнатись кількість елементів у множині, слід перевірити її властивість `count`:
 
-```swiftfor genre in favoriteGenres.sorted() {    print("\(genre)")}// Classical// Hip hop// Jazz
+```swiftprint("У мене є \(favoriteGenres.count) улюблених жанрів музики.")// Надрукує "У мене є 3 улюблених жанрів музики."
 ```
-### Performing Set Operations
-You can efficiently perform fundamental set operations, such as combining two sets together, determining which values two sets have in common, or determining whether two sets contain all, some, or none of the same values.
-#### Fundamental Set OperationsThe illustration below depicts two sets — `a` and `b` — with the results of various set operations represented by the shaded regions.
 
-![](images/setVennDiagram_2x.png)￼ 
-+ Use the `intersection(_:)` method to create a new set with only the values common to both sets.
-+ Use the `symmetricDifference(_:)` method to create a new set with values in either set, but not both.
-+ Use the `union(_:)` method to create a new set with all of the values in both sets.
-+ Use the `subtracting(_:)` method to create a new set with values not in the specified set.
+Булева властивість `isEmpty` є скороченим записом перевірки, чи дорівнює властивість `count` нулю:```swiftif favoriteGenres.isEmpty {    print("Що стосується музики, я не вибагливий.")} else {    print("У мене є певні музичні вподобання.")}// Надрукує "У мене є певні музичні вподобання."
+```
+
+Можна додавати нові елементи у множину, викликаючи метод `insert(_:)`:
+
+```swiftfavoriteGenres.insert("Джаз")// favoriteGenres тепер містить 4 елементи
+```
+
+Щоб видатити елемент із множини, слід викликати метод множини `remove(_:)`, кортий видаляє елемент, якщо він присутній у множині, ти повертає видалене значення, або повертає `nil` у випадку, якщо множина не містила даного елементу. Також, можна видалити всі елементи множини одразу за допомогою методу `removeAll()`.
+
+```swiftif let removedGenre = favoriteGenres.remove("Поп") {    print("\(removedGenre)? Я з цим покінчив.")} else {    print("Я ніколи цим не переймався.")}// Надрукує "Поп? Я з цим покінчив."
+```
+
+Щоб перевірити, чи містить множина певний елемент, слів використовувати метод `contains(_:)`.
+
+```swiftif favoriteGenres.contains("Кобзон") {    print("Гоп-стоп, ми падашлі із-за уґла...")} else {    print("Чотири роки, ..., без кобзона!")}// Надрукує "Чотири роки, ..., без кобзона!"
+```
+
+#### Ітерування множиниЕлементи множини можна ітерувати за допомогою циклу `for`-`in`:
+
+```swiftfor genre in favoriteGenres {    print("\(genre)")}// Хіп-хоп
+// Джаз// Класика
+```
+
+Більше інформаціє про цикл `for`-`in` можна отримати у підрозділі [Цикл For-In](4_control_flow.md#Цикл-For-In).Тип `Set` у Swift не має визначеного порядку. Щоб ітерувати елементи множини у певному порядку, слід використовувати метод `sorted()`, котрий повертає елементи множини у вигляді масиву, впорядкованого за допомогою оператору `<`:
+
+```swiftfor genre in favoriteGenres.sorted() {    print("\(genre)")}// Джаз// Класика// Хіп-хоп
+```
+
+### Операції над множинами
+
+У Swift ефективно реалізавоні операції над множинами, такі як об'єднання двох множин, знаходження спільних елементів двох множин, та визначення, чи містять дві множини всі, деякі чи жодного спільного елемента.
+
+#### Фундаментальі операції над множинамиНаступна ілюстрація зображує дві множини – `a` та `b` – та результати різних операцій над ними, відображених у вигляді зафарбованих ділянок.
+
+![](images/setVennDiagram_2x.png)￼
+
++ Метод `intersection(_:)` створює нову множину зі значень, спільних для обох множин
++ Метод `symmetricDifference(_:)` ствронює нову множину зі значень, що містяться в одніх із множин, але не в обидвох одночасно.
++ Метод `union(_:)` створює нову множину зі всіх значень із обох множин.
++ Метод `subtracting(_:)` створює нову множину зі значень, що не містяться у вказаній множині.
 
 ```swiftlet oddDigits: Set = [1, 3, 5, 7, 9]let evenDigits: Set = [0, 2, 4, 6, 8]let singleDigitPrimeNumbers: Set = [2, 3, 5, 7] oddDigits.union(evenDigits).sorted()// [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]oddDigits.intersection(evenDigits).sorted()// []oddDigits.subtracting(singleDigitPrimeNumbers).sorted()// [1, 9]oddDigits.symmetricDifference(singleDigitPrimeNumbers).sorted()// [1, 2, 9]
 ```
-#### Set Membership and Equality
-The illustration below depicts three sets — `a`, `b` and `c` — with overlapping regions representing elements shared among sets. Set `a` is a *superset* of set `b`, because a contains all elements in `b`. Conversely, set `b` is a *subset* of set `a`, because all elements in `b` are also contained by `a`. Set `b` and set `c` are *disjoint* with one another, because they share no elements in common.
+
+#### Входження в множину та рівність множин
+
+Наступна ілюстрація зображує три множини – `a`, `b` and `c` – де ділянки, що перетинаються, відображають спільні елементи множин. Множина `a` є *надмножиною* множини `b`, бо вона містить усі елементи множини `b`. І навпаки, множина `b` є *підмножиною* множини `a`, бо всі елементи множини `b` також містяться у множині `a`. Множина `b` *не перетинається* із множиною `c`, бо вони не містять жодного спільного елементу. 
 
 ![](images/setEulerDiagram_2x.png)￼
 
- + Use the “is equal” operator (`==`) to determine whether two sets contain all of the same values.
- + Use the `isSubset(of:)` method to determine whether all of the values of a set are contained in the specified set. + Use the `isSuperset(of:)` method to determine whether a set contains all of the values in a specified set. + Use the `isStrictSubset(of:)` or `isStrictSuperset(of:)` methods to determine whether a set is a subset or superset, but not equal to, a specified set. + Use the `isDisjoint(with:)` method to determine whether two sets have any values in common.
+ + Оператор “дорівнює” (`==`) визначає, чи всі елементи двох множин співпадають.
+ + Метод `isSubset(of:)` визначає, чи є дана множина підмножиною вказаної, тобто чи всі значення даної множини містяться у вказаній множині. + Метод `isSuperset(of:)` визначає, чи є дана множина надмножиною вказаної, тобто чи всі значення вказаної множини містяться у даній множині. + Методи `isStrictSubset(of:)` та `isStrictSuperset(of:)` визначають, чи є дана множина підмножиною/надмножиною вказаної, яка при цьому не дорівнює вказаній множині. + Метод `isDisjoint(with:)` визначає, чи перетинаються множини, тобто чи мають вони спільні елементи. 
 
 ```swiftlet houseAnimals: Set = ["🐶", "🐱"]let farmAnimals: Set = ["🐮", "🐔", "🐑", "🐶", "🐱"]let cityAnimals: Set = ["🐦", "🐭"] houseAnimals.isSubset(of: farmAnimals)// truefarmAnimals.isSuperset(of: houseAnimals)// truefarmAnimals.isDisjoint(with: cityAnimals)// true
 ```
