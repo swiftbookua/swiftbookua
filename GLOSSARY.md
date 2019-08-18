@@ -35,3 +35,6 @@
 + Масив - Array
 + Множина - Set	
 + літерал масиву - array literal
++ Випадок - Case(in Switch)
++ пункт where - where clause
++ 

@@ -1,31 +1,38 @@
-## Потік керування
-Control FlowSwift provides a variety of control flow statements. These include `while` loops to perform a task multiple times; `if`, `guard`, and `switch` statements to execute different branches of code based on certain conditions; and statements such as `break` and `continue` to transfer the flow of execution to another point in your code.
-Swift also provides a `for`-`in` loop that makes it easy to iterate over arrays, dictionaries, ranges, strings, and other sequences.
-Swift’s `switch` statement is also considerably more powerful than its counterpart in many C-like languages. Because the cases of a `switch` statement do not fall through to the next case in Swift, it avoids common C errors caused by missing `break` statements. Cases can match many different patterns, including interval matches, tuples, and casts to a specific type. Matched values in a `switch` case can be bound to temporary constants or variables for use within the case’s body, and complex matching conditions can be expressed with a `where` clause for each case.
+## Потік керуванняМова Swift надає багато різноманітних інструкцій потоку керування. Вони включають у себе цикли `while`, щоб виконувати задачу кілька разів; інструкції `if`, `guard`, та `switch` для розгалуження коду в залежності від певних умов; інструкції на кшталт `break` та `continue` для передачі керування до іншої точки у вашому коді. 
 
+Мова Swift також надає цикл `for`-`in`, що спрощує ітерування масивів, словників, діапазонів, рядків та інших послідовностей. 
 
-### Цикл For-InFor-In Loops
-You use the `for`-`in` loop to iterate over a sequence, such as ranges of numbers, items in an array, or characters in a string.
-This example prints the first few entries in the five-times table:
+Інструкція `switch` у Swift значно потужніша за її аналоги у багатьох C-подібних мовах. Випадки в інструкції `switch` не переходять автоматично до наступного випадку в Swift, що унеможливлює типові помилки мови C спричинені пропущеною інструкцією `break`. Випадки можуть співпадати із багатьма різними шаблонами, включаючи потрапляння до інтервалу, кортежі, чи приведення до певних типів. При співпаданні значення у випадках `switch` може бути прив'язане до тимчасової константи чи змінної для використання у тілі випадку, а складні умови співпадання можуть виражатись за допомогою пункту `where` для кожного випадку.
 
-```swiftfor index in 1...5 {    print("\(index) times 5 is \(index * 5)")}// 1 times 5 is 5// 2 times 5 is 10// 3 times 5 is 15// 4 times 5 is 20// 5 times 5 is 25
+### Цикл For-InЦикл `for`-`in` використовується для ітерування послідовності, такої як діапазон чисел, елементи масиву, чи символи в рядку.
+
+У наступному прикладі друкуються перші кілька рядків таблиці множення на п'ять:
+
+```swiftfor index in 1...5 {    print("\(index) × 5 = \(index * 5)")}// 1 × 5 = 5// 2 × 5 = 10// 3 × 5 = 15// 4 × 5 = 20// 5 × 5 = 25
 ```
-The sequence being iterated over is a range of numbers from `1` to `5`, inclusive, as indicated by the use of the closed range operator (`...`). The value of `index` is set to the first number in the range (`1`), and the statements inside the loop are executed. In this case, the loop contains only one statement, which prints an entry from the five-times table for the current value of `index`. After the statement is executed, the value of `index` is updated to contain the second value in the range (`2`), and the `print(_:separator:terminator:)` function is called again. This process continues until the end of the range is reached.
-In the example above, `index` is a constant whose value is automatically set at the start of each iteration of the loop. As such, `index` does not have to be declared before it is used. It is implicitly declared simply by its inclusion in the loop declaration, without the need for a `let` declaration keyword.
-If you don’t need each value from a sequence, you can ignore the values by using an underscore in place of a variable name.
 
-```swiftlet base = 3let power = 10var answer = 1for _ in 1...power {    answer *= base}print("\(base) to the power of \(power) is \(answer)")// Prints "3 to the power of 10 is 59049"
-```
-The example above calculates the value of one number to the power of another (in this case, `3` to the power of `10`). It multiplies a starting value of `1` (that is, `3` to the power of `0`) by `3`, ten times, using a closed range that starts with `1` and ends with `10`. For this calculation, the individual counter values each time through the loop are unnecessary — the code simply executes the loop the correct number of times. The underscore character (`_`) used in place of a loop variable causes the individual values to be ignored and does not provide access to the current value during each iteration of the loop.
-Use a for-in loop with an array to iterate over its items.
+Послідовність, що ітерується, є діапазоном чисел від `1` до `5` включно, що вказано за допомогою використання оператору закритого діапазону (`...`). Значення `index` встановлюється у перше число в діапазоні (`1`), і після цього виконуються інструкції всередині циклу. В цьому випадку, цикл містить одну інструкцію, котра друкує рядок із таблиці множення на п'ять для поточного значення `index`. Після виконання інструкції, значення `index` встановлюється у друге значення в діапазоні (`2`), і функція `print(_:separator:terminator:)` викликається знову. Цей процес триває допоки не буде досягнуто кінець діапазону.
 
-```swiftlet names = ["Anna", "Alex", "Brian", "Jack"]for name in names {    print("Hello, \(name)!")}// Hello, Anna!// Hello, Alex!// Hello, Brian!// Hello, Jack!
-```
-You can also iterate over a dictionary to access its key-value pairs. Each item in the dictionary is returned as a `(key, value)` tuple when the dictionary is iterated, and you can decompose the `(key, value)` tuple’s members as explicitly named constants for use within the body of the `for`-`in` loop. Here, the dictionary’s keys are decomposed into a constant called `animalName`, and the dictionary’s values are decomposed into a constant called `legCount`.
+У прикладі вище, `index` є константою, чиє значення автоматично встановлюється на початку кожної ітерації циклу. Константа `index` як така не зобов'язана бути оголошеною до використання. Вона неявно оголошена просто за допомогою входження її в оголошення циклу, без необхідності використання ключового слова `let`.
 
-```swiftlet numberOfLegs = ["spider": 8, "ant": 6, "cat": 4]for (animalName, legCount) in numberOfLegs {    print("\(animalName)s have \(legCount) legs")}// ants have 6 legs// spiders have 8 legs// cats have 4 legs
+Якщо вам не потрібно кожне значення в послідовності, їх можна проігнорувати записавши символ підкреслення замість імені змінної.
+
+```swiftlet base = 3let power = 10var answer = 1for _ in 1...power {    answer *= base}print("\(base) в степені \(power) дорівнює \(answer)")// Надрукує "3 в степені 10 дорівнює 59049"
 ```
-Items in a `Dictionary` may not necessarily be iterated in the same order in which they were inserted. The contents of a `Dictionary` are inherently unordered, and iterating over them does not guarantee the order in which they will be retrieved. For more on arrays and dictionaries, see [Колекції](3_collection_types.md).
+
+У прикладі вище обчислюється значення числа `base` в степені `power` (в даному випадку, `3` в степені `10`). Початкове значення `1` (тобто `3` в степені `0`) перемножується на `3` десять разів, що вказано за допомогою закритого діапазону, від `1` до `10`. Для даного обчислення, поточне значення лічильника всередині циклу не потрібне, код просто виконує цикл потрібну кількість разів. Використання символу підкреслення (`_`) замість змінної циклу дозволяє ігнорувати окремі значення і не надавати доступ до поточного значення всередині кожної ітерації циклу.
+
+Цикл `for`-`in` зручно використовувати для ітерування елементів масиву.
+
+```swiftlet names = ["Карпо", "Мотря", "Лаврін", "Мелашка"]for name in names {    print("Привіт, \(name)!")}// Привіт, Карпо!// Привіт, Мотря!// Привіт, Лаврін!// Привіт, Мелашка!
+```
+
+Також можна ітерувати елементи словнику для доступу до пар ключ-значення. Під час ітерації словнику, кожен елемент із словника повертається як кортеж `(key, value)`, і ви можете робити декомпозицію елементів кортежу `(key, value)` у явно іменовані константи для використання їх у тілі циклу `for`-`in`. Тут, ключі словника декомпонуються у константу на ім'я `animalName`, а значення словника декомпонуються у константу на ім'я `legCount`.
+
+```swiftlet numberOfLegs = ["павуки": 8, "мурахи": 6, "коти": 4]for (animalName, legCount) in numberOfLegs {    print("\(animalName) мають \(legCount) ніг")}// мурахи мають 6 ніг// павуки мають 8 ніг// коти мають 4 ніг
+```
+
+Елементи у словнику `Dictionary` не обов'язково ітеруватимуться в тому ж порядку, в якому їх було додано в словник. Вміст словнику по суті невпорядкований, тому їх ітерування не гарантує порядку, в якому з'являтимуться елементи словнику. Детальнішу інформацію про масиви і словники можна знайти в розділі [Колекції](3_collection_types.md).
 ### While Loops
 A `while` loop performs a set of statements until a condition becomes `false`. These kinds of loops are best used when the number of iterations is not known before the first iteration begins. Swift provides two kinds of `while` loops:
 
@@ -82,17 +89,17 @@ Control FlowSwift provides a variety of control flow statements. These include
 #### If
 In its simplest form, the `if` statement has a single `if` condition. It executes a set of statements only if that condition is `true`.
 
-```swiftvar temperatureInFahrenheit = 30if temperatureInFahrenheit <= 32 {    print("It's very cold. Consider wearing a scarf.")}// Prints "It's very cold. Consider wearing a scarf."
+```swiftvar temperatureInFahrenheit = 30if temperatureInFahrenheit <= 32 {    print("It's very cold. Consider wearing a scarf.")}// Надрукує "It's very cold. Consider wearing a scarf."
 ```
 The example above checks whether the temperature is less than or equal to 32 degrees Fahrenheit (the freezing point of water). If it is, a message is printed. Otherwise, no message is printed, and code execution continues after the `if` statement’s closing brace.
 The `if` statement can provide an alternative set of statements, known as an *else clause*, for situations when the `if` condition is `false`. These statements are indicated by the `else` keyword.
 
-```swifttemperatureInFahrenheit = 40if temperatureInFahrenheit <= 32 {    print("It's very cold. Consider wearing a scarf.")} else {    print("It's not that cold. Wear a t-shirt.")}// Prints "It's not that cold. Wear a t-shirt."
+```swifttemperatureInFahrenheit = 40if temperatureInFahrenheit <= 32 {    print("It's very cold. Consider wearing a scarf.")} else {    print("It's not that cold. Wear a t-shirt.")}// Надрукує "It's not that cold. Wear a t-shirt."
 ```
 One of these two branches is always executed. Because the temperature has increased to `40` degrees Fahrenheit, it is no longer cold enough to advise wearing a scarf and so the `else` branch is triggered instead.
 You can chain multiple if statements together to consider additional clauses.
 
-```swifttemperatureInFahrenheit = 90if temperatureInFahrenheit <= 32 {    print("It's very cold. Consider wearing a scarf.")} else if temperatureInFahrenheit >= 86 {    print("It's really warm. Don't forget to wear sunscreen.")} else {    print("It's not that cold. Wear a t-shirt.")}// Prints "It's really warm. Don't forget to wear sunscreen."
+```swifttemperatureInFahrenheit = 90if temperatureInFahrenheit <= 32 {    print("It's very cold. Consider wearing a scarf.")} else if temperatureInFahrenheit >= 86 {    print("It's really warm. Don't forget to wear sunscreen.")} else {    print("It's not that cold. Wear a t-shirt.")}// Надрукує "It's really warm. Don't forget to wear sunscreen."
 ```
 Here, an additional `if` statement was added to respond to particularly warm temperatures. The final `else` clause remains, and it prints a response for any temperatures that are neither too warm nor too cold.
 The final `else` clause is optional, however, and can be excluded if the set of conditions does not need to be complete.
@@ -109,7 +116,7 @@ Control FlowSwift provides a variety of control flow statements. These include
 Like the body of an `if` statement, each `case` is a separate branch of code execution. The `switch` statement determines which branch should be selected. This procedure is known as *switching* on the value that is being considered.
 Every `switch` statement must be *exhaustive*. That is, every possible value of the type being considered must be matched by one of the `switch` cases. If it’s not appropriate to provide a case for every possible value, you can define a default case to cover any values that are not addressed explicitly. This default case is indicated by the `default` keyword, and must always appear last.This example uses a `switch` statement to consider a single lowercase character called `someCharacter`:
 
-```swiftlet someCharacter: Character = "z"switch someCharacter {case "a":    print("The first letter of the alphabet")case "z":    print("The last letter of the alphabet")default:    print("Some other character")}// Prints "The last letter of the alphabet"
+```swiftlet someCharacter: Character = "z"switch someCharacter {case "a":    print("The first letter of the alphabet")case "z":    print("The last letter of the alphabet")default:    print("Some other character")}// Надрукує "The last letter of the alphabet"
 ```
 The `switch` statement’s first case matches the first letter of the English alphabet, `a`, and its second case matches the last letter, `z`. Because the `switch` must have a case for every possible character, not just every alphabetic character, this `switch` statement uses a `default` case to match all characters other than `a` and `z`. This provision ensures that the `switch` statement is exhaustive.
 #### No Implicit Fallthrough
@@ -122,7 +129,7 @@ Control FlowSwift provides a variety of control flow statements. These include
 Unlike a `switch` statement in C, this `switch` statement does not match both `"a"` and `"A"`. Rather, it reports a compile-time error that `case "a":` does not contain any executable statements. This approach avoids accidental fallthrough from one case to another and makes for safer code that is clearer in its intent.
 To make a `switch` with a single case that matches both `"a"` and `"A"`, combine the two values into a compound case, separating the values with commas.
 
-```swiftlet anotherCharacter: Character = "a"switch anotherCharacter {case "a", "A":    print("The letter A")default:    print("Not the letter A")}// Prints "The letter A"
+```swiftlet anotherCharacter: Character = "a"switch anotherCharacter {case "a", "A":    print("The letter A")default:    print("Not the letter A")}// Надрукує "The letter A"
 ```
 For readability, a compound case can also be written over multiple lines. For more information about compound cases, see [Compound Cases]().
 > **Note**
@@ -130,13 +137,13 @@ Control FlowSwift provides a variety of control flow statements. These include
  ##### Interval Matching
 Values in `switch` cases can be checked for their inclusion in an interval. This example uses number intervals to provide a natural-language count for numbers of any size:
 
-```swiftlet approximateCount = 62let countedThings = "moons orbiting Saturn"var naturalCount: Stringswitch approximateCount {case 0:    naturalCount = "no"case 1..<5:    naturalCount = "a few"case 5..<12:    naturalCount = "several"case 12..<100:    naturalCount = "dozens of"case 100..<1000:    naturalCount = "hundreds of"default:    naturalCount = "many"}print("There are \(naturalCount) \(countedThings).")// Prints "There are dozens of moons orbiting Saturn."
+```swiftlet approximateCount = 62let countedThings = "moons orbiting Saturn"var naturalCount: Stringswitch approximateCount {case 0:    naturalCount = "no"case 1..<5:    naturalCount = "a few"case 5..<12:    naturalCount = "several"case 12..<100:    naturalCount = "dozens of"case 100..<1000:    naturalCount = "hundreds of"default:    naturalCount = "many"}print("There are \(naturalCount) \(countedThings).")// Надрукує "There are dozens of moons orbiting Saturn."
 ```
 In the above example, `approximateCount` is evaluated in a `switch` statement. Each `case` compares that value to a number or interval. Because the value of `approximateCount` falls between 12 and 100, `naturalCount` is assigned the value `"dozens of"`, and execution is transferred out of the `switch` statement.##### Tuples
 You can use tuples to test multiple values in the same `switch` statement. Each element of the tuple can be tested against a different value or interval of values. Alternatively, use the underscore character (`_`), also known as the wildcard pattern, to match any possible value.
 The example below takes an (x, y) point, expressed as a simple tuple of type `(Int, Int)`, and categorizes it on the graph that follows the example.
 
-```swiftlet somePoint = (1, 1)switch somePoint {case (0, 0):    print("(0, 0) is at the origin")case (_, 0):    print("(\(somePoint.0), 0) is on the x-axis")case (0, _):    print("(0, \(somePoint.1)) is on the y-axis")case (-2...2, -2...2):    print("(\(somePoint.0), \(somePoint.1)) is inside the box")default:    print("(\(somePoint.0), \(somePoint.1)) is outside of the box")}// Prints "(1, 1) is inside the box"```
+```swiftlet somePoint = (1, 1)switch somePoint {case (0, 0):    print("(0, 0) is at the origin")case (_, 0):    print("(\(somePoint.0), 0) is on the x-axis")case (0, _):    print("(0, \(somePoint.1)) is on the y-axis")case (-2...2, -2...2):    print("(\(somePoint.0), \(somePoint.1)) is inside the box")default:    print("(\(somePoint.0), \(somePoint.1)) is outside of the box")}// Надрукує "(1, 1) is inside the box"```
 
 ![](images/coordinateGraphSimple_2x.png)
 The `switch` statement determines whether the point is at the origin (0, 0), on the red x-axis, on the orange y-axis, inside the blue 4-by-4 box centered on the origin, or outside of the box.
@@ -145,7 +152,7 @@ Control FlowSwift provides a variety of control flow statements. These include
 A `switch` case can bind the value or values it matches to temporary constants or variables, for use in the body of the case. This behavior is known as *value binding*, because the values are bound to temporary constants or variables within the case’s body.
 The example below takes an (x, y) point, expressed as a tuple of type *(Int, Int)*, and categorizes it on the graph that follows:
 
-```swiftlet anotherPoint = (2, 0)switch anotherPoint {case (let x, 0):    print("on the x-axis with an x value of \(x)")case (0, let y):    print("on the y-axis with a y value of \(y)")case let (x, y):    print("somewhere else at (\(x), \(y))")}// Prints "on the x-axis with an x value of 2"
+```swiftlet anotherPoint = (2, 0)switch anotherPoint {case (let x, 0):    print("on the x-axis with an x value of \(x)")case (0, let y):    print("on the y-axis with a y value of \(y)")case let (x, y):    print("somewhere else at (\(x), \(y))")}// Надрукує "on the x-axis with an x value of 2"
 ```
 
 ![](images/coordinateGraphMedium_2x.png)
@@ -157,7 +164,7 @@ Control FlowSwift provides a variety of control flow statements. These include
 A `switch` case can use a `where` clause to check for additional conditions.
 The example below categorizes an (x, y) point on the following graph:
 
-```swiftlet yetAnotherPoint = (1, -1)switch yetAnotherPoint {case let (x, y) where x == y:    print("(\(x), \(y)) is on the line x == y")case let (x, y) where x == -y:    print("(\(x), \(y)) is on the line x == -y")case let (x, y):    print("(\(x), \(y)) is just some arbitrary point")}// Prints "(1, -1) is on the line x == -y"
+```swiftlet yetAnotherPoint = (1, -1)switch yetAnotherPoint {case let (x, y) where x == y:    print("(\(x), \(y)) is on the line x == y")case let (x, y) where x == -y:    print("(\(x), \(y)) is on the line x == -y")case let (x, y):    print("(\(x), \(y)) is just some arbitrary point")}// Надрукує "(1, -1) is on the line x == -y"
 ```
 
 ![](images/coordinateGraphComplex_2x.png)
@@ -166,12 +173,12 @@ Control FlowSwift provides a variety of control flow statements. These include
 As in the previous example, the final case matches all possible remaining values, and so a `default` case is not needed to make the `switch` statement exhaustive.
 ##### Compound CasesMultiple switch cases that share the same body can be combined by writing several patterns after `case`, with a comma between each of the patterns. If any of the patterns match, then the case is considered to match. The patterns can be written over multiple lines if the list is long. For example:
 
-```swiftlet someCharacter: Character = "e"switch someCharacter {case "a", "e", "i", "o", "u":    print("\(someCharacter) is a vowel")case "b", "c", "d", "f", "g", "h", "j", "k", "l", "m",     "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z":    print("\(someCharacter) is a consonant")default:    print("\(someCharacter) is not a vowel or a consonant")}// Prints "e is a vowel"
+```swiftlet someCharacter: Character = "e"switch someCharacter {case "a", "e", "i", "o", "u":    print("\(someCharacter) is a vowel")case "b", "c", "d", "f", "g", "h", "j", "k", "l", "m",     "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z":    print("\(someCharacter) is a consonant")default:    print("\(someCharacter) is not a vowel or a consonant")}// Надрукує "e is a vowel"
 ```
 The `switch` statement’s first case matches all five lowercase vowels in the English language. Similarly, its second case matches all lowercase English consonants. Finally, the `default` case matches any other character.
 Compound cases can also include value bindings. All of the patterns of a compound case have to include the same set of value bindings, and each binding has to get a value of the same type from all of the patterns in the compound case. This ensures that, no matter which part of the compound case matched, the code in the body of the case can always access a value for the bindings and that the value always has the same type.
 
-```swiftlet stillAnotherPoint = (9, 0)switch stillAnotherPoint {case (let distance, 0), (0, let distance):    print("On an axis, \(distance) from the origin")default:    print("Not on an axis")}// Prints "On an axis, 9 from the origin"
+```swiftlet stillAnotherPoint = (9, 0)switch stillAnotherPoint {case (let distance, 0), (0, let distance):    print("On an axis, \(distance) from the origin")default:    print("Not on an axis")}// Надрукує "On an axis, 9 from the origin"
 ```
 The `case` above has two patterns: `(let distance, 0)` matches points on the x-axis and `(0, let distance)` matches points on the y-axis. Both patterns include a binding for `distance` and `distance` is an integer in both patterns — which means that the code in the body of the `case` can always access a value for `distance`.### Control Transfer Statements*Control transfer statements* change the order in which your code is executed, by transferring control from one piece of code to another. Swift has five control transfer statements:
  + continue + break + fallthrough + return + throw
@@ -180,7 +187,7 @@ Control FlowSwift provides a variety of control flow statements. These include
 The `continue` statement tells a loop to stop what it is doing and start again at the beginning of the next iteration through the loop. It says “I am done with the current loop iteration” without leaving the loop altogether.
 The following example removes all vowels and spaces from a lowercase string to create a cryptic puzzle phrase:
 
-```swiftlet puzzleInput = "great minds think alike"var puzzleOutput = ""let charactersToRemove: [Character] = ["a", "e", "i", "o", "u", " "]for character in puzzleInput.characters {    if charactersToRemove.contains(character) {        continue    } else {        puzzleOutput.append(character)    }}print(puzzleOutput)// Prints "grtmndsthnklk"
+```swiftlet puzzleInput = "great minds think alike"var puzzleOutput = ""let charactersToRemove: [Character] = ["a", "e", "i", "o", "u", " "]for character in puzzleInput.characters {    if charactersToRemove.contains(character) {        continue    } else {        puzzleOutput.append(character)    }}print(puzzleOutput)// Надрукує "grtmndsthnklk"
 ```
 The code above calls the `continue` keyword whenever it matches a vowel or a space, causing the current iteration of the loop to end immediately and to jump straight to the start of the next iteration.
 #### Break
@@ -192,7 +199,7 @@ Control FlowSwift provides a variety of control flow statements. These include
 > > A switch case that contains only a comment is reported as a compile-time error. Comments are not statements and do not cause a switch case to be ignored. Always use a `break` statement to ignore a `switch` case.
 The following example switches on a `Character` value and determines whether it represents a number symbol in one of four languages. For brevity, multiple values are covered in a single `switch` case.
 
-```swiftlet numberSymbol: Character = "三"  // Chinese symbol for the number 3var possibleIntegerValue: Int?switch numberSymbol {case "1", "١", "一", "๑":    possibleIntegerValue = 1case "2", "٢", "二", "๒":    possibleIntegerValue = 2case "3", "٣", "三", "๓":    possibleIntegerValue = 3case "4", "٤", "四", "๔":    possibleIntegerValue = 4default:    break}if let integerValue = possibleIntegerValue {    print("The integer value of \(numberSymbol) is \(integerValue).")} else {    print("An integer value could not be found for \(numberSymbol).")}// Prints "The integer value of 三 is 3."
+```swiftlet numberSymbol: Character = "三"  // Chinese symbol for the number 3var possibleIntegerValue: Int?switch numberSymbol {case "1", "١", "一", "๑":    possibleIntegerValue = 1case "2", "٢", "二", "๒":    possibleIntegerValue = 2case "3", "٣", "三", "๓":    possibleIntegerValue = 3case "4", "٤", "四", "๔":    possibleIntegerValue = 4default:    break}if let integerValue = possibleIntegerValue {    print("The integer value of \(numberSymbol) is \(integerValue).")} else {    print("An integer value could not be found for \(numberSymbol).")}// Надрукує "The integer value of 三 is 3."
 ```
 This example checks `numberSymbol` to determine whether it is a Latin, Arabic, Chinese, or Thai symbol for the numbers `1` to `4`. If a match is found, one of the `switch` statement’s cases sets an optional `Int?` variable called `possibleIntegerValue` to an appropriate integer value.
 After the switch statement completes its execution, the example uses optional binding to determine whether a value was found. The `possibleIntegerValue` variable has an implicit initial value of `nil` by virtue of being an optional type, and so the optional binding will succeed only if `possibleIntegerValue` was set to an actual value by one of the `switch` statement’s first four cases.
@@ -200,7 +207,7 @@ Control FlowSwift provides a variety of control flow statements. These include
 ##### FallthroughSwitch statements in Swift don’t fall through the bottom of each case and into the next one. Instead, the entire switch statement completes its execution as soon as the first matching case is completed. By contrast, C requires you to insert an explicit `break` statement at the end of every `switch` case to prevent fallthrough. Avoiding default fallthrough means that Swift `switch` statements are much more concise and predictable than their counterparts in C, and thus they avoid executing `multiple` switch cases by mistake.
 If you need C-style fallthrough behavior, you can opt in to this behavior on a case-by-case basis with the `fallthrough` keyword. The example below uses `fallthrough` to create a textual description of a number.
 
-```swiftlet integerToDescribe = 5var description = "The number \(integerToDescribe) is"switch integerToDescribe {case 2, 3, 5, 7, 11, 13, 17, 19:    description += " a prime number, and also"    fallthroughdefault:    description += " an integer."}print(description)// Prints "The number 5 is a prime number, and also an integer."
+```swiftlet integerToDescribe = 5var description = "The number \(integerToDescribe) is"switch integerToDescribe {case 2, 3, 5, 7, 11, 13, 17, 19:    description += " a prime number, and also"    fallthroughdefault:    description += " an integer."}print(description)// Надрукує "The number 5 is a prime number, and also an integer."
 ```
 This example declares a new `String` variable called `description` and assigns it an initial value. The function then considers the value of `integerToDescribe` using a `switch` statement. If the value of `integerToDescribe` is one of the prime numbers in the list, the function appends text to the end of `description`, to note that the number is prime. It then uses the `fallthrough` keyword to “fall into” the `default` case as well. The `default` case adds some extra text to the end of the description, and the `switch` statement is complete.
 Unless the value of `integerToDescribe` is in the list of known prime numbers, it is not matched by the first `switch` case at all. Because there are no other specific cases, `integerToDescribe` is matched by the `default` case.
@@ -237,7 +244,7 @@ Control FlowSwift provides a variety of control flow statements. These include
 > It is not strictly necessary to use the `gameLoop` label when calling `continue gameLoop` to jump to the next iteration of the loop. There is only one loop in the game, and therefore no ambiguity as to which loop the `continue` statement will affect. However, there is no harm in using the `gameLoop` label with the `continue` statement. Doing so is consistent with the label’s use alongside the `break` statement and helps make the game’s logic clearer to read and understand.### Ранній вихідEarly Exit
 A `guard` statement, like an if statement, executes statements depending on the Boolean value of an expression. You use a `guard` statement to require that a condition must be true in order for the code after the guard statement to be executed. Unlike an `if` statement, a guard statement always has an `else` clause — the code inside the `else` clause is executed if the condition is not true.
 
-```swiftfunc greet(person: [String: String]) {    guard let name = person["name"] else {        return    }        print("Hello \(name)!")        guard let location = person["location"] else {        print("I hope the weather is nice near you.")        return    }        print("I hope the weather is nice in \(location).")} greet(person: ["name": "John"])// Prints "Hello John!"// Prints "I hope the weather is nice near you."greet(person: ["name": "Jane", "location": "Cupertino"])// Prints "Hello Jane!"// Prints "I hope the weather is nice in Cupertino."
+```swiftfunc greet(person: [String: String]) {    guard let name = person["name"] else {        return    }        print("Hello \(name)!")        guard let location = person["location"] else {        print("I hope the weather is nice near you.")        return    }        print("I hope the weather is nice in \(location).")} greet(person: ["name": "John"])// Надрукує "Hello John!"// Надрукує "I hope the weather is nice near you."greet(person: ["name": "Jane", "location": "Cupertino"])// Надрукує "Hello Jane!"// Надрукує "I hope the weather is nice in Cupertino."
 ```
 If the `guard` statement’s condition is met, code execution continues after the `guard` statement’s closing brace. Any variables or constants that were assigned values using an optional binding as part of the condition are available for the rest of the code block that the `guard` statement appears in.
 If that condition is not met, the code inside the `else` branch is executed. That branch must transfer control to exit the code block in which the `guard` statement appears. It can do this with a control transfer statement such as `return`, `break`, `continue`, or `throw`, or it can call a function or method that doesn’t return, such as `fatalError(_:file:line:)`.
