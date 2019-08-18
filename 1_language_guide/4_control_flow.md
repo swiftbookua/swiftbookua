@@ -33,42 +33,63 @@
 ```
 
 Елементи у словнику `Dictionary` не обов'язково ітеруватимуться в тому ж порядку, в якому їх було додано в словник. Вміст словнику по суті невпорядкований, тому їх ітерування не гарантує порядку, в якому з'являтимуться елементи словнику. Детальнішу інформацію про масиви і словники можна знайти в розділі [Колекції](3_collection_types.md).
-### While Loops
-A `while` loop performs a set of statements until a condition becomes `false`. These kinds of loops are best used when the number of iterations is not known before the first iteration begins. Swift provides two kinds of `while` loops:
 
-+ `while` evaluates its condition at the start of each pass through the loop.
-+ `repeat`-`while` evaluates its condition at the end of each pass through the loop.#### While
-A `while` loop starts by evaluating a single condition. If the condition is `true`, a set of statements is repeated until the condition becomes `false`.Here’s the general form of a `while` loop:
+### Цикли While
 
-```swiftwhile <condition> {    <statements>}
+Цикли `while` виконують набір інструкцій, допоки умова на стане хибною (`false`). Ці типи циклів найкраще використовувати тоді, коли кількість ітерацій невідома до початку першої ітерації. У Swift є два види циклів `while`:
+
++ цикл `while` перевіряє умову на початку кожного проходження циклу.
++ цикл `repeat`-`while` перевіряє умову в кінці кожного проходження циклу.
+#### While
+
+Цикл `while` починається із перевірки єдиної умови. Якщо умова виконується (`true`), то виконується набір інструкцій до тих пір, поки умова не перестане виконуватись (`false`).
+
+Ось загальна форма циклу `while`:
+
+```swiftwhile <умова> {    <інструкції>}
 ```
-This example plays a simple game of *Snakes and Ladders* (also known as *Chutes and Ladders*):
 
-![](images/snakesAndLadders_2x.png)￼The rules of the game are as follows:
- + The board has 25 squares, and the aim is to land on or beyond square 25.
- + Each turn, you roll a six-sided dice and move by that number of squares, following the horizontal path indicated by the dotted arrow above. + If your turn ends at the bottom of a ladder, you move up that ladder. + If your turn ends at the head of a snake, you move down that snake.
- The game board is represented by an array of `Int` values. Its size is based on a constant called `finalSquare`, which is used to initialize the array and also to check for a win condition later in the example. The board is initialized with 26 zero `Int` values, not 25 (one each at indexes `0` through `25`).
+Наступний приклад демонструє просту гру *[Ліла](https://uk.wikipedia.org/wiki/Ліла_(гра))* (також відому як *Змії і сходи*):
+
+![](images/snakesAndLadders_2x.png)￼
+Правила гри наступні:
+
+ + Дошка має 25 клітин, і метою є потрапити на клітину 25 або за неї.
+ + Під час кожного ходу, ви кидаєте гральні кості, і рухаєтесь на відповідне число клітин вперед, слідуючи горизонтальним шляхом відповідно до штрихпунктирної стрілки вище. 
+ + Якщо хід закінчується на клітинці із нижньою частиною сходів, ви піднімаєтесь угору по цим сходам
+ + Якщо хід закінчується на голові змії, ви спускаєтесь униз по цій змії
+
+Дошку представлено масивом цілочисельних значень (`Int`). Її розмір визначається константою на ім'я `finalSquare`, котра використовується для ініціалізації масиву і для перевірки виграшу в умові далі в цьому прикладі. Дошка ініціалізується 26-ма нульовими значеннями `Int`, не 25-ма (по одному індексу від `0` до `25`). 
 
 ```swiftlet finalSquare = 25var board = [Int](repeating: 0, count: finalSquare + 1)
 ```
-Some squares are then set to have more specific values for the snakes and ladders. Squares with a ladder base have a positive number to move you up the board, whereas squares with a snake head have a negative number to move you back down the board.
 
-```swiftboard[03] = +08; board[06] = +11; board[09] = +09; board[10] = +02board[14] = -10; board[19] = -11; board[22] = -02; board[24] = -08
-```
-Square 3 contains the bottom of a ladder that moves you up to square 11. To represent this, `board[03]` is equal to `+08`, which is equivalent to an integer value of `8` (the difference between 3 and 11). The unary plus operator (`+i`) balances with the unary minus operator (`-i`), and numbers lower than `10` are padded with zeros so that all board definitions align. (Neither stylistic tweak is strictly necessary, but they lead to neater code.)
-The player’s starting square is “square zero”, which is just off the bottom-left corner of the board. The first dice roll always moves the player onto the board.
+Деяким клітинкам після присвоюються конкретніші значення для позначення змій та сходів. Клітинки із початком сходів зберігають додатнє число: кількість клітинок, на яку дані сходи переносять гравця вперед; тоді як клітинки зі зміїними головами зберігають від'ємне число: кількість клітинок, на яку змії переносять гравця назад.
 
-```swiftvar square = 0var diceRoll = 0while square < finalSquare {    // roll the dice    diceRoll += 1    if diceRoll == 7 { diceRoll = 1 }    // move by the rolled amount    square += diceRoll    if square < board.count {        // if we're still on the board, move up or down for a snake or a ladder        square += board[square]    }}print("Game over!")
+```swiftboard[03] = +08; board[06] = +11; board[09] = +09; board[10] = +02.   // сходиboard[14] = -10; board[19] = -11; board[22] = -02; board[24] = -08    // змії
 ```
-The example above uses a very simple approach to dice rolling. Instead of generating a random number, it starts with a `diceRoll` value of `0`. Each time through the `while` loop, `diceRoll` is incremented by one and is then checked to see whether it has become too large. Whenever this return value equals `7`, the dice roll has become too large and is reset to a value of `1`. The result is a sequence of `diceRoll` values that is always `1`, `2`, `3`, `4`, `5`, `6`, `1`, `2` and so on.
-After rolling the dice, the player moves forward by `diceRoll` squares. It’s possible that the dice roll may have moved the player beyond square 25, in which case the game is over. To cope with this scenario, the code checks that `square` is less than the `board` array’s `count` property before adding the value stored in `board[square]` onto the current `square` value to move the player up or down any ladders or snakes.
-> **Note**
-> > Had this check not been performed, `board[square]` might try to access a value outside the bounds of the `board` array, which would trigger an error. If `square` were equal to `26`, the code would try to check the value of `board[26]`, which is larger than the size of the array.
-The current `while` loop execution then ends, and the loop’s condition is checked to see if the loop should be executed again. If the player has moved on or beyond square number `25`, the loop’s condition evaluates to `false` and the game ends.
-A `while` loop is appropriate in this case, because the length of the game is not clear at the start of the `while` loop. Instead, the loop is executed until a particular condition is satisfied.
+
+Клітинка 3 містить початок сходів, що піднімає гравця на клітинку 11. Щоб представити це, третьому елементу `board[03]` присвоєно значення `8` (різниця між 3 та 11). Оператор унарного плюса (`+i`) використано для балансування оператору унарного мінуса (`-i`), а числа, менші за `10`, префіксуються незначущим нулем, щоб вирівняти всі інструкції по тексту. (Жоден із цих стилістичних прийомів не є строго обов'язковим, але вони роблять код значно акуратнішим).
+
+Гравці починають рухатись із “нульової клітинки”, котра знаходиться поруч із нижній лівим кутом дошки. Перший кидок костей вводить гравця на дошку. 
+
+```swiftvar square = 0		// поточна клітинкаvar diceRoll = 0		// поточне значення на гральних костяхwhile square < finalSquare {    // кидаємо кості:    diceRoll += 1    if diceRoll == 7 { diceRoll = 1 }    // рухаємось на кількість клітинок, що випала під час кидання костей:    square += diceRoll    if square < board.count {
+        // якщо ми досі знаходимось на дошці, рухаємось вверх чи вниз у випадку сходів чи змії:        square += board[square]    }}print("Гру завершено!")
+```
+
+У прикладі вище використовується дуже простий підхід до кидання костей. Замість генерування випадкового числа, ми починаємо із нульового значення `diceRoll`. Кожної ітерації циклу `while` змінна `diceRoll` збільшується на `1`, та перевіряється, чи не стало це значення завеликим. Щоразу коли змінна `diceRoll` дорівнює `7`, значення костей стає завеликим і тому воно скидається назад до `1`. Таким чином послідовність значень `diceRoll` буде завжди `1`, `2`, `3`, `4`, `5`, `6`, `1`, `2`, і так далі.
+
+Після кидання костей, гравець рухається вперед на `diceRoll` клітинок. Можливо, що в цей момент гравець прийшов за клітинку 25, що означає закінчення гри. Щоб покрити цей сценарій, код перевіряє, що змінна `square` менша за властивість `count` масиву `board` перед тим як додати значення, котре зберігається в `board[square]`, до поточного значення `square`, і таким чином пересунути гравця вверх чи вниз відповідно до поточних сходів чи змій.
+> **Примітка**
+> 
+> Якби дана перевірка не виконувалась, у `board[square]` ми могли б звертатись до значення за межами масиву `board`, що призвело би до помилки. Якщо би змінна `square` дорівнювала б `26`, код намагався би перевірити значення `board[26]`, що більше за розмір цього масиву.
+
+Поточна ітерація циклу `while` закінчується, і далі перевіряється умова, щоб дізнатись, що потрібна ще одна ітерація циклу. Якщо гравець прийшов на клітинку `25` або за неї, умова циклу обчислюється як `false`, а гра закінчується.
+
+Цикл `while` є доречним у даному випадку, бо тривалість гри є невідомою на початок циклу `while`. Цикл триває до моменту виконання умови закінчення гри.
 #### Repeat-While
 The other variation of the `while` loop, known as the `repeat`-`while` loop, performs a single pass through the loop block *first*, before considering the loop’s condition. It then continues to repeat the loop until the condition is `false`.
-> **Note**
+> **Примітка**
 > > The repeat-while loop in Swift is analogous to a `do`-`while` loop in other languages.
 Here’s the general form of a repeat-while loop:```swiftrepeat {    <statements>} while <condition>
 ```
@@ -120,7 +141,7 @@
 ```
 The `switch` statement’s first case matches the first letter of the English alphabet, `a`, and its second case matches the last letter, `z`. Because the `switch` must have a case for every possible character, not just every alphabetic character, this `switch` statement uses a `default` case to match all characters other than `a` and `z`. This provision ensures that the `switch` statement is exhaustive.
 #### No Implicit Fallthrough
-In contrast with `switch` statements in C and Objective-C, `switch` statements in Swift do not fall through the bottom of each case and into the next one by default. Instead, the entire `switch` statement finishes its execution as soon as the first matching `switch` case is completed, without requiring an explicit `break` statement. This makes the `switch` statement safer and easier to use than the one in C and avoids executing more than one `switch` case by mistake.> **Note**
+In contrast with `switch` statements in C and Objective-C, `switch` statements in Swift do not fall through the bottom of each case and into the next one by default. Instead, the entire `switch` statement finishes its execution as soon as the first matching `switch` case is completed, without requiring an explicit `break` statement. This makes the `switch` statement safer and easier to use than the one in C and avoids executing more than one `switch` case by mistake.> **Примітка**
 > > Although `break` is not required in Swift, you can use a `break` statement to match and ignore a particular case or to break out of a matched case before that case has completed its execution. For details, see [Break in a Switch Statement]().
  The body of each case *must* contain at least one executable statement. It is not valid to write the following code, because the first case is empty:
 
@@ -132,7 +153,7 @@
 ```swiftlet anotherCharacter: Character = "a"switch anotherCharacter {case "a", "A":    print("The letter A")default:    print("Not the letter A")}// Надрукує "The letter A"
 ```
 For readability, a compound case can also be written over multiple lines. For more information about compound cases, see [Compound Cases]().
-> **Note**
+> **Примітка**
 > > To explicitly fall through at the end of a particular switch case, use the `fallthrough` keyword, as described in [Fallthrough]().
  ##### Interval Matching
 Values in `switch` cases can be checked for their inclusion in an interval. This example uses number intervals to provide a natural-language count for numbers of any size:
@@ -195,7 +216,7 @@
 ##### Break in a Loop StatementWhen used inside a loop statement, break ends the loop’s execution immediately and transfers control to the code after the loop’s closing brace (}). No further code from the current iteration of the loop is executed, and no further iterations of the loop are started.##### Break in a Switch Statement
 When used inside a `switch` statement, `break` causes the `switch` statement to end its execution immediately and to transfer control to the code after the `switch` statement’s closing brace (`}`).
 This behavior can be used to match and ignore one or more cases in a `switch` statement. Because Swift’s switch statement is exhaustive and does not allow empty cases, it is sometimes necessary to deliberately match and ignore a case in order to make your intentions explicit. You do this by writing the `break` statement as the entire body of the case you want to ignore. When that case is matched by the `switch` statement, the `break` statement inside the case ends the `switch` statement’s execution immediately.
-> **Note**
+> **Примітка**
 > > A switch case that contains only a comment is reported as a compile-time error. Comments are not statements and do not cause a switch case to be ignored. Always use a `break` statement to ignore a `switch` case.
 The following example switches on a `Character` value and determines whether it represents a number symbol in one of four languages. For brevity, multiple values are covered in a single `switch` case.
 
@@ -211,7 +232,7 @@
 ```
 This example declares a new `String` variable called `description` and assigns it an initial value. The function then considers the value of `integerToDescribe` using a `switch` statement. If the value of `integerToDescribe` is one of the prime numbers in the list, the function appends text to the end of `description`, to note that the number is prime. It then uses the `fallthrough` keyword to “fall into” the `default` case as well. The `default` case adds some extra text to the end of the description, and the `switch` statement is complete.
 Unless the value of `integerToDescribe` is in the list of known prime numbers, it is not matched by the first `switch` case at all. Because there are no other specific cases, `integerToDescribe` is matched by the `default` case.
-After the `switch` statement has finished executing, the number’s description is printed using the `print(_:separator:terminator:)` function. In this example, the number `5` is correctly identified as a prime number.> **Note**
+After the `switch` statement has finished executing, the number’s description is printed using the `print(_:separator:terminator:)` function. In this example, the number `5` is correctly identified as a prime number.> **Примітка**
 > > The `fallthrough` keyword does not check the case conditions for the switch case that it causes execution to fall into. The `fallthrough` keyword simply causes code execution to move directly to the statements inside the next case (or `default` case) block, as in C’s standard `switch` statement behavior.
  ### Labeled Statements
 In Swift, you can nest loops and conditional statements inside other loops and conditional statements to create complex control flow structures. However, loops and conditional statements can both use the `break` statement to end their execution prematurely. Therefore, it is sometimes useful to be explicit about which loop or conditional statement you want a `break` statement to terminate. Similarly, if you have multiple nested loops, it can be useful to be explicit about which loop the `continue` statement should affect.
@@ -237,7 +258,7 @@
 
  + If the dice roll will move the player onto the final square, the game is over. The `break gameLoop` statement transfers control to the first line of code outside of the `while` loop, which ends the game.  + If the dice roll will move the player beyond the final square, the move is invalid and the player needs to roll again. The `continue gameLoop` statement ends the current `while` loop iteration and begins the next iteration of the loop.
  + In all other cases, the dice roll is a valid move. The player moves forward by `diceRoll` squares, and the game logic checks for any snakes and ladders. The loop then ends, and control returns to the `while` condition to decide whether another turn is required.
-  > **Note**
+  > **Примітка**
 > 
 > If the `break` statement above did not use the `gameLoop` label, it would break out of the `switch` statement, not the `while` statement. Using the `gameLoop` label makes it clear which control statement should be terminated.
 > 
