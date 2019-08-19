@@ -87,23 +87,31 @@
 Поточна ітерація циклу `while` закінчується, і далі перевіряється умова, щоб дізнатись, що потрібна ще одна ітерація циклу. Якщо гравець прийшов на клітинку `25` або за неї, умова циклу обчислюється як `false`, а гра закінчується.
 
 Цикл `while` є доречним у даному випадку, бо тривалість гри є невідомою на початок циклу `while`. Цикл триває до моменту виконання умови закінчення гри.
-#### Repeat-While
-The other variation of the `while` loop, known as the `repeat`-`while` loop, performs a single pass through the loop block *first*, before considering the loop’s condition. It then continues to repeat the loop until the condition is `false`.
+#### Цикли Repeat-While
+
+Інша варіація циклу `while`, відома як цикл `repeat`-`while`, виконує одну ітерацію циклу *перед* тим, як перевіряє умову циклу. Після цього вона повторює ітерації циклу допоки умова не стане хибною (`false`).
 > **Примітка**
-> > The repeat-while loop in Swift is analogous to a `do`-`while` loop in other languages.
-Here’s the general form of a repeat-while loop:```swiftrepeat {    <statements>} while <condition>
+> 
+> Цикл `repeat`-`while` у Swift є аналогом циклу `do`-`while` у інших мовах.
+
+Ось загальна форма циклу `repeat`-`while`:```swiftrepeat {    <інструкції>} while <умова>
 ```
-Here’s the *Snakes and Ladders* example again, written as a `repeat`-`while` loop rather than a `while` loop. The values of `finalSquare`, `board`, `square`, and `diceRoll` are initialized in exactly the same way as with a while loop.
+
+Переглянемо ще раз приклад зі грою *Ліла*, переписавши його за допомгою циклу `repeat`-`while` замість `while`. Значення змінних `finalSquare`, `board`, `square`, та `diceRoll` ініціалізовано точно так само як і з циклом `while`.
 
 ```swiftlet finalSquare = 25var board = [Int](repeating: 0, count: finalSquare + 1)board[03] = +08; board[06] = +11; board[09] = +09; board[10] = +02board[14] = -10; board[19] = -11; board[22] = -02; board[24] = -08var square = 0var diceRoll = 0
 ```
-In this version of the game, the *first* action in the loop is to check for a ladder or a snake. No ladder on the board takes the player straight to square 25, and so it isn’t possible to win the game by moving up a ladder. Therefore, it’s safe to check for a snake or a ladder as the first action in the loop.
-At the start of the game, the player is on “square zero”. `board[0]` always equals `0` and has no effect.
 
-```swiftrepeat {    // move up or down for a snake or ladder    square += board[square]    // roll the dice    diceRoll += 1    if diceRoll == 7 { diceRoll = 1 }    // move by the rolled amount    square += diceRoll} while square < finalSquareprint("Game over!")
+В цій версії гри, *першою* дією в циклі є перевірка на сходи чи змій. Жодні сходи у грі не ведуть гравця до клітинки 25, і тому неможливо виграти у грі, тільки рухаючись вверх по драбині. Таким чином, допустимо перевіряти на сходи чи змій першою дією в циклі.
+
+На початку гри, гравець знаходиться у “нульовій клітинці. `board[0]` завжди дорівнює `0` і тому ніяк не впливає.
+
+```swiftrepeat {    // рухаємось вверх чи вниз у випадку сходів чи змії:    square += board[square]    // кидаємо кості    diceRoll += 1    if diceRoll == 7 { diceRoll = 1 }    // рухаємось на кількість клітинок, що випала під час кидання костей:    square += diceRoll} while square < finalSquareprint("Гру завершено!")
 ```
-After the code checks for snakes and ladders, the dice is rolled and the player is moved forward by `diceRoll` squares. The current loop execution then ends.
-The loop’s condition (`while square < finalSquare`) is the same as before, but this time it’s not evaluated until the *end* of the first run through the loop. The structure of the `repeat`-`while` loop is better suited to this game than the `while` loop in the previous example. In the `repeat`-`while` loop above, `square += board[square]` is always executed *immediately after* the loop’s while condition confirms that square is still on the board. This behavior removes the need for the array bounds check seen in the earlier version of the game.
+
+Після того, як код перевіряє клітинку на сходи чи змії, кидаються кості, і гравець рухається вперед на `diceRoll` клітинок. Поточна ітерація циклу закінчується.
+
+Умова циклу (`while square < finalSquare`) така ж як і в попередньому прикладі, але цього разу вона не перевіряється *допоки не закінчиться* перша ітерація циклу. Структура циклу `repeat`-`while` в прикладі вище краще підходить для даної гри, ніж структура циклу `while` в попередньому прикладі. В циклі `repeat`-`while` вище, `square += board[square]` завжди виконується *одразу після* того, як виконання умови циклу підтвердить, що `square` все ще знаходиться в межах ігрової дошки. Дана поведінка позбавляє необхідності перевіряти потрапляння в межі масиву, котра виконувалась в попередній версії цієї гри. 
 ### Conditional Statements
 It is often useful to execute different pieces of code based on certain conditions. You might want to run an extra piece of code when an error occurs, or to display a message when a value becomes too high or too low. To do this, you make parts of your code *conditional*.
 Swift provides two ways to add conditional branches to your code: the `if` statement and the `switch` statement. Typically, you use the `if` statement to evaluate simple conditions with only a few possible outcomes. The `switch` statement is better suited to more complex conditions with multiple possible permutations and is useful in situations where pattern matching can help select an appropriate code branch to execute.
