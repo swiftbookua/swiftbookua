@@ -148,17 +148,26 @@
 
 Оскільки температура не є ні занадто низькою, ні занадто високою, щоб спрацювала умова `if` чи `else if`, не буде надруковано жодного повідомення.
 #### Switch
-A `switch` statement considers a value and compares it against several possible matching patterns. It then executes an appropriate block of code, based on the first pattern that matches successfully. A `switch` statement provides an alternative to the `if` statement for responding to multiple potential states.In its simplest form, a `switch` statement compares a value against one or more values of the same type.
 
-```swiftswitch <some value to consider> {case <value 1>:    <respond to value 1>case <value 2>,     <value 3>:    <respond to value 2 or 3>default:    <otherwise, do something else>}
-```
-Every `switch` statement consists of multiple possible *cases*, each of which begins with the `case` keyword. In addition to comparing against specific values, Swift provides several ways for each case to specify more complex matching patterns. These options are described later in this chapter.
-Like the body of an `if` statement, each `case` is a separate branch of code execution. The `switch` statement determines which branch should be selected. This procedure is known as *switching* on the value that is being considered.
-Every `switch` statement must be *exhaustive*. That is, every possible value of the type being considered must be matched by one of the `switch` cases. If it’s not appropriate to provide a case for every possible value, you can define a default case to cover any values that are not addressed explicitly. This default case is indicated by the `default` keyword, and must always appear last.This example uses a `switch` statement to consider a single lowercase character called `someCharacter`:
+Інструкція `switch` розглядає значення і порівнює його із кількома можливима шаблонами. Після цього виконується відповідний блок коду, що визначається першим шаблоном, з яким співпало значення. Інструкція `switch` є альтернативою інструкції `if` для реагування на кілька можливих станів.
 
-```swiftlet someCharacter: Character = "z"switch someCharacter {case "a":    print("The first letter of the alphabet")case "z":    print("The last letter of the alphabet")default:    print("Some other character")}// Надрукує "The last letter of the alphabet"
+У найпростішій формі, інструкція `switch` порівнює значення із одним чи багатьма значеннями одного типу.
+
+```swiftswitch <якесь значення для розглядуи> {case <значення 1>:    <реакція на значення 1>case <значення 2>,     <значення 3>:    <реакція на значення 2 чи 3>default:    <інакше, робимо щось інше>}
 ```
-The `switch` statement’s first case matches the first letter of the English alphabet, `a`, and its second case matches the last letter, `z`. Because the `switch` must have a case for every possible character, not just every alphabetic character, this `switch` statement uses a `default` case to match all characters other than `a` and `z`. This provision ensures that the `switch` statement is exhaustive.
+
+Кожна інструкція `switch` складається із кількох можливих *випадків*, кожен із яких починається ключовим словом `case`. Окрім простого порівняння із конкретним значенням, у Swift є кілька способів вказати складніші шаблони в кожному випаду. Ці можливості описані далі у цьому розділі. 
+
+Як і тіло в інструкції `if`, кожен випадок `case` є окремою гілкою виконання коду. Інструкція `switch` визначає, яку із гілок виконати. Ця процедура відома як *перемикання* значення, що розглядається. 
+
+Кожна інструкція `switch` повинна бути *вичерпною*. Це означає, що кожне можливе значення, що розглядається, повинно співпасти із одним випадком у `switch`. Якщо в якійсь ситуації недоречно надавати випадок для кожного можливого значення, можна визначити випадок за замовчанням, котрий покриє всі значення, котрі не опрацьовані явно. Випадок за замовчанням позначається ключовим словом `default` і повинен завжди слідувати останнім.
+
+У наступному прикладі інструкція `switch` використовується для розгляду єдиного рядкового символу на ім'я `someCharacter`:
+
+```swiftlet someCharacter: Character = "я"switch someCharacter {case "а":    print("Перша буква абетки")case "я":    print("Остання буква абетки")default:    print("Якась інша літера")}// Надрукує "Остання буква абетки"
+```
+
+Перший випадок інструкції `switch` порівнює значення із першою літерою української абетки, `а`, а другий випадо порівнює значення із останньою літерою, `я`. Оскільки `switch` повинен мати випадо для будь-якого можливого символа, не тільки для символів алфавіту, в інструкції `switch` використовується випадок за замовчанням (`default`) для всіх інших символів крім `а` та `я`. Це положення забезпечує вичерпність інструкції `switch`.
 #### No Implicit Fallthrough
 In contrast with `switch` statements in C and Objective-C, `switch` statements in Swift do not fall through the bottom of each case and into the next one by default. Instead, the entire `switch` statement finishes its execution as soon as the first matching `switch` case is completed, without requiring an explicit `break` statement. This makes the `switch` statement safer and easier to use than the one in C and avoids executing more than one `switch` case by mistake.> **Примітка**
 > > Although `break` is not required in Swift, you can use a `break` statement to match and ignore a particular case or to break out of a matched case before that case has completed its execution. For details, see [Break in a Switch Statement]().
