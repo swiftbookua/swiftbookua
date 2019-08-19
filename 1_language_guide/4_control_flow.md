@@ -112,30 +112,41 @@
 Після того, як код перевіряє клітинку на сходи чи змії, кидаються кості, і гравець рухається вперед на `diceRoll` клітинок. Поточна ітерація циклу закінчується.
 
 Умова циклу (`while square < finalSquare`) така ж як і в попередньому прикладі, але цього разу вона не перевіряється *допоки не закінчиться* перша ітерація циклу. Структура циклу `repeat`-`while` в прикладі вище краще підходить для даної гри, ніж структура циклу `while` в попередньому прикладі. В циклі `repeat`-`while` вище, `square += board[square]` завжди виконується *одразу після* того, як виконання умови циклу підтвердить, що `square` все ще знаходиться в межах ігрової дошки. Дана поведінка позбавляє необхідності перевіряти потрапляння в межі масиву, котра виконувалась в попередній версії цієї гри. 
-### Conditional Statements
-It is often useful to execute different pieces of code based on certain conditions. You might want to run an extra piece of code when an error occurs, or to display a message when a value becomes too high or too low. To do this, you make parts of your code *conditional*.
-Swift provides two ways to add conditional branches to your code: the `if` statement and the `switch` statement. Typically, you use the `if` statement to evaluate simple conditions with only a few possible outcomes. The `switch` statement is better suited to more complex conditions with multiple possible permutations and is useful in situations where pattern matching can help select an appropriate code branch to execute.
+
+### Інструкції умови
+
+Дуже часто потрібно виконувати різні частини коду в залежності від певних умов. Вам може бути необхідно виконати додаткову частину коду у випадку помилки, або для виведення повідомлення, коли якесь значення стає занадто великим або малим. Для цього частини коду роблять *умовними*.
+
+У мові Swift є два способи додавати умовні гілки коду: інструкція `if` та інструкція `switch`. Як правило, інструкція `if` використовується для перевірки простих умов із невеликою кількістю можливих результатів. Інструкція `switch` краще підходить для більш складних умов із багатьма можливими варіантами, і є корисною в ситуаціях, коли співпадання шаблону може допомогти обрати потрібну гілку коду для виконання. 
 #### If
-In its simplest form, the `if` statement has a single `if` condition. It executes a set of statements only if that condition is `true`.
 
-```swiftvar temperatureInFahrenheit = 30if temperatureInFahrenheit <= 32 {    print("It's very cold. Consider wearing a scarf.")}// Надрукує "It's very cold. Consider wearing a scarf."
-```
-The example above checks whether the temperature is less than or equal to 32 degrees Fahrenheit (the freezing point of water). If it is, a message is printed. Otherwise, no message is printed, and code execution continues after the `if` statement’s closing brace.
-The `if` statement can provide an alternative set of statements, known as an *else clause*, for situations when the `if` condition is `false`. These statements are indicated by the `else` keyword.
+У найпростішій формі, інструкція `if` має єдину умову. Вона виконує набір інструкцій тільки тоді, коли значення умови обчислюється як `true`.
 
-```swifttemperatureInFahrenheit = 40if temperatureInFahrenheit <= 32 {    print("It's very cold. Consider wearing a scarf.")} else {    print("It's not that cold. Wear a t-shirt.")}// Надрукує "It's not that cold. Wear a t-shirt."
+```swiftvar temperatureInCelsius = -1if temperatureInCelsius <= 0 {    print("Дуже холодно. Варто вдягнути шарф.")}// Надрукує "Дуже холодно. Варто вдягнути шарф."
 ```
-One of these two branches is always executed. Because the temperature has increased to `40` degrees Fahrenheit, it is no longer cold enough to advise wearing a scarf and so the `else` branch is triggered instead.
-You can chain multiple if statements together to consider additional clauses.
 
-```swifttemperatureInFahrenheit = 90if temperatureInFahrenheit <= 32 {    print("It's very cold. Consider wearing a scarf.")} else if temperatureInFahrenheit >= 86 {    print("It's really warm. Don't forget to wear sunscreen.")} else {    print("It's not that cold. Wear a t-shirt.")}// Надрукує "It's really warm. Don't forget to wear sunscreen."
-```
-Here, an additional `if` statement was added to respond to particularly warm temperatures. The final `else` clause remains, and it prints a response for any temperatures that are neither too warm nor too cold.
-The final `else` clause is optional, however, and can be excluded if the set of conditions does not need to be complete.
+Наступний приклад перевіряє, чи є значення температури менше або рівне 0°C (точці замерзання води). Якщо це так, буде надруковане повідомлення. В іншому випадку не буде надруковано жодного повідомлення, і виконання коду буде продовжено від закриваючої фігурної дужки. 
 
-```swifttemperatureInFahrenheit = 72if temperatureInFahrenheit <= 32 {    print("It's very cold. Consider wearing a scarf.")} else if temperatureInFahrenheit >= 86 {    print("It's really warm. Don't forget to wear sunscreen.")}
+В інструкції `if` можна вписати альтернативний набір інструкцій, відомий як *пункт else*, для ситуацій, коли умова `if` обчислюється як `false`. Ці інструкції позначаються ключовим словом `else`.
+
+```swifttemperatureInCelsius = 5if temperatureInCelsius <= 0 {    print("Дуже холодно. Варто вдягнути шарф.")} else {    print("Не так вже й холодно, вдягайте футболку.")}// Надрукує "Не так вже й холодно, вдягайте футболку."
 ```
-Because the temperature is neither too cold nor too warm to trigger the if or else if conditions, no message is printed.
+
+Одна з цих гілок коду завжди буде виконана. Оскільки температура піднялась до 5°C, вже не достатньо холодно, щоб радити вдягнути шарф, і тому виконується гілка коду `else`.
+
+Можна об'єднувати кілька інструкцій `if` у ланцюжок для розгляду додаткових умов.
+
+```swift	temperatureInCelsius = 32if temperatureInCelsius <= 0 {    print("Дуже холодно. Варто вдягнути шарф.")} else if temperatureInCelsius >= 30 {    print("Спекотно. Не забудьте скористуватись сонцезахисним кремом.")} else {    print("Не так вже й холодно, вдягайте футболку.")}// Надрукує "Спекотно. Не забудьте скористуватись сонцезахисним кремом."
+```
+
+У прикладі вище, було додано додаткову інструкцію `if`, щоб реагувати на особливо високі температури. Фінальна гілка `else` залишається незмінною, але тепер вона друкує повідомлення для температур, що не є занадто високими чи занадто низькими.
+
+Однак, фітальна гілка `else` не є обов'язковою, і може бути пропущеною, якщо набір умов не повинен бути повним. 
+
+```swifttemperatureInCelsius = 22if temperatureInCelsius <= 32 {    print("Дуже холодно. Варто вдягнути шарф.")} else if temperatureInCelsius >= 86 {    print("Спекотно. Не забудьте скористуватись сонцезахисним кремом.")}
+```
+
+Оскільки температура не є ні занадто низькою, ні занадто високою, щоб спрацювала умова `if` чи `else if`, не буде надруковано жодного повідомення.
 #### Switch
 A `switch` statement considers a value and compares it against several possible matching patterns. It then executes an appropriate block of code, based on the first pattern that matches successfully. A `switch` statement provides an alternative to the `if` statement for responding to multiple potential states.In its simplest form, a `switch` statement compares a value against one or more values of the same type.
 
