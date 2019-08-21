@@ -37,4 +37,6 @@
 + літерал масиву - array literal
 + Випадок - Case(in Switch)
 + пункт where - where clause
-+ 
++ об'єднані випадки - Compound Cases
++ Перехід до наступного випадку - Fallthrough (switch-case)
++ Прив'язування значень - Value Bindings

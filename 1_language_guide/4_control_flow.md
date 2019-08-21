@@ -168,47 +168,68 @@
 ```
 
 Перший випадок інструкції `switch` порівнює значення із першою літерою української абетки, `а`, а другий випадо порівнює значення із останньою літерою, `я`. Оскільки `switch` повинен мати випадо для будь-якого можливого символа, не тільки для символів алфавіту, в інструкції `switch` використовується випадок за замовчанням (`default`) для всіх інших символів крім `а` та `я`. Це положення забезпечує вичерпність інструкції `switch`.
-#### No Implicit Fallthrough
-In contrast with `switch` statements in C and Objective-C, `switch` statements in Swift do not fall through the bottom of each case and into the next one by default. Instead, the entire `switch` statement finishes its execution as soon as the first matching `switch` case is completed, without requiring an explicit `break` statement. This makes the `switch` statement safer and easier to use than the one in C and avoids executing more than one `switch` case by mistake.> **Примітка**
-> > Although `break` is not required in Swift, you can use a `break` statement to match and ignore a particular case or to break out of a matched case before that case has completed its execution. For details, see [Break in a Switch Statement]().
- The body of each case *must* contain at least one executable statement. It is not valid to write the following code, because the first case is empty:
+#### Відсутність неявного переходу до наступного випадку
 
-```swiftlet anotherCharacter: Character = "a"switch anotherCharacter {case "a": // Invalid, the case has an empty bodycase "A":    print("The letter A")default:    print("Not the letter A")}// This will report a compile-time error.
-```
-Unlike a `switch` statement in C, this `switch` statement does not match both `"a"` and `"A"`. Rather, it reports a compile-time error that `case "a":` does not contain any executable statements. This approach avoids accidental fallthrough from one case to another and makes for safer code that is clearer in its intent.
-To make a `switch` with a single case that matches both `"a"` and `"A"`, combine the two values into a compound case, separating the values with commas.
+На відміну від інструкції `switch` в мовах C та Objective-C, інструкція `switch` у Swift не переходить вкінці випадку до наступного випадку неявно. Замість цього, виконання інструкції `switch` закінчується після виконання першого випадку, що підійшов, без необхідності вказування інструкції `break` явно. Це робить інструкцію  `switch` легшою у використанні ніж її агалоги в C та запобігає випадковому виконанню більш ніж одного випадку.> **Примітка**
+> 
+> Хоч іструкція `break` і не обов'язкова у Swift, її тим не менше можна використовувати у випадках інструкції `switch` для ігнорування певного випадку, або для раннього виходу з нього. Більш детальну інформацію можна знайти в підрозділі [Break в інструкції Switch](Break-в-інструкції-Switch)
 
-```swiftlet anotherCharacter: Character = "a"switch anotherCharacter {case "a", "A":    print("The letter A")default:    print("Not the letter A")}// Надрукує "The letter A"
+Тіло кожного випадку *повинно* містити хоча б одну інструкцію для викорання. Наступний зразок коду не є коректним, бо перший випадок порожній:
+
+```swiftlet anotherCharacter: Character = "а"switch anotherCharacter {case "а": // Некоректно, бо тіло випадку порожнєcase "А":    print("Літера A")default:    print("Не літера A")}// Тут буде помилка компіляції.
 ```
-For readability, a compound case can also be written over multiple lines. For more information about compound cases, see [Compound Cases]().
+
+На відміну від інструкції `switch` у C, дана інструкція `switch` не співпадає одночасно із `"a"` та `"A"`. Замість цього буде виведено помилка часу компіляції, про те, що `case "a":` не містить жодної інструкції для виконання. Цей підхід унеможливлює випадкові неявні переходи до наступного випадку, робить код безпечнішим, а його наміри зрозумілішими.
+
+Щоб створити інструкцію `switch` із одним випадком, що співпадає одночасно із `"a"` та `"A"`, треба поєднати ці два значення в об'єднаному випадоку, розділивши їх комою.
+
+```swiftlet anotherCharacter: Character = "а"switch anotherCharacter {case "а", "А":    print("Літера А")default:    print("Не літера А")}// Надрукує "Літера A"
+```
+
+Для легкості читання, об'єднані випадки також можна записувати на декількох рядках. За детальнішою інформацією про об'єднані випадки, звертайтесь до підрозділу [Об'єднані випадки](Об'єднані-випадки).
 > **Примітка**
-> > To explicitly fall through at the end of a particular switch case, use the `fallthrough` keyword, as described in [Fallthrough]().
- ##### Interval Matching
-Values in `switch` cases can be checked for their inclusion in an interval. This example uses number intervals to provide a natural-language count for numbers of any size:
+> 
+> Для явного переходу до наступного випадку, слід у кінці поточного випадку вказати ключове слово `fallthrough`, як зазначено в підрозіді 
+> > To explicitly fall through at the end of a particular switch case, use the `fallthrough` keyword, as described in [Перехід до наступного випадку](Перехід-до-наступного-випадку).
+ 
+##### Співпадання із інтервалом
 
-```swiftlet approximateCount = 62let countedThings = "moons orbiting Saturn"var naturalCount: Stringswitch approximateCount {case 0:    naturalCount = "no"case 1..<5:    naturalCount = "a few"case 5..<12:    naturalCount = "several"case 12..<100:    naturalCount = "dozens of"case 100..<1000:    naturalCount = "hundreds of"default:    naturalCount = "many"}print("There are \(naturalCount) \(countedThings).")// Надрукує "There are dozens of moons orbiting Saturn."
+В випадках інструкції `switch` значення можуть перевірятись на входження в інтервал. У наступному прикладі, для опису природною мовою кількостей супутників планети використовуються числові інтервали:
+
+```swiftlet approximateCount = 62let countedThings = "На орбіті Сатурна"var naturalCount: Stringswitch approximateCount {case 0:    naturalCount = "жодного супутника"case 1..<5:    naturalCount = "декілька супутників"case 5..<10:    naturalCount = "численні супутники"case 10..<100:    naturalCount = "десятки супутників"case 100..<1000:    naturalCount = "сотні супутників"default:    naturalCount = "багато супутників"}print("\(countedThings) \(naturalCount).")// Надрукує "На орбіті Сатурна десятки супутників."
 ```
-In the above example, `approximateCount` is evaluated in a `switch` statement. Each `case` compares that value to a number or interval. Because the value of `approximateCount` falls between 12 and 100, `naturalCount` is assigned the value `"dozens of"`, and execution is transferred out of the `switch` statement.##### Tuples
-You can use tuples to test multiple values in the same `switch` statement. Each element of the tuple can be tested against a different value or interval of values. Alternatively, use the underscore character (`_`), also known as the wildcard pattern, to match any possible value.
-The example below takes an (x, y) point, expressed as a simple tuple of type `(Int, Int)`, and categorizes it on the graph that follows the example.
 
-```swiftlet somePoint = (1, 1)switch somePoint {case (0, 0):    print("(0, 0) is at the origin")case (_, 0):    print("(\(somePoint.0), 0) is on the x-axis")case (0, _):    print("(0, \(somePoint.1)) is on the y-axis")case (-2...2, -2...2):    print("(\(somePoint.0), \(somePoint.1)) is inside the box")default:    print("(\(somePoint.0), \(somePoint.1)) is outside of the box")}// Надрукує "(1, 1) is inside the box"```
+У прикладі вище, в іструкції `switch` розглядається значення `approximateCount`. В кожному випадку воно порівнюється із числом або інтервалом. Оскільки значення `approximateCount` знаходиться між 10 та 100, In the above example, `approximateCount` is evaluated in a `switch` statement. Each `case` compares that value to a number or interval. Because the value of `approximateCount` falls between 12 and 100, змінній `naturalCount` присвоєно значення `"десятки супутників"`, і виконання виходить із інструкції `switch`.##### Кортежі
+
+В одній інструкції `switch` можна перевіряти одразу кілька значень, об'єднавши їх у кортеж. Кожен елемент кортежу може порівнюватись із окремим значенням чи інтервалом значень. Також можна випористовувати символ підкреслення (`_`), також відомий як шаблон підстановки, для співпадання із будь-яким можливим значенням.
+
+У наступному прикладі розглядається точка (x, y), виражена за допомогою простого кортежу типу `(Int, Int)`, та характеризується попадання цієї точки на один із графіків на ілюстрації.
+
+```swiftlet somePoint = (1, 1)switch somePoint {case (0, 0):    print("(0, 0) в початку координат")case (_, 0):    print("(\(somePoint.0), 0) знаходиться на осі x")case (0, _):    print("(0, \(somePoint.1)) знаходиться на осі y")case (-2...2, -2...2):    print("(\(somePoint.0), \(somePoint.1)) всередині квадрату")default:    print("(\(somePoint.0), \(somePoint.1)) за межами квадрату")}// Надрукує "(1, 1) всередині квадрату"```
 
 ![](images/coordinateGraphSimple_2x.png)
-The `switch` statement determines whether the point is at the origin (0, 0), on the red x-axis, on the orange y-axis, inside the blue 4-by-4 box centered on the origin, or outside of the box.
-Unlike C, Swift allows multiple `switch` cases to consider the same value or values. In fact, the point (0, 0) could match all *four* of the cases in this example. However, if multiple matches are possible, the first matching case is always used. The point (0, 0) would match `case (0, 0)` first, and so all other matching cases would be ignored.
-##### Value Bindings
-A `switch` case can bind the value or values it matches to temporary constants or variables, for use in the body of the case. This behavior is known as *value binding*, because the values are bound to temporary constants or variables within the case’s body.
-The example below takes an (x, y) point, expressed as a tuple of type *(Int, Int)*, and categorizes it on the graph that follows:
 
-```swiftlet anotherPoint = (2, 0)switch anotherPoint {case (let x, 0):    print("on the x-axis with an x value of \(x)")case (0, let y):    print("on the y-axis with a y value of \(y)")case let (x, y):    print("somewhere else at (\(x), \(y))")}// Надрукує "on the x-axis with an x value of 2"
+Інструкція `switch` визначає, чи знаходиться точка в початку координат (0, 0), на осі x, на осі y, всередині синього квадрату розміром 4х4 з центром в початку координат, або за його межами. 
+
+На відміну від C, Swift дозволяє кільком випадкам `switch` розглядати однакове значення. Фактично, точка (0, 0) співпадає із *чотирма* випадками у прикладі вище. Однак, у разі якщо можливо кілька співпадінь, завжди виконується первий випадок. Точка (0, 0) спершу співпадає із `case (0, 0)`, тому всі подальші співпадіння ігноруються.
+##### Прив'язування значень
+
+У випадках інструкції `switch`, одне чи кілька значень можна прив'язати до тимчасових констант чи змінних, для використання у тілі випадку. Така поведінка відома як *прив'язування значень*, бо значення прив'язуються до тимчасових констант чи змінних всередині тіла випадку.
+
+У наступному прикладі розглядається точка (x, y), виражена кортежем типу `(Int, Int)`, і категоризується її потрапляння на графік:
+
+```swiftlet anotherPoint = (2, 0)switch anotherPoint {case (let x, 0):    print("На осі x зі значенням x = \(x)")case (0, let y):    print("На осі y зі значенням y = \(y)")case let (x, y):    print("Деінде з координатами (\(x), \(y))")}// Надрукує "На осі x зі значенням x = 2"
 ```
 
 ![](images/coordinateGraphMedium_2x.png)
-The `switch` statement determines whether the point is on the red x-axis, on the orange y-axis, or elsewhere (on neither axis).
-The three `switch` cases declare placeholder constants `x` and `y`, which temporarily take on one or both tuple values from `anotherPoint`. The first case, `case (let x, 0)`, matches any point with a `y` value of `0` and assigns the point’s `x` value to the temporary constant `x`. Similarly, the second case, `case (0, let y)`, matches any point with an `x` value of `0` and assigns the point’s `y` value to the temporary constant `y`.
-After the temporary constants are declared, they can be used within the case’s code block. Here, they are used to print the categorization of the point.
-This `switch` statement does not have a `default` case. The final case, `case let (x, y)`, declares a tuple of two placeholder constants that can match any value. Because `anotherPoint` is always a tuple of two values, this case matches all possible remaining values, and a `default` case is not needed to make the switch statement exhaustive.
+
+Дана інструкція `switch` визначає, чи потрапляє точна на червону вісь x, чи на жовтогарячу вісь y, чи деінде (на жодну з осей).
+
+Усі три випадки `switch` оголошують тимчасові константи `x` and `y`, яким присвоюється одне зі значень кортежу `anotherPoint`, чи обидва. У першому випадку, `case (let x, 0)` співпадає із будь-якою точкою, в якій `y` дорівнює `0`, а значення `x` присвоєно тимчасовій константі `x`. Аналогічно, у другому випадку `case (0, let y)` співпадає із будь-якою точкою, в якій `x` дорівнює `0`, а значення `y` присвоєно тимчасовій константі `y`.
+
+Після оголошення тимчасових констант, їм можна використовувати у блоці коду тіла випадку. В даному прикладі вони використовуються для друку категоризації точки. 
+
+Ця інструкція `switch` не має випадку за замовчанням `default`. Останній випадок, `case let (x, y)` оголошує кортеж із двох констант, що співпадає із будь-яким значенням. Оскільки кортеж `anotherPoint` завжди містить два значення, цей випадок співпадає із будь-яким значенням, і тому дана інструкція `switch` вичерпна і не потребує випадку за замовчанням `default`.
 ##### Where
 A `switch` case can use a `where` clause to check for additional conditions.
 The example below categorizes an (x, y) point on the following graph:
@@ -220,7 +241,8 @@
 The `switch` statement determines whether the point is on the green diagonal line where `x == y`, on the purple diagonal line where `x == -y`, or neither.
 The three `switch` cases declare placeholder constants `x` and `y`, which temporarily take on the two tuple values from `yetAnotherPoint`. These constants are used as part of a `where` clause, to create a dynamic filter. The `switch` case matches the current value of `point` only if the where clause’s condition evaluates to `true` for that value.
 As in the previous example, the final case matches all possible remaining values, and so a `default` case is not needed to make the `switch` statement exhaustive.
-##### Compound CasesMultiple switch cases that share the same body can be combined by writing several patterns after `case`, with a comma between each of the patterns. If any of the patterns match, then the case is considered to match. The patterns can be written over multiple lines if the list is long. For example:
+
+##### Об'єднані випадкиMultiple switch cases that share the same body can be combined by writing several patterns after `case`, with a comma between each of the patterns. If any of the patterns match, then the case is considered to match. The patterns can be written over multiple lines if the list is long. For example:
 
 ```swiftlet someCharacter: Character = "e"switch someCharacter {case "a", "e", "i", "o", "u":    print("\(someCharacter) is a vowel")case "b", "c", "d", "f", "g", "h", "j", "k", "l", "m",     "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z":    print("\(someCharacter) is a consonant")default:    print("\(someCharacter) is not a vowel or a consonant")}// Надрукує "e is a vowel"
 ```
@@ -241,7 +263,7 @@
 The code above calls the `continue` keyword whenever it matches a vowel or a space, causing the current iteration of the loop to end immediately and to jump straight to the start of the next iteration.
 #### Break
 The `break` statement ends execution of an entire control flow statement immediately. The `break` statement can be used inside a `switch` statement or loop statement when you want to terminate the execution of the `switch` or loop statement earlier than would otherwise be the case.
-##### Break in a Loop StatementWhen used inside a loop statement, break ends the loop’s execution immediately and transfers control to the code after the loop’s closing brace (}). No further code from the current iteration of the loop is executed, and no further iterations of the loop are started.##### Break in a Switch Statement
+##### Break in a Loop StatementWhen used inside a loop statement, break ends the loop’s execution immediately and transfers control to the code after the loop’s closing brace (}). No further code from the current iteration of the loop is executed, and no further iterations of the loop are started.##### Break в інструкції Switch
 When used inside a `switch` statement, `break` causes the `switch` statement to end its execution immediately and to transfer control to the code after the `switch` statement’s closing brace (`}`).
 This behavior can be used to match and ignore one or more cases in a `switch` statement. Because Swift’s switch statement is exhaustive and does not allow empty cases, it is sometimes necessary to deliberately match and ignore a case in order to make your intentions explicit. You do this by writing the `break` statement as the entire body of the case you want to ignore. When that case is matched by the `switch` statement, the `break` statement inside the case ends the `switch` statement’s execution immediately.
 > **Примітка**
@@ -253,7 +275,8 @@
 This example checks `numberSymbol` to determine whether it is a Latin, Arabic, Chinese, or Thai symbol for the numbers `1` to `4`. If a match is found, one of the `switch` statement’s cases sets an optional `Int?` variable called `possibleIntegerValue` to an appropriate integer value.
 After the switch statement completes its execution, the example uses optional binding to determine whether a value was found. The `possibleIntegerValue` variable has an implicit initial value of `nil` by virtue of being an optional type, and so the optional binding will succeed only if `possibleIntegerValue` was set to an actual value by one of the `switch` statement’s first four cases.
 Because it’s not practical to list every possible `Character` value in the example above, a `default` case handles any characters that are not matched. This `default` case does not need to perform any action, and so it is written with a single `break` statement as its body. As soon as the default case is matched, the `break` statement ends the `switch` statement’s execution, and code execution continues from the `if let` statement.
-##### FallthroughSwitch statements in Swift don’t fall through the bottom of each case and into the next one. Instead, the entire switch statement completes its execution as soon as the first matching case is completed. By contrast, C requires you to insert an explicit `break` statement at the end of every `switch` case to prevent fallthrough. Avoiding default fallthrough means that Swift `switch` statements are much more concise and predictable than their counterparts in C, and thus they avoid executing `multiple` switch cases by mistake.
+
+##### Перехід до наступного випадкуSwitch statements in Swift don’t fall through the bottom of each case and into the next one. Instead, the entire switch statement completes its execution as soon as the first matching case is completed. By contrast, C requires you to insert an explicit `break` statement at the end of every `switch` case to prevent fallthrough. Avoiding default fallthrough means that Swift `switch` statements are much more concise and predictable than their counterparts in C, and thus they avoid executing `multiple` switch cases by mistake.
 If you need C-style fallthrough behavior, you can opt in to this behavior on a case-by-case basis with the `fallthrough` keyword. The example below uses `fallthrough` to create a textual description of a number.
 
 ```swiftlet integerToDescribe = 5var description = "The number \(integerToDescribe) is"switch integerToDescribe {case 2, 3, 5, 7, 11, 13, 17, 19:    description += " a prime number, and also"    fallthroughdefault:    description += " an integer."}print(description)// Надрукує "The number 5 is a prime number, and also an integer."
