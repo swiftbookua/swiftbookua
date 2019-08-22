@@ -40,3 +40,5 @@
 + об'єднані випадки - Compound Cases
 + Перехід до наступного випадку - Fallthrough (switch-case)
 + Прив'язування значень - Value Bindings
++ Управління потоком виконання - control flow (ПЕРЕЙМЕНУВАТИ)
++ 

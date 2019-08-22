@@ -172,7 +172,7 @@
 
 На відміну від інструкції `switch` в мовах C та Objective-C, інструкція `switch` у Swift не переходить вкінці випадку до наступного випадку неявно. Замість цього, виконання інструкції `switch` закінчується після виконання першого випадку, що підійшов, без необхідності вказування інструкції `break` явно. Це робить інструкцію  `switch` легшою у використанні ніж її агалоги в C та запобігає випадковому виконанню більш ніж одного випадку.> **Примітка**
 > 
-> Хоч іструкція `break` і не обов'язкова у Swift, її тим не менше можна використовувати у випадках інструкції `switch` для ігнорування певного випадку, або для раннього виходу з нього. Більш детальну інформацію можна знайти в підрозділі [Break в інструкції Switch](Break-в-інструкції-Switch)
+> Хоч іструкція `break` і не обов'язкова у Swift, її тим не менше можна використовувати у випадках інструкції `switch` для ігнорування певного випадку, або для раннього виходу з нього. Більш детальну інформацію можна знайти в підрозділі [Інструкція Break в інструкції Switch](Break-в-інструкції-Switch)
 
 Тіло кожного випадку *повинно* містити хоча б одну інструкцію для викорання. Наступний зразок коду не є коректним, бо перший випадок порожній:
 
@@ -255,19 +255,25 @@
 ```swiftlet stillAnotherPoint = (9, 0)switch stillAnotherPoint {case (let distance, 0), (0, let distance):    print("Точка лежить на осі, на відстані \(distance) від початку координат")default:    print("Точка не лежить на осі")}// Надрукує "Точка лежить на осі, на відстані 9 від початку координат"
 ```
 
-У випадку вище є два шаблони: `(let distance, 0)`, що співпадає із точками на осі Х, та `(0, let distance)`, що співпадає із точками на осі Y. Обидва шаблони містять прив'язане значення `distance`, котре є цілим числом в обох випадках – що означає, що код у тілі випадку завжди має доступ до значення `distance`.### Control Transfer Statements*Control transfer statements* change the order in which your code is executed, by transferring control from one piece of code to another. Swift has five control transfer statements:
- + continue + break + fallthrough + return + throw
- The `continue`, `break`, and `fallthrough` statements are described below. The `return` statement is described in [Функції](5_functions.md), and the `throw` statement is described in [Propagating Errors Using Throwing Functions](17_error_handling.md#Propagating-Errors-Using-Throwing-Functions).
-#### Continue
-The `continue` statement tells a loop to stop what it is doing and start again at the beginning of the next iteration through the loop. It says “I am done with the current loop iteration” without leaving the loop altogether.
-The following example removes all vowels and spaces from a lowercase string to create a cryptic puzzle phrase:
+У випадку вище є два шаблони: `(let distance, 0)`, що співпадає із точками на осі Х, та `(0, let distance)`, що співпадає із точками на осі Y. Обидва шаблони містять прив'язане значення `distance`, котре є цілим числом в обох випадках – що означає, що код у тілі випадку завжди має доступ до значення `distance`.### Інструкції передачі контролю*Інструкції передачі контролю* міняють порядок, у якому виконується код, передаючи контроль із одної секції коду в іншу. У мові Swift є п'ять інструкцій передачі контролю:
+ + `continue` + `break` + `fallthrough` + `return` + `throw`
 
-```swiftlet puzzleInput = "great minds think alike"var puzzleOutput = ""let charactersToRemove: [Character] = ["a", "e", "i", "o", "u", " "]for character in puzzleInput.characters {    if charactersToRemove.contains(character) {        continue    } else {        puzzleOutput.append(character)    }}print(puzzleOutput)// Надрукує "grtmndsthnklk"
+Інструкції `continue`, `break`, та `fallthrough` описані нижче. Інструкція `return` описана у розділі [Функції](5_functions.md), а інструкція `throw` описана в підрозділі [Поширення помилок за допомогою функцій, що викидають помилки](17_error_handling.md#Поширення-помилок-за-допомогою-функцій,-що-викидають-помилки).
+#### Інструкція Continue
+
+Інструкція `continue` вказує поточному циклу, що слід припинити виконання поточної ітерації і почати наступну ітерацію циклу. Вона каже “я закінчив із поточною ітерацією циклу” без повного виходу із циклу.
+
+У наступному прикладі із рядка, записаного малими літерами, видаляються всі голосні, пробіли та тире, для створення фрази-загадки:
+
+```swiftlet puzzleInput = "борітеся – поборете"var puzzleOutput = ""let charactersToRemove: [Character] = ["а", "е", "и", "i", "о", "у", "я", "ю", "є", "ï", " ", "–"]for character in puzzleInput.characters {    if charactersToRemove.contains(character) {        continue    } else {        puzzleOutput.append(character)    }}print(puzzleOutput)// Надрукує "бртспбрт"
 ```
-The code above calls the `continue` keyword whenever it matches a vowel or a space, causing the current iteration of the loop to end immediately and to jump straight to the start of the next iteration.
-#### Break
-The `break` statement ends execution of an entire control flow statement immediately. The `break` statement can be used inside a `switch` statement or loop statement when you want to terminate the execution of the `switch` or loop statement earlier than would otherwise be the case.
-##### Break in a Loop StatementWhen used inside a loop statement, break ends the loop’s execution immediately and transfers control to the code after the loop’s closing brace (}). No further code from the current iteration of the loop is executed, and no further iterations of the loop are started.##### Break в інструкції Switch
+
+У коді вище інструкція `continue` викликається щоразу, коли поточний символ співпадає із голосним, пробілом чи тире, внаслідок чого поточна ітерація циклу одразу завершується, а цикл переходить до наступної ітерації.
+#### Інструкція Break
+
+Інструкція `break` зупиняє виконання поточного потоку керування. Інструкцію `break` можна використовувати всередині інструкції `switch` або циклу, коли потрібно перервати виконання інструкції `switch` чи циклу раніше, ніж би це відбулось за звичайних умов.
+##### Інструкція Break у циклі
+When used inside a loop statement, break ends the loop’s execution immediately and transfers control to the code after the loop’s closing brace (}). No further code from the current iteration of the loop is executed, and no further iterations of the loop are started.##### Інструкція Break в інструкції Switch
 When used inside a `switch` statement, `break` causes the `switch` statement to end its execution immediately and to transfer control to the code after the `switch` statement’s closing brace (`}`).
 This behavior can be used to match and ignore one or more cases in a `switch` statement. Because Swift’s switch statement is exhaustive and does not allow empty cases, it is sometimes necessary to deliberately match and ignore a case in order to make your intentions explicit. You do this by writing the `break` statement as the entire body of the case you want to ignore. When that case is matched by the `switch` statement, the `break` statement inside the case ends the `switch` statement’s execution immediately.
 > **Примітка**
