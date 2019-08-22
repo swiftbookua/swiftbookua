@@ -242,16 +242,20 @@
 The three `switch` cases declare placeholder constants `x` and `y`, which temporarily take on the two tuple values from `yetAnotherPoint`. These constants are used as part of a `where` clause, to create a dynamic filter. The `switch` case matches the current value of `point` only if the where clause’s condition evaluates to `true` for that value.
 As in the previous example, the final case matches all possible remaining values, and so a `default` case is not needed to make the `switch` statement exhaustive.
 
-##### Об'єднані випадкиMultiple switch cases that share the same body can be combined by writing several patterns after `case`, with a comma between each of the patterns. If any of the patterns match, then the case is considered to match. The patterns can be written over multiple lines if the list is long. For example:
+##### Об'єднані випадки
 
-```swiftlet someCharacter: Character = "e"switch someCharacter {case "a", "e", "i", "o", "u":    print("\(someCharacter) is a vowel")case "b", "c", "d", "f", "g", "h", "j", "k", "l", "m",     "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z":    print("\(someCharacter) is a consonant")default:    print("\(someCharacter) is not a vowel or a consonant")}// Надрукує "e is a vowel"
+Коли є декільки випадків інструкції `switch`, котрі мають однакове тіло, їх можна об'єднувати, записуючи декалька шаблонів після ключового слова `case` та розмежовуючи їх комами. Якщо значення, котре розглядається, співпаде хоча б із одним з шаблонів, буде виконано тіло випадку. Шаблони можна записати у кілька рядків, якщо їх список довгий. Наприклад:
+```swiftlet someCharacter: Character = "е"switch someCharacter {case "а", "е", "и", "i", "о", "у", "я", "ю", "є", "ï":    print("\(someCharacter) є голосною")case "б", "в", "г", "ґ", "д", "ж", "з", "й", "к", "л",     "м", "н", "п", "р", "с", "т", "ф", "х", "ц", "ш", "щ":    print("\(someCharacter) є приголосною")default:    print("\(someCharacter) не є ні голосною ні приголосною")}// Надрукує "е є голосною"
 ```
-The `switch` statement’s first case matches all five lowercase vowels in the English language. Similarly, its second case matches all lowercase English consonants. Finally, the `default` case matches any other character.
-Compound cases can also include value bindings. All of the patterns of a compound case have to include the same set of value bindings, and each binding has to get a value of the same type from all of the patterns in the compound case. This ensures that, no matter which part of the compound case matched, the code in the body of the case can always access a value for the bindings and that the value always has the same type.
 
-```swiftlet stillAnotherPoint = (9, 0)switch stillAnotherPoint {case (let distance, 0), (0, let distance):    print("On an axis, \(distance) from the origin")default:    print("Not on an axis")}// Надрукує "On an axis, 9 from the origin"
+Верший випадок інструкції `switch` співпадає із десятьма голосними української мови. Аналогічно, другий випадок співпадає із усіма приголосними української мови. Випадок за замовчанням `default` співпадає із будь-яким іншим символом.
+
+Об'єднані випадки також можуть містити прив'язані значення. Всі шаблони в об'єднаному випадку повинні містити однаковий набір прив'язаних значень, і кожне прив'язане значення повинно мати однаковий тип. Таким чином, незалежно від того, з яким із шаблонів співпало значення, код у тілі випадку зажди отримує значення одного й того ж типу.
+
+```swiftlet stillAnotherPoint = (9, 0)switch stillAnotherPoint {case (let distance, 0), (0, let distance):    print("Точка лежить на осі, на відстані \(distance) від початку координат")default:    print("Точка не лежить на осі")}// Надрукує "Точка лежить на осі, на відстані 9 від початку координат"
 ```
-The `case` above has two patterns: `(let distance, 0)` matches points on the x-axis and `(0, let distance)` matches points on the y-axis. Both patterns include a binding for `distance` and `distance` is an integer in both patterns — which means that the code in the body of the `case` can always access a value for `distance`.### Control Transfer Statements*Control transfer statements* change the order in which your code is executed, by transferring control from one piece of code to another. Swift has five control transfer statements:
+
+У випадку вище є два шаблони: `(let distance, 0)`, що співпадає із точками на осі Х, та `(0, let distance)`, що співпадає із точками на осі Y. Обидва шаблони містять прив'язане значення `distance`, котре є цілим числом в обох випадках – що означає, що код у тілі випадку завжди має доступ до значення `distance`.### Control Transfer Statements*Control transfer statements* change the order in which your code is executed, by transferring control from one piece of code to another. Swift has five control transfer statements:
  + continue + break + fallthrough + return + throw
  The `continue`, `break`, and `fallthrough` statements are described below. The `return` statement is described in [Функції](5_functions.md), and the `throw` statement is described in [Propagating Errors Using Throwing Functions](17_error_handling.md#Propagating-Errors-Using-Throwing-Functions).
 #### Continue
