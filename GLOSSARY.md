@@ -42,3 +42,4 @@
 + Прив'язування значень - Value Bindings
 + Управління потоком виконання - control flow (ПЕРЕЙМЕНУВАТИ)
 + Іменовані інструкції - labeled statements
++ Двонаправлені параметри - in-out parameter
