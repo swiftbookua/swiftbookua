@@ -365,15 +365,26 @@
 Якщо умова всередині інструкції `guard` не виконується, відбувається виконання коду всередині інструкції `else`. Ця гілка коду обов'язково повинна передати контроль до виходу з блоку коду, де записаний даний `guard`. Вона може це зробити за допомогою інструкцій передачі контролю, таких як `return`, `break`, `continue`, чи `throw`, або вона може викликати метод чи функцію, з якої нема повернення, таку як `fatalError(_:file:line:)`.
 
 Інструкція `guard` найкраще підходить для запису передумов певного коду, використання її покращує читабельність коду, якщо порівнувати з аналогічним кодом, записаним за допомогою інструкції `if`. Вона дозволяє записувати основну гілку коду, що як правило, виконується, без обгортання її в блок `else`, та дозволяє тримати код, що відноситься до обробки порушених передумов поруч із самими передумовами. 
-### Checking API Availability
-Swift has built-in support for checking API availability, which ensures that you don’t accidentally use APIs that are unavailable on a given deployment target.
-The compiler uses availability information in the SDK to verify that all of the APIs used in your code are available on the deployment target specified by your project. Swift reports an error at compile time if you try to use an API that isn’t available.
-You use an *availability condition* in an `if` or `guard` statement to conditionally execute a block of code, depending on whether the APIs you want to use are available at runtime. The compiler uses the information from the availability condition when it verifies that the APIs in that block of code are available.
 
-```swiftif #available(iOS 10, macOS 10.12, *) {    // Use iOS 10 APIs on iOS, and use macOS 10.12 APIs on macOS} else {    // Fall back to earlier iOS and macOS APIs}
+### Перевірка доступності API
+
+У мові Swift є вбудована підтримка перевірки доступності API, котра убезпечує вас від випадкового використання API, що недоступне на тій чи іншій версії тої чи іншої платформи.
+
+Компілятор використовує інформацію про доступність в SDK для перевірки, що всі API використані у вашому коді є доступними на тій версії ОС, що ви вказали у вашому проекті як мінімальну (deployment target). Якщо 
+спробувати використати недоступне API, компілятор Swift повідомить про відповідну помилку.
+
+Однак, іноді потрібно використовувати API, що доступні не на всіх версіях ОС, що підтримує ваша програма. Для цього слід використовувати *умови доступності* в інструкціях `if` чи `guard`, щоб певний код виконувався чи не виконувався в залежності від того, чи є певні API доступними під час виконання. Компілятор використовує інформацію про доступність з умови доступності при перевірці, чи всі API у даному блоці коду є доступними.
+
+```swiftif #available(iOS 10, macOS 10.12, *) {
+    // Використання API, доступних починаючи із iOS 10 та macOS 10.12} else {
+    // Повернення до більш ранніх API iOS та macOS}
 ```
-The availability condition above specifies that on iOS, the body of the `if` executes only on iOS 10 and later; on macOS, only on macOS 10.12 and later. The last argument, `*`, is required and specifies that on any other platform, the body of the `if` executes on the minimum deployment target specified by your target.
-    In its general form, the availability condition takes a list of platform names and versions. You use platform names such as `iOS`, `macOS`, `watchOS`, and `tvOS` — for the full list, see [Declaration Attributes](). In addition to specifying major version numbers like iOS 8, you can specify minor versions numbers like iOS 8.3 and macOS 10.10.3.
 
-```swiftif #available(platform name version, ..., *) {    statements to execute if the APIs are available} else {    fallback statements to execute if the APIs are unavailable}
+Умови доступності вище вказують, що на iOS, тіло `if` буде виконуватись тільки на версії 10 або вище; на macOS, тільки на версії 10.12 або вище. Останній аргумент, `*`, потрібний для того, щов вказати, що на будь-яких інших платформах, тіло `if` буде виконуватись на мінімальній версії ОС, вказаній у налаштуваннях проекту (deployment target).
+
+У загальній формі, умова доступності приймає список платформ на їх версій. Слід вказувати назви платформ, такі, як `iOS`, `macOS`, `watchOS`, та `tvOS` — повний список можна знайти у розділі [Declaration Attributes](). Крім основних номерів версій, як iOS 8, можна вказувати також і мінорні номери версій, як iOS 8.3 та macOS 10.10.3.
+
+```swiftif #available(<ім'я платформи> <версія>, ..., *) {
+    <інструкції для виконання, якщо API доступні>} else {
+    <інструкції для виконання, якщо API недоступні>}
 ```
