@@ -12,14 +12,14 @@
 
 У наступному прикладі функція має ім'я `greet(person:)` (дослівно, `привітати(особу:)`), бо це власне те, що вона робить: приймає ім'я особи на вхід та повертає привітання для цієї особи. Щоб досягнути цього, оголошується один вхідний параметр – значення типу `String`, що називається `person` – та тип, що повертається, `String`, котрий буде містити привітання для даної особи.
 
-```swiftfunc greet(person: String) -> String {    let greeting = "Вітаємо, " + person + "!"    return greeting}
+```swiftfunc greet(person: String) -> String {    let greeting = "Вітаємо вас, " + person + "!"    return greeting}
 ```
 
 Всю цю інформацію згорнуто в оголошення функції, котре починається із ключового слова `func`. Назва типу, що повертає функція, записується після *стрілки повернення* `->` (дефіс та права кутова дужка).
 
 Оголошення описує, що робить дана функція, що вона очікує на вході, і що вона поверне після завершення. Оголошення дозволяє легко однозначно викликати функцію з інших місць у коді: 
 
-```swiftprint(greet(person: "Муся"))// Надрукує "Вітаємо, Муся!"print(greet(person: "Гриша"))// Надрукує "Вітаємо, Гриша!"
+```swiftprint(greet(person: "Муся"))// Надрукує "Вітаємо вас, Муся!"print(greet(person: "Гриша"))// Надрукує "Вітаємо вас, Гриша!"
 ```
 
 Функція `greet(person:)` викликається з передачею в неї значення типу `String`, що вказується після мітки аргумента `person`, наприклад `greet(person: "Муся")`. Оскільки дана функція повертає значення типу `String`, виклик цієї функції можна обгорнути у виклик функції `print(_:separator:terminator:)`, щоб одразу надрукувати і переглянути значення, котре поверне `greet(person:)`.
@@ -33,58 +33,86 @@
 
 Щоб зробити тіло цієї функції кототшим, можна об'єднати створення повідомлення та інструкцію повернення `return` в одному рядку:
 
-```swiftfunc greetAgain(person: String) -> String {    return "Hello again, " + person + "!"}print(greetAgain(person: "Anna"))// Надрукує "Hello again, Anna!"
+```swiftfunc greetAgain(person: String) -> String {    return "Знову вітаємо вас, " + person + "!"}print(greetAgain(person: "Муся"))// Надрукує "Знову вітаємо вас, Муся!"
 ```
-### Function Parameters and Return Values
-Function parameters and return values are extremely flexible in Swift. You can define anything from a simple utility function with a single unnamed parameter to a complex function with expressive parameter names and different parameter options.
-#### Functions Without Parameters
-Functions are not required to define input parameters. Here’s a function with no input parameters, which always returns the same `String` message whenever it is called:
 
-```swiftfunc sayHelloWorld() -> String {    return "hello, world"}print(sayHelloWorld())// Надрукує "hello, world"
-```
-The function definition still needs parentheses after the function’s name, even though it does not take any parameters. The function name is also followed by an empty pair of parentheses when the function is called.
-#### Functions With Multiple Parameters
-Functions can have multiple input parameters, which are written within the function’s parentheses, separated by commas.
-This function takes a person’s name and whether they have already been greeted as input, and returns an appropriate greeting for that person:
+### Параметри функцій та значення, які вони повертають
 
-```swiftfunc greet(person: String, alreadyGreeted: Bool) -> String {    if alreadyGreeted {        return greetAgain(person: person)    } else {        return greet(person: person)    }}print(greet(person: "Tim", alreadyGreeted: true))// Надрукує "Hello again, Tim!"
-```
-You call the `greet(person:alreadyGreeted:)` function by passing it both a `String` argument value labeled `person` and a `Bool` argument value labeled `alreadyGreeted` in parentheses, separated by commas. Note that this function is distinct from the `greet(person:)` function shown in an earlier section. Although both functions have names that begin with greet, the `greet(person:alreadyGreeted:)` function takes two arguments but the `greet(person:)` function takes only one.#### Functions Without Return Values
-Functions are not required to define a return type. Here’s a version of the `greet(person:)` function, which prints its own `String` value rather than returning it:
+Параметри функцій та значення, які вони повертають, є надзвичайно гнучкими. Можна оголосити все, що завгодно, від простої допоміжної функції з єдиним неіменованим параметром до складної функції із виразними іменами параметрів та різними опціями параметрів.
 
-```swiftfunc greet(person: String) {    print("Hello, \(person)!")}greet(person: "Dave")// Надрукує "Hello, Dave!"
+#### Функції без параметрів
+
+Функції не обов'язково повинні мати вхідні параметри. Ось приклад функції без вхідних параметрів, котра повертає завжди один і той же рядок при виклику:
+
+```swiftfunc sayHelloWorld() -> String {    return "привіт, світ"}print(sayHelloWorld())// Надрукує "привіт, світ"
 ```
-Because it does not need to return a value, the function’s definition does not include the return arrow (`->`) or a return type.> **Примітка**
-> > Strictly speaking, this version of the `greet(person:)` function does still return a value, even though no return value is defined. Functions without a defined return type return a special value of type `Void`. This is simply an empty tuple, which is written as `()`.
-The return value of a function can be ignored when it is called:
-```swiftfunc printAndCount(string: String) -> Int {    print(string)    return string.characters.count}func printWithoutCounting(string: String) {    let _ = printAndCount(string: string)}printAndCount(string: "hello, world")// Надрукує "hello, world" and returns a value of 12printWithoutCounting(string: "hello, world")// Надрукує "hello, world" but does not return a value
+
+В оголошенні функції все ще треба вказувати дужки після імені функції, хоч вона і не має ніяких параметрів. При виклику функції також слід вказувати порожні дужки після імені функції. 
+
+#### Функції із кількома параметрами
+
+Функції можуть мати декілька вхідних параметрів, котрі записуються всередині дужок і розділяються комами.
+
+Наступна функція приймає на вхід ім'я особи та булеве значення, яке вказує, чи привітали вже цю особу; функція найбільш доречне привітання для цієї особи:
+
+```swiftfunc greet(person: String, alreadyGreeted: Bool) -> String {    if alreadyGreeted {        return greetAgain(person: person)    } else {        return greet(person: person)    }}print(greet(person: "Сергій", alreadyGreeted: true))// Надрукує "Знову вітаємо вас, Сергій!"
 ```
-The first function, `printAndCount(string:)`, prints a string, and then returns its character count as an `Int`. The second function, `printWithoutCounting(string:)`, calls the first function, but ignores its return value. When the second function is called, the message is still printed by the first function, but the returned value is not used.
+
+При виклику функції `greet(person:alreadyGreeted:)` до неї передаються агрумент типу `String` з міткою `person`, та аргумент типу `Bool` з міткою `alreadyGreeted`, при цьому ці аргументи записуються в дужках та розділяються комою. Слід помітити, що дана функція не співпадає із функцією `greet(person:)` з попереднього підрозділу. Хоч обидві функції і мають імена, що починаються із `greet`, функція `greet(person:alreadyGreeted:)` приймає два аргументи, тоді як функція `greet(person:)` приймає лише один аргумент. 
+
+#### Функції, що не повертають значення
+
+Функції не обов'язково повинні повертати значення. Ось приклад функції `greet(person:)`, котра друкує рядок із привітанням замість того, щоб повертати його:
+
+```swiftfunc greet(person: String) {    print("Вітаємо вас, \(person)!")}greet(person: "Людмила")// Надрукує "Вітаємо вас, Людмила!"
+```
+
+Оскільки функція не повертає жодного значення, в оголошенні функції пропущено стрілку повертання та тип, що повертається. 
 > **Примітка**
-> > Return values can be ignored, but a function that says it will return a value must always do so. A function with a defined return type cannot allow control to fall out of the bottom of the function without returning a value, and attempting to do so will result in a compile-time error.### Функції, що повертають кілька значеньFunctions with Multiple Return Values
-You can use a tuple type as the return type for a function to return multiple values as part of one compound return value.
-The example below defines a function called `minMax(array:)`, which finds the smallest and largest numbers in an array of `Int` values:
+> 
+> Строго кажучи, дана версія функції `greet(person:)` повертає значення, хоч воно і не визначене явно. Функції, що не оголошують тип, що повертається, мають особливий тип, що повертається: `Void`. Цей тип у Swift є просто порожнім кортежем, що записується як `()`.
+
+Значення, що повертається функцією, можна проігнорувати при її виклику:
+```swiftfunc printAndCount(string: String) -> Int {    print(string)    return string.characters.count}func printWithoutCounting(string: String) {    let _ = printAndCount(string: string)}printAndCount(string: "привіт, світ")// Надрукує "привіт, світ" та поверне значення 12printWithoutCounting(string: "привіт, світ")// Надрукує "привіт, світ" та не поверне жодного значення
+```
+
+Перша функція, `printAndCount(string:)`, надрукує рядок, і потім поверне кількість символів у ньому у вигляді числа типу `Int`. Друга функція, `printWithoutCounting(string:)`, викличе першу функцію, але проігнорує значення, котре поверне перша функція. Коли викликається друга функція, першою фукнкцією буде надруковано повідомлення, проте повернуте нею значення не буде використано. 
+> **Примітка**
+> 
+> Значення, що повертається функцією, може бути проігноровано, але якщо оголошення функції каже, що повинно повертатись значення, то функція повинна завжди повертати значення. Функція із оголошеним типом значення, що повертається, не може дозволити виконанню коду дійти до кінця тіла функції та не повернути жодного значення. Спроба написати таку функцію виллється у помилку часу компіляції.### Функції, що повертають кілька значеньЩоб повернути одразу декілька значень із одної функції, можна об'єднати ці значення в кортеж і повертати його як об'єднане значення.
+
+Наступний приклад демонструє оголошення функції на ім'я `minMax(array:)`, котра знаходить найменше та найбільше число в масиві цілочисельних значень типу `Int`:
 
 ```swiftfunc minMax(array: [Int]) -> (min: Int, max: Int) {    var currentMin = array[0]    var currentMax = array[0]    for value in array[1..<array.count] {        if value < currentMin {            currentMin = value        } else if value > currentMax {            currentMax = value        }    }    return (currentMin, currentMax)}
 ```
-The `minMax(array:)` function returns a tuple containing two `Int` values. These values are labeled `min` and `max` so that they can be accessed by name when querying the function’s return value.
-The body of the `minMax(array:)` function starts by setting two working variables called `currentMin` and `currentMax` to the value of the first integer in the array. The function then iterates over the remaining values in the array and checks each value to see if it is smaller or larger than the values of `currentMin` and `currentMax` respectively. Finally, the overall minimum and maximum values are returned as a tuple of two `Int` values.
-Because the tuple’s member values are named as part of the function’s return type, they can be accessed with dot syntax to retrieve the minimum and maximum found values:
 
-```swiftlet bounds = minMax(array: [8, -6, 2, 109, 3, 71])print("min is \(bounds.min) and max is \(bounds.max)")// Надрукує "min is -6 and max is 109"
+Функція `minMax(array:)` повертає кортеж, що містить два цілих значення `Int`. Ці значення іменуються `min` та `max`, тому їх можна дістати з кортежу, що повертає дана функція, за допомогою цих імен.
+
+Тіло функції `minMax(array:)` починає роботу із присвоєння двом робочим змінним `currentMin` та `currentMax` значення першого елементу в масиві. Далі функція ітерує решту значень у масиві, та перевіряє кожне значення, чи воно менше за `currentMin` або більше за `currentMax`. Таким чином обчислюються загальні мінімум та максимум даного масиву, які повертаються як кортеж значень `Int`.
+
+Оскільки значення елементів кортежу було проіменовано в оголошенні типу, що повертає функція, їм можна отримати за допомогою наступного синтаксису: крапа + ім'я елементу. Ось приклад звертання до іменованих елементів кортежу:
+
+```swiftlet bounds = minMax(array: [8, -6, 2, 109, 3, 71])print("min = \(bounds.min); max = \(bounds.max)")// Надрукує "min = -6; max = 109"
 ```
-Note that the tuple’s members do not need to be named at the point that the tuple is returned from the function, because their names are already specified as part of the function’s return type.
-#### Optional Tuple Return Types
-If the tuple type to be returned from a function has the potential to have “no value” for the entire tuple, you can use an *optional* tuple return type to reflect the fact that the entire tuple can be `nil`. You write an optional tuple return type by placing a question mark after the tuple type’s closing parenthesis, such as `(Int, Int)?` or `(String, Int, Bool)?`.> **Примітка**
-> > An optional tuple type such as (Int, Int)? is different from a tuple that contains optional types such as (Int?, Int?). With an optional tuple type, the entire tuple is optional, not just each individual value within the tuple.
-The `minMax(array:)` function above returns a tuple containing two `Int` values. However, the function does not perform any safety checks on the array it is passed. If the `array` argument contains an empty array, the `minMax(array:)` function, as defined above, will trigger a runtime error when attempting to access `array[0]`.
-To handle an empty array safely, write the `minMax(array:)` function with an optional tuple return type and return a value of `nil` when the array is empty:
+
+Слід зазначити, що елементи кортежу не обов'язково іменувати в момент повернення із функції, бо їх імена вже вказано в оголошенні типу, що повертає дана функція. 
+
+#### Опціональні кортежі у якості значеннь, що повертають функції
+
+Нехай ми маємо функцію, що повертає кортеж. Якщо існує ймовірність, що ця функція може не повернути жодного значення, слід використовувати *опціональний* кортеж як тип значення, що повертається, і таким чином відобразити факт, що весь кортеж може мати значення `nil`. Щоб записати опціональний кортеж як значення, що повертає функція, слід додати знак питання після дужки, що закриває кортеж. Наприклад: `(Int, Int)?` або `(String, Int, Bool)?`.> **Примітка**
+> 
+> Опціональний кортеж, як наприклад `(Int, Int)?`, відрізняється від кортежу, що містить опціональний тип,  як наприклад `(Int?, Int?)`. У першому випадку весь кортеж є опціональним, тоді як у другому випадку опціональним є лише окреме значення в кортежі.
+
+Функція `minMax(array:)` з прикладу вище повертає кортеж із двох значень `Int`. Однак, дана функція не робить жодних перевірок безпеки на масиві, що їй передається. Якщо аргумент `array` буде містити порожній масив, функція `minMax(array:)` в оголошенні вище спровокує помилку часу виконання при спробі доступу до `array[0]`.
+
+Щоб обробити ситуацію з порожнім масивом, напишемо нову функцію `minMax(array:)`, котра буде повертати опціональний кортеж, або `nil`, коли масив є порожнім:
 
 ```swiftfunc minMax(array: [Int]) -> (min: Int, max: Int)? {    if array.isEmpty { return nil }    var currentMin = array[0]    var currentMax = array[0]    for value in array[1..<array.count] {        if value < currentMin {            currentMin = value        } else if value > currentMax {            currentMax = value        }    }    return (currentMin, currentMax)}
 ```
-You can use optional binding to check whether this version of the `minMax(array:)` function returns an actual tuple value or `nil`:
 
-```swiftif let bounds = minMax(array: [8, -6, 2, 109, 3, 71]) {    print("min is \(bounds.min) and max is \(bounds.max)")}// Надрукує "min is -6 and max is 109"
+Для перевірки, чи повернула функція `minMax(array:)` власне значення чи `nil`, можна використати прив'язування опціоналів:
+
+```swiftif let bounds = minMax(array: [8, -6, 2, 109, 3, 71]) {    print("min = \(bounds.min); max = \(bounds.max)")}// Надрукує "min = -6; max = 109"
 ```### Мітки аргументів функцій та імена їх параметрів### Function Argument Labels and Parameter Names
 Each function parameter has both an *argument label* and a *parameter name*. The argument label is used when calling the function; each argument is written in the function call with its argument label before it. The parameter name is used in the implementation of the function. By default, parameters use their parameter name as their argument label.
 
