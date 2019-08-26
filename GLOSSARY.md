@@ -46,3 +46,4 @@
 + Варіативні функції, Варіативний параметр - Variadic Parameter
 + Глобальна область видимості – иGlobal scope 
 + Вкладені функції - Nested functions
++ Синтаксис прикінцевих замикань – Trailing closure syntax

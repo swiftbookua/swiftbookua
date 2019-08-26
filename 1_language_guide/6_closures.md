@@ -1,47 +1,80 @@
 ## Замикання
-Closures
-*Closures* are self-contained blocks of functionality that can be passed around and used in your code. Closures in Swift are similar to blocks in C and Objective-C and to lambdas in other programming languages.
-Closures can capture and store references to any constants and variables from the context in which they are defined. This is known as *closing over* those constants and variables. Swift handles all of the memory management of capturing for you.
+
+*Замикання* – це самодостатні блоки функціональності, що можуть передаватись та використовуватись у коді. Замикання у Swift є аналогічними блокам в C та Objective-C, і лямбдам в інших мовах програмування.
+
+Замикання можуть захоплювати і зберігати посилання на константи та змінні з контексту, в якому вони оголошені. Цю поведінку називають *замиканням на* константи та змінні. Swift бере на себе все управління пам'яттю при захопленні змінних.
 
 > **Note**
-> > Don’t worry if you are not familiar with the concept of capturing. It is explained in detail below in [Capturing Values](capturing-values).
-Global and nested functions, as introduced in [Functions](5_functions.md), are actually special cases of closures. Closures take one of three forms:
- + Global functions are closures that have a name and do not capture any values. + Nested functions are closures that have a name and can capture values from their enclosing function. + Closure expressions are unnamed closures written in a lightweight syntax that can capture values from their surrounding context.
- Swift’s closure expressions have a clean, clear style, with optimizations that encourage brief, clutter-free syntax in common scenarios. These optimizations include:
- + Inferring parameter and return value types from context + Implicit returns from single-expression closures + Shorthand argument names + Trailing closure syntax### Closure Expressions
- Nested functions, as introduced in [Nested Functions](5_functions.md#nested-functions), are a convenient means of naming and defining self-contained blocks of code as part of a larger function. However, it is sometimes useful to write shorter versions of function-like constructs without a full declaration and name. This is particularly true when you work with functions or methods that take functions as one or more of their arguments.
-Closure expressions are a way to write inline closures in a brief, focused syntax. Closure expressions provide several syntax optimizations for writing closures in a shortened form without loss of clarity or intent. The closure expression examples below illustrate these optimizations by refining a single example of the `sorted(by:)` method over several iterations, each of which expresses the same functionality in a more succinct way.
-#### The Sorted Method
-Swift’s standard library provides a method called `sorted(by:)`, which sorts an array of values of a known type, based on the output of a sorting closure that you provide. Once it completes the sorting process, the `sorted(by:)` method returns a new array of the same type and size as the old one, with its elements in the correct sorted order. The original array is not modified by the `sorted(by:)` method.
-The closure expression examples below use the `sorted(by:)` method to sort an array of `String` values in reverse alphabetical order. Here’s the initial array to be sorted:
+> 
+> Не слід переживати, якщо ви не знайомі з концепцією захоплення. Вона детально описана нижче у підрозділі [Захоплення значень](#Захоплення-значень).
 
-```swiftlet names = ["Chris", "Alex", "Ewa", "Barry", "Daniella"]
-```
-The `sorted(by:)` method accepts a closure that takes two arguments of the same type as the array’s contents, and returns a `Bool` value to say whether the first value should appear before or after the second value once the values are sorted. The sorting closure needs to return `true` if the first value should appear *before* the second value, and `false` otherwise.
-This example is sorting an array of `String` values, and so the sorting closure needs to be a function of type `(String, String) -> Bool`.
-One way to provide the sorting closure is to write a normal function of the correct type, and to pass it in as an argument to the `sorted(by:)` method:
+Глобальні та вкладені функції, які представлені в попередньому розділі [Функції](5_functions.md), є особливими випадками замикань. Загалом, замикання можуть приймати одну із трьох форм:
 
-```swiftfunc backward(_ s1: String, _ s2: String) -> Bool {    return s1 > s2}var reversedNames = names.sorted(by: backward)// reversedNames is equal to ["Ewa", "Daniella", "Chris", "Barry", "Alex"]
+ + Глобальні функції є замиканнями, що мають ім'я та не захоплюють значень.
+ + Вкладені функції є замиканнями, що мають ім'я та захоплюють значення із функції, де їх оголошено.
+ + Вирази замикань є безіменними замиканнями, що записуються за допомогою легковісного синтаксису та можуть захоплювати значення із довколишнього контексту.
+
+У Swift вирази замикань мають чистий, зрозумілий стиль, з оптимізаціями, котрі заохочують которкий, незахаращений синтаксис у найчастіших сценаріях. Ці оптимізації включають:
+
+ + Виведення типів параметрів та значення, що повертається, з контексту
+ + Неявний `return` у замиканнях, що складаються з одного рядка
+ + Скорочений запис імен аргументів
+ + Синтаксис прикінцевих замикань
+
+### Вирази замикань
+
+Вкладені функції, як показано у підрозділі [Вкладені функції](5_functions.md#Вкладені-функції), є зручним засобом визначення та іменування самодостатніх блоків коду в якості частини більшої функції. Однак, іноді корисно писати коротші версії функцієподібних конструктів без повного оголошення та імені. Це найбільш доречно при роботі із функціями чи методами, що приймають інші функції в якості одного чи кілької аргументів.
+
+Вирази замикань є способом запису замикання по місцю використання за допомогою короткого, зосередженого синтаксису. Синтаксис виразів замикань має кілька оптимізацій, потрібних для запису замикань у найкоротшій формі без втрати ясності чи наміру. Приклади виразів замикань нижче ілюструють ці оптимізації шляхом удосконалення одного прикладу із методом `sorted(by:)` протягом кількох ітерацій, у кожній з яких одна й та ж функціональність буде записана у більш лаконічний спосіб.
+
+#### Метод Sorted
+
+Стандартна бібліотека Swift надає метод на ім'я `sorted(by:)`, котрий сортує масив значень відомого типу, в залежності від результату сортуючого замикання, що ви надаєте. Після завершення процесу сортування, метод `sorted(by:)` повертає новий масив також ж типу і розміру, як і старий, із елементами, котрі відсортовані у відповідному порядку. Початковий масив методом `sorted(by:)` не змінюється.
+
+У прикладі нижче використовується метод `sorted(by:)` для сортування масиву значень `String` у зворотньому алфавітному порядку. Ось початковий масив для сортування:
+
+The closure expression examples below use the `sorted(by:)` method to sort an array of `String` values in reverse alphabetical order. Here’s the initial array to be sorted:
+
+```swiftlet names = ["В'ячеслав", "Сергій", "Анна", "Ярослав", "Святослав"]
 ```
-If the first string (`s1`) is greater than the second string (`s2`), the `backward(_:_:)` function will return `true`, indicating that `s1` should appear before `s2` in the sorted array. For characters in strings, “greater than” means “appears later in the alphabet than”. This means that the letter `"B"` is “greater than” the letter `"A"`, and the string `"Tom"` is greater than the string `"Tim"`. This gives a reverse alphabetical sort, with `"Barry"` being placed before `"Alex"`, and so on.
-However, this is a rather long-winded way to write what is essentially a single-expression function (`a > b`). In this example, it would be preferable to write the sorting closure inline, using closure expression syntax.
-#### Closure Expression Syntax
-Closure expression syntax has the following general form:
-```swift{ (<parameters>) -> <return type> in    <statements>}
+
+Метод `sorted(by:)` приймає замикання, що бере два аргументи того ж типу, що й вміст масиву, та повертає булеве значення, котре вказує, чи є повинно йти перше значення перед другим після сортування масиву. Замикання, що сортує, повинно поветрати `true`, якщо перше значення повинно йти *перед* другим значенням, і `false` в інакшому випадку.
+
+У цьому прикладі відсортовуєтсья масив значень типу `String`, і тому типом замикання, що сортує, має бути функція типу `(String, String) -> Bool`.
+
+Одним із способів надати замикання, що сортує, є написання звичайної функції коректного типу, і передача її як аргумент в метод `sorted(by:)`:
+
+```swiftfunc backward(_ s1: String, _ s2: String) -> Bool {    return s1 > s2}var reversedNames = names.sorted(by: backward)// reversedNames дорівнює ["Ярослав", "Сергій", "Святослав", "В'ячеслав", "Анна"]
 ```
-The *parameters* in closure expression syntax can be in-out parameters, but they can’t have a default value. Variadic parameters can be used if you name the variadic parameter. Tuples can also be used as parameter types and return types.
-The example below shows a closure expression version of the `backward(_:_:)` function from earlier:
+
+Якщо перший рядок (`s1`) більший за другий рядок (`s2`), функція `backward(_:_:)` поверне `true`, вказуючи, що у відсортованому масиві рядок `s1` повинен іти перед рядком `s2`. Для символів у рядку, “більше ніж” означає “з'являється у алфафілі після”. Це означає, що літера `"Б"` є “більшою ніж” літера `"А"`, а рядок `"віл"` є більшим за рядок `"вал"`. Це й призводить до зворотнього алфавітного сортування, де `"Богдан"` знаходиться перед `"Анна"`, і так далі.
+
+Однак, це досить довготривалий шлях для запису того, що є по суті функцією з одного виразу (`a > b`). В цьому прикладі було би доречніше записати замикання, що сортує, одразу в місці використання, використовуючи синтаксис виразів замикань.
+#### Синтаксис виразів замикань
+
+Синтаксис виразів замикань має наступний загальний вигляд:
+
+```swift{ (<параметри>) -> <тип, що повертається> in    <інструкції>}
+```
+
+*Параметри* у виразах замикань можуть бути двонаправленими, але не можуть мати значень за замовчанням. Варіативні параметри також можуть використовуватись у виразах замикань. Кортежі можуть використовуватись і як параметри, і як значення, що повертається.
+
+У наступному прикладі продемонстровано вираз замикання замість функції `backward(_:_:)` з попереднього прикладу:
 
 ```swiftreversedNames = names.sorted(by: { (s1: String, s2: String) -> Bool in    return s1 > s2})
 ```
-Note that the declaration of parameters and return type for this inline closure is identical to the declaration from the `backward(_:_:)` function. In both cases, it is written as `(s1: String, s2: String) -> Bool`. However, for the inline closure expression, the parameters and return type are written *inside* the curly braces, not outside of them.
-The start of the closure’s body is introduced by the `in` keyword. This keyword indicates that the definition of the closure’s parameters and return type has finished, and the body of the closure is about to begin.
-Because the body of the closure is so short, it can even be written on a single line:
+
+Слід помітити, що оголошення параметрів та типу, що повертається, для цього замикання є ідентичним до такого ж оголошення в функції `backward(_:_:)`. В обох випадках, це записується як `(s1: String, s2: String) -> Bool`. Однак, для виразів замикань, оголошених по місцю використання, параметри та значення, що повертається, записуються *всередині* фігурних дужок, а не поза ними.
+
+Початок тіла замикання вводиться ключовим словом `in`. Це ключове слово розмежовує кінець оголошенню параметрів замикання та типу, що воно повертає, та початок тіла замикання.
+
+Оскільки тіло цього замикання є досить коротке, його можна навіть записати в один рядок:
 
 ```swiftreversedNames = names.sorted(by: { (s1: String, s2: String) -> Bool in return s1 > s2 } )
 ```
-This illustrates that the overall call to the `sorted(by:)` method has remained the same. A pair of parentheses still wrap the entire argument for the method. However, that argument is now an inline closure.
-#### Inferring Type From Context
+
+Приклад вище ілюструє, що весь виклик методу `sorted(by:)` залишився без змін. Круглі дужки досі огортають весь аргумент цього методу. Однак, цей аргумент тепер є замиканням, оголошеним по місцю використання.
+#### Визначення типу з контексту
 Because the sorting closure is passed as an argument to a method, Swift can infer the types of its parameters and the type of the value it returns. The `sorted(by:)` method is being called on an array of strings, so its argument must be a function of type `(String, String) -> Bool`. This means that the `(String, String)` and `Bool` types do not need to be written as part of the closure expression’s definition. Because all of the types can be inferred, the return arrow (`->`) and the parentheses around the names of the parameters can also be omitted:
 
 ```swiftreversedNames = names.sorted(by: { s1, s2 in return s1 > s2 } )
@@ -99,7 +132,7 @@ Closures
 The string retrieved from the `digitNames` dictionary is added to the *front* of `output`, effectively building a string version of the number in reverse. (The expression `number % 10` gives a value of `6` for `16`, `8` for `58`, and `0` for `510`.)
 The `number` variable is then divided by `10`. Because it is an integer, it is rounded down during the division, so `16` becomes `1`, `58` becomes `5`, and `510` becomes `51`.
 The process is repeated until `number` is equal to `0`, at which point the `output` string is returned by the closure, and is added to the output array by the `map(_:)` method.
-The use of trailing closure syntax in the example above neatly encapsulates the closure’s functionality immediately after the function that closure supports, without needing to wrap the entire closure within the `map(_:)` method’s outer parentheses.### Capturing Values
+The use of trailing closure syntax in the example above neatly encapsulates the closure’s functionality immediately after the function that closure supports, without needing to wrap the entire closure within the `map(_:)` method’s outer parentheses.### Захоплення значень### Capturing Values
 A closure can *capture* constants and variables from the surrounding context in which it is defined. The closure can then refer to and modify the values of those constants and variables from within its body, even if the original scope that defined the constants and variables no longer exists.
 In Swift, the simplest form of a closure that can capture values is a nested function, written within the body of another function. A nested function can capture any of its outer function’s arguments and can also capture any constants and variables defined within the outer function.
 Here’s an example of a function called `makeIncrementer`, which contains a nested function called `incrementer`. The nested `incrementer()` function captures two values, `runningTotal` and `amount`, from its surrounding context. After capturing these values, `incrementer` is returned by `makeIncrementer` as a closure that increments `runningTotal` by `amount` each time it is called.
