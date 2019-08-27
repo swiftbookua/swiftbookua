@@ -5,3 +5,6 @@
 ### Operator Methods
 
 ### Equivalence Operators
+
+### Методи-оператори
+Operator Methods

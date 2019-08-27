@@ -47,3 +47,5 @@
 + Глобальна область видимості – иGlobal scope 
 + Вкладені функції - Nested functions
 + Синтаксис прикінцевих замикань – Trailing closure syntax
++ Методи-оператори - Operator Methods
++ Відображення - Mapping
