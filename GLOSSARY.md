@@ -44,8 +44,11 @@
 + Іменовані інструкції - labeled statements
 + Двонаправлені параметри - in-out parameter
 + Варіативні функції, Варіативний параметр - Variadic Parameter
-+ Глобальна область видимості – иGlobal scope 
++ Глобальна область видимості – Global scope 
 + Вкладені функції - Nested functions
 + Синтаксис прикінцевих замикань – Trailing closure syntax
 + Методи-оператори - Operator Methods
 + Відображення - Mapping
++ Циклічне посилання - reference cycles (https://uk.wikipedia.org/wiki/Підрахунок_посилань#Робота_з_циклічними_посиланнями)
++ Замикання-емігранти – Escaping Closures
++ Автозамикання – Autoclosures

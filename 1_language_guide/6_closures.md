@@ -4,7 +4,7 @@
 
 Замикання можуть захоплювати і зберігати посилання на константи та змінні з контексту, в якому вони оголошені. Цю поведінку називають *замиканням на* константи та змінні. Swift бере на себе все управління пам'яттю при захопленні змінних.
 
-> **Note**
+> **Примітка**
 > 
 > Не слід переживати, якщо ви не знайомі з концепцією захоплення. Вона детально описана нижче у підрозділі [Захоплення значень](#Захоплення-значень).
 
@@ -153,7 +153,7 @@ Swift автоматично надає імена аргументів зами
 В даному прикладі, змінна `number` ініціалізується значенням параметру замикання `number`, для того, щоб це значення можна було змінити в тілі замикання. (Параметри функції та замикать є завжди константами). В оголошенні виразу замикання також вказується тип, що повертається – `String` – по ньому визначається тип значень, що зберігатимуться в новому масиві. 
 
 Вираз замикання будує рядок на ім'я `output` при кожному виклику. Він обчислює останню цифру числа `number` за допомогою оператора остачі від ділення (`number % 10`), і використовує цю цифру для знаходження у словнику `digitNames` рядка, що їй відповідає. Дане замикання можна використовувати для створення текстового представлення будь-якого додатнього цілого числа.
-> **Note**
+> **Примітка**
 > 
 > Після виклику індексу словника `digitNames` вказано знак оклику (`!`), бо індекси словників повертають опціональні значення, щоб вказати, що пошук у словнику може не вдатись, коли у ньому не існує даний ключ. У прикладі вище, значення `number % 10` буде гарантовано коректним індексом для словника `digitNames`, тому знак оклику використовується для примусового розгортання значення `String`, що зберігається в опціоналі, котрий повертає індекс. 
 
@@ -164,77 +164,110 @@ Swift автоматично надає імена аргументів зами
 Процес повторюється допоки значення `number` не досягне `0`, після чого рядок `output` повертається із замикання, і додається до нового масиву всередині методу `map(_:)`.
 
 Використання синтаксису прикінцевих замикань у прикладі вище акуратно інкапсулює функціональність замикання одразу після функції, що використовує це замикання, без необхідності обгортати все замикання дужками виклику методу `map(_:)`.### Захоплення значеньЗамикання можуть *захоплювати* константи та змінні із довколишнього контексту. Замикання можуть посилатись на значення цих констант та змінних, змінювати їх, навіть якщо більше не існує початкового контексту, де було оголошено ці константи чи змінні.
-In Swift, the simplest form of a closure that can capture values is a nested function, written within the body of another function. A nested function can capture any of its outer function’s arguments and can also capture any constants and variables defined within the outer function.
-Here’s an example of a function called `makeIncrementer`, which contains a nested function called `incrementer`. The nested `incrementer()` function captures two values, `runningTotal` and `amount`, from its surrounding context. After capturing these values, `incrementer` is returned by `makeIncrementer` as a closure that increments `runningTotal` by `amount` each time it is called.
+
+У Swift, найпростішою формою замикання, що може захоплювати значення, є вкладена функція, записана в тілі іншої функції. Вкладена функція може захоплювати будь-який з аргументів зовнішньої функції, а також будь-які змінні та константи всередині зовнішньої функції.
+
+Ось приклад функції `makeIncrementer`, котра містить вкладену функцію `incrementer` (збільшувач). Вкладена функція `incrementer` захоплює два значення, `runningTotal` та `amount`, із зовнішнього для неї контексту. Після захоплення цих значень, функція `incrementer` повертається функцією `makeIncrementer` як замикання, що при кожному виклику збільшує значення змінної `runningTotal` на `amount`.
 
 ```swiftfunc makeIncrementer(forIncrement amount: Int) -> () -> Int {    var runningTotal = 0    func incrementer() -> Int {        runningTotal += amount        return runningTotal    }    return incrementer}
 ```
-The return type of `makeIncrementer` is `() -> Int`. This means that it returns a *function*, rather than a simple value. The function it returns has no parameters, and returns an `Int` value each time it is called. To learn how functions can return other functions, see [Function Types as Return Types](5_functions.md#Function-Types-as-Return-Types).
-The `makeIncrementer(forIncrement:)` function defines an integer variable called `runningTotal`, to store the current running total of the incrementer that will be returned. This variable is initialized with a value of `0`.
-The `makeIncrementer(forIncrement:)` function has a single `Int` parameter with an argument label of `forIncrement`, and a parameter name of `amount`. The argument value passed to this parameter specifies how much `runningTotal` should be incremented by each time the returned incrementer function is called. The `makeIncrementer` function defines a nested function called `incrementer`, which performs the actual incrementing. This function simply adds `amount` to `runningTotal`, and returns the result.
-When considered in isolation, the nested `incrementer()` function might seem unusual:
+
+Типом, що повертає функція `makeIncrementer` є `() -> Int`. Це означає, що повертається не просте значення, а *функція*. Функція, що повертається, не має параметрів, та повертає значення `Int` при кожному виклику. Детальніше із функціями, що повертають інші функції, можна ознайомитись в підрозділі [Функціональні типи як типи, що повертаються](5_functions.md#Функціональні-типи-як-типи,-що-повертаються).
+
+У функції `makeIncrementer(forIncrement:)` оголошено цілочислельну змінну на ім'я `runningTotal` для зберігання поточного значення лічильника, що повертається функцією `incrementer()`. Цю змінну ініціалізовано значенням `0`.
+
+Функція `makeIncrementer(forIncrement:)` має єдиний параметр типу `Int` з міткою аргумента `forIncrement`, та ім'ям параметра `amount`. Значення аргумента, що передається в якості цього параметра, визначає, на скільки буде збільшуватись значення `runningTotal` при кожному виклику функції, що повертається. Функція `makeIncrementer` визначає вкладену функцію `incrementer`, котра власне й виконує збільшення. Ця функція просто додає `amount` до `runningTotal`, і повертає результат.
+
+Якщо вкладену функцію `incrementer()` розглядати ізольовано, вона може виглядати незвично:
 
 ```swiftfunc incrementer() -> Int {    runningTotal += amount    return runningTotal}
 ```
-The `incrementer()` function doesn’t have any parameters, and yet it refers to `runningTotal` and `amount` from within its function body. It does this by capturing a *reference* to `runningTotal` and `amount` from the surrounding function and using them within its own function body. Capturing by reference ensures that `runningTotal` and `amount` do not disappear when the call to `makeIncrementer` ends, and also ensures that `runningTotal` is available the next time the `incrementer` function is called.
-> **Note**
-> > As an optimization, Swift may instead capture and store a *copy* of a value if that value is not mutated by a closure, and if the value is not mutated after the closure is created.
-> > Swift also handles all memory management involved in disposing of variables when they are no longer needed.
-Here’s an example of `makeIncrementer` in action:
+
+Функція `incrementer()` не має жодного параметра, але посилається на значення `runningTotal` та `amount` з поза меж свого тіла. Функція робить це шляхом захоплення *посилань* на `runningTotal` та `amount` із зовнішньої функції і використання їх всередині власного тіла. Захоплення посилань гарантує, що `runningTotal` та `amount` не зникнуть після того, як завершиться виконання функції `makeIncrementer`, і також гарантує, що змінна `runningTotal` буде доступною при наступному виклику функції `incrementer`.
+> **Примітка**
+> 
+> В якості оптимізації, Swift може настравді захоплювати і зберігати *копію* значення, якщо воно не змінюється в замиканні, і якщо значення не змінюється після створення замикання.
+> 
+> Swift також виконує все управління пам'яттю, що задіяне у звільненні змінних, коли вони більше не потрібні.
+
+Ось приклад функції `makeIncrementer` в дії:
 
 ```swiftlet incrementByTen = makeIncrementer(forIncrement: 10)
 ```
-This example sets a constant called `incrementByTen` to refer to an incrementer function that adds `10` to its `runningTotal` variable each time it is called. Calling the function multiple times shows this behavior in action:
 
-```swiftincrementByTen()// returns a value of 10incrementByTen()// returns a value of 20incrementByTen()// returns a value of 30
-```
-If you create a second incrementer, it will have its own stored reference to a new, separate `runningTotal` variable:
+У цьому прикладі константі `incrementByTen` присвоєно посилання на функцію-збільшувач, що при кожному виклику додає `10` до змінної `runningTotal`. Продемонструємо дану поведінку, викликавши цю функцію кілька разів:
 
-```swiftlet incrementBySeven = makeIncrementer(forIncrement: 7)incrementBySeven()// returns a value of 7
+```swiftincrementByTen()// поверне значення 10incrementByTen()// поверне значення 20incrementByTen()// поверне значення 30
 ```
-Calling the original incrementer (`incrementByTen`) again continues to increment its own `runningTotal` variable, and does not affect the variable captured by `incrementBySeven`:
 
-```swiftincrementByTen()// returns a value of 40
-```
-> **Note**
-> > If you assign a closure to a property of a class instance, and the closure captures that instance by referring to the instance or its members, you will create a strong reference cycle between the closure and the instance. Swift uses capture lists to break these strong reference cycles. For more information, see [Strong Reference Cycles for Closures](15_automatic_reference_counting.md#Strong-Reference-Cycles-for-Closures).
- ### Closures Are Reference Types
-In the example above, `incrementBySeven` and `incrementByTen` are constants, but the closures these constants refer to are still able to increment the `runningTotal` variables that they have captured. This is because functions and closures are *reference types*.
-Whenever you assign a function or a closure to a constant or a variable, you are actually setting that constant or variable to be a *reference* to the function or closure. In the example above, it is the choice of closure that `incrementByTen` *refers* to that is constant, and not the contents of the closure itself.
-This also means that if you assign a closure to two different constants or variables, both of those constants or variables will refer to the same closure:
+Якщо створити іншу функцію-збільшувач, вона зберігатиме своє власне посилання на нову, окрему змінну  `runningTotal`:
 
-```swiftlet alsoIncrementByTen = incrementByTenalsoIncrementByTen()// returns a value of 50
+```swiftlet incrementBySeven = makeIncrementer(forIncrement: 7)incrementBySeven()// поверне значення 7
 ```
-### Escaping Closures
-A closure is said to *escape* a function when the closure is passed as an argument to the function, but is called after the function returns. When you declare a function that takes a closure as one of its parameters, you can write `@escaping` before the parameter’s type to indicate that the closure is allowed to escape.
-One way that a closure can escape is by being stored in a variable that is defined outside the function. As an example, many functions that start an asynchronous operation take a closure argument as a completion handler. The function returns after it starts the operation, but the closure isn’t called until the operation is completed — the closure needs to escape, to be called later. For example:
+
+Новий виклик початкового збільшувача (`incrementByTen`) продовжить збільшувати його власну змінну `runningTotal`, не впливаючи на значення, захоплене функцією `incrementBySeven`:
+
+```swiftincrementByTen()// поверне значення 40
+```
+> **Примітка**
+> 
+> Якщо присвоїти замикання властивості екземпляру класу, і замикання захоплює цей екземпляр через посилання на його членів, буде створено циклічне посилання між замиканням та екземпляром. Більше інформації можна знайти у підрозділі [Сильні циклічні посилання в замиканнях](15_automatic_reference_counting.md#Сильні-циклічні-посилання-в-замиканнях).
+
+### Замикання є типами-посиланнями
+
+У прикладах вище, `incrementBySeven` та `incrementByTen` є константами, але замикання, на які посилаються ці константи, тим не менше можуть збільшувати змінні `runningTotal`, котрі вони захопили. Це тому, що функції та замикання є *типами-посиланнями*.
+
+Щоразу при присвоєнні функції чи замикання змінній чи константі, фактично цій змінній чи константі присвоюється *посилання* на функцію чи замикання. У прикладі вище, константа `incrementByTen` є константним *посиланням* на замикання, при цьому саме замикання не є константним.
+
+Це також означає наступне: якщо присвоїти замикання двом різним константам чи змінним, обидві ці константи чи змінні будуть посилатись на одне й теж замикання:
+
+```swiftlet alsoIncrementByTen = incrementByTenalsoIncrementByTen()// поверне значення 50
+```
+
+### Замикання-емігранти
+
+Кажуть, що замикання *емігрують* з функції, якщо замикання передається до функції як агрумент, але вилкикається після завершення функції. Під час оголошення функції, що приймає замикання як один з параметрів, для того, щоб це замикання могло ємігрувати з функції, потрібно позначати його атрибутом `@escaping`. 
+
+Одним зі способів еміграції замикання є збереження його у змінній, котру оголошено за межами функції. Наприклад, багато функцій, що розпочинають асинхронну операцію, приймають своїм аргументом замикання як обробник завершення цієї операції. Функція завершується одразу після того, як вона розпочне операцію, але замикання не буде викликано до завершення цієї операції: таким чином замикання повинно емігрувати, щоб бути викликаним пізніше. Наприклад: ии
 
 ```swiftvar completionHandlers: [() -> Void] = []func someFunctionWithEscapingClosure(completionHandler: @escaping () -> Void) {    completionHandlers.append(completionHandler)}
 ```
-The `someFunctionWithEscapingClosure(_:)` function takes a closure as its argument and adds it to an array that’s declared outside the function. If you didn’t mark the parameter of this function with `@escaping`, you would get a compiler error.
-Marking a closure with `@escaping` means you have to refer to `self` explicitly within the closure. For example, in the code below, the closure passed to `someFunctionWithEscapingClosure(_:)` is an escaping closure, which means it needs to refer to `self` explicitly. In contrast, the closure passed to `someFunctionWithNonescapingClosure(_:)` is a nonescaping closure, which means it can refer to `self` implicitly.
 
-```swiftfunc someFunctionWithNonescapingClosure(closure: () -> Void) {    closure()} class SomeClass {    var x = 10    func doSomething() {        someFunctionWithEscapingClosure { self.x = 100 }        someFunctionWithNonescapingClosure { x = 200 }    }} let instance = SomeClass()instance.doSomething()print(instance.x)// Prints "200" completionHandlers.first?()print(instance.x)// Prints "100"
-```
-### Autoclosures
-An *autoclosure* is a closure that is automatically created to wrap an expression that’s being passed as an argument to a function. It doesn’t take any arguments, and when it’s called, it returns the value of the expression that’s wrapped inside of it. This syntactic convenience lets you omit braces around a function’s parameter by writing a normal expression instead of an explicit closure.
-It’s common to *call* functions that take autoclosures, but it’s not common to *implement* that kind of function. For example, the `assert(condition:message:file:line:)` function takes an autoclosure for its `condition` and `message` parameters; its condition parameter is evaluated only in debug builds and its `message` parameter is evaluated only if `condition` is `false`.
-An autoclosure lets you delay evaluation, because the code inside isn’t run until you call the closure. Delaying evaluation is useful for code that has side effects or is computationally expensive, because it lets you control when that code is evaluated. The code below shows how a closure delays evaluation.
+Функція `someFunctionWithEscapingClosure(_:)` приймає замикання як аргумент та додає його до масиву, що оголошено за її межами. Якщо не позначити параметр цієї функції атрибутом `@escaping`, відбудеться помилка компіляції.
 
-```swiftvar customersInLine = ["Chris", "Alex", "Ewa", "Barry", "Daniella"]print(customersInLine.count)// Prints "5" let customerProvider = { customersInLine.remove(at: 0) }print(customersInLine.count)// Prints "5" print("Now serving \(customerProvider())!")// Prints "Now serving Chris!"print(customersInLine.count)// Prints "4"
-```
-Even though the first element of the `customersInLine` array is removed by the code inside the closure, the array element isn’t removed until the closure is actually called. If the closure is never called, the expression inside the closure is never evaluated, which means the array element is never removed. Note that the type of `customerProvider` is not `String` but `() -> String` — a function with no parameters that returns a string.
-You get the same behavior of delayed evaluation when you pass a closure as an argument to a function.
+Позначення замикання атрибутом `@escaping` вимагає, щоб всередині замикання до `self` звертались явно. Наприклад, у коді нижче, замикання, що передається до функції `someFunctionWithEscapingClosure(_:)`, є замиканням-емігрантом, тому всередині його потрібно звертатись до `self` явно. На противагу до цього, замикання, що передається до функції `someFunctionWithNonescapingClosure(_:)` не є замиканням-емігрантом, тому всередині його можна звертатись до `self` неявно.
 
-```swift// customersInLine is ["Alex", "Ewa", "Barry", "Daniella"]func serve(customer customerProvider: () -> String) {    print("Now serving \(customerProvider())!")}serve(customer: { customersInLine.remove(at: 0) } )// Prints "Now serving Alex!"
+```swiftfunc someFunctionWithNonescapingClosure(closure: () -> Void) {    closure()} class SomeClass {    var x = 10    func doSomething() {        someFunctionWithEscapingClosure { self.x = 100 }        someFunctionWithNonescapingClosure { x = 200 }    }} let instance = SomeClass()instance.doSomething()print(instance.x)// Надрукує "200" completionHandlers.first?()print(instance.x)// Надрукує "100"
 ```
-The `serve(customer:)` function in the listing above takes an explicit closure that returns a customer’s name. The version of `serve(customer:)` below performs the same operation but, instead of taking an explicit closure, it takes an autoclosure by marking its parameter’s type with the `@autoclosure` attribute. Now you can call the function as if it took a `String` argument instead of a closure. The argument is automatically converted to a closure, because the `customerProvider` parameter’s type is marked with the `@autoclosure` attribute.
+### Автозамикання
 
-```swift// customersInLine is ["Ewa", "Barry", "Daniella"]func serve(customer customerProvider: @autoclosure () -> String) {    print("Now serving \(customerProvider())!")}serve(customer: customersInLine.remove(at: 0))// Prints "Now serving Ewa!"
-```
-> **Note**
-> > Overusing autoclosures can make your code hard to understand. The context and function name should make it clear that evaluation is being deferred.If you want an autoclosure that is allowed to escape, use both the `@autoclosure` and `@escaping` attributes. The `@escaping` attribute is described above in [Escaping Closures](6_closures.md#escaping-closures).
+*Автозамиканням* є замикання, що автоматично створюється для загортання виразу, що передається до функції як аргумент. Автозамикання ніколи не приймають вхідних аргументів, і при виклику повертають значення виразу, котрий вони в собі загортають. Ця синтаксична зручність дозволяє пропускати фігурні дужки довкола параметру функції, записуючи звичайний вираз замість явного замикання.
 
-```swift// customersInLine is ["Barry", "Daniella"]var customerProviders: [() -> String] = []func collectCustomerProviders(_ customerProvider: @autoclosure @escaping () -> String) {    customerProviders.append(customerProvider)}collectCustomerProviders(customersInLine.remove(at: 0))collectCustomerProviders(customersInLine.remove(at: 0)) print("Collected \(customerProviders.count) closures.")// Prints "Collected 2 closures."for customerProvider in customerProviders {    print("Now serving \(customerProvider())!")}// Prints "Now serving Barry!"// Prints "Now serving Daniella!"
+Зазвичай, доводиться часто *викликати* функції, що приймають автозамикання як аргумент, але рідко доводиться *реалізовувати* такий різновид функцій. Наприклад, функція `assert(condition:message:file:line:)` приймає автозамикання в якості параметрів `condition` та `message`; її параметр `condition` обчислюється тільки в зневаджувальних конфігураціях збірки, а її параметр `message` викликається тільки тоді, коли `condition` обчислюється як `false`.
+
+Автозамикання дозволяють відкласти виконання коду, бо код всередині автозамикання не буде виконуватись до запуску самого замикання. Це відкладування може бути корисним для коду, що має побічні ефекти чи є обчислювально дорогим, бо воно дозволяє контролювати момент, коли виконується цей код. Приклад нижче показує, як замикання відкладають виконання коду:
+
+```swiftvar customersInLine = ["Віра", "Катя", "Ольга", "Галя", "Сергій"]print(customersInLine.count)// Надрукує "5" let customerProvider = { customersInLine.remove(at: 0) }print(customersInLine.count)// Надрукує "5" print("Тепер обслуговуємо вас, \(customerProvider())!")// Надрукує "Тепер обслуговуємо вас, Віра!"print(customersInLine.count)// Надрукує "4"
 ```
-In the code above, instead of calling the closure passed to it as its `customerProvider` argument, the `collectCustomerProviders(_:)` function appends the closure to the `customerProviders` array. The array is declared outside the scope of the function, which means the closures in the array can be executed after the function returns. As a result, the value of the `customerProvider` argument must be allowed to escape the function’s scope.
+
+Незважаючи на те, що перший елемент масиву `customersInLine` видаляється з масиву в коді всередині замикання, елемент масиву не видаляється до всласне ивиклику самого замикання. Якщо замикання ніколи не викликати, вираз всередині замикання ніколи не буди виконуватись, що означає, що ніколи не видалиться елемент з масиву. Слід зазначити, що типом `customerProvider` є не `String`, а `() -> String` – функція, що не має параметрів та повертає рядок.
+
+Цю ж само поведінку відкладеного виконання можна отримати, передавши замикання як аргумент до функції.
+
+```swift// customersInLine дорівнює ["Катя", "Ольга", "Галя", "Сергій"]func serve(customer customerProvider: () -> String) {    print("Тепер обслуговуємо вас, \(customerProvider())!")}serve(customer: { customersInLine.remove(at: 0) } )// Надрукує "Тепер обслуговуємо вас, Катя!"
+```
+
+Функція `serve(customer:)` у прикладі вище приймає замикання у явному вигляді, котре повертає ім'я покупця з черги. Версія функції `serve(customer:)` у прикладі нижче виконує ту ж саму операцію, але замість явного замикання, вона приймає автозамикання шляхом позначення типу її параметра атрибутом `@autoclosure`. Тепер можна викликати функцію так, неначе вона приймає аргумент типу `String` замість замикання. Оскільки тип параметра позначенто атрибутом `@autoclosure`, аргумент буде автоматично перетворено на замикання.
+
+```swift// customersInLine is ["Ольга", "Галя", "Сергій"]func serve(customer customerProvider: @autoclosure () -> String) {    print("Тепер обслуговуємо вас, \(customerProvider())!")}serve(customer: customersInLine.remove(at: 0))// Надрукує "Тепер обслуговуємо вас, Ольга!"
+```
+> **Примітка**
+> 
+> Зловживання автозамиканнями може зробити ваш код складним для розуміння. Контекст та ім'я функції повинні давати зрозуміти, що виконання буде відкладено.
+
+Якщо автозамиканню дозволено емігрувати, слід використовувати одночасно обидва атрибути, `@autoclosure` та `@escaping`. Атрибут `@escaping` описано вище в підрозділі [Замикання-емігранти](6_closures.md#Замикання-емігранти).
+
+```swift// customersInLine is ["Галя", "Сергій"]var customerProviders: [() -> String] = []func collectCustomerProviders(_ customerProvider: @autoclosure @escaping () -> String) {    customerProviders.append(customerProvider)}collectCustomerProviders(customersInLine.remove(at: 0))collectCustomerProviders(customersInLine.remove(at: 0)) print("Отримано \(customerProviders.count) замикання.")// Надрукує "Отримано 2 замикання."for customerProvider in customerProviders {    print("Тепер обслуговуємо вас, \(customerProvider())!")}// Надрукує "Тепер обслуговуємо вас, Галя!"// Надрукує "Тепер обслуговуємо вас, Сергій!"
+```
+
+У коді вище, замість виклику замикання, переданого до функції `collectCustomerProviders(_:)` в якості аргумента `customerProvider`, ця функція додає замикання до масиву `customerProviders`. Масив оголошено поза межами функції; це означає, що замикання в масиві можна викликати після виходу з функції. Тому значення аргумента `customerProvider` повинно мати дозвіл на еміграцію з тіла функції.
