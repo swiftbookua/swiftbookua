@@ -181,7 +181,7 @@ let someString = "Some string literal value"
 ```swiftgreeting[greeting.endIndex] // Помилкаgreeting.index(after: greeting.endIndex) // ПомилкаUse the indices property of the characters property to access all of the indices of individual characters in a string.for index in greeting.characters.indices {    print("\(greeting[index]) ", terminator: "")}// Надрукує "G u t e n   T a g ! "
 ```
 > **Примітка**> 
-> Можна користуватись властивостями `startIndex` та `endIndex`, а також методами `index(before:)`, `index(after:)`, та `index(_:offsetBy:)` на будь-якому типі, що реалізовує протокол `Collection`. Таким типом є `String`, як показано тут, так само такими є типи колекцій, такі як  `Array`, `Dictionary`, та `Set`.#### Вставка та видалення
+> Можна користуватись властивостями `startIndex` та `endIndex`, а також методами `index(before:)`, `index(after:)`, та `index(_:offsetBy:)` на будь-якому типі, що підпорядковується протоколу `Collection`. Таким типом є `String`, як показано тут, так само такими є типи колекцій, такі як  `Array`, `Dictionary`, та `Set`.#### Вставка та видалення
 
 Щоб вставити один символ в рядок за визначеним індексом, можна користуватись методом `insert(_:at:)`, а щоб вставити вміст іншого рядка за визначеним індексом, можна скористатись методом  `insert(contentsOf:at:)`.
 
@@ -194,7 +194,7 @@ let someString = "Some string literal value"
 ```swiftwelcome.remove(at: welcome.index(before: welcome.endIndex))// welcome тепер дорівнює "hello there" let range = welcome.index(welcome.endIndex, offsetBy: -6)..<welcome.endIndexwelcome.removeSubrange(range)// welcome тепер дорівнює "hello"
 ```
 > **Примітка**> 
-> Методи `insert(_:at:)`, `insert(contentsOf:at:)`, `remove(at:)`, та `removeSubrange(_:)` можна використовувати на будь-якому типі, що реалізовує протокол `RangeReplaceableCollection`. Це включає `String`, як показано тут, так же як і типи колекцій, такі як `Array`, `Dictionary`, та `Set`.и### Порівняння рядків
+> Методи `insert(_:at:)`, `insert(contentsOf:at:)`, `remove(at:)`, та `removeSubrange(_:)` можна використовувати на будь-якому типі, що підпорядковується протоколу `RangeReplaceableCollection`. Це включає `String`, як показано тут, так же як і типи колекцій, такі як `Array`, `Dictionary`, та `Set`.и### Порівняння рядків
 
 Swift надає три способи порівнювати текстові значення: рівність рядків та символів, рівність префіксів та рівність суфіксів.#### Рівність рядків та символів
 

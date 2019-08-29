@@ -1,32 +1,49 @@
 ## Перечислення
-An *enumeration* defines a common type for a group of related values and enables you to work with those values in a type-safe way within your code.
-If you are familiar with C, you will know that C enumerations assign related names to a set of integer values. Enumerations in Swift are much more flexible, and do not have to provide a value for each case of the enumeration. If a value (known as a “raw” value) is provided for each enumeration case, the value can be a string, a character, or a value of any integer or floating-point type.
-Alternatively, enumeration cases can specify associated values of any type to be stored along with each different case value, much as unions or variants do in other languages. You can define a common set of related cases as part of one enumeration, each of which has a different set of values of appropriate types associated with it.
-Enumerations in Swift are first-class types in their own right. They adopt many features traditionally supported only by classes, such as computed properties to provide additional information about the enumeration’s current value, and instance methods to provide functionality related to the values the enumeration represents. Enumerations can also define initializers to provide an initial case value; can be extended to expand their functionality beyond their original implementation; and can conform to protocols to provide standard functionality.For more on these capabilities, see [Properties](9_properties.md), [Methods](10_methods.md), [Initialization](13_initialization.md), [Extensions](20_extensions.md), and [Protocols](21_protocols.md).
-### Enumeration Syntax
-You introduce enumerations with the `enum` keyword and place their entire definition within a pair of braces:
 
-```swiftenum <SomeEnumeration> {    // enumeration definition goes here}
+*Перечислення* визначають спільний тип для групи пов'язаних значень, та дозволяють працювати з цими значеннями в коді у типобезпечний спосіб. 
+
+Якщо ви знайомі з мовою C, вам могло бути відомо, що перечислення в C присвоюють пов'язані імена набору цілочисельних значень. Перечислення у Swift є набагато більш гнучкі, а їх елементи не обов'язково повинні мати конкретні значення. Однак елементи пересислення можуть мати значення (відомі, як “сирі” значення), і ці значення не обов'язково повинні бути цілочисельного типу: це можуть бути рядки, символи, цілі чи числа з палавючою комою. 
+
+Елементи перечислень також можуть визначати асоційовині значення будь-якого типу, що будуть зберігатись разом із кожним елементом, подібно до юніонів чи варіантів в інших мовах програмування. Можна визначити спільний набір елементів всередині одного перечислення, кожен з яких матиме різний набір асоційованих із ним значень певних типів.
+
+Перечислення у Swift є самі по собі першокласними типами. Вони підтримують багато можливостей, які раніше традиційно підтримувилась лише класами, такі як властивсоті, що обчислються (щоб надавати додаткову інформацію про поточне значення перечислення), та методи екземплярів (щоб надавати функціональність, пов'язану зі значенням, котре представляє перечислення). Перечислення можуть також визначати ініціалізатори для задавання початкового значення елемента; для перечислень можна створювати розширення, щоб виводити їх функціональність за межі початкової реалізації; перечислення можуть підпорядковуватись до протоколів, щоб надавати стандартну функціональність.
+
+Детальніше з цими можливостями можна ознайомитись у розділах [Властивості](9_properties.md), [Методи](10_methods.md), [Ініціалізація](13_initialization.md), [Розширення](20_extensions.md), та [Протоколи](21_protocols.md).
+
+### Синтаксис перечислень
+
+Щоб створити перечислення, слід використати ключове слово `enum` та помістити все оголошення в пару фігурних дужок:
+
+```swiftenum <ЯкесьПеречислення> {    // тут йде визначення перечислення}
 ```
-Here’s an example for the four main points of a compass:
+
+Ось приклад перечислення для чотирьох основних точок компасу:
 
 ```swiftenum CompassPoint {    case north    case south    case east    case west}
 ```
-The values defined in an enumeration (such as `north`, `south`, `east`, and `west`) are its *enumeration cases*. You use the `case` keyword to introduce new enumeration cases.
-> **Note**
-> > Unlike C and Objective-C, Swift enumeration cases are not assigned a default integer value when they are created. In the `CompassPoint` example above, `north`, `south`, `east`, and `west` do not implicitly equal `0`, `1`, `2` and `3`. Instead, the different enumeration cases are fully-fledged values in their own right, with an explicitly-defined type of `CompassPoint`.
- Multiple cases can appear on a single line, separated by commas:
+
+Значення, оголошені в перечисленні (такі як `north`, `south`, `east`, та `west`) є його *елементами перечислення*. Для оголошення нового елементу перечислення використовують ключове слово `case`.
+> **Примітка**
+> 
+> Навідміну від C та Objective-C, елементам перечислень Swift при створенні не присвоюється цілочисельне значення за замовчанням. У прикладі вище, елементи перечислення `CompassPoint` – `north`, `south`, `east`, та `west` – не дорівнюватимуть неявно `0`, `1`, `2` та `3`, як це було б в C. Замість цього, елементи перечислення є повноцінними значеннями на власних правах, із явно визначеним типом – `CompassPoint`.
+
+Кілька різних елементів перечислення можуть оголошуватись в одному рядку, розділені комою:
+ 
 ```swiftenum Planet {    case mercury, venus, earth, mars, jupiter, saturn, uranus, neptune}
 ```
-Each enumeration definition defines a brand new type. Like other types in Swift, their names (such as `CompassPoint` and `Planet`) should start with a capital letter. Give enumeration types singular rather than plural names, so that they read as self-evident:
+
+Кожне оголошення перечислення визначає новий тип. Як і інші типи у Swift, їх назви (такі як `CompassPoint` та `Planet`) прийнято писати з великої літери. Бажано давати перечисленням назви в однині, а не у множині, щоб вони читались самоочевидним чином:
 
 ```swiftvar directionToHead = CompassPoint.west
+// дослівдно: var напрямокРуху = ТочкаКомпасу.захід
 ```
-The type of `directionToHead` is inferred when it is initialized with one of the possible values of `CompassPoint`. Once `directionToHead` is declared as a `CompassPoint`, you can set it to a different `CompassPoint` value using a shorter dot syntax:
+
+Тип змінної `directionToHead` буде визначено з того, що вона ініціалізується одним із можливих значень типу `CompassPoint`. Після того, як змінну `directionToHead` оголошено як змінну типу `CompassPoint`, їй можна присвоїти нове значення типу `CompassPoint` за допомогою кототшого синтаксису, через точку:
 
 ```swiftdirectionToHead = .east
 ```
-The type of `directionToHead` is already known, and so you can drop the type when setting its value. This makes for highly readable code when working with explicitly-typed enumeration values.
+
+Тип змінної `directionToHead` вже відомий, і тому  можна пропустити ім'я типу при присвоєнні нового значення. Це робить код набагато легшим для читання при роботі з явно типізованими значеннями перечислень.
 ### Matching Enumeration Values with a Switch Statement
 You can match individual enumeration values with a `switch` statement:
 
@@ -79,7 +96,7 @@
 ```
 Here, the raw values for an enumeration called `ASCIIControlCharacter` are defined to be of type `Character`, and are set to some of the more common ASCII control characters. `Character` values are described in [Strings and Characters](2_strings_and_characters.md).
 Raw values can be strings, characters, or any of the integer or floating-point number types. Each raw value must be unique within its enumeration declaration.
-> **Note**
+> **Примітка**
 > > Raw values are *not* the same as associated values. Raw values are set to prepopulated values when you first define the enumeration in your code, like the three ASCII codes above. The raw value for a particular enumeration case is always the same. Associated values are set when you create a new constant or variable based on one of the enumeration’s cases, and can be different each time you do so.
 #### Implicitly Assigned Raw Values
 When you’re working with enumerations that store integer or string raw values, you don’t have to explicitly assign a raw value for each case. When you don’t, Swift will automatically assign the values for you.
@@ -106,7 +123,7 @@
 ```swiftlet possiblePlanet = Planet(rawValue: 7)// possiblePlanet is of type Planet? and equals Planet.uranus
 ```
 Not all possible `Int` values will find a matching planet, however. Because of this, the raw value initializer always returns an *optional* enumeration case. In the example above, `possiblePlanet` is of type `Planet?`, or “optional `Planet`.”
-> **Note**
+> **Примітка**
 > 
 > The raw value initializer is a failable initializer, because not every raw value will return an enumeration case. For more information, see [Failable Initializers](2_language_reference/06_declarations.md/#Failable-Initializers).
  If you try to find a planet with a position of `11`, the optional `Planet` value returned by the raw value initializer will be `nil`:

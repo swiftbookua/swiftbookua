@@ -20,9 +20,11 @@
 + Оператор напіввідкритого діапазону (Half-Open range operator)
 + Тип-значення (Value Type)
 + Тип-посилання (Reference Type)
-+ Перечислення (Enumeration)
++ Перечислення (Enumeration) (https://uk.wikipedia.org/wiki/Перелічуваний_тип_даних)
++ Елемент перечислення (Enumeration case)
 + Міст (Bridging)
 + Приведення типів (Type casting) https://uk.wikipedia.org/wiki/Приведення_типів
++ Сире значення (raw value)
 + Змінюваність (Mutability)
 + Оператор додавання з присвоєнням (`+=`) addition assignment operator
 + Юнікодовий скаляр - Unicode scalar 
@@ -52,3 +54,6 @@
 + Циклічне посилання - reference cycles (https://uk.wikipedia.org/wiki/Підрахунок_посилань#Робота_з_циклічними_посиланнями)
 + Замикання-емігранти – Escaping Closures
 + Автозамикання – Autoclosures
++ Протокол - Protocol
++ Підпорядковуватись протоколу - To conform to protocols
++ 
