@@ -57,3 +57,6 @@
 + Протокол - Protocol
 + Підпорядковуватись протоколу - To conform to protocols
 + Ненадійний - failable (ненадійний ініціалізатор - failable initializer)
++ Властивість - Property
++ Властивість, що зберігається – Stored property
++ Властивість, що обчислюється – Computed property

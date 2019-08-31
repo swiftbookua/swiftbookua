@@ -1,31 +1,56 @@
 ## Класи і структури
-*Classes* and *structures* are general-purpose, flexible constructs that become the building blocks of your program’s code. You define properties and methods to add functionality to your classes and structures by using exactly the same syntax as for constants, variables, and functions.
-Unlike other programming languages, Swift does not require you to create separate interface and implementation files for custom classes and structures. In Swift, you define a class or a structure in a single file, and the external interface to that class or structure is automatically made available for other code to use.
-> **Note**
-> 
-> An instance of a *class* is traditionally known as an *object*. However, Swift classes and structures are much closer in functionality than in other languages, and much of this chapter describes functionality that can apply to instances of *either* a class or a structure type. Because of this, the more general term *instance* is used.
- ### Comparing Classes and Structures
-Classes and structures in Swift have many things in common. Both can:
- + Define properties to store values + Define methods to provide functionality + Define subscripts to provide access to their values using subscript syntax + Define initializers to set up their initial state
- + Be extended to expand their functionality beyond a default implementation + Conform to protocols to provide standard functionality of a certain kind
-  For more information, see [Properties](9_properties.md), [Methods](10_methods.md), [Subscripts](11_subscripts.md), [Initialization](13_initialization.md), [Extensions](20_extensions.md), and [Protocols](21_protocols.md).
-Classes have additional capabilities that structures do not:
- + Inheritance enables one class to inherit the characteristics of another. + Type casting enables you to check and interpret the type of a class instance  at runtime. + Deinitializers enable an instance of a class to free up any resources it has assigned. + Reference counting allows more than one reference to a class instance.
-  For more information, see [Inheritance](12_inheritance.md), [Type Casting](18_type_casting.md), [Deinitialization](14_deinitialization.md), and [Automatic Reference Counting](15_automatic_reference_counting.md).
-> **Note**
-> > Structures are always copied when they are passed around in your code, and do not use reference counting.
- #### Definition Syntax
-Classes and structures have a similar definition syntax. You introduce classes with the `class` keyword and structures with the `struct` keyword. Both place their entire definition within a pair of braces:
 
-```swiftclass SomeClass {    // class definition goes here}struct SomeStructure {    // structure definition goes here}
+*Класи* та *структури* є гнучкими конструктами загального призначення та основними будівельними блоками коду вашої програми. Методи і властивості, що додають функціональність до класів та структур, створюються за попомогою точно такогои ж синкаксису, що й функції, константи та змінні. 
+
+На відміну від інших мов програмування, Swift не вимагає розділення інтерфейсу та реалізації власного класу на різні файли. У Swift, класи та структури оголошуються в одному файлі, а зовнішній інтерфейс цих класів та структур є автоматично доступним для використання в іншому коді. 
+> **Примітка**
+> 
+> Екземпляр *класу* традиційно називається *об'єктом*. Однак, у Swift класи та структури є ближчими в плані функціональності, ніж в інших мовах, і більша частина цього розділу описуватиме функціональність, що властива екземплярам як класів, так і структур. Тому, найчастіше цей розділ оперуватиме більш загальним терміном "*екземпляр*".
+
+### Порівняння класів та структур
+
+Класи та структури у Swift мають чимало спільного. Обидва можуть:
+
+ + Визначати властивості і зберігати в них значення
+ + Визначати методи і реалізовувати в них функціональність
+ + Визначати індекси для доступу до внутрішніх значень за допомогою синтаксису індексації
+ + Визначати ініціалізатори для налаштування початкового стану
+ + Бути розширеними для реалізації додаткової функціональності
+ + Підпорядковуватись протоколам, щоб надавати стандартну функціональність певного виду
+
+За більшою інформацією слід звертатись до розділів [Властивості](9_properties.md), [Методи](10_methods.md), [Індекси](11_subscripts.md), [Ініціалізація](13_initialization.md), [Розширення](20_extensions.md), and [Протоколи](21_protocols.md).
+
+Класи мають додаткові можливості, яких нема в структур:
+
+ + Наслідування дозволяє одному класу наслідувати характеристики іншого.
+ + Приведення типів дозволяє перевірити та інтерпретувати тип екземпляру класу під час виконання.
+ + Деініціалізатори дозволяють екземпляру класу звільнити будь-які ресурси, використані під час життєвого циклу
+ + Підрахунок посилань дозволяє існувати більш ніж одному посиланню на екземпляр класу.
+
+За більшою інформацією слід звертатись до розділів [Наслідування](12_inheritance.md), [Приведення типів](18_type_casting.md), [Деініціалізація](14_deinitialization.md), and [Автоматичний підрахунок посилань](15_automatic_reference_counting.md).
+> **Примітка**
+> 
+> Структури при передачі по коду завжди копіюються, і тому не послуговуються підрахунком посилань.
+ 
+#### Синтаксис оголошення
+
+Класи та структури мають схожий синтаксис оголошення. Оголошення класу розпочинається ключовим словом `class`, а оголошення структури - ключовим словом `struct`. Оголошення як класу, так і структури розміщується всередині пари фігурних дужок:
+
+```swiftclass SomeClass {    // тут йде оголошення класу}struct SomeStructure {    // тут йде оголошення структури}
 ```
-> **Note**
-> > Whenever you define a new class or structure, you effectively define a brand new Swift type. Give types `UpperCamelCase` names (such as `SomeClass` and `SomeStructure` here) to match the capitalization of standard Swift types (such as `String`, `Int`, and `Bool`). Conversely, always give properties and methods `lowerCamelCase` names (such as `frameRate` and `incrementCount`) to differentiate them from type names.
-Here’s an example of a structure definition and a class definition:
+
+> **Примітка**
+> 
+> Кожне оголошення класу чи структури є оголошенням нового типу Swift. Слід давати класам та структурам назви у стилі [ВерхньогоВерблюжогоРегістра](https://uk.wikipedia.org/wiki/Верблюжий_регістр) (наприклад, `SomeClass` та `SomeStructure`), щоб відповідати стилю стандартних типів Swift (таких як `String`, `Int`, та `Bool`). В той же час, слід давати властивостям та методам назви у стилі [нижньогоВерблюжогоРегістра](https://uk.wikipedia.org/wiki/Верблюжий_регістр) (наприклад, `frameRate` та `incrementCount`), щоб відрізняти їх від назв типів.
+
+Ось приклад оголошення структири та оголошення класу:
 
 ```swiftstruct Resolution {    var width = 0    var height = 0}class VideoMode {    var resolution = Resolution()    var interlaced = false    var frameRate = 0.0    var name: String?}
 ```
-The example above defines a new structure called `Resolution`, to describe a pixel-based display resolution. This structure has two stored properties called `width` and `height`. Stored properties are constants or variables that are bundled up and stored as part of the class or structure. These two properties are inferred to be of type `Ште` by setting them to an initial integer value of `0`.
+
+У прикладі вище оголошено нову структуру на ім'я `Resolution` для опису роздільної здатності екрану в пікселях. Дана структура має дві властивості, що зберігаються, на ім'я `width` and `height`. Властивості, що зберігаються, є константами чи змінними, що йдуть в комплекті із класом чи структурою, і зберігаються як їх частина. Ці дві властивості мають тип, визначений як `Int` через задавання початкового цілочисельного значення `0`.
+
+У прикладі вище також оголошено новий клас на ім'я `VideoMode` для опису певного відео режим для екрану. Даний клас має чотири властивості, що зберігаються. Перша властивість, `resolution`, ініціалізована новим екземпляром структури `Resolution`, через що її тип визначено як `Resolution`. Наступні три властивості
 The example above also defines a new class called `VideoMode`, to describe a specific video mode for video display. This class has four variable stored properties. The first, `resolution`, is initialized with a new `Resolution` structure instance, which infers a property type of `Resolution`. For the other three properties, new `VideoMode` instances will be initialized with an `interlaced` setting of `false` (meaning “noninterlaced video”), a playback frame rate of `0.0`, and an optional `String` value called `name`. The `name` property is automatically given a default value of `nil`, or “no `name` value”, because it is of an optional type.
 #### Class and Structure Instances
 The `Resolution` structure definition and the `VideoMode` class definition only describe what a `Resolution` or `VideoMode` will look like. They themselves do not describe a specific resolution or video mode. To do that, you need to create an instance of the structure or class.
@@ -44,7 +69,7 @@
 
 ```swiftprint("The width of someVideoMode is \(someVideoMode.resolution.width)")// Prints "The width of someVideoMode is 0"You can also use dot syntax to assign a new value to a variable property:someVideoMode.resolution.width = 1280print("The width of someVideoMode is now \(someVideoMode.resolution.width)")// Prints "The width of someVideoMode is now 1280"
 ```
-> **Note**
+> **Примітка**
 > 
 > Unlike Objective-C, Swift enables you to set sub-properties of a structure property directly. In the last example above, the width property of the `resolution` property of `someVideoMode` is set directly, without your needing to set the entire `resolution` property to a new value.
 ### Memberwise Initializers for Structure Types
@@ -123,6 +148,6 @@
 ### Assignment and Copy Behavior for Strings, Arrays, and Dictionaries
 In Swift, many basic data types such as `String`, `Array`, and `Dictionary` are implemented as structures. This means that data such as strings, arrays, and dictionaries are copied when they are assigned to a new constant or variable, or when they are passed to a function or method.
 This behavior is different from Foundation: `NSString`, `NSArray`, and `NSDictionary` are implemented as classes, not structures. Strings, arrays, and dictionaries in Foundation are always assigned and passed around as a reference to an existing instance, rather than as a copy.
-> **Note**
+> **Примітка**
 > 
 > The description above refers to the “copying” of strings, arrays, and dictionaries. The behavior you see in your code will always be as if a copy took place. However, Swift only performs an *actual* copy behind the scenes when it is absolutely necessary to do so. Swift manages all value copying to ensure optimal performance, and you should not avoid assignment to try to preempt this optimization.
