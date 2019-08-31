@@ -162,30 +162,40 @@
 ```swiftlet possiblePlanet = Planet(rawValue: 7)// possiblePlanet має тип Planet? та дорівнює Planet.uranus
 ```
 
-Однак, не кожному можливому значенню `Int` відповідає планета з перечислення `Planet`. Через це, ініціалізатор сирого значення завжди повертає *опціональний* елемент перечислення. У прикладі вище, `possiblePlanet` має тип `Planet?`, або “опціональна `Planet`.”
+Однак, не кожному можливому значенню `Int` відповідає планета з перечислення `Planet`. Через це, ініціалізатор сирим значенням завжди повертає *опціональний* елемент перечислення. У прикладі вище, `possiblePlanet` має тип `Planet?`, або “опціональна `Planet`.”
 > **Примітка**
 > 
-> The raw value initializer is a failable initializer, because not every raw value will return an enumeration case. For more information, see [Failable Initializers](2_language_reference/06_declarations.md/#Failable-Initializers).
- If you try to find a planet with a position of `11`, the optional `Planet` value returned by the raw value initializer will be `nil`:
+> Ініціалізатор сирим значенням є ненадійним ініціалізатором, бо не для кожного сирого значення він поверте елемент перечислення. Детальніше з ненадійними ініціалізаторами можна познайомитись в розділі [Ненадійні ініціалізатори](2_language_reference/06_declarations.md/#Failable-Initializers).
+ 
+Якщо спробувати знайти планету в позиції `11`, опціональне значення `Planet`, що повертенться з ініціалізатора сирим значенням, буде `nil`:
 
-```swiftlet positionToFind = 11if let somePlanet = Planet(rawValue: positionToFind) {    switch somePlanet {    case .earth:        print("Mostly harmless")    default:        print("Not a safe place for humans")    }} else {    print("There isn't a planet at position \(positionToFind)")}// Надрукує "There isn't a planet at position 11"
+```swiftlet positionToFind = 11if let somePlanet = Planet(rawValue: positionToFind) {    switch somePlanet {    case .earth:        print("Здебільшого, нешкідлива")    default:        print("Небезпечне місце для людей")    }} else {    print("Не існує планети в позиції \(positionToFind)")}// Надрукує "Не існує планети в позиції 11"
 ```
-This example uses optional binding to try to access a planet with a raw value of `11`. The statement `if let somePlanet = Planet(rawValue: 11)` creates an optional `Planet`, and sets `somePlanet` to the value of that optional `Planet` if it can be retrieved. In this case, it is not possible to retrieve a planet with a position of `11`, and so the `else` branch is executed instead.### Recursive Enumerations
-A *recursive enumeration* is an enumeration that has another instance of the enumeration as the associated value for one or more of the enumeration cases. You indicate that an enumeration case is recursive by writing `indirect` before it, which tells the compiler to insert the necessary layer of indirection.
-For example, here is an enumeration that stores simple arithmetic expressions:
+
+У даному прикладі для доступу до планети, ініціалізованої сирим значенням `11`, використовується прив'язування опціоналу. Якщо інструкція `if let somePlanet = Planet(rawValue: 11)` створить планету, константі `somePlanet` буде присвоєно значення опціональної `Planet`. У цьому ж випадку, планету з позицією  `11` створити неможливо, тому виконується гілка коду `else`.
+
+### Рекурсивні перечислення
+
+ *Рекурсивним перечисленням* називають перечислення, котре має екземпляр цього ж перечислення як асоційоване значення хоча б одного зі своїх елементів. Рекурсивні перечислення створюють за допомогою ключового слова `indirect`, яке пишуть перед тими з елементів перечислення, що мають асоційоване значення, типом якого є це ж саме перечислення. Ключове слово `indirect` означає "непрямий", тобто вказує компілятору, що потрібно додати певний проміжний шар.
+
+Наприклад, ось перечислення, що зберігає прості арифметичні вирази:
 
 ```swiftenum ArithmeticExpression {    case number(Int)    indirect case addition(ArithmeticExpression, ArithmeticExpression)    indirect case multiplication(ArithmeticExpression, ArithmeticExpression)}
 ```
-You can also write `indirect` before the beginning of the enumeration, to enable indirection for all of the enumeration’s cases that need it:
+
+Такоже можна вказати ключове слово `indirect` перед початком оголошення перечислення, щоб дозволити кожному з елементів перечислення бути за потреби рекурсивним:
 
 ```swiftindirect enum ArithmeticExpression {    case number(Int)    case addition(ArithmeticExpression, ArithmeticExpression)    case multiplication(ArithmeticExpression, ArithmeticExpression)}
 ```
-This enumeration can store three kinds of arithmetic expressions: a plain number, the addition of two expressions, and the multiplication of two expressions. The `addition` and `multiplication` cases have associated values that are also arithmetic expressions — these associated values make it possible to nest expressions. For example, the expression `(5 + 4) * 2` has a number on the right hand side of the multiplication and another expression on the left hand side of the multiplication. Because the data is nested, the enumeration used to store the data also needs to support nesting — this means the enumeration needs to be recursive. The code below shows the `ArithmeticExpression` recursive enumeration being created for `(5 + 4) * 2`:
+
+Дане перечислення може зберігати три види арифметичних виразів: ціле число, додавання двох виразів, та множення двох виразів. Елементи `addition` та `multiplication` мають асоційовані значення, що є теж арифметичними виразами – ці асоційовані значення дозволяють створювати вкладені вирази. Наприклад, вираз `(5 + 4) * 2` містить число справа від знаку множення та інший вираз зліва від знаку множення. Оскільки вираз `(5 + 4)` є вкладеним в вираз `(5 + 4) * 2`, перечислення, в якому ці вирази моделюються, теж повинні підтримувати вкладеність, тобто бути рекурсивними. У коді нижче демонструється рекурсивне перечислення `ArithmeticExpression`, створене для моделювання виразу `(5 + 4) * 2`:
 
 ```swiftlet five = ArithmeticExpression.number(5)let four = ArithmeticExpression.number(4)let sum = ArithmeticExpression.addition(five, four)let product = ArithmeticExpression.multiplication(sum, ArithmeticExpression.number(2))
 ```
-A recursive function is a straightforward way to work with data that has a recursive structure. For example, here’s a function that evaluates an arithmetic expression:
+
+Природнім способом роботи із даними з рекурсивною структурою є рекурсивна функція. Наприклад, ось функція, що обчислює значення арифметичного виразу:
 
 ```swiftfunc evaluate(_ expression: ArithmeticExpression) -> Int {    switch expression {    case let .number(value):        return value    case let .addition(left, right):        return evaluate(left) + evaluate(right)    case let .multiplication(left, right):        return evaluate(left) * evaluate(right)    }} print(evaluate(product))// Надрукує "18"
 ```
-This function evaluates a plain number by simply returning the associated value. It evaluates an addition or multiplication by evaluating the expression on the left hand side, evaluating the expression on the right hand side, and then adding them or multiplying them.
+
+Ця функція обчислює вираз "ціле число" просто повертаючи асоційоване значення елементу `number`. Додавання та множення обчислюється шляхом обчислення лівого виразу, обчислення правого виразу, та додавання/множення результатів цих обчислень.

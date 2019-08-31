@@ -56,4 +56,4 @@
 + Автозамикання – Autoclosures
 + Протокол - Protocol
 + Підпорядковуватись протоколу - To conform to protocols
-+ 
++ Ненадійний - failable (ненадійний ініціалізатор - failable initializer)
