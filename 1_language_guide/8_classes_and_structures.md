@@ -3,7 +3,8 @@
 *Класи* та *структури* є гнучкими конструктами загального призначення та основними будівельними блоками коду вашої програми. Методи і властивості, що додають функціональність до класів та структур, створюються за попомогою точно такогои ж синкаксису, що й функції, константи та змінні. 
 
 На відміну від інших мов програмування, Swift не вимагає розділення інтерфейсу та реалізації власного класу на різні файли. У Swift, класи та структури оголошуються в одному файлі, а зовнішній інтерфейс цих класів та структур є автоматично доступним для використання в іншому коді. 
-> **Примітка**
+
+> **Примітка**
 > 
 > Екземпляр *класу* традиційно називається *об'єктом*. Однак, у Swift класи та структури є ближчими в плані функціональності, ніж в інших мовах, і більша частина цього розділу описуватиме функціональність, що властива екземплярам як класів, так і структур. Тому, найчастіше цей розділ оперуватиме більш загальним терміном "*екземпляр*".
 
@@ -28,7 +29,8 @@
  + Підрахунок посилань дозволяє існувати більш ніж одному посиланню на екземпляр класу.
 
 За більшою інформацією слід звертатись до розділів [Наслідування](12_inheritance.md), [Приведення типів](18_type_casting.md), [Деініціалізація](14_deinitialization.md), and [Автоматичний підрахунок посилань](15_automatic_reference_counting.md).
-> **Примітка**
+
+> **Примітка**
 > 
 > Структури при передачі по коду завжди копіюються, і тому не послуговуються підрахунком посилань.
  
@@ -36,7 +38,13 @@
 
 Класи та структури мають схожий синтаксис оголошення. Оголошення класу розпочинається ключовим словом `class`, а оголошення структури - ключовим словом `struct`. Оголошення як класу, так і структури розміщується всередині пари фігурних дужок:
 
-```swiftclass SomeClass {    // тут йде оголошення класу}struct SomeStructure {    // тут йде оголошення структури}
+```swift
+class SomeClass {
+    // тут йде оголошення класу
+}
+struct SomeStructure {
+    // тут йде оголошення структури
+}
 ```
 
 > **Примітка**
@@ -45,109 +53,222 @@
 
 Ось приклад оголошення структири та оголошення класу:
 
-```swiftstruct Resolution {    var width = 0    var height = 0}class VideoMode {    var resolution = Resolution()    var interlaced = false    var frameRate = 0.0    var name: String?}
+```swift
+struct Resolution {
+    var width = 0
+    var height = 0
+}
+class VideoMode {
+    var resolution = Resolution()
+    var interlaced = false
+    var frameRate = 0.0
+    var name: String?
+}
 ```
 
 У прикладі вище оголошено нову структуру на ім'я `Resolution` для опису роздільної здатності екрану в пікселях. Дана структура має дві властивості, що зберігаються, на ім'я `width` and `height`. Властивості, що зберігаються, є константами чи змінними, що йдуть в комплекті із класом чи структурою, і зберігаються як їх частина. Ці дві властивості мають тип, визначений як `Int` через задавання початкового цілочисельного значення `0`.
 
-У прикладі вище також оголошено новий клас на ім'я `VideoMode` для опису певного відео режим для екрану. Даний клас має чотири властивості, що зберігаються. Перша властивість, `resolution`, ініціалізована новим екземпляром структури `Resolution`, через що її тип визначено як `Resolution`. Наступні три властивості
-The example above also defines a new class called `VideoMode`, to describe a specific video mode for video display. This class has four variable stored properties. The first, `resolution`, is initialized with a new `Resolution` structure instance, which infers a property type of `Resolution`. For the other three properties, new `VideoMode` instances will be initialized with an `interlaced` setting of `false` (meaning “noninterlaced video”), a playback frame rate of `0.0`, and an optional `String` value called `name`. The `name` property is automatically given a default value of `nil`, or “no `name` value”, because it is of an optional type.
-#### Class and Structure Instances
-The `Resolution` structure definition and the `VideoMode` class definition only describe what a `Resolution` or `VideoMode` will look like. They themselves do not describe a specific resolution or video mode. To do that, you need to create an instance of the structure or class.
-The syntax for creating instances is very similar for both structures and classes:
+У прикладі вище також оголошено новий клас на ім'я `VideoMode` для опису певного відео режим для екрану. Даний клас має чотири властивості, що зберігаються. Перша властивість, `resolution`, ініціалізована новим екземпляром структури `Resolution`, через що її тип визначено як `Resolution`. Щодо наступних трьох властивостей, нові екземпляри `VideoMode` будуть ініціалізовані із налаштуванням `interlaced` що дорівнює `false` (що означає, що розгортка відео не буде [черезрядковою](https://uk.wikipedia.org/wiki/Черезрядкова_розгортка)), швидкістю зміни кадрів `frameRate`, що дорівнює `0.0`, та опціональним рядком на ім'я `name`. Властивість `name` буде автоматично ініціалізовано значенням `nil`, тобто “нема значення `name`”, оскільки вона має опціональний тип.
 
-```swiftlet someResolution = Resolution()let someVideoMode = VideoMode()
-```
-Structures and classes both use initializer syntax for new instances. The simplest form of initializer syntax uses the type name of the class or structure followed by empty parentheses, such as `Resolution()` or `VideoMode()`. This creates a new instance of the class or structure, with any properties initialized to their default values. Class and structure initialization is described in more detail in [Initialization](13_initialization.md).
-#### Accessing Properties
-You can access the properties of an instance using *dot syntax*. In dot syntax, you write the property name immediately after the instance name, separated by a period (`.`), without any spaces:
+#### Екземпляри класів та структур
 
-```swiftprint("The width of someResolution is \(someResolution.width)")// Prints "The width of someResolution is 0"
-```
-In this example, `someResolution.width` refers to the `width` property of `someResolution`, and returns its default initial value of `0`.
-You can drill down into sub-properties, such as the `width` property in the `resolution` property of a `VideoMode`:
+Оголошення стурктури `Resolution` та класу `VideoMode` описують лише те, як буде виглядати роздільна здатність `Resolution` та відео режим `VideoMode`. Самі по собі вони не описують конкретну роздільну здатність чи відео режим. Для цього слід створити екземпляр структури чи класу.
 
-```swiftprint("The width of someVideoMode is \(someVideoMode.resolution.width)")// Prints "The width of someVideoMode is 0"You can also use dot syntax to assign a new value to a variable property:someVideoMode.resolution.width = 1280print("The width of someVideoMode is now \(someVideoMode.resolution.width)")// Prints "The width of someVideoMode is now 1280"
+Синтаксис створення екземплярів стуктур та класів дуже схожий:
+
+```swift
+let someResolution = Resolution()
+let someVideoMode = VideoMode()
 ```
-> **Примітка**
+
+І структури, і класи послуговуються синтаксисом ініціалізації для створення нових екземплярів. У найпростішій формі цього синтаксису, записується назва класу чи структури і порожні круглі дужки після неї, наприклад `Resolution()` чи `VideoMode()`. Таким чином створюються нові екземпляри класу чи структури, при цьому їх властивості ініціалізуються значенням за замовчанням. Ініціалізація класів та структур детально описана в розділі [Ініціалізація](13_initialization.md).
+
+#### Доступ до властивостей
+
+Щоб отримати значення властивості екземпляру, використовують *синтаксис крапки*. При такому синтаксисі, ім'я властивості записується одразу після імені екземпляру, відділяючись від нього крапою (`.`), без жодних пробілів:
+
+```swift
+print("Ширина в someResolution дорівнює \(someResolution.width)")
+// Надрукує "Ширина в someResolution дорівнює 0"
+```
+
+У даному прикладі, `someResolution.width` посилається на властивість `width` екземпляру `someResolution`, і повертах її початкое значення за замовчанням `0`.
+
+Синтаксис крапки можна застосовувати до підвластивостей, таких як властивість `width` властивості `resolution` класу `VideoMode`:
+
+```swift
+print("Ширина в someVideoMode дорівнює \(someVideoMode.resolution.width)")
+// Надрукує "Ширина в someVideoMode дорівнює 0"
+
+// Також можна застосовувати синтаксис крапки для присвоєння нового значення змінній властивості:
+someVideoMode.resolution.width = 1280
+print("Ширина в someVideoMode тепер дорівнює \(someVideoMode.resolution.width)")
+// Надрукує "Ширина в someVideoMode тепер дорівнює 1280"
+```
+
+> **Примітка**
 > 
-> Unlike Objective-C, Swift enables you to set sub-properties of a structure property directly. In the last example above, the width property of the `resolution` property of `someVideoMode` is set directly, without your needing to set the entire `resolution` property to a new value.
-### Memberwise Initializers for Structure Types
-All structures have an automatically-generated *memberwise initializer*, which you can use to initialize the member properties of new structure instances. Initial values for the properties of the new instance can be passed to the memberwise initializer by name:
+> На відміну від Objective-C, мова Swift дозволяє присвоювати значення підвластивостям структур напряму. У останньому прикладі вище, властивість `width` властивості `resolution` екземпляру `someVideoMode` задається напряму, без необхідності присвоювати повністю нову структуру властивості `resolution`.
 
-```swiftlet vga = Resolution(width: 640, height: 480)
+### Почленна ініціалізація у стуктурах
+
+Всі структури мають автоматично-згенеровані *почленні ініціалізатори*, котрі можна використовувати для ініціалізації членів – властивостей нового екземпляру структури. Початкові значення властивостей нового екземпляру можуть передаватись почленному ініціалізатору за іменем:
+
+```swift
+let vga = Resolution(width: 640, height: 480)
 ```
-Unlike structures, class instances do not receive a default memberwise initializer. Initializers are described in more detail in [Initialization](13_initialization.md).### Структури і перечислення як типи-значенняStructures and Enumerations Are Value Types
-A *value type* is a type whose value is *copied* when it is assigned to a variable or constant, or when it is passed to a function.
-You’ve actually been using value types extensively throughout the previous chapters. In fact, all of the basic types in Swift — integers, floating-point numbers, Booleans, strings, arrays and dictionaries—are value types, and are implemented as structures behind the scenes.
-All structures and enumerations are value types in Swift. This means that any structure and enumeration instances you create — and any value types they have as properties—are always copied when they are passed around in your code.
-Consider this example, which uses the `Resolution` structure from the previous example:
 
-```swiftlet hd = Resolution(width: 1920, height: 1080)var cinema = hd
+На відміну від структур, екземпляри класів не мають почленних ініціалізаторів за замовчанням. Детальніше з ініціалізаторами можна ознайомитись у розіділі [Ініціалізація](13_initialization.md).
+
+### Структури і перечислення як типи-значення
+
+*Тип-значення* – це тип, чиє значення копіюється при присвоєнні до змінної чи константи, або при передачі до функції.
+
+Насправді, типи-значення широко використовувались протягом попередніх розділів цієї книги. Фактично, всі базові типи у Swift: цілі числа, числа з плаваючою комою, булеві значення, рядки, масиви та словники – всі вони є типами-значеннями, і є реалізованими як структури за лаштунками. 
+
+Всі структури та перечислення є типами-значеннями у Swift. Це означає, що будь-яка стурктура чи перечислення, що ви створюєте (та будь-які типи значення, що є їх властивостями) завжди копіюються при їх передачі по коду. 
+
+Розглянемо наступний приклад, де використовується структура `Resolution` з попереднього прикладу:
+
+```swift
+let hd = Resolution(width: 1920, height: 1080)
+var cinema = hd
 ```
-This example declares a constant called `hd` and sets it to a `Resolution` instance initialized with the width and height of full HD video (`1920` pixels wide by `1080` pixels high).
-It then declares a variable called `cinema` and sets it to the current value of `hd`. Because `Resolution` is a structure, a copy of the existing instance is made, and this new copy is assigned to `cinema`. Even though `hd` and `cinema` now have the same width and height, they are two completely different instances behind the scenes.
-Next, the `width` property of `cinema` is amended to be the width of the slightly-wider 2K standard used for digital cinema projection (`2048` pixels wide and `1080` pixels high):
 
-```swiftcinema.width = 2048
+У цьому прикладі оголошується константа `hd`, котрій присвоєно екземпляр структури `Resolution`, який ініціалізавано шириною та висотою відео у форматі Full HD (`1920` пікселів ширини на `1080` пікселів висоти).
+
+Потім оголошено змінну на ім'я `cinema`, котрій присвоєно поточне значення `hd`. Оскільки `Resolution` – це структура, відбувається копіювання існуючого екземпляру, і цю нову копію присвоєно змінній `cinema`. Хоч `hd` та `cinema` зараз мають однакову ширину й висоту, вони являються двома повністю різними екземплярами за лаштунками. 
+
+Далі, змінимо властивість `width` змінної `cinema`, щоб моделювати трошки ширший стандарт 2K, що використовуються в цифровій кінопроекції (`2048` пікселів ширини на `1080` пікселів висоти):
+
+```swift
+cinema.width = 2048
 ```
-Checking the width property of `cinema` shows that it has indeed changed to be `2048`:
 
-```swiftprint("cinema is now \(cinema.width) pixels wide")// Prints "cinema is now 2048 pixels wide"
+Перевіримо, що властивість `width` змінної `cinema` дійсно змінилась на `2048`:
+
+```swift
+print("cinema тепер має \(cinema.width) пікселів ширини")
+// Надрукує "cinema тепер має 2048 пікселів ширини"
 ```
-However, the width property of the original `hd` instance still has the old value of `1920`:
 
-```swiftprint("hd is still \(hd.width) pixels wide")// Prints "hd is still 1920 pixels wide"
+Однак, властивість `width` оригінального екземпляру `hd` досі має старе значення `1920`:
+
+```swift
+print("hd все ще має \(hd.width) пікселів ширини")
+// Надрукує "hd все ще має 1920 пікселів ширини"
 ```
-When `cinema` was given the current value of `hd`, the *values* stored in `hd` were copied into the new `cinema` instance. The end result is two completely separate instances, which just happened to contain the same numeric values. Because they are separate instances, setting the width of `cinema` to `2048` doesn’t affect the width stored in `hd`.
-The same behavior applies to enumerations:
 
-```swiftenum CompassPoint {    case north, south, east, west}var currentDirection = CompassPoint.westlet rememberedDirection = currentDirectioncurrentDirection = .eastif rememberedDirection == .west {    print("The remembered direction is still .west")}// Prints "The remembered direction is still .west"
+Коли змінній `cinema` було присвоєно поточне значення `hd`, *значення*, що зберігались у `hd`, були скопійовані до нового екземпляру `cinema`. В кінцевому результаті маємо два повністю розділених екземпляри, котрі лише внаслідок копіювання містять однакові числові значення. Оскільки вони є різними екземплярами, присвоєння ширині `cinema` значення `2048` не впливає на значення, що зберігаються в `hd`.
+
+Ту ж само поведінку мають перечислення:
+
+```swift
+enum CompassPoint {
+    case north, south, east, west
+}
+var currentDirection = CompassPoint.west
+let rememberedDirection = currentDirection
+currentDirection = .east
+if rememberedDirection == .west {
+    print("Значення rememberedDirection все ще дорівнює .west")
+}
+// Надрукує "Значення rememberedDirection все ще дорівнює .west"
 ```
-When `rememberedDirection` is assigned the value of `currentDirection`, it is actually set to a copy of that value. Changing the value of `currentDirection` thereafter does not affect the copy of the original value that was stored in `rememberedDirection`.
 
-### Classes Are Reference Types
-Unlike value types, *reference types* are not copied when they are assigned to a variable or constant, or when they are passed to a function. Rather than a copy, a reference to the same existing instance is used instead.Here’s an example, using the `VideoMode` class defined above:
+Коли константі `rememberedDirection` присвоєно значення змінної `currentDirection`, їй фактично було присвоєно копію цього значення. Подільші зміни значення `currentDirection` не впливають на копію оригінального значення, що зберігається у константі `rememberedDirection`.
 
-```swiftlet tenEighty = VideoMode()tenEighty.resolution = hdtenEighty.interlaced = truetenEighty.name = "1080i"tenEighty.frameRate = 25.0
+### Класи як типи-посилання
+
+На відміну від типів-значень, *типи-посилання* не копіюються при присвоєнні їх змінній чи константі, або при передачі до функції. Замість копії використовується посилання на той же само екземпляр.
+
+Ось приклад, де використовуються клас `VideoMode`, оголошений вище:
+
+```swift
+let tenEighty = VideoMode()
+tenEighty.resolution = hd
+tenEighty.interlaced = true
+tenEighty.name = "1080i"
+tenEighty.frameRate = 25.0
 ```
-This example declares a new constant called `tenEighty` and sets it to refer to a new instance of the `VideoMode` class. The video mode is assigned a copy of the HD resolution of `1920` by `1080` from before. It is set to be interlaced, and is given a name of `"1080i"`. Finally, it is set to a frame rate of `25.0` frames per second.
-Next, `tenEighty` is assigned to a new constant, called `alsoTenEighty`, and the frame rate of `alsoTenEighty` is modified:
 
-```swiftlet alsoTenEighty = tenEightyalsoTenEighty.frameRate = 30.0
+У даному прикладі оголошено нову константу на ім'я `tenEighty`, і їй присвоєно посилання на новий екземпляр класу `VideoMode`. Властивості `resolution` даного екземпляру присвоєно копію значення `hd` з роздільною здатністю `1920` на `1080` із прикладів вище. Далі встановлюються значення черезрядковогої розгортки, дається ім'я `"1080i"`, а швидкість програвання встановлюється в `25.0` кадрів на секунду.
+
+Далі, присвоїмо `tenEighty` новій константі на ім'я `alsoTenEighty`, після чого змінимо властивість `frameRate` нової константи `alsoTenEighty`:
+
+```swift
+let alsoTenEighty = tenEighty
+alsoTenEighty.frameRate = 30.0
 ```
-Because classes are reference types, `tenEighty` and `alsoTenEighty` actually both refer to the *same* `VideoMode` instance. Effectively, they are just two different names for the same single instance.
-Checking the `frameRate` property of `tenEighty` shows that it correctly reports the new frame rate of `30.0` from the underlying `VideoMode` instance:
 
-```swiftprint("The frameRate property of tenEighty is now \(tenEighty.frameRate)")// Prints "The frameRate property of tenEighty is now 30.0"
+Оскільки класи є типами-посиланнями, константи `tenEighty` та `alsoTenEighty` фактично посилаються на *один і той же* екземпляр класу `VideoMode`. Насправді, вони є просто двома різними назвами одного й того ж єдиного екземпляру.
+
+Перевірка властивості `frameRate` екземпляру `tenEighty` демонструє, що її значення тепер змінилось і дорівнює `30.0`:
+
+```swift
+print("Властивість frameRate екземпляру tenEighty тепер дорівнює \(tenEighty.frameRate)")
+// Надрукує "Властивість frameRate екземпляру tenEighty тепер дорівнює 30.0"
 ```
-Note that `tenEighty` and `alsoTenEighty` are declared as *constants*, rather than variables. However, you can still change `tenEighty.frameRate` and `alsoTenEighty.frameRate` because the values of the `tenEighty` and `alsoTenEighty` constants themselves do not actually change. `tenEighty` and `alsoTenEighty` themselves do not “store” the `VideoMode` instance — instead, they both *refer* to a `VideoMode` instance behind the scenes. It is the `frameRate` property of the underlying `VideoMode` that is changed, not the values of the constant references to that `VideoMode`.
-#### Identity Operators
-Because classes are reference types, it is possible for multiple constants and variables to refer to the same single instance of a class behind the scenes. (The same is not true for structures and enumerations, because they are always copied when they are assigned to a constant or variable, or passed to a function.)
-It can sometimes be useful to find out if two constants or variables refer to exactly the same instance of a class. To enable this, Swift provides two identity operators:
- + Identical to (`===`) + Not identical to (`!==`)
- Use these operators to check whether two constants or variables refer to the same single instance:
 
-```swiftif tenEighty === alsoTenEighty {    print("tenEighty and alsoTenEighty refer to the same VideoMode instance.")}// Prints "tenEighty and alsoTenEighty refer to the same VideoMode instance."
+Зверніть увагу, що `tenEighty` та `alsoTenEighty` було оголошено *константами*, а не змінними. Однак, все ще можна змінити `tenEighty.frameRate` та `alsoTenEighty.frameRate`, оскільки значення самих констант  `tenEighty` та `alsoTenEighty` фактично лишилось без змін. Константи `tenEighty` та `alsoTenEighty` самі по собі не “зберігають” екземпляр класу `VideoMode`: замість цього, вони обидві *посилаються* на екземпляр класу `VideoMode` за лаштунками. Змінилась саме властивість `frameRate` екземпляру `VideoMode` за лаштунками, а не значення самих константних посилань на цей екземпляр.
+
+#### Оператори ідентичності
+
+Оскільки класи є типами-посиланнями, можливо мати кілька констант та змінних, що посилається на один і той же екземпляр класу за лаштунками. (Що неможливо для структур та перечислень, оскільки вони завжди копіюються при присвоєнні новій константі чи змінні, чи при передаванні до функції).
+
+Іноді буває потрібно з'ясувати, чи посилаються дві константи або змінні на один і той же екземпляр класу. Для цього у Swift є два оператори ідентичності:
+
+ + Ідентичний до (`===`)
+ + Не ідентичний до (`!==`)
+
+Ці оператори застосовують для перевірки, чи посилаються дві константи або змінні на один і той же екземпляр:
+
+```swift
+if tenEighty === alsoTenEighty {
+    print("tenEighty та alsoTenEighty посилаються на одий і той же екземпляр VideoMode.")
+}
+// Надрукує "tenEighty та alsoTenEighty посилаються на одий і той же екземпляр VideoModeи."
 ```
-Note that “identical to” (represented by three equals signs, or `===`) does not mean the same thing as “equal to” (represented by two equals signs, or `==`):
 
- + “Identical to” means that two constants or variables of class type refer to exactly the same class instance.
- + “Equal to” means that two instances are considered “equal” or “equivalent” in value, for some appropriate meaning of “equal”, as defined by the type’s designer.
-  When you define your own custom classes and structures, it is your responsibility to decide what qualifies as two instances being “equal”. The process of defining your own implementations of the “equal to” and “not equal to” operators is described in [Equivalence Operators](24_advanced_operators.md#Equivalence-Operators).
-#### Pointers
-If you have experience with C, C++, or Objective-C, you may know that these languages use *pointers* to refer to addresses in memory. A Swift constant or variable that refers to an instance of some reference type is similar to a pointer in C, but is not a direct pointer to an address in memory, and does not require you to write an asterisk (`*`) to indicate that you are creating a reference. Instead, these references are defined like any other constant or variable in Swift.
-### Choosing Between Classes and Structures
-You can use both classes and structures to define custom data types to use as the building blocks of your program’s code.
-However, structure instances are always passed by *value*, and class instances are always passed by *reference*. This means that they are suited to different kinds of tasks. As you consider the data constructs and functionality that you need for a project, decide whether each data construct should be defined as a class or as a structure.
-As a general guideline, consider creating a structure when one or more of these conditions apply:
- + The structure’s primary purpose is to encapsulate a few relatively simple data values. + It is reasonable to expect that the encapsulated values will be copied rather than referenced when you assign or pass around an instance of that structure. + Any properties stored by the structure are themselves value types, which would also be expected to be copied rather than referenced. + The structure does not need to inherit properties or behavior from another existing type.
- Examples of good candidates for structures include:
- + The size of a geometric shape, perhaps encapsulating a width property and a height property, both of type Double. + A way to refer to ranges within a series, perhaps encapsulating a start property and a length property, both of type Int. + A point in a 3D coordinate system, perhaps encapsulating x, y and z properties, each of type Double.
- In all other cases, define a class, and create instances of that class to be managed and passed by reference. In practice, this means that most custom data constructs should be classes, not structures.
-### Assignment and Copy Behavior for Strings, Arrays, and Dictionaries
-In Swift, many basic data types such as `String`, `Array`, and `Dictionary` are implemented as structures. This means that data such as strings, arrays, and dictionaries are copied when they are assigned to a new constant or variable, or when they are passed to a function or method.
-This behavior is different from Foundation: `NSString`, `NSArray`, and `NSDictionary` are implemented as classes, not structures. Strings, arrays, and dictionaries in Foundation are always assigned and passed around as a reference to an existing instance, rather than as a copy.
-> **Примітка**
+Слід зазначити, що  “ідентичний до” (записується як три знаки рівності, тобто `===`) означає не те ж саме, що й оператор “дорівнює” (записується як два знаки рівності, тобто `==`):
+
+ + “Ідентичний до” означає, що дві константи чи змінні посилаються на один і той же екземпляр класу
+ + “Дорівнює” означає, що два екземпляри вважаються “рівними”, або “еквівалентними” по значенню, згідно із сенсом рівності, закладеним проектувальником даного типу.
+
+Коли ви оголошуєте свої власні класи та структури, це саме ваша відповідальність вирішувати, що кваліфікується як рівність двох екземплярів. Процес визначення вашої реалізації операторів “дорівнює” та “не дорівнює” описано в підрозділі [Оператори рівності](24_advanced_operators.md#Equivalence-Operators).
+
+#### Вказівники
+
+Якщо ви маєте досвід із мовами C, C++, чи Objective-C, вам, мабуть, відомо, що в цих мовах для посилань на адреси у пам'яті застосовуються *вказівники*. У Swift, константи чи змінні, що посилаються на екземпляр якогось типу-посилання є схожим на вказівник у мові C, але вони не є прямими вказівниками на адреси у пам'яті, і не потребують запису зірочки (`*`) для позначення створення посилання. У Swift ці посилання визначаються просто як будь-яка інша константа чи змінна. 
+
+
+### Вибір між класами і структурами
+
+Для оголошення властних типів данних і використання їх як будівельних блоків коду вашої програми, підходять як класи, так і структури.
+
+Однак, екземпляри структур завжди передаються по *значенню*, в той час як екземпляри класів завжди передаються за *посиланням*. Це означає, що вони підходять для різних видів задач. Розглядаючи конструкти даних та функціональність, котрих потребує ваш проект, доводиться вирішувати, в якому вигляді краще втілити цей конструкт, у вигляді класу чи структури?
+
+Як основний гайдлайн, слід задуматись над використанням структури, якщо одна чи декілька наступних умов виконуються:
+
+ + Основне призначення стурктур – інкапсулювати кілька відносно простих значень.
+ + Доцільно очікувати, що інкапсульовані дані будуть копіюватись (а не передаватись за посиланням) при присвоєнні чи передачі до функції екземплярів цієї структури. 
+ + Усі властивості, що зберігаються у структурі, є також типами-значеннями, і очікується, що вони також будуть копіюватись
+ + Структура не потребує наслідування властивостей чи поведінки існуючого типу. 
+
+Ось кілька прикладів хороших кандидатів у структури:
+
+ + Розміри геометричної фігури, наприклад, інкапсуляція властивостей ширини та висоти типу `Double`.
+ + Спосіб посилатись на діапазони всередині послідовностей, наприклад, інкапсуляція властивостей початку діапазону та його довжини типу `Int`.
+ + Точка в тривимірній системі координат, наприклад, інкапсуляція властивостей x, y та z типу `Double`.
+
+У всіх інших випадках, слід визначати класи, створювати екземпляри цих класів і передавати їх за посиланням. На практиці, більшість власних типів даних повинні бути класами, а не структурами.
+
+### Присвоєння і поведінка копіювання рядків, масивів та словників
+
+У Swift, багато базових типів даних, такі як `String`, `Array`, та `Dictionary`, є реалізовані як стурктури. Це означає, що дані, такі як рядки, масиви та словники, копіюються при присвоєнні їх новій змінній чи константі, або при передачі до функції чи методу. 
+
+Дана поведінка відрізняється від Foundation: `NSString`, `NSArray`, та `NSDictionary` реалізовані як класи, а не структури. Рядки, масиви і словники у Foundation завжди присвоюються та передаються за посиланням на існуючий екземпляр, а не як копії.
+
+> **Примітка**
 > 
-> The description above refers to the “copying” of strings, arrays, and dictionaries. The behavior you see in your code will always be as if a copy took place. However, Swift only performs an *actual* copy behind the scenes when it is absolutely necessary to do so. Swift manages all value copying to ensure optimal performance, and you should not avoid assignment to try to preempt this optimization.
+> Текст вище посилаєтсья на “копіювання” рядків, масивів та словників. Ваш код завжди буду вести себе, ніби відбулось копіювання. Однак, у Swift за лаштунками *фактичне* копіювання відбувається тільки тоді, коли це дійсно потрібно. Swift керує копіюванням усіх значень, щоб гарантувати оптимальну швидкодію коду, тому вам не слід уникати присвоєнь заради оптимізації коду. 

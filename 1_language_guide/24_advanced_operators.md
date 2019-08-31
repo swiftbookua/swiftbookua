@@ -4,7 +4,9 @@
 
 ### Operator Methods
 
-### Equivalence Operators
+### Оператори рівності
+Equivalence Operators
+
 
 ### Методи-оператори
 Operator Methods

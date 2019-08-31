@@ -60,3 +60,6 @@
 + Властивість - Property
 + Властивість, що зберігається – Stored property
 + Властивість, що обчислюється – Computed property
++ Синтаксис крапки – dot syntax
++ Почленна ініціалізація - memberwise initialization
++ Оператори ідентичності - Identity Operators
