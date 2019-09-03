@@ -60,6 +60,10 @@
 + Властивість - Property
 + Властивість, що зберігається – Stored property
 + Властивість, що обчислюється – Computed property
++ Ліниві властивості – lazy properties
 + Синтаксис крапки – dot syntax
 + Почленна ініціалізація - memberwise initialization
 + Оператори ідентичності - Identity Operators
++ Клас-нащадок – subclass
++ Батьківський клас – superclass
++

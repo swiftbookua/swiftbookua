@@ -14,7 +14,7 @@
 
 ```swiftstruct Fahrenheit {    var temperature: Double    init() {        temperature = 32.0    }}var f = Fahrenheit()print("The default temperature is \(f.temperature)° Fahrenheit")// Prints "The default temperature is 32.0° Fahrenheit"
 ```
-The structure defines a single initializer, `init`, with no parameters, which initializes the stored temperature with a value of `32.0` (the freezing point of water in degrees Fahrenheit).#### Default Property Values
+The structure defines a single initializer, `init`, with no parameters, which initializes the stored temperature with a value of `32.0` (the freezing point of water in degrees Fahrenheit).#### Значення властивостей за замовчаннямDefault Property Values
 You can set the initial value of a stored property from within an initializer, as shown above. Alternatively, specify a *default property value* as part of the property’s declaration. You specify a default property value by assigning an initial value to the property when it is defined.> **Note**
 > > If a property always takes the same initial value, provide a default value rather than setting a value within an initializer. The end result is the same, but the default value ties the property’s initialization more closely to its declaration. It makes for shorter, clearer initializers and enables you to infer the type of the property from its default value. The default value also makes it easier for you to take advantage of default initializers and initializer inheritance, as described later in this chapter.You can write the `Fahrenheit` structure from above in a simpler form by providing a default value for its `temperature` property at the point that the property is declared:
 
@@ -57,7 +57,7 @@
 
 ```swiftclass SurveyQuestion {    var text: String    var response: String?    init(text: String) {        self.text = text    }    func ask() {        print(text)    }}let cheeseQuestion = SurveyQuestion(text: "Do you like cheese?")cheeseQuestion.ask()// Prints "Do you like cheese?"cheeseQuestion.response = "Yes, I do like cheese."
 ```
-The response to a survey question cannot be known until it is asked, and so the `response` property is declared with a type of `String?`, or “optional `String`”. It is automatically assigned a default value of `nil`, meaning “no string yet”, when a new instance of `SurveyQuestion` is initialized.#### Assigning Constant Properties During Initialization
+The response to a survey question cannot be known until it is asked, and so the `response` property is declared with a type of `String?`, or “optional `String`”. It is automatically assigned a default value of `nil`, meaning “no string yet”, when a new instance of `SurveyQuestion` is initialized.#### Присвоєння значень константним властивостям під час ініціалізаціїAssigning Constant Properties During Initialization
 You can assign a value to a constant property at any point during initialization, as long as it is set to a definite value by the time initialization finishes. Once a constant property is assigned a value, it can’t be further modified.
 > **Note**
 > 
