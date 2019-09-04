@@ -47,20 +47,37 @@
 
 У прикладі нижче ліниву властивость, що зберігаються, застосовано для уникнення зайвої ініціалізації в складному класі. У цьому прикладі оголошено два класи із назвами `DataImporter` та `DataManager`, жоден з яких не показаний повністю:
 
-```swiftclass DataImporter {    /*     DataImporter is a class to import data from an external file.     The class is assumed to take a non-trivial amount of time to initialize.     */    var fileName = "data.txt"    // the DataImporter class would provide data importing functionality here} class DataManager {    lazy var importer = DataImporter()    var data = [String]()    // the DataManager class would provide data management functionality here} let manager = DataManager()manager.data.append("Some data")manager.data.append("Some more data")// the DataImporter instance for the importer property has not yet been created
+```swiftclass DataImporter {    /*
+     DataImporter – це клас, що імпортує дані із зовнішнього файлу.
+     Будемо вважати, що клас ініціалізація класу DataImporter займає суттєву кільківть часу.     */    var fileName = "data.txt"
+    // клас DataImporter буде реалізовувати функціональність імпорту даних тут} class DataManager {    lazy var importer = DataImporter()    var data = [String]()
+    // клас DataManager буде реалізовувати функціональність управління даними тут} let manager = DataManager()manager.data.append("Some data")manager.data.append("Some more data")
+// на даний момент досі не створено екземпляру класу DataImporter, що зберігається у властивості importer
 ```
-The `DataManager` class has a stored property called `data`, which is initialized with a new, empty array of `String` values. Although the rest of its functionality is not shown, the purpose of this `DataManager` class is to manage and provide access to this array of `String` data.
-Part of the functionality of the `DataManager` class is the ability to import data from a file. This functionality is provided by the `DataImporter` class, which is assumed to take a non-trivial amount of time to initialize. This might be because a `DataImporter` instance needs to open a file and read its contents into memory when the `DataImporter` instance is initialized.
-It is possible for a `DataManager` instance to manage its data without ever importing data from a file, so there is no need to create a new `DataImporter` instance when the `DataManager` itself is created. Instead, it makes more sense to create the `DataImporter` instance if and when it is first used.
-Because it is marked with the `lazy` modifier, the `DataImporter` instance for the `importer` property is only created when the `importer` property is first accessed, such as when its `fileName` property is queried:
 
-```swiftprint(manager.importer.fileName)// the DataImporter instance for the importer property has now been created// Надрукує "data.txt"
+Клас `DataManager` містить властивість, що зберігається, на ім'я `data`, котру ініціалізовано новим порожнім масивом рядків. Хоч решта функціональності класу `DataManager` не приводитья, метою цього класу є управління та надання доступу до цього масиву даних у вигляді рядків.
+
+Частиною функціональності класу `DataManager` є можливість імпортувати дані із файлу. Ця функціональність реалізовується в класі `DataImporter`, і ми будемо вважати, що його ініціалізація займає значну кількість часу. Це може бути через те, що екземпляр `DataImporter` при ініціалізації повинен відкрити файл і прочитати його вміст у пам'ять.
+
+Екземпляр класу `DataManager` може керувати своїми даними, жодного разу не імпортувавши ці дані із файлу, тому нема необхідності створювати новий екземпляр `DataImporter` щоразу при створенні екземпляру самого `DataManager`. Натомість, більше сенсу має створення екземпляру `DataImporter` при першому використанні.
+
+Оскільки властивість `importer` позначено модифікатором `lazy`, екземпляр `DataImporter` буде створено лише при першому звертанні до властивості `importer`, наприклад, при звертанні до властивості `fileName`:
+
+```swiftprint(manager.importer.fileName)// на даний момент створено екземпляр DataImporter, що зберігається у властивості importer// Надрукує "data.txt"
 ```
 > **Примітка**
-> > If a property marked with the `lazy` modifier is accessed by multiple threads simultaneously and the property has not yet been initialized, there is no guarantee that the property will be initialized only once.
-#### Stored Properties and Instance VariablesIf you have experience with Objective-C, you may know that it provides *two* ways to store values and references as part of a class instance. In addition to properties, you can use instance variables as a backing store for the values stored in a property.
-Swift unifies these concepts into a single property declaration. A Swift property does not have a corresponding instance variable, and the backing store for a property is not accessed directly. This approach avoids confusion about how the value is accessed in different contexts and simplifies the property’s declaration into a single, definitive statement. All information about the property — including its name, type, and memory management characteristics — is defined in a single location as part of the type’s definition.### Computed Properties
-In addition to stored properties, classes, structures, and enumerations can define *computed properties*, which do not actually store a value. Instead, they provide a getter and an optional setter to retrieve and set other properties and values indirectly.
+> 
+> Якщо властивість позначено модифікатором `lazy`, до неї звертаються із різних потоків одночасно, і при цьому дану властивість ще не було проініціалізовано, немає гарантії, що властивість буде проініціалізовано тільки раз.
+
+#### Властивості, що зберігаються, та змінні екземпляру
+
+Якщо ви маєте досвід роботи з Objective-C, вам може бути відомо, що в цій мові є *два* способи зберігати значення та посилання як частину екземпляру класу. Окрім властивостей, там можна створювати змінні екземпляру, як внутрішнє вмістилище для значень, що зберігаються у властивості. 
+
+У мові Swift ці концепції об'єднано в єдине оголошення властивості. Властивості у Swift не мають відповідної змінної екземпляру, і до внутрішнього вмістилища значення властивості нема прямого доступу. Цей підхід дозволяє уникати плутанини щодо того, як звертатись до значення у різних контекстах та спрощує оголошення властивості до єдиної вичерпної інструкції. Вся інформація про властивість, включаючи її назву, тип, та характеристики управління пам'яттю, оголошується в єдиному місці як частина оголошення типу. 
+
+### Властивості, що обчислюються
+
+Окрім властивостей, що зберігаються, у класах, структурах та перечисленнях можна створювати *властивості, що обчислюються*, котрі фактично не зберігають значеннь, Натомість, вони визначають спосіб звертатись до інших властивостей чи змінювати їх непрямо. Звертатись до інших властивостей можна через спеціальну функцію: "геттер". Змінювати їх – через спеціальну функцію "сеттер". Для властивостей, що обчислюються, обов'язковою є лише наявність геттера.
 
 ```swiftstruct Point {    var x = 0.0, y = 0.0}struct Size {    var width = 0.0, height = 0.0}struct Rect {    var origin = Point()    var size = Size()    var center: Point {        get {            let centerX = origin.x + (size.width / 2)            let centerY = origin.y + (size.height / 2)            return Point(x: centerX, y: centerY)        }        set(newCenter) {            origin.x = newCenter.x - (size.width / 2)            origin.y = newCenter.y - (size.height / 2)        }    }}var square = Rect(origin: Point(x: 0.0, y: 0.0),                  size: Size(width: 10.0, height: 10.0))let initialSquareCenter = square.centersquare.center = Point(x: 15.0, y: 15.0)print("square.origin is now at (\(square.origin.x), \(square.origin.y))")// Надрукує "square.origin is now at (10.0, 10.0)"
 ```

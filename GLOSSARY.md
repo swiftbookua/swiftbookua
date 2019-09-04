@@ -66,4 +66,5 @@
 + Оператори ідентичності - Identity Operators
 + Клас-нащадок – subclass
 + Батьківський клас – superclass
-+
++ геттер - getter
++ сеттер - setter
