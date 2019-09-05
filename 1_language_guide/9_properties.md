@@ -79,16 +79,21 @@
 
 Окрім властивостей, що зберігаються, у класах, структурах та перечисленнях можна створювати *властивості, що обчислюються*, котрі фактично не зберігають значеннь, Натомість, вони визначають спосіб звертатись до інших властивостей чи змінювати їх непрямо. Звертатись до інших властивостей можна через спеціальну функцію: "геттер". Змінювати їх – через спеціальну функцію "сеттер". Для властивостей, що обчислюються, обов'язковою є лише наявність геттера.
 
-```swiftstruct Point {    var x = 0.0, y = 0.0}struct Size {    var width = 0.0, height = 0.0}struct Rect {    var origin = Point()    var size = Size()    var center: Point {        get {            let centerX = origin.x + (size.width / 2)            let centerY = origin.y + (size.height / 2)            return Point(x: centerX, y: centerY)        }        set(newCenter) {            origin.x = newCenter.x - (size.width / 2)            origin.y = newCenter.y - (size.height / 2)        }    }}var square = Rect(origin: Point(x: 0.0, y: 0.0),                  size: Size(width: 10.0, height: 10.0))let initialSquareCenter = square.centersquare.center = Point(x: 15.0, y: 15.0)print("square.origin is now at (\(square.origin.x), \(square.origin.y))")// Надрукує "square.origin is now at (10.0, 10.0)"
+```swiftstruct Point {    var x = 0.0, y = 0.0}struct Size {    var width = 0.0, height = 0.0}struct Rect {    var origin = Point()    var size = Size()    var center: Point {        get {            let centerX = origin.x + (size.width / 2)            let centerY = origin.y + (size.height / 2)            return Point(x: centerX, y: centerY)        }        set(newCenter) {            origin.x = newCenter.x - (size.width / 2)            origin.y = newCenter.y - (size.height / 2)        }    }}var square = Rect(origin: Point(x: 0.0, y: 0.0),                  size: Size(width: 10.0, height: 10.0))let initialSquareCenter = square.centersquare.center = Point(x: 15.0, y: 15.0)print("square.origin тепер знаходиться в точці (\(square.origin.x), \(square.origin.y))")// Надрукує "square.origin тепер знаходиться в точці (10.0, 10.0)"
 ```
-This example defines three structures for working with geometric shapes:
 
- + `Point` encapsulates the x- and y-coordinate of a point. + `Size` encapsulates a `width` and a `height`.
- + `Rect` defines a rectangle by an origin point and a size.
- The `Rect` structure also provides a computed property called `center`. The current center position of a `Rect` can always be determined from its `origin` and `size`, and so you don’t need to store the center point as an explicit `Point` value. Instead, `Rect` defines a custom getter and setter for a computed variable called `center`, to enable you to work with the rectangle’s `center` as if it were a real stored property.
-The preceding example creates a new `Rect` variable called `square`. The `square` variable is initialized with an origin point of `(0, 0)`, and a width and height of `10`. This square is represented by the blue square in the diagram below.
-The `square` variable’s `center` property is then accessed through dot syntax (`square.center`), which causes the getter for `center` to be called, to retrieve the current property value. Rather than returning an existing value, the getter actually calculates and returns a new `Point` to represent the center of the square. As can be seen above, the getter correctly returns a center point of `(5, 5)`.
-The `center` property is then set to a new value of `(15, 15)`, which moves the square up and to the right, to the new position shown by the orange square in the diagram below. Setting the `center` property calls the setter for `center`, which modifies the `x` and `y` values of the stored `origin` property, and moves the square to its new position.
+У даному прикладі визначаються три структури для роботи із геометричними фігурами:
+
+ + `Point` інкапсулює точку з координатами x та y. + `Size` інкапсулює розмір із шириною `width` та висотою `height`.
+ + `Rect` визначає прямокутник за лівою нижньою вершиною `origin` та розміром `size`.
+
+Структура `Rect` також містить властивість, що обчислюється, на ім'я `center` (центр). Поточне значення центру прямокутника `Rect` завжди можна визначити за його розміром `size` та одною з вершин, зокрема з  `origin`, тому немає необхідності зберігати значення центру у вигляді точки `Point` явно. Натомість, `Rect` визначає властні геттер та сеттер для властивості, що обчислюється, на ім'я `center`, щоб працювати із центром прямокутника так, ніби це насправді властивість, що зберігається. 
+
+У попередньому прикладі створено нову змінну типу `Rect` на ім'я `square`. Змінну `square` проініціалізовано лівою нижньою вершиною `(0, 0)`, та розміром `10` на `10`. Цей квадрат зображено як синій квадрат на графіку нижче. 
+
+Далі йде звернення до властивості `center` змінної `square` за допомогою синтаксису крапки  (`square.center`), що спричиняє виклик геттера властивості `center`, і повернення поточного значення властивості. Замість повернення існуючого значення, геттер обчислює та повертає нове значення `Point`, що відповідає центру квадрата. Як видно вище, геттер коректно обчислює центральну точку `(5, 5)`.
+
+Потім властивості `center` присвоєно нове значення `(15, 15)`, таким чином даний квадрат рухається вверх та вправо, на нове місце, яке зображено як помаранчевий квадрат на графіку нижче. Присвоєння значення властивості `center` спричиняє виклик її сеттера, котрий змінює значення `x` та `y` у властивості `origin`, що зберігається в `Rect`, що, власне, і пересуває даний квадрат на нову позицію. 
 
 ![](images/computedProperties_2x.png)￼#### Shorthand Setter Declaration
 If a computed property’s setter does not define a name for the new value to be set, a default name of `newValue` is used. Here’s an alternative version of the `Rect` structure, which takes advantage of this shorthand notation:
