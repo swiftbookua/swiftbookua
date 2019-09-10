@@ -1,28 +1,45 @@
 ## Методи
-Methods
-*Methods* are functions that are associated with a particular type. Classes, structures, and enumerations can all define instance methods, which encapsulate specific tasks and functionality for working with an instance of a given type. Classes, structures, and enumerations can also define type methods, which are associated with the type itself. Type methods are similar to class methods in Objective-C.
-The fact that structures and enumerations can define methods in Swift is a major difference from C and Objective-C. In Objective-C, classes are the only types that can define methods. In Swift, you can choose whether to define a class, structure, or enumeration, and still have the flexibility to define methods on the type you create.
-### Instance Methods*Instance methods* are functions that belong to instances of a particular class, structure, or enumeration. They support the functionality of those instances, either by providing ways to access and modify instance properties, or by providing functionality related to the instance’s purpose. Instance methods have exactly the same syntax as functions, as described in [Functions](5_functions.md).
-You write an instance method within the opening and closing braces of the type it belongs to. An instance method has implicit access to all other instance methods and properties of that type. An instance method can be called only on a specific instance of the type it belongs to. It cannot be called in isolation without an existing instance.
-Here’s an example that defines a simple `Counter` class, which can be used to count the number of times an action occurs:
+
+*Методи* – це функції, що асоційовані із певним типом. Як класи, так і структури й перечислення можуть визначати методи екземплярів, що інкапсулюють певні завдання та функціональність для роботи із екземпляром даного типу. Класи, структури та перечислення також можуть визначати методи типу, котрі асоціюються із самим типом. Методи типу є аналогічними до методів класу у мові Objective-C.
+
+Можливість стуктур та перечислень визначати методи у Swift є значною відмінністю цієї мови від мов C та Objective-C. У Objective-C, класи є єдиними типами, що можуть визначати методи. У Swift можна обирати між класом, структурою та перечисленням, маючи при цьому гнучкість для визначення методів у типі, що ви створюєте. 
+
+### Методи екземплярів
+
+*Метод екземпляру* – це функція, що належить до екземпляру певного класу, структури чи перечислення. Методи екземплярів формують функціональність цих екземплярів, або надаючи способи доступу та модифікації властивостей екземпляру, або надаючи функціональність, що відноситься до призначення екземпляру. Методи екземплярів мають точно такий же синтаксис, що й функції, які описані в розділі [Функції](5_functions.md).
+
+Методи екземплярів записуються поміж фігурних дужок типу, до якого вони належать. Метод екземпляру має доступ до всіх інших методів та властивостей цього типу. Метод екземпляру можна викликати лише на певному екземплярі типу, до якого він належить. Його не можна викликати окремо від існуючого екземпляру.
+
+Ось приклад простого класу `Counter`, котрий можна використовувати для підрахунку кількості наставань певної події:
 
 ```swiftclass Counter {    var count = 0    func increment() {        count += 1    }    func increment(by amount: Int) {        count += amount    }    func reset() {        count = 0    }}
 ```
-The `Counter` class defines three instance methods:
- + `increment()` increments the counter by `1`. 
- + `increment(by: Int)` increments the counter by a specified integer amount.
- + `reset()` resets the counter to zero.
- The `Counter` class also declares a variable property, `count`, to keep track of the current counter value.
-You call instance methods with the same dot syntax as properties:
 
-```swiftlet counter = Counter()// the initial counter value is 0counter.increment()// the counter's value is now 1counter.increment(by: 5)// the counter's value is now 6counter.reset()// the counter's value is now 0
+Клас `Counter` визначає три методи екземпляру: 
+
+ + `increment()` збільшує лічильник на `1`. 
+ + `increment(by: Int)` збільшує лічильник на визначену цілочисельну величину.
+ + `reset()` скидує лічильник до нуля.
+
+Клас `Counter` також оголошує змінну властисіть `count` для відслідковування поточного значення лічильника. 
+
+Методи екземпляру викликаються за допомогою синтаксису крапки, аналогічно до звернень до властивостей:
+
+```swiftlet counter = Counter()// початкове значення лічильника 0counter.increment()// значення лічильника тепер 1counter.increment(by: 5)// значення лічильника тепер 6counter.reset()// значення лічильника тепер 0
 ```
-Function parameters can have both a name (for use within the function’s body) and an argument label (for use when calling the function), as described in [Function Argument Labels and Parameter Names](5_functions.md#function-argument-labels-and-parameter-names). The same is true for method parameters, because methods are just functions that are associated with a type.#### The self Property
-Every instance of a type has an implicit property called `self`, which is exactly equivalent to the instance itself. You use the `self` property to refer to the current instance within its own instance methods.
-The `increment()` method in the example above could have been written like this:
+
+Параметри функцій можуть мати як назву (для використання всередині тіла функції), так і мітку аргумента (для використання при виклику функціїи), як описано в підрозділі [Мітки аргументів функцій та імена їх параметрів](5_functions.md#Мітки-аргументів-функцій-та-імена-їх-параметрів). Це ж саме працює і для параметрів методів, оскільки методи є просто функціями, що асоційовані з певним типом.
+
+#### Властивість self
+
+Кожен екземпляр типу має неявну властивість на ім'я `self`, котра завжди дорівнює самому екземпляру. Властивість `self` використовується для посилання на поточний екземпляр всередині його власних методів.
+
+Метод `increment()` з прикладу вище може бути записаний наступним чином:
 
 ```swiftfunc increment() {    self.count += 1}
 ```
+
+На практиці, писати `self` у коді потрібно не дуже часто. 
 In practice, you don’t need to write `self` in your code very often. If you don’t explicitly write `self`, Swift assumes that you are referring to a property or method of the current instance whenever you use a known property or method name within a method. This assumption is demonstrated by the use of `count` (rather than `self.count`) inside the three instance methods for `Counter`.
 The main exception to this rule occurs when a parameter name for an instance method has the same name as a property of that instance. In this situation, the parameter name takes precedence, and it becomes necessary to refer to the property in a more qualified way. You use the `self` property to distinguish between the parameter name and the property name.
 Here, `self` disambiguates between a method parameter called `x` and an instance property that is also called `x`:
