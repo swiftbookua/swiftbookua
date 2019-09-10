@@ -2,4 +2,5 @@
 
 ### Failable Initializers
 
-### In-Out Parameters
+### Двонаправлені параметри
+In-Out Parameters

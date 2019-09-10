@@ -78,7 +78,8 @@
 The example below defines a structure called `Size` with two properties called `width` and `height`. Both properties are inferred to be of type `Double` by assigning a default value of `0.0`.The `Size` structure automatically receives an `init(width:height:)` memberwise initializer, which you can use to initialize a new `Size` instance:
 
 ```swiftstruct Size {    var width = 0.0, height = 0.0}let twoByTwo = Size(width: 2.0, height: 2.0)```
-### Initializer Delegation for Value TypesInitializers can call other initializers to perform part of an instance’s initialization. This process, known as *initializer delegation*, avoids duplicating code across multiple initializers.
+
+### Делегування ініціалізації у типах-значенняхInitializer Delegation for Value TypesInitializers can call other initializers to perform part of an instance’s initialization. This process, known as *initializer delegation*, avoids duplicating code across multiple initializers.
 The rules for how initializer delegation works, and for what forms of delegation are allowed, are different for value types and class types. Value types (structures and enumerations) do not support inheritance, and so their initializer delegation process is relatively simple, because they can only delegate to another initializer that they provide themselves. Classes, however, can inherit from other classes, as described in [Inheritance](12_inheritance.md). This means that classes have additional responsibilities for ensuring that all stored properties they inherit are assigned a suitable value during initialization. These responsibilities are described in [Class Inheritance and Initialization](13_initialization.md#Class-Inheritance-and-Initialization) below.For value types, you use `self.init` to refer to other initializers from the same value type when writing your own custom initializers. You can call `self.init` only from within an initializer.Note that if you define a custom initializer for a value type, you will no longer have access to the default initializer (or the memberwise initializer, if it is a structure) for that type. This constraint prevents a situation in which additional essential setup provided in a more complex initializer is accidentally circumvented by someone using one of the automatic initializers.> **Note**
 > 
 > If you want your custom value type to be initializable with the default initializer and memberwise initializer, and also with your own custom initializers, write your custom initializers in an extension rather than as part of the value type’s original implementation. For more information, see [Extensions](20_extensions.md).
@@ -119,7 +120,7 @@
 Convenience initializers are written in the same style, but with the `convenience` modifier placed before the `init` keyword, separated by a space:
 
 ```swiftconvenience init(parameters) {    statements}
-```### Initializer Delegation for Class Types
+```### Делегування ініціалізації у класахInitializer Delegation for Class Types
 To simplify the relationships between designated and convenience initializers, Swift applies the following three rules for delegation calls between initializers:
 **Rule 1**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A designated initializer must call a designated initializer from its immediate superclass.
 **Rule 2**

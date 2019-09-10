@@ -2,20 +2,26 @@
 
 *Властивості* асоціюють значення із певним класом, структурою чи перечисленням. Властивості бувають двох видів: ті, що зберігаються, та ті, що обчислюються. Ті, що зберігаються, зберігають константу чи змінну як частину екземпляру, в той час як ті, що обчислюються, лише обчислюють значення, не зберігаючи нічого. Властивості, що обчислюються, можуть міститись у класах, структурах та перечисленнях. Властивості, що зберігаються, можуть міститись лише у класах та структурах. 
 
-Властивості, що зберігаються та що обчислюються, зазвичай є асоційованими із екземпляром певного типу. Однак, властивості такожи можуть бути асоційовані із самим типом. Такі властивості називають властивостями типу. 
+Властивості, що зберігаються та що обчислюються, зазвичай є асоційованими з екземпляром певного типу. Однак, властивості також можуть бути асоційовані із самим типом. Такі властивості називають властивостями типу. 
 
-Окрім властивостей, можна також створювати спостерігачі за властивостями, щоб стежити за значенням властивості і реагувати на їх зміни. Спостерігачі за властивостями можна додавати до властивостей, що зберігаються і що створені вами, а також до властивостей, які клас-нащадок успадковує від батьківського класу. 
+Окрім властивостей, можна також створювати спостерігачі за властивостями, щоб стежити за значенням властивості та реагувати на їх зміни. Спостерігачі за властивостями можна додавати до властивостей, що зберігаються і що створені вами, а також до властивостей, які клас-нащадок успадковує від батьківського класу. 
 
 ### Властивості, що зберігаються
 
-У найпростішій формі, властивість, що зберігається – це константа чи змінна, що зберігається як частина певного класу чи структури. Властивості, що зберігаються, можуть бути або *змінними властивостями, що зберігаються* (оголошуються за допомогою ключового слова `var`), або *константними  властивостями, що зберігаються* (оголошуються за допомогою ключового слова `let`).
+У найпростішій формі, властивість, що зберігається – це константа чи змінна, що зберігається як частина певного класу чи структури. Властивості, що зберігаються, можуть бути або *змінними властивостями, що зберігаються* (оголошуються за допомогою ключового слова `var`), або *константними властивостями, що зберігаються* (оголошуються за допомогою ключового слова `let`).
 
 В оголошенні властивості, що зберігається, можна надавати значення за замовчанням, як описано у підрозділі [Значення властивостей за замовчанням](13_initialization.md#Значення-властивостей-за-замовчанням). Можна задавати та змінювати початкове значення властивості, що зберігається, під час ініціалізації. Це працює навіть для константних властивостей, що зберігаються, як описано у підрозділі [Присвоєння значень константним властивостям під час ініціалізації](13_initialization.md#Присвоєння-значень-константним-властивостям-під-час-ініціалізації).
 
 У прикладі нижче оголошено стурктуру із назвою `FixedLengthRange`, котра описує діапазон цілих чисел фіксованої довжини:
 
-```swiftstruct FixedLengthRange {    var firstValue: Int    let length: Int}var rangeOfThreeItems = FixedLengthRange(firstValue: 0, length: 3)
-// діапазон представляє цілі числа 0, 1 та 2rangeOfThreeItems.firstValue = 6
+```swift
+struct FixedLengthRange {
+    var firstValue: Int
+    let length: Int
+}
+var rangeOfThreeItems = FixedLengthRange(firstValue: 0, length: 3)
+// діапазон представляє цілі числа 0, 1 та 2
+rangeOfThreeItems.firstValue = 6
 // діапазон тепер представляє цілі числа 6, 7, та 8
 ```
 
@@ -25,8 +31,10 @@
 
 Якщо створити екземпляр структури та присвоїти його константі, буде неможливо змінити його властивості, не дивлячись навіть на те, що їх було оголошено змінними властивостями:
 
-```swiftlet rangeOfFourItems = FixedLengthRange(firstValue: 0, length: 4)
-// цей діапазон представляє цілі числа 0, 1, 2, та 3rangeOfFourItems.firstValue = 6
+```swift
+let rangeOfFourItems = FixedLengthRange(firstValue: 0, length: 4)
+// цей діапазон представляє цілі числа 0, 1, 2, та 3
+rangeOfFourItems.firstValue = 6
 // тут буде повідомлення про помилку, хоч firstValue і є змінною властивістю
 ```
 
@@ -39,7 +47,8 @@
 #### Ліниві властивості, що зберігаються
 
 *Лінива властивість, що зберігається* – це властивість, чиє початкове значення не обчислюється до її першого використання. Щоб позначити властивість, що зберігається, лінивою, перед її оголошенням вживають ключове слово `lazy`.
-> **Примітка**
+
+> **Примітка**
 > 
 > Слід завжди оголошувати ліниві властивості як змінні (за допомогою ключового слова `var`), оскільки їх початкове значення не можна отримати допоки ініціалізація екземпляру не закінчиться. Константні властивості повинні завжди мати значення до завершення ініціалізації екземпляру, тому їх не можна оголошувати лінивими. 
 
@@ -47,11 +56,25 @@
 
 У прикладі нижче ліниву властивость, що зберігаються, застосовано для уникнення зайвої ініціалізації в складному класі. У цьому прикладі оголошено два класи із назвами `DataImporter` та `DataManager`, жоден з яких не показаний повністю:
 
-```swiftclass DataImporter {    /*
+```swift
+class DataImporter {
+    /*
      DataImporter – це клас, що імпортує дані із зовнішнього файлу.
-     Будемо вважати, що клас ініціалізація класу DataImporter займає суттєву кільківть часу.     */    var fileName = "data.txt"
-    // клас DataImporter буде реалізовувати функціональність імпорту даних тут} class DataManager {    lazy var importer = DataImporter()    var data = [String]()
-    // клас DataManager буде реалізовувати функціональність управління даними тут} let manager = DataManager()manager.data.append("Some data")manager.data.append("Some more data")
+     Будемо вважати, що клас ініціалізація класу DataImporter займає суттєву кільківть часу.
+     */
+    var fileName = "data.txt"
+    // клас DataImporter буде реалізовувати функціональність імпорту даних тут
+}
+ 
+class DataManager {
+    lazy var importer = DataImporter()
+    var data = [String]()
+    // клас DataManager буде реалізовувати функціональність управління даними тут
+}
+ 
+let manager = DataManager()
+manager.data.append("Some data")
+manager.data.append("Some more data")
 // на даний момент досі не створено екземпляру класу DataImporter, що зберігається у властивості importer
 ```
 
@@ -63,9 +86,13 @@
 
 Оскільки властивість `importer` позначено модифікатором `lazy`, екземпляр `DataImporter` буде створено лише при першому звертанні до властивості `importer`, наприклад, при звертанні до властивості `fileName`:
 
-```swiftprint(manager.importer.fileName)// на даний момент створено екземпляр DataImporter, що зберігається у властивості importer// Надрукує "data.txt"
+```swift
+print(manager.importer.fileName)
+// на даний момент створено екземпляр DataImporter, що зберігається у властивості importer
+// Надрукує "data.txt"
 ```
-> **Примітка**
+
+> **Примітка**
 > 
 > Якщо властивість позначено модифікатором `lazy`, до неї звертаються із різних потоків одночасно, і при цьому дану властивість ще не було проініціалізовано, немає гарантії, що властивість буде проініціалізовано тільки раз.
 
@@ -79,12 +106,40 @@
 
 Окрім властивостей, що зберігаються, у класах, структурах та перечисленнях можна створювати *властивості, що обчислюються*, котрі фактично не зберігають значеннь, Натомість, вони визначають спосіб звертатись до інших властивостей чи змінювати їх непрямо. Звертатись до інших властивостей можна через спеціальну функцію: "геттер". Змінювати їх – через спеціальну функцію "сеттер". Для властивостей, що обчислюються, обов'язковою є лише наявність геттера.
 
-```swiftstruct Point {    var x = 0.0, y = 0.0}struct Size {    var width = 0.0, height = 0.0}struct Rect {    var origin = Point()    var size = Size()    var center: Point {        get {            let centerX = origin.x + (size.width / 2)            let centerY = origin.y + (size.height / 2)            return Point(x: centerX, y: centerY)        }        set(newCenter) {            origin.x = newCenter.x - (size.width / 2)            origin.y = newCenter.y - (size.height / 2)        }    }}var square = Rect(origin: Point(x: 0.0, y: 0.0),                  size: Size(width: 10.0, height: 10.0))let initialSquareCenter = square.centersquare.center = Point(x: 15.0, y: 15.0)print("square.origin тепер знаходиться в точці (\(square.origin.x), \(square.origin.y))")// Надрукує "square.origin тепер знаходиться в точці (10.0, 10.0)"
+```swift
+struct Point {
+    var x = 0.0, y = 0.0
+}
+struct Size {
+    var width = 0.0, height = 0.0
+}
+struct Rect {
+    var origin = Point()
+    var size = Size()
+    var center: Point {
+        get {
+            let centerX = origin.x + (size.width / 2)
+            let centerY = origin.y + (size.height / 2)
+            return Point(x: centerX, y: centerY)
+        }
+        set(newCenter) {
+            origin.x = newCenter.x - (size.width / 2)
+            origin.y = newCenter.y - (size.height / 2)
+        }
+    }
+}
+var square = Rect(origin: Point(x: 0.0, y: 0.0),
+                  size: Size(width: 10.0, height: 10.0))
+let initialSquareCenter = square.center
+square.center = Point(x: 15.0, y: 15.0)
+print("square.origin тепер знаходиться в точці (\(square.origin.x), \(square.origin.y))")
+// Надрукує "square.origin тепер знаходиться в точці (10.0, 10.0)"
 ```
 
 У даному прикладі визначаються три структури для роботи із геометричними фігурами:
 
- + `Point` інкапсулює точку з координатами x та y. + `Size` інкапсулює розмір із шириною `width` та висотою `height`.
+ + `Point` інкапсулює точку з координатами x та y.
+ + `Size` інкапсулює розмір із шириною `width` та висотою `height`.
  + `Rect` визначає прямокутник за лівою нижньою вершиною `origin` та розміром `size`.
 
 Структура `Rect` також містить властивість, що обчислюється, на ім'я `center` (центр). Поточне значення центру прямокутника `Rect` завжди можна визначити за його розміром `size` та одною з вершин, зокрема з  `origin`, тому немає необхідності зберігати значення центру у вигляді точки `Point` явно. Натомість, `Rect` визначає властні геттер та сеттер для властивості, що обчислюється, на ім'я `center`, щоб працювати із центром прямокутника так, ніби це насправді властивість, що зберігається. 
@@ -95,98 +150,260 @@
 
 Потім властивості `center` присвоєно нове значення `(15, 15)`, таким чином даний квадрат рухається вверх та вправо, на нове місце, яке зображено як помаранчевий квадрат на графіку нижче. Присвоєння значення властивості `center` спричиняє виклик її сеттера, котрий змінює значення `x` та `y` у властивості `origin`, що зберігається в `Rect`, що, власне, і пересуває даний квадрат на нову позицію. 
 
-![](images/computedProperties_2x.png)￼#### Shorthand Setter Declaration
-If a computed property’s setter does not define a name for the new value to be set, a default name of `newValue` is used. Here’s an alternative version of the `Rect` structure, which takes advantage of this shorthand notation:
+![](images/computedProperties_2x.png)
+￼
+#### Shorthand Setter Declaration
 
-```swiftstruct AlternativeRect {    var origin = Point()    var size = Size()    var center: Point {        get {            let centerX = origin.x + (size.width / 2)            let centerY = origin.y + (size.height / 2)            return Point(x: centerX, y: centerY)        }        set {            origin.x = newValue.x - (size.width / 2)            origin.y = newValue.y - (size.height / 2)        }    }}
+If a computed property’s setter does not define a name for the new value to be set, a default name of `newValue` is used. Here’s an alternative version of the `Rect` structure, which takes advantage of this shorthand notation:
+
+```swift
+struct AlternativeRect {
+    var origin = Point()
+    var size = Size()
+    var center: Point {
+        get {
+            let centerX = origin.x + (size.width / 2)
+            let centerY = origin.y + (size.height / 2)
+            return Point(x: centerX, y: centerY)
+        }
+        set {
+            origin.x = newValue.x - (size.width / 2)
+            origin.y = newValue.y - (size.height / 2)
+        }
+    }
+}
 ```
 
 #### Властивості тільки для читання
 
 Властивість, що має геттер, але не має сеттера, називають *властивістю тільки для читання*. Тільки властивості, що обчислюються, можуть бути властивостями тільки для читання. Такі властивості завжди повертають значення, яке можна дістати шляхом використання синтаксису крапки, але їм не можна присвоїти інше значення. 
-> **Примітка**
+
+> **Примітка**
 > 
 > Слід оголошувати властивості, що обчислюються (включно із властивостями тільки для читання), як змінні властивості, за допомогою ключового слова `var`, бо їх значення не є фіксованими. Ключове слово `let` використовуються лише для константних властивостей, щоб позначити, що їх значення не можуть змінюватись після присвоєння у ході ініціалізації. 
 
 Можна спростити оголошення властивості тільки для читання, опустивши ключове слово `get` та відповідні фігурні дужки:
 
-```swiftstruct Cuboid {    var width = 0.0, height = 0.0, depth = 0.0    var volume: Double {        return width * height * depth    }}let fourByFiveByTwo = Cuboid(width: 4.0, height: 5.0, depth: 2.0)print("об'єм куба fourByFiveByTwo дорівнює \(fourByFiveByTwo.volume)")// Надрукує "об'єм куба fourByFiveByTwo дорівнює 40.0"
+```swift
+struct Cuboid {
+    var width = 0.0, height = 0.0, depth = 0.0
+    var volume: Double {
+        return width * height * depth
+    }
+}
+let fourByFiveByTwo = Cuboid(width: 4.0, height: 5.0, depth: 2.0)
+print("об'єм куба fourByFiveByTwo дорівнює \(fourByFiveByTwo.volume)")
+// Надрукує "об'єм куба fourByFiveByTwo дорівнює 40.0"
 ```
 
 У даному прикладі створено нову структуру на ім'я `Cuboid`, що моделює тривимірний прямокутний паралелепіпед із властивостями `width` для ширини, `height` для висоти, та `depth` для глибини. Ця структура також має властивість тільки для читання на ім'я `volume`, котра обчислює та повертає об'єм даного паралелепіпеда. Немає сенсу створювати сеттер у властивості `volume`, бо тоді буде незрозуміло, як саме змінювати значення `width`, `height`, та `depth` при зміні об'єму. Тим не менше, дана властивість тільки для читання структури `Cuboid` є корисною: користувачі даної структури можуть дізнаватись обчислений об'єм. 
-### Property Observers
-Property observers observe and respond to changes in a property’s value. Property observers are called every time a property’s value is set, even if the new value is the same as the property’s current value.
-You can add property observers to any stored properties you define, except for lazy stored properties. You can also add property observers to any inherited property (whether stored or computed) by overriding the property within a subclass. You don’t need to define property observers for nonoverridden computed properties, because you can observe and respond to changes to their value in the computed property’s setter. Property overriding is described in [Overriding](12_inheritance.md#Overriding).
-You have the option to define either or both of these observers on a property: + `willSet` is called just before the value is stored.
- + `didSet` is called immediately after the new value is stored.
- If you implement a `willSet` observer, it’s passed the new property value as a constant parameter. You can specify a name for this parameter as part of your `willSet` implementation. If you don’t write the parameter name and parentheses within your implementation, the parameter is made available with a default parameter name of `newValue`.
-Similarly, if you implement a `didSet` observer, it’s passed a constant parameter containing the old property value. You can name the parameter or use the default parameter name of `oldValue`. If you assign a value to a property within its own didSet observer, the new value that you assign replaces the one that was just set.
-> **Примітка**
-> > The `willSet` and `didSet` observers of superclass properties are called when a property is set in a subclass initializer, after the superclass initializer has been called. They are not called while a class is setting its own properties, before the superclass initializer has been called.
-> > For more information about initializer delegation, see [Initializer Delegation for Value Types](13_initialization.md#Initializer-Delegation-for-Value-Types) and [Initializer Delegation for Class Types](13_initialization.md#Initializer-Delegation-for-Class-Types).
-Here’s an example of `willSet` and `didSet` in action. The example below defines a new class called `StepCounter`, which tracks the total number of steps that a person takes while walking. This class might be used with input data from a pedometer or other step counter to keep track of a person’s exercise during their daily routine.
 
-```swiftclass StepCounter {    var totalSteps: Int = 0 {        willSet(newTotalSteps) {            print("About to set totalSteps to \(newTotalSteps)")        }        didSet {            if totalSteps > oldValue  {                print("Added \(totalSteps - oldValue) steps")            }        }    }}let stepCounter = StepCounter()stepCounter.totalSteps = 200// About to set totalSteps to 200// Added 200 stepsstepCounter.totalSteps = 360// About to set totalSteps to 360// Added 160 stepsstepCounter.totalSteps = 896// About to set totalSteps to 896// Added 536 steps
-```
-The `StepCounter` class declares a `totalSteps` property of type `Int`. This is a stored property with `willSet` and `didSet` observers.
-The `willSet` and `didSet` observers for `totalSteps` are called whenever the property is assigned a new value. This is true even if the new value is the same as the current value.
-This example’s `willSet` observer uses a custom parameter name of `newTotalSteps` for the upcoming new value. In this example, it simply prints out the value that is about to be set.
-The `didSet` observer is called after the value of `totalSteps` is updated. It compares the new value of `totalSteps` against the old value. If the total number of steps has increased, a message is printed to indicate how many new steps have been taken. The `didSet` observer does not provide a custom parameter name for the old value, and the default name of `oldValue` is used instead.
-> **Примітка**
+### Спостерігачі за властивостями
+
+Спостерігач за властивістю – це спосіб спостереження за властивістю та реагування на зміни її значення. Спостерігачі за властивостями викликаються щоразу при присвоєнні нового значення, навіть якщо нове значення співпадає із поточним. 
+
+Спостерігач за властивістю можна додати до будь-якої визначеної вами властивості, що зберігається, окрім лінивої властивості. Спостерігач за властивістю також можна додати до будь-якої успадкованої властивості (що зберігається чи що обчислюється) шляхом заміщення властивості в класі-нащадкові. Щодо властивостей, що обчислюються, немає сенсу створювати спостерігачі за ними: спостерігати за значенням та реагувати на його зміну можна прямо в сеттері. Заміщення властивостей детальніше описано в підрозділі [Заміщення](12_inheritance.md#Заміщення).
+
+Існує два види спостерігачів за властивостями, які можна використовувати як поодинці, так і одночасно:
+
+ + `willSet` викликається якраз перед збереженням нового значення.
+ + `didSet` викликається одразу після збереження нового значення.
+
+Якщо реалізувати спостерігач `willSet`, до нього буде передаватись нове значення властивості в якості константного параметра. В реалізації `willSet` можна вказати ім'я для цього параметра. Якщо ж не вказати імені цього параметра у реалізації спостерігача, він все одно буде доступним з іменем за замовчанням `newValue`.
+
+Аналогічним чином, якщо реалізувати спостерігач `didSet`, до нього буде передаватись попереднє значення властивості в якості константного параметра. Цьому параметру можна дати назву, або користуватись назвою за замовчанням `oldValue`. Якщо присвоїти властивості значення всередині її спостерігача `didSet`, нове присвоєне значення замінить значення, котре було щойно присвоєне.
+
+> **Примітка**
 > 
-> If you pass a property that has observers to a function as an in-out parameter, the `willSet` and `didSet` observers are always called. This is because of the copy-in copy-out memory model for in-out parameters: The value is always written back to the property at the end of the function. For a detailed discussion of the behavior of in-out parameters, see [In-Out Parameters](2_language_reference/06_declarations.md#In-Out-Parameters).
-### Global and Local Variables
-The capabilities described above for computing and observing properties are also available to *global variables* and *local variables*. Global variables are variables that are defined outside of any function, method, closure, or type context. Local variables are variables that are defined within a function, method, or closure context.
-The global and local variables you have encountered in previous chapters have all been *stored variables*. Stored variables, like stored properties, provide storage for a value of a certain type and allow that value to be set and retrieved.
-However, you can also define *computed variables* and define observers for stored variables, in either a global or local scope. Computed variables calculate their value, rather than storing it, and they are written in the same way as computed properties.
-> **Примітка**
-> > Global constants and variables are always computed lazily, in a similar manner to [Lazy Stored Properties](9_properties.md#Lazy-Stored-Properties). Unlike lazy stored properties, global constants and variables do not need to be marked with the `lazy` modifier.
-> > Local constants and variables are never computed lazily.
-### Type Properties
-Instance properties are properties that belong to an instance of a particular type. Every time you create a new instance of that type, it has its own set of property values, separate from any other instance.
-You can also define properties that belong to the type itself, not to any one instance of that type. There will only ever be one copy of these properties, no matter how many instances of that type you create. These kinds of properties are called *type properties*.
-Type properties are useful for defining values that are universal to all instances of a particular type, such as a constant property that all instances can use (like a static constant in C), or a variable property that stores a value that is global to all instances of that type (like a static variable in C).
-Stored type properties can be variables or constants. Computed type properties are always declared as variable properties, in the same way as computed instance properties.
-> **Примітка**
+> Спостерігачі `willSet` та `didSet` властивості батькіського класу виклакаються під час присвоєння значення властивості в інінціалізаторі класу-нащадка, після чого викликається ініціалізатор батьківського класу. Вони не викликаються під час ініціалізації властивостей класу, до виклику ініціалізатора батьківського класу. 
 > 
-> Unlike stored instance properties, you must always give stored type properties a default value. This is because the type itself does not have an initializer that can assign a value to a stored type property at initialization time.
-> > Stored type properties are lazily initialized on their first access. They are guaranteed to be initialized only once, even when accessed by multiple threads simultaneously, and they do not need to be marked with the `lazy` modifier.
- #### Type Property Syntax
-In C and Objective-C, you define static constants and variables associated with a type as *global* static variables. In Swift, however, type properties are written as part of the type’s definition, within the type’s outer curly braces, and each type property is explicitly scoped to the type it supports.
-You define type properties with the `static` keyword. For computed type properties for class types, you can use the `class` keyword instead to allow subclasses to override the superclass’s implementation. The example below shows the syntax for stored and computed type properties:
+> Делегування ініціалізації детальніше описано в розділах [Делегування ініціалізації у типах-значеннях](13_initialization.md#Делегування-ініціалізації-у-типах-значеннях) та [Делегування ініціалізації у класах](13_initialization.md#Делегування-ініціалізації-у-класах).
 
-```swiftstruct SomeStructure {    static var storedTypeProperty = "Some value."    static var computedTypeProperty: Int {        return 1    }}enum SomeEnumeration {    static var storedTypeProperty = "Some value."    static var computedTypeProperty: Int {        return 6    }}class SomeClass {    static var storedTypeProperty = "Some value."    static var computedTypeProperty: Int {        return 27    }    class var overrideableComputedTypeProperty: Int {        return 107    }}
-```
-> **Примітка**
-> > The computed type property examples above are for read-only computed type properties, but you can also define read-write computed type properties with the same syntax as for computed instance properties.
- #### Querying and Setting Type Properties
-Type properties are queried and set with dot syntax, just like instance properties. However, type properties are queried and set on the *type*, not on an instance of that type. For example:
+Ось приклад спостерігачів `willSet` and `didSet` у ділі. У цьому прикладі оголошего новий клас на ім'я  `StepCounter`, метою якого є відслідковування кількості кроків, які хтось робить під час прогулянки. Цей клас можна використовувати разом із даними з крокоміру, щоб слідкувати за вправами, які виконує людина у ході її повсякденної рутини. и
 
-```swiftprint(SomeStructure.storedTypeProperty)// Надрукує "Some value."SomeStructure.storedTypeProperty = "Another value."print(SomeStructure.storedTypeProperty)// Надрукує "Another value."print(SomeEnumeration.computedTypeProperty)// Надрукує "6"print(SomeClass.computedTypeProperty)// Надрукує "27"
+```swift
+class StepCounter {
+    var totalSteps: Int = 0 {
+        willSet(newTotalSteps) {
+            print("Зараз властивості totalSteps буде присвоєно значення \(newTotalSteps)")
+        }
+        didSet {
+            if totalSteps > oldValue  {
+                print("Додано \(totalSteps - oldValue) кроків")
+            }
+        }
+    }
+}
+let stepCounter = StepCounter()
+stepCounter.totalSteps = 200
+// Зараз властивості totalSteps буде присвоєно значення 200
+// Додано 200 кроків
+stepCounter.totalSteps = 360
+// Зараз властивості totalSteps буде присвоєно значення 360
+// Додано 160 кроків
+stepCounter.totalSteps = 896
+// Зараз властивості totalSteps буде присвоєно значенняи 896
+// Додано 536 кроків
 ```
-The examples that follow use two stored type properties as part of a structure that models an audio level meter for a number of audio channels. Each channel has an integer audio level between `0` and `10` inclusive.
-The figure below illustrates how two of these audio channels can be combined to model a stereo audio level meter. When a channel’s audio level is `0`, none of the lights for that channel are lit. When the audio level is 10, all of the lights for that channel are lit. In this figure, the left channel has a current level of `9`, and the right channel has a current level of `7`:￼
+
+У класі `StepCounter` оголошено властивість `totalSteps` типу `Int`, що представляє сумарну кількість зроблених кроків. Ця властивість зберігається і має спостерігачі `willSet` та `didSet`.
+
+Спостерігачі `willSet` та `didSet` властивості `totalSteps` викликаються щоразу при присвоєнні цій властивості нового значення. Це працює навіть тоді, коли нове значення співпадає із попереднім. 
+
+У даному прикладі спостерігач `willSet` послуговується власним іменем параметра `newTotalSteps` для нового значення. Тут цей спостерігач просто друкує нове значення безпосередньо перед його присвоєнням.
+
+Спостерігач `didSet` викликається після того, як було оновлено значення `totalSteps`. Він порівнює нове значення `totalSteps` з її старим значенням. Якщо значення `totalSteps` збільшилось, друкується повідомлення, котре сповіщує про кількість зроблених кроків. У спостерігачі `didSet` не використовується власне ім'я параметра для старого значення, натомість використовується ім'я за замовчанням `oldValue`.
+
+> **Примітка**
+> 
+> Якщо передати властивість, що має спостерігачі, до функції як двонаправлений параметр, спостерігачі `willSet` та `didSet` будуть завжди викликатись. Це пов'язано з моделлю пам'яті двонаправлених параметрів "копія на вході, копія на виході": значення буде завжди присвоюватись властивості після виходу з функції. Детальніше поведінка двонаправлених параметрів розібрана в розділі [In-Out Parameters](2_language_reference/06_declarations.md#Двонаправлені-параметри).
+
+### Глобальні та локальні змінні
+
+Описані вище можливості, що стосуються властивостей, що обчислюються, та спостерігачів за властивостями, також доступні для *глобальних* та *локальних* змінних. Глобальні змінні – це змінні, що оголошені поза межами якоїсь функції, методу, замикання чи іншого контексту. Локальні змінні – це змінні, що оголошені всередині якоїсь функції, методу, замикання чи іншого контексту.
+
+Усі глобальні та локальні змінні, з якими ви стикались у попередніх розділах, були змінними, що зберігаються. Змінні, що зберігаються, так сами як і властивості, що зберігаються, надають вмістилище для значення певного типу і дозволяють отримувати це значення.
+
+Однак, також можна оголошувати *змінні, що обчислюються* та визначати сопстерігачі для змінних, що зберігаються, як для глобальних, так і для локальних змінних. Змінні, що обчислюються, обчислюють своє значення, замість його зберігання, і оголошуються точно таким же чином, як і властивості, що зберігаютсья.
+
+> **Примітка**
+> 
+> Глобальні константи та змінні завжди обчислюються ліниво, аналогічно до [Лінивих властивостей, що зберігаються](9_properties.md#Ліниві-властивості,-що-зберігаються). На відміну від лінивих властивостей, глобальні константи та змінні не потребують маркування ключовим словом `lazy`.
+> 
+> Локальні константи та змінні ніколи не обчислюються ліниво.
+
+### Властивості типу
+
+Властивості екземплярів – це властивості, що належать екземпляру певного типу. При кожному створенні нового екземпляру типу, цей екземпляр матиме свій власний набір значень властивостей, відділений від будь-якого іншого екземпляру. 
+
+Також можна створювати властивості, що належать самому типові, а не будь-якому з екземплярів цього типу. Скільки б не було створено екземплярів, завжди буде існувати лише одна копія цих властивостей. Властивості цього різновиду називаються *властивостями типу*.
+
+Властивості типу доцільно використовувати для визначення значень, котрі є спільними для всіх екземплярів певного типу, такі як константні властивості для використання в кожному екземплярі (як статичні константи у мові C), або змінні властивості, що зберігають значення, глобальні для всіх екземплярів цього типу (як статичні змінні в мові C).
+
+Властивості типу, що зберігаються, можуть бути змінними та константними. Властивості типу, що обчислюються, завжди оголошуються як змінні властивості, так само як і властивості екземпляру, що зберігаються.
+
+> **Примітка**
+> 
+> На відміну від властивостей екземпляру, що зберігаються, властивості типу, що зберігаються, завжди повинні мати значення за замовчанням. Це пов'язано з тим, що самі типи не мають ініціалізаторів, що може присвоїти значення властивості типу, що зберігається, під час ініціалізації типу. 
+>
+> Властивості типу, що зберігається, ініціалізуються ліниво при першому доступі до них. Гарантується, що їх буде проініціалізовано лише одного разу, навіть при доступі з кількох потоків одночасно, і вони не потребують маркування ключовим словом `lazy`.
+
+
+#### Синтаксис властивостей типу
+
+У мовах C та Objective-C, статичні константи та змінні, що асоціюються з певним типом, оголошуються як *глобальні* статичні змінні. У Swift, властивості типу записуються як частина оголошення самого типу, всередині фігурних дужок оголошення типу, і кожна властивість типу явно прив'язується до свого типу.
+
+Властивості типу оголошуються за допомогою ключового слова `static`. Властивості типу класів, що обчислюються, можна оголошувати за допомогою ключового слова `class` замість `static`: це дозволяє класам-нащадкам заміщувати реалізацію властивості батьківського класу. Наступний приклад демонструє синтаксис оголошення властивостей типу, що зберігаються та що обчислюються:
+
+```swift
+struct SomeStructure {
+    static var storedTypeProperty = "Якесь значення."
+    static var computedTypeProperty: Int {
+        return 1
+    }
+}
+enum SomeEnumeration {
+    static var storedTypeProperty = "Якесь значення."
+    static var computedTypeProperty: Int {
+        return 6
+    }
+}
+class SomeClass {
+    static var storedTypeProperty = "Якесь значення."
+    static var computedTypeProperty: Int {
+        return 27
+    }
+    class var overrideableComputedTypeProperty: Int {
+        return 107
+    }
+}
+```
+
+> **Примітка**
+> 
+> У прикладі вище демонструються лише властивості типу, що обчислюються, тільки для читання, але можна також оголошувати і властивості для читання й запису, за допомогою точно такого ж синтаксису, що й для властивостей екземпляру, що обчислюються.
+
+#### Читання й запис властивостей типу
+
+До властивостей типу можна звертатись за допомогою синтаксису крапи, точно так же як і до властивостей екземпляру. Однак, звернення йде до властивості *типу*, а не екземпляру цього типу. Наприклад:
+
+```swift
+print(SomeStructure.storedTypeProperty)
+// Надрукує "Якесь значення."
+SomeStructure.storedTypeProperty = "Інше значення."
+print(SomeStructure.storedTypeProperty)
+// Надрукує "Інше значення."
+print(SomeEnumeration.computedTypeProperty)
+// Надрукує "6"
+print(SomeClass.computedTypeProperty)
+// Надрукує "27"
+```
+
+В наступному прикладі демонструються дві властивості типу, що зберігаються як частина стурктури, що моделює рівень гучності каналу аудіодоріжки. Кожен канал має цілочисельний рівень гучності аудіо від `0` до `10` включно.
+
+Зображення нижче ілюструє, як два канали аудіо можуть комбінуватись для моделювання вимірювача рівня гучності стерео-доріжки. Коли ирівень гучності каналу `0`, жоден з індикаторів даного каналу не світиться. Коли рівень гучності сягає `10`, світяться всі індикатори для цього каналу. На даному зображенні, лівий канал має рівень `9`, а правий – `7`:
+￼
 ![](images/staticPropertiesVUMeter_2x.png)
-The audio channels described above are represented by instances of the `AudioChannel` structure:
 
-```swiftstruct AudioChannel {    static let thresholdLevel = 10    static var maxInputLevelForAllChannels = 0    var currentLevel: Int = 0 {        didSet {            if currentLevel > AudioChannel.thresholdLevel {                // cap the new audio level to the threshold level                currentLevel = AudioChannel.thresholdLevel            }            if currentLevel > AudioChannel.maxInputLevelForAllChannels {                // store this as the new overall maximum input level                AudioChannel.maxInputLevelForAllChannels = currentLevel            }        }    }}
+Описані вище аудіоканали моделюються екземплярами структури `AudioChannel`:
+
+```swift
+struct AudioChannel {
+    static let thresholdLevel = 10
+    static var maxInputLevelForAllChannels = 0
+    var currentLevel: Int = 0 {
+        didSet {
+            if currentLevel > AudioChannel.thresholdLevel {
+                // обмежуємо нове значення рівня гучності пороговим значенням
+                currentLevel = AudioChannel.thresholdLevel
+            }
+            if currentLevel > AudioChannel.maxInputLevelForAllChannels {
+                // зберігаємо це значення як нове максимальне значення гучності аудіо
+                AudioChannel.maxInputLevelForAllChannels = currentLevel
+            }
+        }
+    }
+}
 ```
-The `AudioChannel` structure defines two stored type properties to support its functionality. The first, `thresholdLevel`, defines the maximum threshold value an audio level can take. This is a constant value of `10` for all `AudioChannel` instances. If an audio signal comes in with a higher value than `10`, it will be capped to this threshold value (as described below).
-The second type property is a variable stored property called `maxInputLevelForAllChannels`. This keeps track of the maximum input value that has been received by *any* `AudioChannel` instance. It starts with an initial value of `0`.
-The `AudioChannel` structure also defines a stored instance property called `currentLevel`, which represents the channel’s current audio level on a scale of `0` to `10`.
-The `currentLevel` property has a `didSet` property observer to check the value of `currentLevel` whenever it is set. This observer performs two checks:
- + If the new value of `currentLevel` is greater than the allowed `thresholdLevel`, the property observer caps `currentLevel` to `thresholdLevel`. + If the new value of `currentLevel` (after any capping) is higher than any value previously received by *any* `AudioChannel` instance, the property observer stores the new `currentLevel` value in the `maxInputLevelForAllChannels` type property.
- > **Примітка**
-> > In the first of these two checks, the `didSet` observer sets `currentLevel` to a different value. This does not, however, cause the observer to be called again.
-You can use the `AudioChannel` structure to create two new audio channels called `leftChannel` and `rightChannel`, to represent the audio levels of a stereo sound system:
 
-```swiftvar leftChannel = AudioChannel()var rightChannel = AudioChannel()
+В структурі `AudioChannel` визначено дві властивості, що зберігаються, для підтримки її функціональності. Перша – `thresholdLevel` – визначає максимальне порогове значення, яке може приймати гучність. Це константне значення `10` для всіх екземплярів структури `AudioChannel`. Якщо аудіо сингал приходить із значенням гучності вищим за `10`, він буде обрізаний до цього погового значення (як описано нижче). 
+
+Друга властивість типу є змінною властивістю, що зберігається, на ім'я `maxInputLevelForAllChannels`. Вона відслідковує максимальне значення гучності, що коли-небудь приймалось *будь-яким* екземпляром `AudioChannel`. Її початкове значення – `0`.
+
+Структура `AudioChannel` також визначає властивість екземпляру, що зберігається, на ім'я `currentLevel`, котра містить поточне значення гучності аудіо каналу, в масштабі від `0` до `10`.
+
+Властивість `currentLevel` має спостерігач за значенням `didSet` для перевірки значення `currentLevel` при кожному присвоєнні. Він виконує дві наступні перевірки:
+
+ + Якщо нове значення властивості `currentLevel` перевищує максимально дозволене значення `thresholdLevel`, значення властивості `currentLevel` обрізається до значення `thresholdLevel`.
+ + Якщо нове значення властивості `currentLevel` (після можливого обрізання) перевищує будь-яке значення коли-небудь отримане *будь-яким* екземпляром `AudioChannel`, спостерігач за властивістю зберігає нове значення `currentLevel` у властивості типу `maxInputLevelForAllChannels`.
+ 
+> **Примітка**
+> 
+> У першій з цих двох перевірок, спостерігач `didSet` присвоює властивості `currentLevel` нове значення. Однак, це не призводить до повторного виклику даного спостерігача.
+
+Тепер можна використати структуру `AudioChannel`, щоб створити два її екземпляри із назвами `leftChannel` та `rightChannel`, і таким чином змоделювати рівні гучності стерео системи:
+
+```swift
+var leftChannel = AudioChannel()
+var rightChannel = AudioChannel()
 ```
-If you set the currentLevel of the *left* channel to `7`, you can see that the `maxInputLevelForAllChannels` type property is updated to equal `7`:
 
-```swiftleftChannel.currentLevel = 7print(leftChannel.currentLevel)// Надрукує "7"print(AudioChannel.maxInputLevelForAllChannels)// Надрукує "7"
+Якщо присвоїти властивості `currentLevel` *лівого* каналу `leftChannel` значення `7`, можна побачити, що властивість типу `maxInputLevelForAllChannels` також змінить своє значення на `7`:
+
+```swift
+leftChannel.currentLevel = 7
+print(leftChannel.currentLevel)
+// Надрукує "7"
+print(AudioChannel.maxInputLevelForAllChannels)
+// Надрукує "7"
 ```
-If you try to set the `currentLevel` of the *right* channel to `11`, you can see that the right channel’s `currentLevel` property is capped to the maximum value of `10`, and the `maxInputLevelForAllChannels` type property is updated to equal `10`:
 
-```swiftrightChannel.currentLevel = 11print(rightChannel.currentLevel)// Надрукує "10"print(AudioChannel.maxInputLevelForAllChannels)// Надрукує "10"
+Якщо присвоїти властивості `currentLevel` *правого* каналу `rightChannel` значення `11`, можна побачити, що значення цієї властивості обріжеться до максимального значення `10`, а властивість типу `maxInputLevelForAllChannels` також оновить своє значення і теж дорівнюватимеии `10`:
+
+```swift
+rightChannel.currentLevel = 11
+print(rightChannel.currentLevel)
+// Надрукує "10"
+print(AudioChannel.maxInputLevelForAllChannels)
+// Надрукує "10"
 ```

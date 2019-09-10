@@ -46,7 +46,10 @@ Inheritance
 If you create an instance of `Tandem`, you can work with any of its new and inherited properties, and query the read-only `description` property it inherits from `Vehicle`:
 
 ```swiftlet tandem = Tandem()tandem.hasBasket = truetandem.currentNumberOfPassengers = 2tandem.currentSpeed = 22.0print("Tandem: \(tandem.description)")// Tandem: traveling at 22.0 miles per hour
-```### Overriding
+```
+
+### Заміщення 
+Overriding
 A subclass can provide its own custom implementation of an instance method, type method, instance property, type property, or subscript that it would otherwise inherit from a superclass. This is known as *overriding*.
 To override a characteristic that would otherwise be inherited, you prefix your overriding definition with the `override` keyword. Doing so clarifies that you intend to provide an override and have not provided a matching definition by mistake. Overriding by accident can cause unexpected behavior, and any overrides without the `override` keyword are diagnosed as an error when your code is compiled.
 The `override` keyword also prompts the Swift compiler to check that your overriding class’s superclass (or one of its parents) has a declaration that matches the one you provided for the override. This check ensures that your overriding definition is correct.
