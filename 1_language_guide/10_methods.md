@@ -39,37 +39,51 @@
 ```swiftfunc increment() {    self.count += 1}
 ```
 
-На практиці, писати `self` у коді потрібно не дуже часто. 
-In practice, you don’t need to write `self` in your code very often. If you don’t explicitly write `self`, Swift assumes that you are referring to a property or method of the current instance whenever you use a known property or method name within a method. This assumption is demonstrated by the use of `count` (rather than `self.count`) inside the three instance methods for `Counter`.
-The main exception to this rule occurs when a parameter name for an instance method has the same name as a property of that instance. In this situation, the parameter name takes precedence, and it becomes necessary to refer to the property in a more qualified way. You use the `self` property to distinguish between the parameter name and the property name.
-Here, `self` disambiguates between a method parameter called `x` and an instance property that is also called `x`:
+На практиці, писати `self` у коді потрібно не дуже часто. Якщо вседерині певного методу не вказати явно `self`, Swift припускає, що відбувається посилання на властивість чи метод поточного екземпляру при будь-якому використанні відомої назви властивості чи методу. Це припущення демонтсрується використанням назви властивості `count` (замість `self.count`) всередині трьох методів класу `Counter` у прикладі вище.
 
-```swiftstruct Point {    var x = 0.0, y = 0.0    func isToTheRightOf(x: Double) -> Bool {        return self.x > x    }}let somePoint = Point(x: 4.0, y: 5.0)if somePoint.isToTheRightOf(x: 1.0) {    print("This point is to the right of the line where x == 1.0")}// Prints "This point is to the right of the line where x == 1.0"
-```
-Without the `self` prefix, Swift would assume that both uses of `x` referred to the method parameter called `x`.
-#### Modifying Value Types from Within Instance Methods
-Structures and enumerations are *value types*. By default, the properties of a value type cannot be modified from within its instance methods.
-However, if you need to modify the properties of your structure or enumeration within a particular method, you can opt in to *mutating* behavior for that method. The method can then mutate (that is, change) its properties from within the method, and any changes that it makes are written back to the original structure when the method ends. The method can also assign a completely new instance to its implicit `self` property, and this new instance will replace the existing one when the method ends.
-You can opt in to this behavior by placing the `mutating` keyword before the `func` keyword for that method:
+Головним виключенням з цього правила є колізія імен: наприклад, коли ім'я параметру методу екземпляру співпадає з іменем властивості цього екземпляру. У цій ситуації, ім'я параметру має пріорітет, і стає потрібним звертатись до властивості більш точним способом. В подібних випадках влатсивість `self` використовується для розрізнення імені параметру та імені властивості.
 
-```swiftstruct Point {    var x = 0.0, y = 0.0    mutating func moveBy(x deltaX: Double, y deltaY: Double) {        x += deltaX        y += deltaY    }}var somePoint = Point(x: 1.0, y: 1.0)somePoint.moveBy(x: 2.0, y: 3.0)print("The point is now at (\(somePoint.x), \(somePoint.y))")// Prints "The point is now at (3.0, 4.0)"
-```
-The `Point` structure above defines a mutating `moveBy(x:y:)` method, which moves a `Point` instance by a certain amount. Instead of returning a new point, this method actually modifies the point on which it is called. The `mutating` keyword is added to its definition to enable it to modify its properties.
-Note that you cannot call a mutating method on a constant of structure type, because its properties cannot be changed, even if they are variable properties, as described in [Stored Properties of Constant Structure Instances](9_properties.md#Stored-Properties-of-Constant-Structure-Instances):
+Тут властивсіть `self` допомагає відрізнити параметр методу на ім'я `x` від властивості екземпляру, що теж називається `x`:
 
-```swiftlet fixedPoint = Point(x: 3.0, y: 3.0)fixedPoint.moveBy(x: 2.0, y: 3.0)// this will report an error
+```swiftstruct Point {    var x = 0.0, y = 0.0    func isToTheRightOf(x: Double) -> Bool {        return self.x > x    }}let somePoint = Point(x: 4.0, y: 5.0)if somePoint.isToTheRightOf(x: 1.0) {
+    print("Ця точка знаходиться справа від лінії, де x == 1.0")}// Надрукує "Ця точка знаходиться справа від лінії, де x == 1.0"
 ```
-#### Assigning to self Within a Mutating Method
-Mutating methods can assign an entirely new instance to the implicit `self` property. The `Point` example shown above could have been written in the following way instead:
+
+Без префіксу `self`, компілятор Swift би припустив би, що обидва `x` посилаються на параметр методу на ім'я `x`.
+
+#### Зміни типів-значень в методах екземплярів
+
+Структури та перечислення є *типами-значеннями*. За замовчанням, властивості типів-значень не можуть бути змінені всередині методів екземпляру. 
+
+Однак, якщо потрібно змінити значення властивості структури чи перечислення всередині певного методу, це можна зробити шлляхом увімкнення *мутуючої* поведінки для цього методу. Після цього метод може змінювати властивості екземпляру, і ці зміни записуються назад в оригінальну структуру після закінчення методу. Метод може навіть присвоїти повністю новий екземпляр неявній властивості `self`, і цей новий екземпляр замінить собою існуючий екземпляр по закінченню метода.
+
+Мутуюча поведінка методу вмикається шляхом вказування ключового слова `mutating` перед ключовим словом `mutating` в оголошенні цього метода:
+
+```swiftstruct Point {    var x = 0.0, y = 0.0    mutating func moveBy(x deltaX: Double, y deltaY: Double) {        x += deltaX        y += deltaY    }}var somePoint = Point(x: 1.0, y: 1.0)somePoint.moveBy(x: 2.0, y: 3.0)print("Точка тепер має координати (\(somePoint.x), \(somePoint.y))")// Надрукує "Точка тепер має координати (3.0, 4.0)"
+```
+
+Структура `Point` моделює точку на площині з координатами `x` та `y`; вона визначає мутуючий метод `moveBy(x:y:)`, що пересовує точку на певну величину. Замість того, щоб повернути нову точку, цей метод фактично змінює саму точку, на якій він був викликаний. Ключове слово `mutating` додається до оголошення цього методу, щоб дозволити йому модифікувати властивості свого екземпляру. 
+
+Слід помітити, що не можна викликати мутуючий метод на константі типу-структури, оскільки її властивості не можна змінювати, навіть якщо вони і оголошені як змінні властивості. Це детально описано в підрозділі [Властивості константних структур, що зберігаються](9_properties.md#Властивості-константних-структур,-що-зберігаються). Наприклад:
+
+```swiftlet fixedPoint = Point(x: 3.0, y: 3.0)fixedPoint.moveBy(x: 2.0, y: 3.0)// тут буде повідомлення про помилку компіляції
+```
+
+#### Присвоєння self у мутуючому методі
+
+У мутуючому методі можна присвоїти цілком новий екземпляр неявній властивості `self`. Приклад зі структурою `Point` вище можна переписати у наступний спосіб:
 
 ```swiftstruct Point {    var x = 0.0, y = 0.0    mutating func moveBy(x deltaX: Double, y deltaY: Double) {        self = Point(x: x + deltaX, y: y + deltaY)    }}
 ```
-This version of the mutating `moveBy(x:y:)` method creates a brand new structure whose `x` and `y` values are set to the target location. The end result of calling this alternative version of the method will be exactly the same as for calling the earlier version.
-Mutating methods for enumerations can set the implicit `self` parameter to be a different case from the same enumeration:
 
-```swiftenum TriStateSwitch {    case off, low, high    mutating func next() {        switch self {        case .off:            self = .low        case .low:            self = .high        case .high:            self = .off        }    }}var ovenLight = TriStateSwitch.lowovenLight.next()// ovenLight is now equal to .highovenLight.next()// ovenLight is now equal to .off
+У даній версії мутуючого методу `moveBy(x:y:)` створюється новий екземпляр структури зі значеннями `x` та `y`, що дорівнюють результату перенесення. Кінцевий результат виклику цієї альтернативної версії методу буде точно таким же, як і результат виклику попередньої версії.
+
+Мутуючі методи перечислень можуть присвоїти неявному параметру `self` інший елемент цього ж перечислення:
+
+```swiftenum TriStateSwitch {    case off, low, high    mutating func next() {        switch self {        case .off:            self = .low        case .low:            self = .high        case .high:            self = .off        }    }}var ovenLight = TriStateSwitch.lowovenLight.next()// ovenLight тепер дорівнює .highovenLight.next()// ovenLight тепер дорівнює .off
 ```
-This example defines an enumeration for a three-state switch. The switch cycles between three different power states (`off`, `low` and `high`) every time its `next()` method is called.
+
+У даному прикладі визначено перечислення, що моделює вимикач із трьома станами. Вимикач циклічно змінює свій стан (поміж `off`, `low` та `high`) щоразу коли викликається його метод `next()`.
 ### Type MethodsInstance methods, as described above, are methods that are called on an instance of a particular type. You can also define methods that are called on the type itself. These kinds of methods are called *type methods*. You indicate type methods by writing the `static` keyword before the method’s `func` keyword. Classes may also use the `class` keyword to allow subclasses to override the superclass’s implementation of that method.
 > **Note**
 > 
@@ -95,9 +109,9 @@
 The `Player` class creates a new instance of `LevelTracker` to track that player’s progress. It also provides a method called `complete(level:)`, which is called whenever a player completes a particular level. This method unlocks the next level for all players and updates the player’s progress to move them to the next level. (The Boolean return value of `advance(to:)` is ignored, because the level is known to have been unlocked by the call to `LevelTracker.unlock(_:)` on the previous line.)
 You can create an instance of the `Player` class for a new player, and see what happens when the player completes level one:
 
-```swiftvar player = Player(name: "Argyrios")player.complete(level: 1)print("highest unlocked level is now \(LevelTracker.highestUnlockedLevel)")// Prints "highest unlocked level is now 2"
+```swiftvar player = Player(name: "Argyrios")player.complete(level: 1)print("highest unlocked level is now \(LevelTracker.highestUnlockedLevel)")// Надрукує "highest unlocked level is now 2"
 ```
 If you create a second player, whom you try to move to a level that is not yet unlocked by any player in the game, the attempt to set the player’s current level fails:
 
-```swiftplayer = Player(name: "Beto")if player.tracker.advance(to: 6) {    print("player is now on level 6")} else {    print("level 6 has not yet been unlocked")}// Prints "level 6 has not yet been unlocked"
+```swiftplayer = Player(name: "Beto")if player.tracker.advance(to: 6) {    print("player is now on level 6")} else {    print("level 6 has not yet been unlocked")}// Надрукує "level 6 has not yet been unlocked"
 ```

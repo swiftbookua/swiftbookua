@@ -70,3 +70,4 @@
 + сеттер - setter
 + спостерігачі за властивостями - Property Observers
 + Заміщення (методу, властивості) - Overriding (method, property) (https://uk.wikipedia.org/wiki/Заміщення_методу)
++ Мутуючий метод - Mutating Method
