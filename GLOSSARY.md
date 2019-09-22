@@ -73,3 +73,5 @@
 + Перевантаження (методу, функції, індексу) - Overloading (...) https://uk.wikipedia.org/wiki/Перевантаження_функції - (про статичний поліморфізм)
 + Заміщення (методу, властивості) - Overriding (method, property) (https://uk.wikipedia.org/wiki/Заміщення_методу) (про динамічний поліморфізм)
 + Мутуючий метод - Mutating Method
++ Призначений ініціалізатор - Designated initializer
++ Ініціалізатор для зручності - Convenience initializer
