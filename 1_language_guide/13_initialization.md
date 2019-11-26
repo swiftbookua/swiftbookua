@@ -6,7 +6,7 @@
 
 Екземпляри класів також можуть реалізовувати *деініціалізатори*, що виконують будь-яке спеціальне очищення перед тим, як екземпляр класу буде деалоковано. Детальніше з деініціалізаторами можна ознайомитись в розділі [Deinitialization](14_deinitialization.md).
 
-Instances of class types can also implement a *deinitializer*, which performs any custom cleanup just before an instance of that class is deallocated. For more information about deinitializers, see [Деініціалізація](14_deinitialization.md).
+Instances of class types can also implement a *deinitializer*, which performs any custom cleanup just before an instance of that class is deallocated. For more information about deinitializers, see [Деініціалізація](14_deinitialization.md). 
 
 ### Присвоєння початкових значень властивостям, що зберігаються
 
@@ -17,7 +17,7 @@ Instances of class types can also implement a *deinitializer*, which performs an
 > **Примітка**
 > 
 > Коли ви присвоюєте значення за замовчанням властивості, що зберігається, або задаєте її початкове значення в ініціалізаторі, значення властивості присвоюється напряму, без виклику будь-яких спостерігачів за властивістю.
- 
+
 #### Ініціалізатори
 
 *Ініціалізатори* викликаються для створення нового екземпляру нового типу. У найпростішій формі, ініціалізатор схожий на метод екземпляру без параметрів, записаний за допомогою ключового слова `init`:
@@ -183,7 +183,7 @@ cheeseQuestion.response = "Так, мені подобається бринза.
 Константній властивості можна присвоїти значення в будь-який момент ініціалізації, за умови що її значення буде визначеним до кінця ініціалізації. Як тільки константній властивості було присвоєно значення, його більше не можна змінити. 
 
 > **Примітка**
->
+> 
 > У випадку екземплярів класу, константну властивість можна змінити лише у тому класі, де її оголошено. Її не можна змінити у класі-нащадку.
 
 Можна переглянути клас `SurveyQuestion` у прикладі вище, зробивши властивість `text` константною замість змінної. Це дозволяє позначити, що питання не змінюється після створення екземпляру класу `SurveyQuestion`. Хоч властивість `text` і є константною, їй можна присвоїти значення в ініціалізаторі класу:
@@ -265,7 +265,7 @@ struct Point {
 ```
 
 Структуру `Rect` можна ініціалізувати одним із трьох способів:
- 
+
  + використовуючи значення за замовчанням властивостей `origin` та `size`, тобто нулі
  + надаючи значення початкової точкии (`origin`) та розміру
  + надаючи значення центру та розміру
@@ -391,121 +391,120 @@ convenience init(параметри) {
 
 ![](images/initializerDelegation02_2x.png)
 ￼
-#### Two-Phase Initialization
+#### Двофазна ініціалізація
 
-Class initialization in Swift is a two-phase process. In the first phase, each stored property is assigned an initial value by the class that introduced it. Once the initial state for every stored property has been determined, the second phase begins, and each class is given the opportunity to customize its stored properties further before the new instance is considered ready for use.
+Ініціалізація класів у Swift є двофазним процесом. У ході першої фази кожній властивості, що зберігається, присвоюється початкове значення класом, в якому її оголошено. Як тільки було визначено початковий стан кожної властивості, що зберігається, розпочинається друга фаза, і кожному класу дається можливість підлаштувати його властивості, що зберігаються, перед початком використання нового екземпляру. 
 
-The use of a two-phase initialization process makes initialization safe, while still giving complete flexibility to each class in a class hierarchy. Two-phase initialization prevents property values from being accessed before they are initialized, and prevents property values from being set to a different value by another initializer unexpectedly.
+Використання двофазного процесу ініціалізації робить ініціалізацію безпечною, при тому надаючи повну гнучкість для кожного класу в ієрархії класів. Двофазна ініціалізація запобігає доступу до значень властивостей до їх ініціалізації, та запобігає неочікуваному присвоєнню значення властивості в іншому ініціалізаторі.
 
 > **Примітка**
 > 
-> Swift’s two-phase initialization process is similar to initialization in Objective-C. The main difference is that during phase 1, Objective-C assigns zero or null values (such as `0` or `nil`) to every property. Swift’s initialization flow is more flexible in that it lets you set custom initial values, and can cope with types for which `0` or `nil` is not a valid default value.
+> Процес двофазної ініціалізації у Swift є аналогічним до ініціалізації в Objective-C. Основною відмінністю є те, що під час фази 1, Objective-C присвоює нульові значення (такі як `0` або `nil`) кожній властивості. Процес ініціалізації у Swift є гнучкішим, оскільки від дає вам можливість присвоювати власні початкові значення, та працює з типами, для яких `0` або `nil` не може бути валідним початковим значенням.
 
-Swift’s compiler performs four helpful safety-checks to make sure that two-phase initialization is completed without error:
+Компілятор Swift проводить чотири корисні перевірки безпеки, що убезпечують двофазну ініціалізацію від помилок:
 
-**Safety check 1**
+**Перевірка безпеки 1**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A designated initializer must ensure that all of the properties introduced by its class are initialized before it delegates up to a superclass initializer.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Призначений ініціалізатор повинен гарантувати, що всі властивості, котрі вводяться даним класом, було проініціалізовано перед делегуванням ініціалізації до батьківського класу.
 
-As mentioned above, the memory for an object is only considered fully initialized once the initial state of all of its stored properties is known. In order for this rule to be satisfied, a designated initializer must make sure that all of its own properties are initialized before it hands off up the chain.
+Як зазначено вище, пам'ять для об'єкту вважаться повністу проініціалізованою лише після того, як початковий стан усіх його властивостей, що зберігаються, є відомим. Для того щоб це правило задовольнялось, призначений ініціалізатор повинен гарантувати, що всі власні властивості даного класу було проініціалізовано перед рухом вгору по ланцюгу ініціалізаторів.
 
-**Safety check 2**
+**Перевірка безпеки 2**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A designated initializer must delegate up to a superclass initializer before assigning a value to an inherited property. If it doesn’t, the new value the designated initializer assigns will be overwritten by the superclass as part of its own initialization.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Призначений ініціалізатор повинен делегувати ініціалізацію до батьківського класу перед присвоєнням значення до успадкованої властивості. Інакше, присвоєне цим ініціалізатором значення завжди буде перезаписане батьківським класом в ході його власної ініціалізації. 
 
-**Safety check 3**
+**Перевірка безпеки 3**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A convenience initializer must delegate to another initializer before assigning a value to any property (including properties defined by the same class). If it doesn’t, the new value the convenience initializer assigns will be overwritten by its own class’s designated initializer.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ініціалізатор для зручності повинен делегувати ініціалізацію до іншого ініціалізатора перед присвоєнням значення до будь-якої властивості, в тому числі оголошеної в цьому ж класі. Інакше, присвоєне цим ініціалізатором значення буде перезаписуватись призначеним ініціалізатором цього ж класу. 
 
-**Safety check 4**
+**Перевірка безпеки 4**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An initializer cannot call any instance methods, read the values of any instance properties, or refer to self as a value until after the first phase of initialization is complete.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ініціалізатор не може викликати методів екземпляру, звертатись до значень будь-яких властивостей екземпляру, або звертатись до значення `self` до завершення першої фази ініціалізації.
 
-The class instance is not fully valid until the first phase ends. Properties can only be accessed, and methods can only be called, once the class instance is known to be valid at the end of the first phase.
+Екземпляр класу не є повністю валідним до кінця першої фази ініціалізації. Звертатись до властивостей та викликати методи на екземплярі класу можна лише після того, як відомо, що даний екземпляр класу є валідним наприкінці першої фази ініціалізації.
 
-Here’s how two-phase initialization plays out, based on the four safety checks above:
+Ось як працює двофазна ініціалізація, базуючись на цих чотирьох перевірках безпеки:
 
-**Phase 1**
+**Фаза 1**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A designated or convenience initializer is called on a class.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Призначений ініціалізатор чи ініціалізатор для зручності було викликано на класі.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Memory for a new instance of that class is allocated. The memory is not yet initialized.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Було виділено пам'ять для нового екземпляру класу. Пам'ять ще не було ініціалізовано.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A designated initializer for that class confirms that all stored properties introduced by that class have a value. The memory for these stored properties is now initialized.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Призначений ініціалізатор даного класу ініціалізує всі введені в цьому класі властивості, що зберігаються. Пам'ять для цих властивостей тепер проініціалізована.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The designated initializer hands off to a superclass initializer to perform the same task for its own stored properties.
-This continues up the class inheritance chain until the top of the chain is reached.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Призначений ініціалізатор передає контроль до ініціалізатору батьківського класу, котрий зробить таку ж роботу із його власними властивостями, що зберігаються. Це продовжується по ланцюжку наслідування допоки не буде досягнуто вершини цього ланцюга. 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Once the top of the chain is reached, and the final class in the chain has ensured that all of its stored properties have a value, the instance’s memory is considered to be fully initialized, and phase 1 is complete.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Як тільки було досягнуто вершину ланцюжка наслідування, і останній клас у ланцюжку проініціалізував всі свої властивості, що зберігаються, пам'ять екземпляру вважається повністю проініціалізованою, і фаза 1 завершується.
 
-**Phase 2**
+**Фаза 2**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Working back down from the top of the chain, each designated initializer in the chain has the option to customize the instance further. Initializers are now able to access `self` and can modify its properties, call its instance methods, and so on.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Йде робота назад по ланцюжоку наслідування починаючи з його вершини, кожному призначеному ініціалізатору надається можливість подальшого налаштування екземпляру. Ініціалізатор тепер може звертатись до `self` та змінювати його властивості, викликати методи, і так далі. 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finally, any convenience initializers in the chain have the option to customize the instance and to work with `self`.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Врешті-решт, кожному ініціалізатору для зручності дається можливість налаштувати екземляр для роботи, звертаючись до `self`.
 
-Here’s how phase 1 looks for an initialization call for a hypothetical subclass and superclass:
+Ось так виглядає фаза 1 для виклику ініціалізації для гіпотетичних класу-нащадку та батьківського класу:
 
 ![](images/twoPhaseInitialization01_2x.png)
 ￼
-In this example, initialization begins with a call to a convenience initializer on the subclass. This convenience initializer cannot yet modify any properties. It delegates across to a designated initializer from the same class.
+У цьому прикладі, ініціалізація розпочинається викликом ініціалізатора для зручності на класі-нащадку. Цей ініціалізатор для зручності ще не може модифікувати будь-яких властивостей. Він делегує ініціалізацію до призначеного ініціалізатора для цього ж класу. 
 
-The designated initializer makes sure that all of the subclass’s properties have a value, as per safety check 1. It then calls a designated initializer on its superclass to continue the initialization up the chain.
+Призначений ініціалізатор впевнюється в тому, що всі властивості цього класу-нащадку мають значення, відповідно до перевірки безпеки 1. Після цього він викликає призначений ініціалізатор батьківського класу для продовження ініціалізації по ланцюжку. 
 
-The superclass’s designated initializer makes sure that all of the superclass properties have a value. There are no further superclasses to initialize, and so no further delegation is needed.
+Призначений ініціалізатор батьківського класу впевнюється в тому, що всі властивості батьківського класу мають значення. Цей клас є вершиною ланцюжка, тому подальше делегування непотрібне.
 
-As soon as all properties of the superclass have an initial value, its memory is considered fully initialized, and Phase 1 is complete.
+Як тільки всі властивості батьківського класу мають початкове значення, його пам'ять вважається повністю проініціалізованою, і фаза 1 завершується.
 
-Here’s how phase 2 looks for the same initialization call:
+Ось так виглядає фаза 2 для цього ж виклику ініціалізації:
 
 ![](images/twoPhaseInitialization02_2x.png)
-￼
-The superclass’s designated initializer now has an opportunity to customize the instance further (although it does not have to).
+￼ 
+Призначений ініціалізатор батьківського класу тепер має можливість подальшого налаштування екземпляру (хоч і не обов'язково повинен це робити).
 
-Once the superclass’s designated initializer is finished, the subclass’s designated initializer can perform additional customization (although again, it does not have to).
+Як тільки призначений ініціалізатор батьківського класу завершив свою роботу, призначений ініціалізатор класу-нащадка може провести додаткове налаштування екземпляру (хоч, знову, не зобов'язаний це робити).
 
-Finally, once the subclass’s designated initializer is finished, the convenience initializer that was originally called can perform additional customization.
+Врешті-решт, як тільки призначений ініціалізатор класу-нащадка завершив роботу, ініціалізатор для зручності, котрий було викликано на самому початку, може виконати додаткове налаштування. 
 
-#### Initializer Inheritance and Overriding
+#### Наслідування ініціалізаторів та їх заміщення
 
-Unlike subclasses in Objective-C, Swift subclasses do not inherit their superclass initializers by default. Swift’s approach prevents a situation in which a simple initializer from a superclass is inherited by a more specialized subclass and is used to create a new instance of the subclass that is not fully or correctly initialized.
-
-> **Примітка**
-> 
-> Superclass initializers are inherited in certain circumstances, but only when it is safe and appropriate to do so. For more information, see [Автоматичне наслідування ініціалізаторів](13_initialization.md#Автоматичне-наслідування-иініціалізаторів) below.
-
-If you want a custom subclass to present one or more of the same initializers as its superclass, you can provide a custom implementation of those initializers within the subclass.
-
-When you write a subclass initializer that matches a superclass *designated* initializer, you are effectively providing an `override` of that designated initializer. Therefore, you must write the override modifier before the subclass’s initializer definition. This is true even if you are overriding an automatically provided default initializer, as described in [Default Initializers](13_initialization.md#Default-Initializers).
-
-As with an overridden property, method or subscript, the presence of the `override` modifier prompts Swift to check that the superclass has a matching designated initializer to be overridden, and validates that the parameters for your overriding initializer have been specified as intended.
+На відміну від класів-нащадків у Objective-C, у Swift класи-нащадки не наслідують ініціалізатори батьківського класу за замовчанням. Підхід мови Swift запобігає ситуації, в якій простий ініціалізатор батьківського класу наслідується більш спеціалізованим класом-нащадком, та використовується для створення екземпляру класу-нащадка, що не є повністю чи коректно ініціалізованим. 
 
 > **Примітка**
 > 
-> You always write the `override` modifier when overriding a superclass designated initializer, even if your subclass’s implementation of the initializer is a convenience initializer.
+>  Ініціалізатори батьківських класів наслідуються за певних умов, але тільки тоді, коли це безпечно й доречно. Детальніше з цим можна ознайомитись у підрозділі [Автоматичне наслідування ініціалізаторів](13_initialization.md#Автоматичне-наслідування-иініціалізаторів) нижче.
 
-Conversely, if you write a subclass initializer that matches a superclass *convenience* initializer, that superclass convenience initializer can never be called directly by your subclass, as per the rules described above in [Initializer Delegation for Class Types](13_initialization.md#Initializer-Delegation-for-Class-Types). Therefore, your subclass is not (strictly speaking) providing an override of the superclass initializer. As a result, you do not write the `override` modifier when providing a matching implementation of a superclass convenience initializer.
+Якщо потрібно, щоб певний клас-нащаток містив один чи більше ініціалізаторів його батьківського класу, слід надати власну реалізацію цих ініціалізаторів всередині класу-нащадку. 
 
-The example below defines a base class called `Vehicle`. This base class declares a stored property called `numberOfWheels`, with a default `Int` value of `0`. The `numberOfWheels` property is used by a computed property called `description` to create a `String` description of the vehicle’s characteristics:
+Якщо в клас-нащадок додати ініціалізатор, що відповідає *призначеному* ініціалізатору батьківського класу, фактично відбудеться *заміщення* цього призначеного ініціалізатору. Тому слід додавати модифікатор `override` перед оголошенням ініціалізатора класу-нащадка. Це правило працює в тому числі й при заміщенні автоматично створених ініціалізаторів батьківського класу, які описані в підрозділі [Ініціалізатори за замовчанням](13_initialization.md#Ініціалізатори-за-замовчанням).
+
+Як і з заміщеними властивостями, методами чи індексами, наявність модифікатора `override` підказує компілятору Swift перевірити, що батьківський клас має відповідний призначений ініціалізатор, та впевнитись, що параметри даного ініціалізатора відповідають параметрам батьківського.
+
+> **Примітка**
+> 
+> Слід завжди вказувати модифікатор `override` при заміщенні призначеного ініціалізатора батьківського класу, навіть, якщо реалізація класу-нащадка є ініціалізатором для зручності. 
+
+І навпаки, якщо ініціалізатор класу-надащка співпадає з *ініціалізатором для зручності* батьківського класу, ініціалізатор для зручності батьківсього класу не можна прямо викликати у класі-нащадку, відповідно до правил, описаних вище в підрозділі [Делегування ініціалізації у класах](13_initialization.md#Делегування-ініціалізації-у-класах). Таким чином, строго кажучи, ініціалізатор класу-нащадка не заміщує ініціалізатор батьківського класу. Як результат, при реалізації ініціалізатора для зручності в класі-нащадку, що співпадає з ініціалізатором для зручності батьківського класу, не потрібно писати ключове слово `override`.
+
+У прикладі нижче визначено базовий клас на ім'я `Vehicle`, що моделює транспортний засіб. У цьому базовому класі оголошено властивість, що зберігається, на ім'я `numberOfWheels` (кількість коліс), зі значенням типу `Int`, що за замовчанням дорівнює `0`. Властивість `numberOfWheels` використовується властивістю, що обчислюється на ім'я `description` типу `String`, котра створює опис характеристик даного транспортного засобу:
 
 ```swift
 class Vehicle {
     var numberOfWheels = 0
     var description: String {
-        return "\(numberOfWheels) wheel(s)"
+        return "\(numberOfWheels) колеса/коліс"
     }
 }
 ```
 
-The `Vehicle` class provides a default value for its only stored property, and does not provide any custom initializers itself. As a result, it automatically receives a default initializer, as described in [Default Initializers](13_initialization.md#Default-Initializers). The default initializer (when available) is always a designated initializer for a class, and can be used to create a new `Vehicle` instance with a `numberOfWheels` of `0`:
+У класі `Vehicle` надано значення за замовчанням для його властивості, що зберігається, і немає явних ініціалізаторів. Як результат, він автоматично отримує ініціалізатор за замовчанням, як описано в підрозділі [Ініціалізатори за замовчанням](13_initialization.md#Ініціалізатори-за-замовчанням). Ініціалізатор за замовчанням (якщо він доступний) є завжди призначеним ініціалізаторм для класу, і може бути використаним для створення нового екземпляру  `Vehicle` із кількістю коліс `numberOfWheels`, що дорівнює `0`:
 
 ```swift
 let vehicle = Vehicle()
-print("Vehicle: \(vehicle.description)")
-// Vehicle: 0 wheel(s)
+print("Транспорт: \(vehicle.description)")
+// Транспорт: 0 колеса/коліс
 ```
 
-The next example defines a subclass of `Vehicle` called `Bicycle`:
+Наступний приклад ілюструє клас-нащадок класу `Vehicle` на ім'я `Bicycle`:
 
 ```swift
 class Bicycle: Vehicle {
@@ -516,48 +515,48 @@ class Bicycle: Vehicle {
 }
 ```
 
-The `Bicycle` subclass defines a custom designated initializer, `init()`. This designated initializer matches a designated initializer from the superclass of `Bicycle`, and so the `Bicycle` version of this initializer is marked with the `override` modifier.
+У класі-нащадку `Bicycle` оголошується власний призначений ініціалізатор, `init()`. Цей призначений ініціалізатор співпадає з призначеним ініціалізатором батьківського класу `Vehicle`, і тому версію `init()` класу `Bicycle` позначено модифікатором `override`.
 
-The `init()` initializer for `Bicycle` starts by calling `super.init()`, which calls the default initializer for the `Bicycle` class’s superclass, `Vehicle`. This ensures that the `numberOfWheels` inherited property is initialized by `Vehicle` before `Bicycle` has the opportunity to modify the property. After calling `super.init()`, the original value of `numberOfWheels` is replaced with a new value of `2`.
+Ініціалізатор `init()` класу `Bicycle` починається з виклику `super.init()`, котрий викликає ініціалізатор за замовчанням батьківсього класу `Vehicle` класу `Bicycle`. Це дозволяє гарантувати, що успадковану властивість `numberOfWheels` буде проініціалізовано класом `Vehicle` перед тим, як клас `Bicycle` матиме можливість змінити цю властивість. Після виклику `super.init()`, оригінальне значення властивості `numberOfWheels` замінюється новим значенням `2`.
 
-If you create an instance of `Bicycle`, you can call its inherited `description` computed property to see how its `numberOfWheels` property has been updated:
+Якщо створити екземпляр класу `Bicycle`, можна викликати успадковану ним властивість, що зберігається `description`, щоб побачити, як оновилось значення властивості `numberOfWheels`:
 
 ```swift
 let bicycle = Bicycle()
-print("Bicycle: \(bicycle.description)")
-// Bicycle: 2 wheel(s)
+print("Велосипед: \(bicycle.description)")
+// Велосипед: 2 колеса/коліс
 ```
 
 > **Примітка**
 > 
-> Subclasses can modify inherited variable properties during initialization, but can not modify inherited constant properties.
+> Класи-нащадки під час ініціалізації можуть змінювати лише успадковані змінні властивості, вони не можуть змінювати успадковані константні властивості.
 
 #### Автоматичне наслідування ініціалізаторів
-#### Automatic Initializer Inheritance
 
-As mentioned above, subclasses do not inherit their superclass initializers by default. However, superclass initializers are automatically inherited if certain conditions are met. In practice, this means that you do not need to write initializer overrides in many common scenarios, and can inherit your superclass initializers with minimal effort whenever it is safe to do so.
+Як зазначено вище, класи-нащадки не успадковують ініціалізатори своїх базових класів за замовчанням. Однак, ініціалізатори батьківських класів автоматично наслідуються за певних умов. На практиці, це означає, що вам не потрібно писати заміщення ініціалізаторів у багатьох загальних сценаріях; ініціалізатори батьківських класів можуть бути успадкованими з мінімальними зусиллями завжди, коли це безпечно. 
 
+Якщо всі нові властивості, що оголошуються у класах нащадках, мають значення за замовчанням, працюють наступні два правила:
 Assuming that you provide default values for any new properties you introduce in a subclass, the following two rules apply:
 
-**Rule 1**
+**Правило 1**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If your subclass doesn’t define any designated initializers, it automatically inherits all of its superclass designated initializers.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Якщо клас-нащадок не визначає нових призначених ініціалізаторів, він автоматично успадковує усі призначені ініціалізатори батьківського класу. 
 
-**Rule 2**
+**Правило 2**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If your subclass provides an implementation of *all* of its superclass designated initializers — either by inheriting them as per rule 1, or by providing a custom implementation as part of its definition — then it automatically inherits all of the superclass convenience initializers.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Якщо клас-нащадок має реалізації *усім* призначеним ініціалізаторам батьківського класу – як шляхом їх наслідування за правилом 1, так і шляхом власної їх реалізації – тоді він автоматично успадковує всі ініціалізатори для зручності батьківського класу.
 
-These rules apply even if your subclass adds further convenience initializers.
+Ці правила працюють в тому числі й тоді, коли клас-нащадок оголошує додаткові ініціалізатори для зручності.
 
 > **Примітка**
 > 
-> A subclass can implement a superclass designated initializer as a subclass convenience initializer as part of satisfying rule 2.
+> Клас-нащадок може реалізувати призначений ініціалізатор батьківського класу як ініціалізатор для зручності, і таким чимон задовольнити правило 2.
 
-#### Designated and Convenience Initializers in Action
+#### Призначені ініціалізатори та ініціалізатори для зручності в дії
 
-The following example shows designated initializers, convenience initializers, and automatic initializer inheritance in action. This example defines a hierarchy of three classes called `Food`, `RecipeIngredient`, and `ShoppingListItem`, and demonstrates how their initializers interact.
+Наступний приклад демонструє призначені ініціалізатори, ініціалізатори для зручності та автоматичне наслідування ініціалізаторів у дії. Цей приклад визначає ієрархію з трьох класів: `Food`, `RecipeIngredient`, та `ShoppingListItem`, і демонструє взаємодію їх ініціалізаторів. 
 
-The base class in the hierarchy is called `Food`, which is a simple class to encapsulate the name of a foodstuff. The `Food` class introduces a single `String` property called `name` and provides two initializers for creating `Food` instances:
+Базовий клас у ієрархії називається `Food` (Їжа), він є простим класом для інкапсуляції імені харчового продукту. Клас `Food` вводить єдину властивість типу `String` на ім'я `name`, і має два ініціалізатори для створення екземплярів `Food`:
 
 ```swift
 class Food {
@@ -566,32 +565,32 @@ class Food {
         self.name = name
     }
     convenience init() {
-        self.init(name: "[Unnamed]")
+        self.init(name: "[Без імені]")
     }
 }
 ```
 
-The figure below shows the initializer chain for the `Food` class:
+Зображення нижче демонструє ланцюжок ініціалізаторів класу `Food`:
 
 ![](images/initializersExample01_2x.png)
 ￼
-Classes do not have a default memberwise initializer, and so the `Food` class provides a designated initializer that takes a single argument called `name`. This initializer can be used to create a new Food instance with a specific name:
+Класи не мають почленних ініціалізаторів за замовчанням, і тому в класі `Food` явно міститься призначений ініціалізатор, що приймає єдиний аргумент на ім'я `name`. Цей ініціалізатор може використовуватись для створення нового екземпляру класу `Food` із певним іменем:
 
 ```swift
-let namedMeat = Food(name: "Bacon")
-// namedMeat's name is "Bacon"
+let namedMeat = Food(name: "Салечко")
+// ім'я namedMeat – "Салечко"
 ```
 
-The `init(name: String)` initializer from the `Food` class is provided as a *designated* initializer, because it ensures that all stored properties of a new `Food` instance are fully initialized. The `Food` class does not have a superclass, and so the `init(name: String)` initializer does not need to call `super.init()` to complete its initialization.
+Ініціалізатор `init(name: String)` класу `Food` визначено як  *призначений* ініціалізатор, бо він впевнюється в тому, що всі властивості, що зберігаються в новому екземплярі класу `Food`  було проініціалізовано. Клас `Food` не має батьківського класу, і тому ініціалізатор `init(name: String)` не повинен виклакати `super.init()` для завершення ініціалізації. 
 
-The Food class also provides a *convenience* initializer, `init()`, with no arguments. The `init()` initializer provides a default placeholder name for a new food by delegating across to the `Food` class’s `init(name: String)` with a `name` value of `[Unnamed]`:
+Клас `Food` також має ініціалізатор *для зручності*, `init()`, без аргументів. Ініціалізатор `init()` надає тимчасове ім'я за замовчанням новим екземплярам класу `Food`, делегуючи ініціалізацію до ініціалізатору `init(name: String)`, зі значенням аргумента `name` – `"[Без імені]"`:
 
 ```swift
 let mysteryMeat = Food()
-// mysteryMeat's name is "[Unnamed]"
+// ім'я mysteryMeat – "[Без імені]"
 ```
 
-The second class in the hierarchy is a subclass of `Food` called `RecipeIngredient`. The `RecipeIngredient` class models an ingredient in a cooking recipe. It introduces an `Int` property called quantity (in addition to the name property it inherits from `Food`) and defines two initializers for creating `RecipeIngredient` instances:
+Другим класом в ієрархії є нащадок класу `Food` на ім'я `RecipeIngredient`. Клас `RecipeIngredient` моделює інгредієнт у кухонному рецепті. Він додає властивість типу `Int` на ім'я `quantity`, що виражає кількість продукту (на додачу до властивості `name`, що вже успадкована з класу `Food`). Він також має два ініціалізатори для створення екземплярів `RecipeIngredient`:
 
 ```swift
 class RecipeIngredient: Food {
@@ -606,31 +605,31 @@ class RecipeIngredient: Food {
 }
 ```
 
-The figure below shows the initializer chain for the `RecipeIngredient` class:
+Зображення нижче демонструє ланцюжок ініціалізаторів класу `RecipeIngredient`:
 
 ![](images/initializersExample02_2x.png)
 ￼
-The `RecipeIngredient` class has a single designated initializer, `init(name: String, quantity: Int)`, which can be used to populate all of the properties of a new `RecipeIngredient` instance. This initializer starts by assigning the passed `quantity` argument to the `quantity` property, which is the only new property introduced by `RecipeIngredient`. After doing so, the initializer delegates up to the `init(name: String)` initializer of the `Food` class. This process satisfies safety check 1 from [Two-Phase Initialization](13_initialization.md#Two-Phase-Initialization) above.
+Клас `RecipeIngredient` має один призначений ініціалізатор, `init(name: String, quantity: Int)`, котрий можна використовувати для заповнення всіх властивостей нового екземпляру `RecipeIngredient` значеннями. Цей ініціалізатор починається із присвоєння значення переданого аргументу `quantity` до однойменної властивості, котра є єдиною новою властивістю, введеню класом `RecipeIngredient`. Після цього, ініціалізатор делегує ініціалізацію до ініціалізатора `init(name: String)` класу `Food`. Цей процес задовольняє перевірку безпеки 1 з підрозділу [Двофазна ініціалізація](13_initialization.md#Двофазна-ініціалізація) вище.
 
-`RecipeIngredient` also defines a convenience initializer, `init(name: String)`, which is used to create a `RecipeIngredient` instance by name alone. This convenience initializer assumes a quantity of `1` for any `RecipeIngredient` instance that is created without an explicit quantity. The definition of this convenience initializer makes `RecipeIngredient` instances quicker and more convenient to create, and avoids code duplication when creating several single-quantity `RecipeIngredient` instances. This convenience initializer simply delegates across to the class’s designated initializer, passing in a `quantity` value of `1`.
+Клас `RecipeIngredient` також має ініціалізатор для зручності, `init(name: String)`, котрий можна використовувати для створення екземплярів `RecipeIngredient` лише за іменем. Цей ініціалізтор для зручності припускає, що кількість інгредієнту дорівнює `1` для будь-якого екземпляру `RecipeIngredient`, що створюється без явного вказування кількості. Визначення ініціалізатора для зручності робить створення екземплярів `RecipeIngredient` швидшим та зручнішим, та запобігає дублюванню коду при створенні кількох екземплярів `RecipeIngredient` з кількістю `1`. Цей ініцілазітор просто делегує ініціалізацію призначеному ініціалізатору даного класу, передаючи `1` як значення `quantity`.
 
-The `init(name: String)` convenience initializer provided by `RecipeIngredient` takes the same parameters as the `init(name: String)` *designated* initializer from `Food`. Because this convenience initializer overrides a designated initializer from its superclass, it must be marked with the override modifier (as described in [Initializer Inheritance and Overriding]()).
+Ініціалізатор для зручності `init(name: String)` класу `RecipeIngredient` приймає такі ж аргументи, як і *призначений*  ініціалізатор класу `Food`. Оскільки цей ініціалізатор для зручності заміщуює призначений ініціалізатор батьківського класу, він повинен позначатись ключовим словом `override` (як описано у підрозділі [Наслідування ініціалізаторів та їх заміщення](13_initialization.md#Наслідування-ініціалізаторів-та-їх-заміщення)).
 
-Even though `RecipeIngredient` provides the `init(name: String)` initializer as a convenience initializer, `RecipeIngredient` has nonetheless provided an implementation of all of its superclass’s designated initializers. Therefore, `RecipeIngredient` automatically inherits all of its superclass’s convenience initializers too.
+Хоч клас `RecipeIngredient` реалізовує ініціалізатор `init(name: String)` як ініціалізатор для зручності, цей клас тим не менш реалізовує всі призначені ініціалізатори батьківського класу. Таким чином, клас `RecipeIngredient` автоматично отримує всі ініціалізатори для зручності свого батьківського класу. 
 
-In this example, the superclass for `RecipeIngredient` is `Food`, which has a single convenience initializer called `init()`. This initializer is therefore inherited by `RecipeIngredient`. The inherited version of `init()` functions in exactly the same way as the `Food` version, except that it delegates to the `RecipeIngredient` version of `init(name: String)` rather than the Food version.
+У даному прикладі, батьківським класом класу `RecipeIngredient` є клас `Food`, котрий має єдиний ініціалізатор для зручності на ім'я `init()`. Цей ініціалізатор успадковується класом `RecipeIngredient`. Успадкована версія ініціалізатора `init()` працює точно так само як і в класі `Food`, крім того, що вона делегує ініціалізацію до версії ініціалізатора `init(name: String)` класу  `RecipeIngredient`, а не класу `Food`.
 
-All three of these initializers can be used to create new `RecipeIngredient` instances:
+Усі три ці ініціалізатори можна використовувати для створення нових екземплярів класу `RecipeIngredient`:
 
 ```swift
 let oneMysteryItem = RecipeIngredient()
-let oneBacon = RecipeIngredient(name: "Bacon")
-let sixEggs = RecipeIngredient(name: "Eggs", quantity: 6)
+let oneBacon = RecipeIngredient(name: "Салечко")
+let sixEggs = RecipeIngredient(name: "Яйця", quantity: 6)
 ```
 
-The third and final class in the hierarchy is a subclass of `RecipeIngredient` called `ShoppingListItem`. The `ShoppingListItem` class models a recipe ingredient as it appears in a shopping list.
+Третім та останнім класом в ієрархії є нащадок класу `RecipeIngredient` на ім'я `ShoppingListItem`. Клас `ShoppingListItem` моделює інгредієнт рецепту при його появі в списку покупок. 
 
-Every item in the shopping list starts out as “unpurchased”. To represent this fact, `ShoppingListItem` introduces a Boolean property called `purchased`, with a default value of `false`. `ShoppingListItem` also adds a computed `description` property, which provides a textual description of a `ShoppingListItem` instance:
+Кожен елемент у списку покупок спершу є “не купленим”. Щоб відобразити цей факт, клас `ShoppingListItem` вводить булеву властивість на ім'я `purchased`, зі значенням за замовчанням `false`. Клас `ShoppingListItem` також вводить властивість, що обчислюється `description`, котра генерує текстовий опис екземпляру `ShoppingListItem`:
 
 ```swift
 class ShoppingListItem: RecipeIngredient {
@@ -645,51 +644,51 @@ class ShoppingListItem: RecipeIngredient {
 
 > **Примітка**
 > 
-> `ShoppingListItem` does not define an initializer to provide an initial value for `purchased`, because items in a shopping list (as modeled here) always start out unpurchased.
+> Клас `ShoppingListItem` не визначає ініціалізатора для задавання початкового значення властивості `purchased`, оскільки усі елементи у списку покупок спершу не є купленими.
 
-Because it provides a default value for all of the properties it introduces and does not define any initializers itself, `ShoppingListItem` automatically inherits *all* of the designated and convenience initializers from its superclass.
+Оскільки клас `ShoppingListItem` задає значення за замовчанням усім властивостям, які він вводить, і не визначає жодних власних ініціалізаторі, він автоматично успадковує *усі* призначені ініціалізатори та ініціалізатори для зручності від свого батьківського класу. 
 
-The figure below shows the overall initializer chain for all three classes:
+Зображення нижче демонструє повний ланцюжок ініціалізаторів усіх трьох класів: 
 
 ![](images/initializersExample03_2x.png)
 ￼
-You can use all three of the inherited initializers to create a new `ShoppingListItem` instance:
+Для створення нових екземплярів класу `ShoppingListItem` можна використовувати усі три успадковані ініціалізатори:
 
 ```swift
 var breakfastList = [
     ShoppingListItem(),
-    ShoppingListItem(name: "Bacon"),
-    ShoppingListItem(name: "Eggs", quantity: 6),
+    ShoppingListItem(name: "Салечко"),
+    ShoppingListItem(name: "Яйця", quantity: 6),
 ]
-breakfastList[0].name = "Orange juice"
+breakfastList[0].name = "Апельсиновий сік"
 breakfastList[0].purchased = true
 for item in breakfastList {
     print(item.description)
 }
-// 1 x Orange juice ✔
-// 1 x Bacon ✘
-// 6 x Eggs ✘
+// 1 x Апельсиновий сік ✔
+// 1 x Салечко ✘
+// 6 x Яйця ✘
 ```
 
-Here, a new array called `breakfastList` is created from an array literal containing three new `ShoppingListItem` instances. The type of the array is inferred to be `[ShoppingListItem]`. After the array is created, the name of the `ShoppingListItem` at the start of the array is changed from `"[Unnamed]"` to `"Orange juice"` and it is marked as having been purchased. Printing the description of each item in the array shows that their default states have been set as expected.
+Тут у прикладі вище з літералу масиву, що містить три нові екземпляри класу `ShoppingListItem`, створюється масив на ім'я `breakfastList`. Тип даного масиву визначено як `[ShoppingListItem]`. Після створення масиву, назву першого в масиві екземпляру `ShoppingListItem` змінено з `"[Без імені]"` на `"Апельсиновий сік"`, а потім цей екземпляр помічається як куплений. Далі слідує друк описів кожного елементу з масиву, що демонструє  те, що задавання початкових станів відбулось так, як очікувалось. 
 
-### Failable Initializers
+### Ненадійні ініціалізатори
 
-It is sometimes useful to define a class, structure, or enumeration for which initialization can fail. This failure might be triggered by invalid initialization parameter values, the absence of a required external resource, or some other condition that prevents initialization from succeeding.
+Іноді буває корисним мати клас, структуру чи перечислення, чия ініціалізація може провалитись. Цей провал може бути спричиненим некоректними значеннями параметрів ініціалізації, відсутністю необхідного зовнішнього ресурсу, або іншою умовою, що перешкоджає успішній ініціалізації. 
 
-To cope with initialization conditions that can fail, define one or more failable initializers as part of a class, structure, or enumeration definition. You write a failable initializer by placing a question mark after the `init` keyword (`init?`).
-
-> **Примітка**
-> 
-> You cannot define a failable and a nonfailable initializer with the same parameter types and names.
-
-A failable initializer creates an *optional* value of the type it initializes. You write `return nil` within a failable initializer to indicate a point at which initialization failure can be triggered.
+Щоб впоратись із умовами ініціалізації, що призводять до її провалу, слід визначити один або декілька ненадійних ініціалізаторів в оголошенні класу, структури чи перечислення. Ненадійні ініціалізатори записуються за допомогою додавання знаку питання після ключового слова `init` (`init?`).и
 
 > **Примітка**
 > 
-> Strictly speaking, initializers do not return a value. Rather, their role is to ensure that `self` is fully and correctly initialized by the time that initialization ends. Although you write `return nil` to trigger an initialization failure, you do not use the `return` keyword to indicate initialization success.
+> Не можна оголошувати одночасно звичайний та ненадійний ініціалізатори з однаковими типами параметрів та їх іменами.
 
-The example below defines a structure called `Animal`, with a constant `String` property called `species`. The `Animal` structure also defines a failable initializer with a single parameter called `species`. This initializer checks if the `species` value passed to the initializer is an empty string. If an empty string is found, an initialization failure is triggered. Otherwise, the `species` property’s value is set, and initialization succeeds:
+Ненадійний ініціалізатор створює *опціональне* значення типу, котрий ініціалізується. Щоб відобразити момент провалу ініціалізації, слід писати `return nil` всередині ненадійного ініціалізатора.
+
+> **Примітка**
+> 
+> Строго кажучи, ініціалізатори не повертають значення. Натомість їхня роль полягає у тому, щоб упевнитись, що `self` є повністю та коректно проініціалізовано до моменту завершення ініціалізації. Хоча провали ініціалізаці й записуються як `return nil`, не потрібно писати ключове слово `return` для позначення успішного завершення ініціалізації.
+
+У прикладі нижче визначено структуру `Animal` (що моделює тварину), із константною властивістю типу `String` на ім'я `species` (що моделює її вид). У структурі `Animal` також визначено ненадійний ініціалізатор з єдиним параметром на ім'я `species`. Цей ініціалізатор перевіряє передане значення параметру `species`: якщо це порожній рядок, генерується провал ініціалізації. В іншому випадку, значення присвоюється властивості `species`, та ініціалізація завершується вдало:
 
 ```swift
 struct Animal {
@@ -701,39 +700,39 @@ struct Animal {
 }
 ```
 
-You can use this failable initializer to try to initialize a new `Animal` instance and to check if initialization succeeded:
+Тепер можна скористатись ненадійним ініціалізатором, щоб спробувати створити новий екземпляр `Animal` та перевірити, чи була ініціалізація успішною:
 
 ```swift
-let someCreature = Animal(species: "Giraffe")
-// someCreature is of type Animal?, not Animal
+let someCreature = Animal(species: "Жирафа")
+// someCreature має тип Animal?, не Animal
  
 if let giraffe = someCreature {
-    print("An animal was initialized with a species of \(giraffe.species)")
+    print("Тварина було ініціалізовани з видом \(giraffe.species)")
 }
-// Надрукує "An animal was initialized with a species of Giraffe"
+// Надрукує "Тварина було ініціалізовани з видом Жирафа"
 ```
 
-If you pass an empty string value to the failable initializer’s species parameter, the initializer triggers an initialization failure:
+Якщо передати порожній рядок в якості параметра `species` ненадійного ініціалізатора, це спровокує провал ініціалізації: 
 
 ```swift
 let anonymousCreature = Animal(species: "")
-// anonymousCreature is of type Animal?, not Animal
+// anonymousCreature має тип Animal?, не Animal
  
 if anonymousCreature == nil {
-    print("The anonymous creature could not be initialized")
+    print("Неможливо ініціалізувати анонімне створіння")
 }
-// Надрукує "The anonymous creature could not be initialized"
+// Надрукує "Неможливо ініціалізувати анонімне створіння"
 ```
 
 > **Примітка**
 > 
-> Checking for an empty string value (such as `""` rather than `"Giraffe"`) is not the same as checking for `nil` to indicate the absence of an *optional* `String` value. In the example above, an empty string (`""`) is a valid, nonoptional `String`. However, it is not appropriate for an animal to have an empty string as the value of its `species` property. To model this restriction, the failable initializer triggers an initialization failure if an empty string is found.
+> Перевірка рядка на порожність (наприклад, `""` замістю `"Жирафа"`) – це не те ж саме, що перевірка на `nil` для визначення відсутності значення *опціонального* значення типу `String`. У прикладі вище, порожній рядок (`""`) є дійсним, неопціональним значенням типу `String`. Однак, для трарини мати порожній рядок в якості властивості `species` (вид) є недоречним. Щоб змоделювати це обмеження, ненадійний ініціалізатор провалює ініціалізацію у випадку виявлення порожнього рядка. 
 
-#### Failable Initializers for Enumerations
+#### Ненадійні ініціалізатори в перечисленнях
 
-You can use a failable initializer to select an appropriate enumeration case based on one or more parameters. The initializer can then fail if the provided parameters do not match an appropriate enumeration case.
+Ненадійними ініціалізаторами зручно користуватись, щоб обрати відповідний елемент перечислення, базуючись на одному або кількох параметрах. Ініціалізатор може провалитись, якщо заданим параметрам не відповідає жоден з елементів перечислення. 
 
-The example below defines an enumeration called `TemperatureUnit`, with three possible states (`kelvin`, `celsius`, and `fahrenheit`). A failable initializer is used to find an appropriate enumeration case for a `Character` value representing a temperature symbol:
+У прикладі нижче визначено перечислення `TemperatureUnit`, котре моделює одиницю вимірювання температури та має три елементи (`kelvin`, `celsius`, та `fahrenheit`). Ненадійний ініціалізатор використовується для знаходження елементу перечислення за значенням типу `Character`, що представляє символ температури відповідної шкали:
 
 ```swift
 enum TemperatureUnit {
@@ -753,27 +752,27 @@ enum TemperatureUnit {
 }
 ```
 
-You can use this failable initializer to choose an appropriate enumeration case for the three possible states and to cause initialization to fail if the parameter does not match one of these states:
+Можна використовувати цей ненадійний ініціалізатор для того, щоб обрати відповідний елемент перечислення, або провалитись, якщо параметр не відповідає жодному з елементів перечислення: 
 
 ```swift
 let fahrenheitUnit = TemperatureUnit(symbol: "F")
 if fahrenheitUnit != nil {
-    print("This is a defined temperature unit, so initialization succeeded.")
+    print("Це відома шкала температури, тому ініціалізація була успішною.")
 }
-// Надрукує "This is a defined temperature unit, so initialization succeeded."
+// Надрукує "Це відома шкала температури, тому ініціалізація була успішною."
  
 let unknownUnit = TemperatureUnit(symbol: "X")
 if unknownUnit == nil {
-    print("This is not a defined temperature unit, so initialization failed.")
+    print("Це невідома шкала температури, тому ініціалізація провалилась.")
 }
-// Надрукує "This is not a defined temperature unit, so initialization failed."
+// Надрукує "Це невідома шкала температури, тому ініціалізація провалилась."
 ```
 
-#### Failable Initializers for Enumerations with Raw Values
+#### Ненадійні ініціалізатори в перечисленнях з сирими значеннями
 
-Enumerations with raw values automatically receive a failable initializer, `init?(rawValue:)`, that takes a parameter called `rawValue` of the appropriate raw-value type and selects a matching enumeration case if one is found, or triggers an initialization failure if no matching value exists.
+Перечислення із сирими значеннями автоматично отримують ненадійний ініціалізатор, `init?(rawValue:)`, котрий приймає параметр на ім'я `rawValue` відповідного типу сирого значення, та обирає відповідний елемент перечислення по сирому значенню, або провалюється у випадку, якщо не існує відповідного елементу. 
 
-You can rewrite the `TemperatureUnit` example from above to use raw values of type `Character` and to take advantage of the `init?(rawValue:)` initializer:
+Можна переписати приклад з перечисленням `TemperatureUnit` вище, використовуючи сирі значенням типу `Character` та скориставшись перевагами ініціалізатора `init?(rawValue:)`:
 
 ```swift
 enum TemperatureUnit: Character {
@@ -782,28 +781,28 @@ enum TemperatureUnit: Character {
  
 let fahrenheitUnit = TemperatureUnit(rawValue: "F")
 if fahrenheitUnit != nil {
-    print("This is a defined temperature unit, so initialization succeeded.")
+    print("Це відома шкала температури, тому ініціалізація була успішною.")
 }
-// Надрукує "This is a defined temperature unit, so initialization succeeded."
+// Надрукує "Це відома шкала температури, тому ініціалізація була успішною."
  
 let unknownUnit = TemperatureUnit(rawValue: "X")
 if unknownUnit == nil {
-    print("This is not a defined temperature unit, so initialization failed.")
+    print("Це невідома шкала температури, тому ініціалізація провалилась.")
 }
-// Надрукує "This is not a defined temperature unit, so initialization failed."
+// Надрукує "Це невідома шкала температури, тому ініціалізація провалилась."
 ```
 
-#### Propagation of Initialization Failure
+#### Поширення провалу ініціалізації
 
-A failable initializer of a class, structure, or enumeration can delegate across to another failable initializer from the same class, structure, or enumeration. Similarly, a subclass failable initializer can delegate up to a superclass failable initializer.
+Ненадійний ініціалізатор класу, структури чи перечислення може делегувати ініціалізацію до іншого ненадійного ініціалізатора цього ж класу, структури чи перечислення. Аналогічно, ненадійний ініціалізатор класу-нащадка може делегувати ініціалізацію до ненадійного ініціалізатора батьківського класу.
 
-In either case, if you delegate to another initializer that causes initialization to fail, the entire initialization process fails immediately, and no further initialization code is executed.
+В будь-якому випадку, якщо відбувається делегування ініціалізатору, в котрому ініціалізація провалюється, весь процесь ініціалізації одразу провалюється, і жоден подальший код ініціалізації не виконується. 
 
 > **Примітка**
 > 
-> A failable initializer can also delegate to a nonfailable initializer. Use this approach if you need to add a potential failure state to an existing initialization process that does not otherwise fail.
+> Ненадійний ініціалізатор також може делегувати ініціалізацію до звичайного ініціалізатора. Слід користуватись таким підоходом для того, щоб розширити процес ініціалізації, що не провалюється, додатковою обробкою провалів. 
 
-The example below defines a subclass of `Product` called `CartItem`. The `CartItem` class models an item in an online shopping cart. `CartItem` introduces a stored constant property called `quantity` and ensures that this property always has a value of at least `1`:
+У прикладі нижче оголошено клас-нащадок класу  `Product`, що називається `CartItem`. Клас `CartItem` моделює елемент в кошику інтернет-магазину. `CartItem` додає константну властивість, що зберігається, на ім'я `quantity`, та має ненадійний ініціалізатор, що контролює, що ця властивість завжди має значення не менше за `1`:
 
 ```swift
 class Product {
@@ -824,58 +823,58 @@ class CartItem: Product {
 }
 ```
 
-The failable initializer for `CartItem` starts by validating that it has received a `quantity` value of `1` or more. If the `quantity` is invalid, the entire initialization process fails immediately and no further initialization code is executed. Likewise, the failable initializer for `Product` checks the `name` value, and the initializer process fails immediately if `name` is the empty string.
+Ненадійний ініціалізатор класу `CartItem` розпочинається з валідації аргумента `quantity`. Якщо значення `quantity` менше за `1`, тобто невалідне, весь процес ініціалізації одразу провалюється і подальший ініціалізаційний код не виконується. Аналогічно, ненадійний ініціалізатор класу `Product` перевіряє значення `name`, і якщо це порожній рядок – процес ініціалізації одразу провалиться.
 
-If you create a `CartItem` instance with a nonempty name and a quantity of `1` or more, initialization succeeds:
+Якщо створити екземпляр `CartItem` із непорожньою назвою та кількістю `1` або більше, процес ініціалізації завершується успішно: 
 
 ```swift
-if let twoSocks = CartItem(name: "sock", quantity: 2) {
-    print("Item: \(twoSocks.name), quantity: \(twoSocks.quantity)")
+if let twoSocks = CartItem(name: "шкарпетка", quantity: 2) {
+    print("Товар: \(twoSocks.name), кількість: \(twoSocks.quantity)")
 }
-// Надрукує "Item: sock, quantity: 2"
+// Надрукує "Товар: шкарпетка, кількість: 2"
 ```
 
-If you try to create a `CartItem` instance with a `quantity` value of `0`, the 
-`CartItem` initializer causes initialization to fail:
+Якщо створити екземпляр класу `CartItem` зі значенням  `quantity`, що дорівнює `0`, ініціалізатор `CartItem` провалить ініціалізацію:
 
 ```swift
-if let zeroShirts = CartItem(name: "shirt", quantity: 0) {
-    print("Item: \(zeroShirts.name), quantity: \(zeroShirts.quantity)")
+if let zeroShirts = CartItem(name: "сорочка", quantity: 0) {
+    print("Товар: \(zeroShirts.name), кількість: \(zeroShirts.quantity)")
 } else {
-    print("Unable to initialize zero shirts")
+    print("Неможливо ініціалізувати нуль сорочок")
 }
-// Надрукує "Unable to initialize zero shirts"
+// Надрукує "Неможливо ініціалізувати нуль сорочок"
 ```
 
-Similarly, if you try to create a `CartItem` instance with an empty `name` value, the superclass `Product` initializer causes initialization to fail:
+Аналогічно, якщо спробувати створити екземпляр класу `CartItem` з порожнім значенням `name`, ініціалізатор батьківського класу `Product` провалить ініціалізацію:
 
 ```swift
 if let oneUnnamed = CartItem(name: "", quantity: 1) {
-    print("Item: \(oneUnnamed.name), quantity: \(oneUnnamed.quantity)")
+    print("Товар: \(oneUnnamed.name), кількість: \(oneUnnamed.quantity)")
 } else {
-    print("Unable to initialize one unnamed product")
+    print("Неможливо ініціалізувати безіменний товар")
 }
-// Надрукує "Unable to initialize one unnamed product"
+// Надрукує "Неможливо ініціалізувати безіменний товар"
 ```
 
-#### Overriding a Failable Initializer
 
-You can override a superclass failable initializer in a subclass, just like any other initializer. Alternatively, you can override a superclass failable initializer with a subclass *nonfailable* initializer. This enables you to define a subclass for which initialization cannot fail, even though initialization of the superclass is allowed to fail.
+#### Заміщення ненадійних ініціалізаторів
 
-Note that if you override a failable superclass initializer with a nonfailable subclass initializer, the only way to delegate up to the superclass initializer is to force-unwrap the result of the failable superclass initializer.
+Ненадійні ініціалізатори батьківських класів можна заміщувати в класах-нащадках, як і будь-які інші ініціалізатори. Також можливо замістити ненадійний ініціалізатор батьківського класу *надійним* ініціалізатором класу-нащадка. Це дає можливість створювати класи-нащадки, чия ініціалізація не провалюється, хоч ініціалізація батьківського класу і може при цьому провалюватись. 
+
+Слід помітити, що коли заміщується ненадійний ініціалізатор батьківського класу надійним ініціалізатором класу-нащадка, єдиним способом делегувати ініціалізацію до батькіського класу є примусове розгортання результату виклику ненадійного ініціалізатора батьківсього класу.
 
 > **Примітка**
 > 
-> You can override a failable initializer with a nonfailable initializer but not the other way around.
+> Можна замістити ненадійний ініціалізатор надійним, але не можна зробити навпаки.
 
-The example below defines a class called `Document`. This class models a document that can be initialized with a `name` property that is either a nonempty string value or `nil`, but cannot be an empty string:
+У прикладі нижче оголошено клас на ім'я `Document`. Цей клас моделює документ, котрий може бути ініціалізованим властивістю `name`, котра має бути або непорожнім рядком, або `nil`, однак не може бути порожнім рядком: 
 
 ```swift
 class Document {
     var name: String?
-    // this initializer creates a document with a nil name value
+    // цей ініціалізатор створює документ зі значенням name nil
     init() {}
-    // this initializer creates a document with a nonempty name value
+    // цей ініціалізатор створює документ із непорожнім значенням name
     init?(name: String) {
         if name.isEmpty { return nil }
         self.name = name
@@ -883,18 +882,18 @@ class Document {
 }
 ```
 
-The next example defines a subclass of `Document` called `AutomaticallyNamedDocument`. The `AutomaticallyNamedDocument` subclass overrides both of the designated initializers introduced by `Document`. These overrides ensure that an `AutomaticallyNamedDocument` instance has an initial `name` value of `"[Untitled]"` if the instance is initialized without a name, or if an empty string is passed to the `init(name:)` initializer:
+У наступному прикладі оголошено клас-нащадо класу `Document` на ім'я `AutomaticallyNamedDocument`. Клас-нащадок `AutomaticallyNamedDocument` заміщує обидва призначених ініціалізатори, введених класом `Document`. Ці заміщення гарантують, що екземпляр класу `AutomaticallyNamedDocument` матиме початкове значення `name` `"[Безіменний]"` у випадках, якщо він ініціалізовується без назви, або якщо до ініціалізатора `init(name:)` передано порожній рядок:
 
 ```swift
 class AutomaticallyNamedDocument: Document {
     override init() {
         super.init()
-        self.name = "[Untitled]"
+        self.name = "[Безіменний]"
     }
     override init(name: String) {
         super.init()
         if name.isEmpty {
-            self.name = "[Untitled]"
+            self.name = "[Безіменний]"
         } else {
             self.name = name
         }
@@ -902,83 +901,85 @@ class AutomaticallyNamedDocument: Document {
 }
 ```
 
-The `AutomaticallyNamedDocument` overrides its superclass’s failable `init?(name:)` initializer with a nonfailable `init(name:)` initializer. Because `AutomaticallyNamedDocument` copes with the empty string case in a different way than its superclass, its initializer does not need to fail, and so it provides a nonfailable version of the initializer instead.
+Клас `AutomaticallyNamedDocument` заміщує ненадійний ініціалізатор батьківського класу `init?(name:)` надійним ініціалізатором `init(name:)`. Оскільки клас `AutomaticallyNamedDocument` справляється з випадком порожнього рядку іншим способом, аніж його батьківський клас, його ініціалізатору не потрібно провалюватись, і тому даний клас натомість містить надійну версію даного ініціалізатора. 
 
-You can use forced unwrapping in an initializer to call a failable initializer from the superclass as part of the implementation of a subclass’s nonfailable initializer. For example, the `UntitledDocument` subclass below is always named `"[Untitled]"`, and it uses the failable `init(name:)` initializer from its superclass during initialization.
+В реалізації надійного ініціалізатора класу-нащадка можна використовувати примусове розгортання виклику ненадійного ініціалізатора батьківського класу. Наприклад, клас-нащадок `UntitledDocument` у прикладі нижче завжди має назву `"[Безіменний]"`, і використовує під час ініціалізації ненадійний ініціалізатор батьківського класу `init(name:)`:
 
 ```swift
 class UntitledDocument: Document {
     override init() {
-        super.init(name: "[Untitled]")!
+        super.init(name: "[Безіменний]")!
     }
 }
 ```
 
-In this case, if the `init(name:)` initializer of the superclass were ever called with an empty string as the name, the forced unwrapping operation would result in a runtime error. However, because it’s called with a string constant, you can see that the initializer won’t fail, so no runtime error can occur in this case.
+В даному випадку, якби ініціалізатор `init(name:)` батьківського класу був викликаний з порожнім рядков в якості параметра `name`, операція примусового розгортання призвела б до помилки часу виконання. Однак, оскільки в якості параметра завжди передається рядкова константа, даний ініціалізатор не може провалитись і в даному випадку не буде помилки часу виконання. 
 
-#### The init! Failable Initializer
+#### Ненадійний ініціалізатор init!
 
-You typically define a failable initializer that creates an optional instance of the appropriate type by placing a question mark after the `init` keyword (`init?`). Alternatively, you can define a failable initializer that creates an implicitly unwrapped optional instance of the appropriate type. Do this by placing an exclamation mark after the `init` keyword (`init!`) instead of a question mark.
+Як привило, ненадійні ініціалізатори оголошують за допомогою знаку питання після ключового слова `init` (`init?`), і такі ініціалізатори створюють опціональний екземпляр відповідного типу. Однак, також можна оголошувати ненадійні ініціалізатори, котрі повертають опціональні екземпляри відповідного типу, що розгортаються неявно. Такі ініціалізатори записуються за допомогою знаку оклику після ключового слова `init` (`init!`) замість знаку питання. 
 
-You can delegate from `init?` to `init!` and vice versa, and you can override `init?` with `init!` and vice versa. You can also delegate from `init` to `init!`, although doing so will trigger an assertion if the `init!` initializer causes initialization to fail.
+Можна делегувати ініціалізацію з ініціалізатора `init?` до `init!` і навпаки, а також можна заміщувати ініціалізатор `init?` ініціалізатором `init!` і навпаки. Також можна делегувати з ініціалізатора `init` до `init!`, однак це спричинить помилку часу виконання у випадку, якщо ініціалізатор `init!` спровокує провал ініціалізації. 
 
-### Required Initializers
+### Обов'язкові ініціалізатори
 
-Write the `required` modifier before the definition of a class initializer to indicate that every subclass of the class must implement that initializer:
+Якщо перед оголошенням ініцілізатора класу вказати ключове слово `required`, усі нащадки даного класу повинні будуть реалізовувати даний ініціалізатор:
 
 ```swift
 class SomeClass {
     required init() {
-        // initializer implementation goes here
+        // ініціалізація буде проходити тут
     }
 }
 ```
 
-You must also write the `required` modifier before every subclass implementation of a required initializer, to indicate that the initializer requirement applies to further subclasses in the chain. You do not write the `override` modifier when overriding a required designated initializer:
+Також обов'язково слід вказувати модифікатор `required` перед кожною реалізацією обов'язкового ініціалізатора в класі-нащадку, щоб позначити, що обов'язковість даного ініціалізатора стосується також подальших нащадків у ланцюжку. Перед обов'язковим заміщенням призначеного ініціалізатора при цьому не обов'язково вказувати ключове слово `override`:
 
 ```swift
 class SomeSubclass: SomeClass {
     required init() {
-        // subclass implementation of the required initializer goes here
+        // реалізація обов'язкового ініціалізатора класу-нащада буде проходити тут
     }
 }
 ```
 
 > **Примітка**
 > 
-> You do not have to provide an explicit implementation of a required initializer if you can satisfy the requirement with an inherited initializer.
- 
-### Setting a Default Property Value with a Closure or Function
+> Не обов'язково надавати явну реалізацію обов'язкового ініціалізатора, якщо можна делегувати ініціалізацію успадкованому ініціалізатору. 
 
-If a stored property’s default value requires some customization or setup, you can use a closure or global function to provide a customized default value for that property. Whenever a new instance of the type that the property belongs to is initialized, the closure or function is called, and its return value is assigned as the property’s default value.
+### Присвоєння початкового значення за допомогою замикання чи функції
 
-These kinds of closures or functions typically create a temporary value of the same type as the property, tailor that value to represent the desired initial state, and then return that temporary value to be used as the property’s default value.
+Якщо початкове значення властивості, що зберігається, потребує якогось налаштування, для генерації такого початкового значення можна використати замикання чи глобальну функцію. При ініціалізації нового екземпляру типу, до якого належить властивість, буде викликано замикання чи функція, і її значення, що повертається, буде присвоєно властивості як початкове значення. 
 
-Here’s a skeleton outline of how a closure can be used to provide a default property value:
+Ці види замикань чи функцій, як правило, створюють тимчасове значення того ж типу, що й властивість, конфігурують його до бажаного початкового стану, а потім повертають це тимчасове значення для використання як початкове значення властивості.
+
+Ось приблизний шаблон використання замикання для створення початкового значення властивості:
 
 ```swift
 class SomeClass {
     let someProperty: SomeType = {
-        // create a default value for someProperty inside this closure
-        // someValue must be of the same type as SomeType
+        // Значення за замовчанням властивості someProperty
+        // створюється в цьому замиканні.
+        // someValue повинно мати тип SomeType.
         return someValue
     }()
 }
 ```
 
-Note that the closure’s end curly brace is followed by an empty pair of parentheses. This tells Swift to execute the closure immediately. If you omit these parentheses, you are trying to assign the closure itself to the property, and not the return value of the closure.
+Слід помітити, що одразу за фігурними дужками замикання йде порожня пара круглих дужок. Це вказує Swift виконати замикання одразу після його оголошення. Якщо пропустити ці круглі дужки, властивості буде присвоюватись саме замикання, а не значення, яке повертає замикання. 
 
 > **Примітка**
-> 
-> If you use a closure to initialize a property, remember that the rest of the instance has not yet been initialized at the point that the closure is executed. This means that you cannot access any other property values from within your closure, even if those properties have default values. You also cannot use the implicit `self` property, or call any of the instance’s methods.
+>
+> При використанні замикань для ініціалізації властивостей, слід пам'ятати, що решта екземпляру ще не було ініціалізовано на момент виконання замикання. Це означає, що не можна звертатись до інших властивостей з цього замикання, навіть якщо вони мають значення за за мовчанням. Також не можна використовувати неявну властивість `self`, чи викликати будь-які методи екземпляру. 
 
-The example below defines a structure called `Chessboard`, which models a board for the game of chess. Chess is played on an 8 x 8 board, with alternating black and white squares.
+У прикладі нижче оголошено структуру з назвою `Chessboard`, котра моделює дошку для гри в шахи. В шахи грають на дошці розміром 8 x 8 клітинок, котрі почергово зафарбовані в білий та чорний. 
 
 ![](images/chessBoard_2x.png)
 ￼
-To represent this game board, the `Chessboard` structure has a single property called `boardColors`, which is an array of 64 `Bool` values. A value of `true` in the array represents a black square and a value of `false` represents a white square. The first item in the array represents the top left square on the board and the last item in the array represents the bottom right square on the board.
 
-The `boardColors` array is initialized with a closure to set up its color values:
+Щоб представити дану ігрову дошку, структура  `Chessboard` має одну властивість на ім'я `boardColors`, котра є масивом з 64 булевих значень. Значення `true` в цьому масиві представляє чорну клітинку, а значення `false` – білу клітинку. Перший елемент в масиві представляє верхню ліву клітинку на дошці, а останній елемент в масиві – нижню праву.
+
+Масив `boardColors` ініціалізується за допомогою замикання для налаштування значень кольорів клітинок:
 
 ```swift
 struct Chessboard {
@@ -1000,7 +1001,7 @@ struct Chessboard {
 }
 ```
 
-Whenever a new `Chessboard` instance is created, the closure is executed, and the default value of `boardColors` is calculated and returned. The closure in the example above calculates and sets the appropriate color for each square on the board in a temporary array called `temporaryBoard`, and returns this temporary array as the closure’s return value once its setup is complete. The returned array value is stored in `boardColors` and can be queried with the `squareIsBlackAtRow` utility function:
+Щоразу при створення екземпляру `Chessboard`, буде виконуватись замикання, котре обчислюватиме й повертатиме початкове значення властивості `boardColors`. Дане замикання у прикладі вище обчислює та присвоює відповідний колір кожній клідинці на дошці в тимчасово створеному масиві `temporaryBoard`, і повертає цей тимчасовий масив після завершення налаштування. Масив, що повертається, буде збережено у властивості `boardColors` і потім до нього можна звертатись у допоміжній функції `squareIsBlackAtRow`, котра перевіряє колір клітинки за індексами: 
 
 ```swift
 let board = Chessboard()

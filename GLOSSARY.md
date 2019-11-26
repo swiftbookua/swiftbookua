@@ -75,3 +75,4 @@
 + Мутуючий метод - Mutating Method
 + Призначений ініціалізатор - Designated initializer
 + Ініціалізатор для зручності - Convenience initializer
++ Обов'язковий ініціалізатор - Required initializer
