@@ -1,36 +1,96 @@
 ## Деініціалізація
-A *deinitializer* is called immediately before a class instance is deallocated. You write deinitializers with the `deinit` keyword, similar to how initializers are written with the `init` keyword. Deinitializers are only available on class types.### How Deinitialization Works
-Swift automatically deallocates your instances when they are no longer needed, to free up resources. Swift handles the memory management of instances through *automatic reference counting (ARC)*, as described in [Automatic Reference Counting](15_automatic_reference_counting.md). Typically you don’t need to perform manual cleanup when your instances are deallocated. However, when you are working with your own resources, you might need to perform some additional cleanup yourself. For example, if you create a custom class to open a file and write some data to it, you might need to close the file before the class instance is deallocated.
-Class definitions can have at most one deinitializer per class. The deinitializer does not take any parameters and is written without parentheses:
 
-```swiftdeinit {    // perform the deinitialization}
-```
-Deinitializers are called automatically, just before instance deallocation takes place. You are not allowed to call a deinitializer yourself. Superclass deinitializers are inherited by their subclasses, and the superclass deinitializer is called automatically at the end of a subclass deinitializer implementation. Superclass deinitializers are always called, even if a subclass does not provide its own deinitializer.
-Because an instance is not deallocated until after its deinitializer is called, a deinitializer can access all properties of the instance it is called on and can modify its behavior based on those properties (such as looking up the name of a file that needs to be closed).
-### Deinitializers in Action
-Here’s an example of a deinitializer in action. This example defines two new types, `Bank` and `Player`, for a simple game. The `Bank` class manages a made-up currency, which can never have more than 10,000 coins in circulation. There can only ever be one `Bank` in the game, and so the `Bank` is implemented as a class with type properties and methods to store and manage its current state:
+*Деініціалізатори* викликаються безпосередньо перед деалокацією екземплярів. Деалокатори оголошуються за допомогою ключового слова `deinit`, аналогічно до ініціалізаторів, котрі оголошуються за допомогою ключового слова `init`. Деініціалізатори доступні лише для класів. 
 
-```swiftclass Bank {    static var coinsInBank = 10_000    static func distribute(coins numberOfCoinsRequested: Int) -> Int {        let numberOfCoinsToVend = min(numberOfCoinsRequested, coinsInBank)        coinsInBank -= numberOfCoinsToVend        return numberOfCoinsToVend    }    static func receive(coins: Int) {        coinsInBank += coins    }}
-```
-`Bank` keeps track of the current number of coins it holds with its `coinsInBank` property. It also offers two methods — `distribute(coins:)` and `receive(coins:)` — to handle the distribution and collection of coins.
-The `distribute(coins:)` method checks that there are enough coins in the bank before distributing them. If there are not enough coins, `Bank` returns a smaller number than the number that was requested (and returns zero if no coins are left in the bank). It returns an integer value to indicate the actual number of coins that were provided.
-The `receive(coins:)` method simply adds the received number of coins back into the bank’s coin store.
-The `Player` class describes a player in the game. Each player has a certain number of coins stored in their purse at any time. This is represented by the player’s `coinsInPurse` property:
+### Як працює деініціалізація
 
-```swiftclass Player {    var coinsInPurse: Int    init(coins: Int) {        coinsInPurse = Bank.distribute(coins: coins)    }    func win(coins: Int) {        coinsInPurse += Bank.distribute(coins: coins)    }    deinit {        Bank.receive(coins: coinsInPurse)    }}
-```
-Each `Player` instance is initialized with a starting allowance of a specified number of coins from the bank during initialization, although a `Player` instance may receive fewer than that number if not enough coins are available.
-The `Player` class defines a `win(coins:)` method, which retrieves a certain number of coins from the bank and adds them to the player’s purse. The `Player` class also implements a deinitializer, which is called just before a `Player` instance is deallocated. Here, the deinitializer simply returns all of the player’s coins to the bank:
+Swift автоматично деалокує екземпляри, котрі більше не потрібні, щоб вивільнити ресурси. Swift керує пам'яттю екземплярів за допомогою *автоматичного підрахунку посилань* (*automatic reference counting, або ARC*), що детально описано в розділі [Автоматичний підрахунок посилань](15_automatic_reference_counting.md). Як правило, при деалокації екземплярів не потрібно робити якогось ручного прибирання. Однак, при роботі з деякими ресурсами, іноді потрібно вивільняти їх наприкінці життя екземпляру. Наприклад, якщо якийсь клас відкриває файл та записує до нього дані, може знадобитись закрити цей файл перед деалокацією екземляра цього класу.
 
-```swiftvar playerOne: Player? = Player(coins: 100)print("A new player has joined the game with \(playerOne!.coinsInPurse) coins")// Prints "A new player has joined the game with 100 coins"print("There are now \(Bank.coinsInBank) coins left in the bank")// Prints "There are now 9900 coins left in the bank"
-```
-A new `Player` instance is created, with a request for 100 coins if they are available. This `Player` instance is stored in an optional `Player` variable called `playerOne`. An optional variable is used here, because players can leave the game at any point. The optional lets you track whether there is currently a player in the game.
-Because `playerOne` is an optional, it is qualified with an exclamation mark (`!`) when its `coinsInPurse` property is accessed to print its default number of coins, and whenever its `winCoins(_:)` method is called:
+Оголошення класу може мати не більше одного деініціалізатора. Деініціалізатор не приймає жодних параметрів, та записується без круглих дужок:
 
-```swiftplayerOne!.win(coins: 2_000)print("PlayerOne won 2000 coins & now has \(playerOne!.coinsInPurse) coins")// Prints "PlayerOne won 2000 coins & now has 2100 coins"print("The bank now only has \(Bank.coinsInBank) coins left")// Prints "The bank now only has 7900 coins left"
+```swift
+deinit {
+    // виконання деініціалізації
+}
 ```
-Here, the player has won 2,000 coins. The player’s purse now contains 2,100 coins, and the bank has only 7,900 coins left.
 
-```swiftplayerOne = nilprint("PlayerOne has left the game")// Prints "PlayerOne has left the game"print("The bank now has \(Bank.coinsInBank) coins")// Prints "The bank now has 10000 coins"
+Деініціалізатори викликаються автоматично, одразу перед тим як відбудеться деалокація екземпляру. Викликати ініціалізатори явно заборонено. Деініціалізатор батьківського класу успадковується його нащадками, при цьому деініціалізатор батьківського класу викликається автоматично наприкінці реалізації деініціалізатора класу-нащадка. Деініціалізатор батькіського класу викликається завжди, навіть якщо у класі-нащадку немає власного деініціалізатора. 
+
+Оскільки екземпляр не деалокується до завершення виклику деініціалізатора, деініціалізатор має доступ до всіх властивостей екземпляру, на якому він викликається, та може змінювати власну поведінку базуючись на цих властивостях (наприклад, визначити ім'я файлу, котрий потрібно закрити). 
+
+### Деініціалізатори в дії
+
+Ось приклад деініціалізатору в дії. В даному прикладі є два нових типи, `Bank` та `Player` (що моделюють банк та гравця відповідно) для простої гри. Клас `Bank` керує ігровою валютою, котра має в обігу не більше 10 000 монет. У грі може бути не більше одного банку, тому `Bank` реалізавано як клас із властивостями та методами типу для зберігання його поточного стану та керування ним:
+
+```swift
+class Bank {
+    static var coinsInBank = 10_000
+    static func distribute(coins numberOfCoinsRequested: Int) -> Int {
+        let numberOfCoinsToVend = min(numberOfCoinsRequested, coinsInBank)
+        coinsInBank -= numberOfCoinsToVend
+        return numberOfCoinsToVend
+    }
+    static func receive(coins: Int) {
+        coinsInBank += coins
+    }
+}
 ```
-The player has now left the game. This is indicated by setting the optional `playerOne` variable to `nil`, meaning “no `Player` instance.” At the point that this happens, the `playerOne` variable’s reference to the `Player` instance is broken. No other properties or variables are still referring to the `Player` instance, and so it is deallocated in order to free up its memory. Just before this happens, its deinitializer is called automatically, and its coins are returned to the bank.
+
+Клас `Bank` відслідковує поточну кількість монет, які в ньому тримаються, у властивості `coinsInBank`. Він також має два методи: `distribute(coins:)` та `receive(coins:)` – для видачі монет гравцю та повернення їх назад у банк відповідно. 
+
+Метод `distribute(coins:)` перевіряє, що банк має достатньо монет перед їх видачею. Якщо в банку недостатно монет, `Bank` повертає менше монет, ніж запитувалось (зокрема, повертає нуль, якщо в банку закінчились монети). Він повертає цілочисельне значенния, що є фактичного кількістю виданих монет.
+
+Метод `receive(coins:)` просто додає кількість монет, що повертаються назад, до загальної кількості монет у банку.
+
+Клас `Player` описує гравця у грі. Кожен гравець має певну кількість монет, що зберігаються в його гаманці в будь-який час. Це представлено властивістю гравця `coinsInPurse`:
+
+```swift
+class Player {
+    var coinsInPurse: Int
+    init(coins: Int) {
+        coinsInPurse = Bank.distribute(coins: coins)
+    }
+    func win(coins: Int) {
+        coinsInPurse += Bank.distribute(coins: coins)
+    }
+    deinit {
+        Bank.receive(coins: coinsInPurse)
+    }
+}
+```
+
+Кожен екземпляр `Player` ініціалізується стартовим капіталом з визначеної кількості монет з банку, при цьому гравцю може бути видано менше монет, ніж вказано, якщо їх не вистачає в банку. 
+
+У класі `Player` визначено метод `win(coins:)`, котрий бере з банку певну кількість монет та додає їх до гаманця гравця. У класі `Player` також реалізавано деініціалізатор, котрий викликається в момент перед деалолкацією екземпляру класу `Player`. В даному випадку, деініціалізатор просто повертає всі монети гравця назад у банк:
+
+```swift
+var playerOne: Player? = Player(coins: 100)
+print("До гри приєднався новий гравець з \(playerOne!.coinsInPurse) монетами")
+// Надрукує "До гри приєднався новий гравець з 100 монетами"
+print("У банку лишилось \(Bank.coinsInBank) монет")
+// Надрукує "У банку лишилось 9900 монет"
+```
+
+Вище створено новий екземляр класу `Player`, із запитом 100 монет, якщо вони доступні. Цей екземпляр `Player` зберігається у опціональній змінній типу `Player` на ім'я `playerOne`. Опціональне значення використовується тут тому що гравці можуть вийти з гри у будь-який момент. Опціональне значення дозволяє відслідковувати, чи є у даний момент гравець у грі. 
+
+Оскільки змінна `playerOne` є опціональною, звернення до її властивості `coinsInPurse` та методу `winCoins(_:)` відбуваються через знак оклику (`!`):
+
+```swift
+playerOne!.win(coins: 2_000)
+print("Гравець PlayerOne виграв 2000 монет і тепер має \(playerOne!.coinsInPurse) монет")
+// Надрукує "Гравець PlayerOne виграв 2000 монет і тепер має 2100 монет"
+print("У банку тепер лишилось \(Bank.coinsInBank) монет")
+// Надрукує "У банку тепер лишилось 7900 монет"
+```
+
+Тут гравець виграв 2000 монет. Тепер у нього в гаманці міститься 2100 монет, а у банку залишилось лише 7900 монет.
+
+```swift
+playerOne = nil
+print("Гравець PlayerOne покинув гру")
+// Надрукує "Гравець PlayerOne покинув гру"
+print("Банк тепер має \(Bank.coinsInBank) монет")
+// Надрукує "Банк тепер має 10000 монет"
+```
+
+Гравець тепер покинув гру. Це моделюється присвоєнням опціональній змінній `playerOne` значення `nil`, що значить “немає екземпляру `Player`.” В момент, коли сталось присвоєння, посилання змінної `playerOne` на екземпляр `Player` розірвалось. Оскільки більше немає властивостей чи змінних, котрі посилаються на цей же екземпляр `Player`, він деалокується для вивільнення пам'яті. В момент перед деалокацією автоматично викликається його деініціалізатор, і монети повертаються назад у банк.
