@@ -81,9 +81,9 @@ reference3 = nil
 // Надрукує "Дмитро Клюшин деініціалізується"
 ```
 
-### Strong Reference Cycles Between Class Instances
+### Циклічні сильні посилання між екземплярами класів
 
-In the examples above, ARC is able to track the number of references to the new `Person` instance you create and to deallocate that `Person` instance when it is no longer needed.
+У прикладах вище, ARC дозволяє відслідковувати кількість посилань на новий екземпляр `Person` та деалокувати екземпляр `Person`, коли він більше не потрібен. 
 
 However, it is possible to write code in which an instance of a class never gets to a point where it has zero strong references. This can happen if two class instances hold a strong reference to each other, such that each instance keeps the other alive. This is known as a *strong reference cycle*.
 
