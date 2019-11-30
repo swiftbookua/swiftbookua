@@ -76,3 +76,4 @@
 + Призначений ініціалізатор - Designated initializer
 + Ініціалізатор для зручності - Convenience initializer
 + Обов'язковий ініціалізатор - Required initializer
++ Витік пам'яті - Memory leak [Вікіпедія](https://uk.wikipedia.org/wiki/Витік_пам%27яті)

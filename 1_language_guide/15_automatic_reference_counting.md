@@ -81,89 +81,91 @@ reference3 = nil
 // Надрукує "Дмитро Клюшин деініціалізується"
 ```
 
-### Циклічні сильні посилання між екземплярами класів
+### Цикли сильних посилань між екземплярами класів
 
 У прикладах вище, ARC дозволяє відслідковувати кількість посилань на новий екземпляр `Person` та деалокувати екземпляр `Person`, коли він більше не потрібен. 
 
-However, it is possible to write code in which an instance of a class never gets to a point where it has zero strong references. This can happen if two class instances hold a strong reference to each other, such that each instance keeps the other alive. This is known as a *strong reference cycle*.
+Однак, можливо написати код, у котрому екземпляр класу ніколи не добирається до точки, коли він має нуль сильних посилань. Це може статись, коли два екземпляри класу тримають сильні посилання один на одного, таким чином тримаючи один одного живим. Такі ситуації називають *циклами сильних посилань*.
 
-You resolve strong reference cycles by defining some of the relationships between classes as weak or unowned references instead of as strong references. This process is described in [Resolving Strong Reference Cycles Between Class Instances](15_automatic_reference_counting.md#Resolving-Strong-Reference-Cycles-Between-Class-Instances). However, before you learn how to resolve a strong reference cycle, it is useful to understand how such a cycle is caused.
+Цикли сильних посилань можна вирішити шляхом використання слабких (`weak`) чи безхазяйних (`unowned`) посилань замість сильних. Даний процес описаний у підрозділі [Вирішення циклів сильних посилань між екземплярами класів](15_automatic_reference_counting.md#Вирішення-циклів-сильних-посилань-між-екземплярами-класів). Однак, перед тим як вирішувати цикли сильних посилань, корисно зрозуміти, як такі цикли утворюються. 
 
-Here’s an example of how a strong reference cycle can be created by accident. This example defines two classes called `Person` and `Apartment`, which model a block of apartments and its residents:
+Ось приклад випадкового створення циклу сильних посилань. У даному прикладі оголошено два класи, `Person` та `Apartment`, котрі моделюють особу та її помешкання відповідно:
 
 ```swift
 class Person {
     let name: String
     init(name: String) { self.name = name }
     var apartment: Apartment?
-    deinit { print("\(name) is being deinitialized") }
+    deinit { print("\(name) деініціалізується") }
 }
  
 class Apartment {
     let unit: String
     init(unit: String) { self.unit = unit }
     var tenant: Person?
-    deinit { print("Apartment \(unit) is being deinitialized") }
+    deinit { print("Помешкання \(unit) деініціалізується") }
 }
 ```
 
-Every `Person` instance has a name property of type `String` and an optional apartment property that is initially nil. The apartment property is optional, because a person may not always have an apartment.
+Кожен екземпляр `Person` має властивість `name` типу `String` та опціональну властивість `apartment`, котра спершу дорівнює `nil`. Властивість `apartment` є опціональною, бо особа не завжди має помешкання. 
 
-Similarly, every `Apartment` instance has a `unit` property of type `String` and has an optional `tenant` property that is initially `nil`. The `tenant` property is optional because an apartment may not always have a `tenant`.
+Аналогічно, кожен екземпляр `Apartment` має властивість `unit` типу `String`, та опціональну властивість `tenant`, що спершу дорівнює `nil`. Властивість `tenant` є опціональним, бо помешкання не завжди має мешканця.
 
-Both of these classes also define a deinitializer, which prints the fact that an instance of that class is being deinitialized. This enables you to see whether instances of `Person` and `Apartment` are being deallocated as expected.
+Обидва цих класи мають ініціалізатори, котрі друкують повідомлення для підтвердження факту деініціалізації їх екземлярів. Це дозволяє бачити, чи дійсно екземпляри класів `Person` та `Apartment` деалокуються так, як ми цього очікуємо. 
 
-This next code snippet defines two variables of optional type called `john` and `unit4A`, which will be set to a specific `Apartment` and `Person` instance below. Both of these variables have an initial value of `nil`, by virtue of being optional:
+У наступному фрагмені коду оголошено дві змінні на ім'я `john` та `unit4A`, котрим будуть пізніше присвоєні конкретні екземпляри `Apartment` та `Person`. Обидві змінні автоматично ініціалізуються значенням `nil`, через свою опціональну природу. 
 
 ```swift
 var john: Person?
 var unit4A: Apartment?
 ```
 
-You can now create a specific `Person` instance and `Apartment` instance and assign these new instances to the `john` and `unit4A` variables:
+Тепер можна створити конкретні екземпляри класів `Person` та `Apartment` та присвоїти ці нові екземпляри змінним `john` та `unit4A`:
 
 ```swift
 john = Person(name: "John Appleseed")
 unit4A = Apartment(unit: "4A")
 ```
 
-Here’s how the strong references look after creating and assigning these two instances. The `john` variable now has a strong reference to the new `Person` instance, and the `unit4A` variable has a strong reference to the new `Apartment` instance:
+Ось як виглядають сильні посилання після створення та присвоєння цих двох екземплярів. Змінна `john` зараз тримає сильне посилання на новий екземпляр `Person`, а змінна `unit4A` – на екземпляр `Apartment`:
 
 ![](images/referenceCycle01_2x.png)
 ￼
-You can now link the two instances together so that the person has an apartment, and the apartment has a tenant. Note that an exclamation mark (`!`) is used to unwrap and access the instances stored inside the `john` and `unit4A` optional variables, so that the properties of those instances can be set:
+
+Тепер можна поєднати два екземпляри разом, так, щоб у особи було помешкання, а у помешкання - мешканець. Слід звернути увагу на знак оклику (`!`), котрий використовується для доступу до екземплярів, що зберігаються всередині опціональних змінних `john` та `unit4A`, таким чином дозволяючи звертатись до властивостей даних екземплярів:
 
 ```swift
 john!.apartment = unit4A
 unit4A!.tenant = john
 ```
 
-Here’s how the strong references look after you link the two instances together:
+Ось як виглядаються сильні посилання після поєднання двох екземплярів:
 
 ![](images/referenceCycle02_2x.png)
-￼
-Unfortunately, linking these two instances creates a strong reference cycle between them. The `Person` instance now has a strong reference to the `Apartment` instance, and the `Apartment` instance has a strong reference to the `Person` instance. Therefore, when you break the strong references held by the `john` and `unit4A` variables, the reference counts do not drop to zero, and the instances are not deallocated by ARC:
+
+￼Нажаль, поєднання двох екземплярів створює цикл сильних посилань між ними. Екземпляр `Person` тепер має сильне посилання на екземпляр `Apartment`, а він у свою чергу має сильне посилання на екземпляр `Person`. Більше того, якщо прибрати сильні посилання, що тримають змінні `john` та `unit4A`, лічильники посилань не знизяться до нуля, і дані екземпляри не будуть деалоковані ARC:
 
 ```swift
 john = nil
 unit4A = nil
 ```
 
-Note that neither deinitializer was called when you set these two variables to `nil`. The strong reference cycle prevents the `Person` and `Apartment` instances from ever being deallocated, causing a memory leak in your app.
+Жоден з деініціалізаторів не буде викликано при присвоєнні цим двом змінним значення `nil`. Цикл сильних посилань перешкоджає екземплярам `Person` та `Apartment` бути будь-коли деалокованими, спричиняючи витік пам'яті у даному додатку.
 
-Here’s how the strong references look after you set the `john` and `unit4A` variables to `nil`:
+Ось так виклядають сильні посилання після того, як змінним `john` та `unit4A` було присвоєно значення `nil`:
 
 ![](images/referenceCycle03_2x.png)
 ￼
-The strong references between the `Person` instance and the `Apartment` instance remain and cannot be broken.
 
-#### Resolving Strong Reference Cycles Between Class Instances
+Цикл сильних посилань між екземпляром `Person` та екземпляром `Apartment` житиме, і його ніяк не можна розв'язати.
 
-Swift provides two ways to resolve strong reference cycles when you work with properties of class type: weak references and unowned references.
+#### Вирішення циклів сильних посилань між екземплярами класів
 
-Weak and unowned references enable one instance in a reference cycle to refer to the other instance *without* keeping a strong hold on it. The instances can then refer to each other without creating a strong reference cycle.
+У Swift є два способи вирішувати цикли сильних посилань при роботі з властивостями типів-класів: слабкі посилання та безхазяйні посилання. 
 
-Use a weak reference when the other instance has a shorter lifetime — that is, when the other instance can be deallocated first. In the `Apartment` example above, it is appropriate for an apartment to be able to have no tenant at some point in its lifetime, and so a weak reference is an appropriate way to break the reference cycle in this case. In contrast, use an unowned reference when the other instance has the same lifetime or a longer lifetime.
+Слабкі та безхазяйні посилання дозволяють одному екземпляру в циклі посилатись на інший екземпляр *не утримуючи* його сильно. Екземпляри таким чином можуть посилатись один на одного не утворюючи при цьому циклу сильних посилань. 
+
+Слабкі посилання слід створювати тоді, коли інший екземпляр має коротший час існування; іншими словами, коли інший екземпляр може бути деалоковано раніше. У прикладі з помешканням вище, для помешкання нормально не мати мешканця в якийсь момент його існування, тому слабке посилання є доречним способом розірвати циклічне посилання у даному випадку. Безхазяйні посилання слід застосовувати у протилежних випадках: коли інший екземпляр має такий же або довший час існування.
 
 #### Weak References
 
