@@ -167,37 +167,37 @@ unit4A = nil
 
 Слабкі посилання слід створювати тоді, коли інший екземпляр має коротший час існування; іншими словами, коли інший екземпляр може бути деалоковано раніше. У прикладі з помешканням вище, для помешкання нормально не мати мешканця в якийсь момент його існування, тому слабке посилання є доречним способом розірвати циклічне посилання у даному випадку. Безхазяйні посилання слід застосовувати у протилежних випадках: коли інший екземпляр має такий же або довший час існування.
 
-#### Weak References
+#### Слабкі посилання
 
-A *weak reference* is a reference that does not keep a strong hold on the instance it refers to, and so does not stop ARC from disposing of the referenced instance. This behavior prevents the reference from becoming part of a strong reference cycle. You indicate a weak reference by placing the `weak` keyword before a property or variable declaration.
+*Слабим посиланням* є посилання, котре не тримається міцно за екземпляр, на котрий воно посилається, і таким  не заважає ARC деалокувати цей екземпляр. Така поведінка не дає посиланню стати частиною циклу сильних посилань. Слабкі посилання позначаються ключовим словом `weak` перед оголошенням змінної чи властивості. 
 
-Because a weak reference does not keep a strong hold on the instance it refers to, it is possible for that instance to be deallocated while the weak reference is still referring to it. Therefore, ARC automatically sets a weak reference to `nil` when the instance that it refers to is deallocated. And, because weak references need to allow their value to be changed to `nil` at runtime, they are always declared as variables, rather than constants, of an optional type.
+Оскільки слабкі посилання не трибаються міцно за свій екземпляр, стає можливою деалокація цього екземпляру доки слабке посилання все ще на нього посилається. Тому ARC автоматично присвоює слабкому посиланню значення `nil` під час деалокації екземпляру, на який воно посилається. І тому, оскільки слабкі посилання повинні дозволяти своєму значенню змінитись на  `nil` під час виконання, вони завжди оголошуються як змінні, а не як константи, і завжди мають опціональний тип.
 
-You can check for the existence of a value in the weak reference, just like any other optional value, and you will never end up with a reference to an invalid instance that no longer exists.
+При зверненні до слабкого посилання слід завжди перевіряти, чи існує його значення, так само як і при зверненні будь-якого іншого опціонального значення. Це дозволить запобігти зверненню до екземпляру, котрого вже не існує. 
 
 > **Примітка**
-> 
-> Property observers aren’t called when ARC sets a weak reference to `nil`.
+>
+> Коли ARC присвоює слабкій властивості значення `nil`, спостерігачі за цією властивістю не викликаються.
 
-The example below is identical to the `Person` and `Apartment` example from above, with one important difference. This time around, the `Apartment` type’s `tenant` property is declared as a weak reference:
+Прикладі нижче є майже ідентичним до прикладу про `Person` та `Apartment` вище, однак має одну важливу відмінність. Цього разу, властивість `tenant` класу `Apartment` оголошено слабкою:
 
 ```swift
 class Person {
     let name: String
     init(name: String) { self.name = name }
     var apartment: Apartment?
-    deinit { print("\(name) is being deinitialized") }
+    deinit { print("\(name) деініціалізується") }
 }
  
 class Apartment {
     let unit: String
     init(unit: String) { self.unit = unit }
     weak var tenant: Person?
-    deinit { print("Apartment \(unit) is being deinitialized") }
+    deinit { print("Помешкання \(unit) деініціалізується") }
 }
 ```
 
-The strong references from the two variables (john and unit4A) and the links between the two instances are created as before:
+Сильні посилання з двох змінних (`john` та `unit4A`) та зв'язки між цими двома екземплярами створюються так само, як і раніше:
 
 ```swift
 var john: Person?
@@ -210,43 +210,43 @@ john!.apartment = unit4A
 unit4A!.tenant = john
 ```
 
-Here’s how the references look now that you’ve linked the two instances together:
+Ось як тепер виклядаються посилання після зв'язування цих екземплярів разом:
 
 ![](images/weakReference01_2x.png)
 ￼
-The `Person` instance still has a strong reference to the `Apartment` instance, but the `Apartment` instance now has a *weak* reference to the `Person` instance. This means that when you break the strong reference held by the `john` variable by setting it to `nil`, there are no more strong references to the `Person` instance:
+Клас `Person` все ще має сильне посилання на екземпляр `Apartment`, однак екземпляр `Apartment` тепер має *слабке* посилання на екземпляр `Person`. Це означає, що при розірванні сильного посилання внаслідок присвоєнні змінній `john` значення `nil`, більше не залишиться сильних посилань на екземпляр `Person`:
 
 ```swift
 john = nil
-// Надрукує "John Appleseed is being deinitialized"
+// Надрукує "John Appleseed деініціалізується"
 ```
 
-Because there are no more strong references to the `Person` instance, it is deallocated and the `tenant` property is set to `nil`:
+Оскільки більше немає сильних посилань на екземпляр `Person`, його буде деалоковано і властивості `tenant` буде задано значення `nil`:
 
 ![](images/weakReference02_2x.png)
-￼
-The only remaining strong reference to the `Apartment` instance is from the `unit4A` variable. If you break that strong reference, there are no more strong references to the `Apartment` instance:
+
+￼Тепер єдиним сильним посиланням на екземпляр `Apartment` лишається змінна `unit4A`. Якщо його розірвати, більше не залишиться сильних посилань на екземпляр `Apartment`:
 
 ```swift
 unit4A = nil
-// Надрукує "Apartment 4A is being deinitialized"
+// Надрукує "Помешкання 4A деініціалізується"
 ```
 
-Because there are no more strong references to the Apartment instance, it too is deallocated:
+Оскільки більше не залишилось сильних посилань на екземпляр `Apartment`, його теж буде деалоковано:
 
 ![](images/weakReference03_2x.png)
 ￼
 > **Примітка**
-> 
-> In systems that use garbage collection, weak pointers are sometimes used to implement a simple caching mechanism because objects with no strong references are deallocated only when memory pressure triggers garbage collection. However, with ARC, values are deallocated as soon as their last strong reference is removed, making weak references unsuitable for such a purpose.
+>
+> У системах з прибиранням сміття, слабкі посиланні іноді використовуються для реалізації простого механізму кешування: там об'єкти, на які немає сильних посилань, деалокуються лише тоді, коли при закінченні пам'яті в системі буде розпочато збірку сміття. Однак, при роботі з ARC, значення деалокуються одразу як тільки вони втрачають останнє сильне посилання, і тому створення слабких посилань не підходить для даної цілі. 
 
-#### Unowned References
+#### Безхазяйні посилання
 
-Like a weak reference, an *unowned reference* does not keep a strong hold on the instance it refers to. Unlike a weak reference, however, an unowned reference is used when the other instance has the same lifetime or a longer lifetime. You indicate an unowned reference by placing the `unowned` keyword before a property or variable declaration.
+Як і слабкі посилання, *безхазяйні посилання* не тримаються міцно за екземпляр, на котрий вони посилаються. Але на відміну від слабких посилань, безхазяйні посилання використовуються тоді, коли час життя іншого екземпляру такий же, як і наш, або довший. Безхазяйні посилання позначаються ключовим словом `unowned` перед оголошенням змінної чи властивості. 
 
-An unowned reference is expected to always have a value. As a result, ARC never sets an unowned reference’s value to `nil`, which means that unowned references are defined using nonoptional types.
+Вважається, що безхазяйне посилання завжди має значення. Як результат, ARC ніколи не присвоює безхазяйному посиланню значення `nil`, що значить, що безхазяйні посилання можуть мати неопціональний тип.
 
-> **Important**
+> **Важливо**
 > 
 > Use an unowned reference only when you are sure that the reference *always refers* to an instance that has not been deallocated.
 > 
