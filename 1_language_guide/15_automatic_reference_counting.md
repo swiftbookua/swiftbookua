@@ -247,18 +247,18 @@ unit4A = nil
 Вважається, що безхазяйне посилання завжди має значення. Як результат, ARC ніколи не присвоює безхазяйному посиланню значення `nil`, що значить, що безхазяйні посилання можуть мати неопціональний тип.
 
 > **Важливо**
-> 
-> Use an unowned reference only when you are sure that the reference *always refers* to an instance that has not been deallocated.
-> 
-> If you try to access the value of an unowned reference after that instance has been deallocated, you’ll get a runtime error.
+>
+> Слід користуватись безхазяйними посиланнями лише при повній впевненості у тому, що вони *завжди посилаються* на екземпляр, котрий не було деалоковано. 
+>
+> Спроба доступу до значення безхазяйного посилання після деалокації екземпляру призведе до помилки часу виконання. 
 
-The following example defines two classes, `Customer` and `CreditCard`, which model a bank customer and a possible credit card for that customer. These two classes each store an instance of the other class as a property. This relationship has the potential to create a strong reference cycle.
+У наступному прикладі оголошено два класи, `Customer` та `CreditCard`, що моделюють клієнта банку та кредитну картку цього клієнта. Обидва ці класи зберігають посилання на екземпляр іншого класу як властивість. Цей зв'язок потенційно може створити цикл сильних посилань. 
 
-The relationship between `Customer` and `CreditCard` is slightly different from the relationship between `Apartment` and `Person` seen in the weak reference example above. In this data model, a customer may or may not have a credit card, but a credit card will *always* be associated with a customer. A `CreditCard` instance never outlives the `Customer` that it refers to. To represent this, the `Customer` class has an optional `card` property, but the `CreditCard` class has an unowned (and nonoptional) `customer` property.
+Зв'язок між екземплярами `Customer` та `CreditCard` дещо відрізняється від зв'язку між екземплярами `Apartment` та `Person` у вигляді слабкого посилання з прикладу вище. У даній моделі даних, клієнт може мати або не мати крединту картку, однак кредитна картка є *зважди* асоційованою з клієнтом. Екземляр `CreditCard` ніколи не переживе екземпляр `Customer`, на який він посилається. Щоб представити це, клас `Customer` має опціональну властивість `card`, а клас `CreditCard` має безхазяйну (і неопціональну) властивість `customer`.
 
-Furthermore, a new `CreditCard` instance can *only* be created by passing a `number` value and a `customer` instance to a custom `CreditCard` initializer. This ensures that a `CreditCard` instance always has a `customer` instance associated with it when the `CreditCard` instance is created.
+Більше того, новий екземпляр `CreditCard` може бути створеним *лише* за допомогою передачі значення номера картки `number` та екземпляру  `Customer` до ініціалізатора `CreditCard`. Це гарантує, що екземпляр `CreditCard` після створення завжди має асоційований екземпляр `Customer`.
 
-Because a credit card will always have a `customer`, you define its customer property as an unowned reference, to avoid a strong reference cycle:
+Оскільки кредитна картка завжди має клієнта, з метою уникнення циклу сильних посилань властивість `customer` оголошено як безхазяйне посилання:
 
 ```swift
 class Customer {
@@ -267,7 +267,7 @@ class Customer {
     init(name: String) {
         self.name = name
     }
-    deinit { print("\(name) is being deinitialized") }
+    deinit { print("\(name) деініціалізується") }
 }
  
 class CreditCard {
@@ -277,19 +277,21 @@ class CreditCard {
         self.number = number
         self.customer = customer
     }
-    deinit { print("Card #\(number) is being deinitialized") }
+    deinit { print("Картка #\(number) деініціалізується") }
 }
 ```
 
 > **Примітка**
-> 
-> The `number` property of the `CreditCard` class is defined with a type of `UInt64` rather than `Int`, to ensure that the number property’s capacity is large enough to store a 16-digit card number on both 32-bit and 64-bit systems.
+>
+> Властивість `number` класу `CreditCard` оголошується з типом `UInt64` замість `Int` для того, щоб гарантувати, що місткості властивості `number` достатньо для зберігання 16-значного номера кредитної картки як на 32-бітних, так і на 64-бітних системах.
 
-This next code snippet defines an optional `Customer` variable called `john`, which will be used to store a reference to a specific customer. This variable has an initial value of `nil`, by virtue of being optional:
+У наступному фрагменті коду оголошено опціональну змінну типу `Customer` на ім'я `john`, котра буде використовуватись для зберігання певного клієнта. Дана змінна має початкове значення `nil` через свою опціональну природу:
 
 ```swift
 var john: Customer?
 ```
+
+Тепер можна створити екземпляр `Customer`, та використати його для інціалізації нового екземпляру `CreditCard`, і після чого одразу зберегти його в 
 
 You can now create a `Customer` instance, and use it to initialize and assign a new `CreditCard` instance as that customer’s `card` property:
 
