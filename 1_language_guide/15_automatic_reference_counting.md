@@ -291,54 +291,51 @@ class CreditCard {
 var john: Customer?
 ```
 
-Тепер можна створити екземпляр `Customer`, та використати його для інціалізації нового екземпляру `CreditCard`, і після чого одразу зберегти його в 
-
-You can now create a `Customer` instance, and use it to initialize and assign a new `CreditCard` instance as that customer’s `card` property:
+Тепер можна створити екземпляр `Customer`, та використати його для інціалізації нового екземпляру `CreditCard`, і після чого одразу зберегти його у властивості `card`:
 
 ```swift
 john = Customer(name: "John Appleseed")
 john!.card = CreditCard(number: 1234_5678_9012_3456, customer: john!)
 ```
 
-Here’s how the references look, now that you’ve linked the two instances:
+Ось як виклядають посилання після поєднання двох екземплярів:
 ￼
 ![](images/unownedReference01_2x.png)
 
-The `Customer` instance now has a strong reference to the `CreditCard` instance, and the `CreditCard` instance has an unowned reference to the `Customer` instance.
+Екземпляр `Customer` тепер має сильне посилання на екземпляр `CreditCard`, а екземпляр `CreditCard` має безхазяйне посилання на екземпляр `Customer`.
 
-Because of the unowned `customer` reference, when you break the strong reference held by the `john` variable, there are no more strong references to the `Customer` instance:
+Оскільки посилання `customer` є безхазяйним, якщо прибрати сильне посилання змінної `john`, більше не залишиться посилань на екземпляр `Customer`:
 
 ![](images/unownedReference02_2x.png)
-￼
-Because there are no more strong references to the `Customer` instance, it is deallocated. After this happens, there are no more strong references to the `CreditCard` instance, and it too is deallocated:
+￼Оскільки більше нема сильних посилань на екземпляр `Customer`, його буде деалоковано. Після того, як це відбудеться, не залишиться більше сильних і на екземпляр `CreditCard`, і його також буде деалоковано:
 
 ```swift
 john = nil
-// Надрукує "John Appleseed is being deinitialized"
-// Надрукує "Card #1234567890123456 is being deinitialized"
+// Надрукує "John Appleseed деініціалізується"
+// Надрукує "Картка #1234567890123456 деініціалізується"
 ```
 
-The final code snippet above shows that the deinitializers for the `Customer` instance and `CreditCard` instance both print their “deinitialized” messages after the `john` variable is set to `nil`.
+Останній фрагмент коду демонструє, що деініціалізатори екземплярів `Customer` та `CreditCard` викликаються та друкують їх повідомлення про деініціалізацію як тільки змінній `john` присвоєно значення `nil`.
 
 > **Примітка**
-> 
-> The examples above show how to use *safe* unowned references. Swift also provides unsafe unowned references for cases where you need to disable runtime safety checks—for example, for performance reasons. As with all unsafe operations, you take on the responsiblity for checking that code for safety.
-> 
-> You indicate an unsafe unowned reference by writing `unowned(unsafe)`. If you try to access an unsafe unowned reference after the instance that it refers to is deallocated, your program will try to access the memory location where the instance used to be, which is an unsafe operation.
+>
+> Приклади вище показують, як *безпечно* користуватись безхазяйними посиланнями. Swift також дає можливість користуватись небезпечними безхазяйними посиланнями для випадків, коли потрібно вимкнути перевірки безпеки часу виконання, наприклад, з метою оптимізації швидкодії. Як і з усіма небезпечними операціями, ви берете відповідальність перевірки даного коду на безпечність. 
+>
+> Небезпечні безхазяйні посилання позначаються за допомогою `unowned(unsafe)`. При спробі доступу до небезпечного безхазяйного посилання після деалокації екземпляру, на який воно посилається, програма спробує доступитись до регіону пам'яті, в якому раніше розташовувався екземпляр, що є небезпечною операцією. 
 
-#### Unowned References and Implicitly Unwrapped Optional Properties
+#### Безхазяйні посилання та Опціональні властивості, що розгортаються неявно
 
-The examples for weak and unowned references above cover two of the more common scenarios in which it is necessary to break a strong reference cycle.
+У прикладах зі слабкими та безхазяйними посиланнями вище розглядаються два найбільше частих сценарії, а яких потрібно розривати цикли сильних посилань. 
 
-The `Person` and `Apartment` example shows a situation where two properties, both of which are allowed to be `nil`, have the potential to cause a strong reference cycle. This scenario is best resolved with a weak reference.
+Приклад з `Person` та `Apartment` показує ситуацію, в котрій дві властивості, обидві з яких можуть мати значення `nil`, можуть потенційно утворити цикл сильних посилань. Цей сценарій краще за все вирішується за допомогою слабкого посилання. 
 
-The `Customer` and `CreditCard` example shows a situation where one property that is allowed to be `nil` and another property that cannot be `nil` have the potential to cause a strong reference cycle. This scenario is best resolved with an unowned reference.
+Приклад з `Customer` та `CreditCard` показує ситуацію, де одна властивість може мати значення `nil`, а інша - ні, і ці властивості можуть потенційно утворити цикл сильних посилань. Цей сценарій найкраще вирішується за допомогою безхазяйного посилання. 
 
-However, there is a third scenario, in which *both* properties should always have a value, and neither property should ever be `nil` once initialization is complete. In this scenario, it is useful to combine an unowned property on one class with an implicitly unwrapped optional property on the other class.
+Однак, існує третій сценарій, в якому *обидві* властивості повинні мати значення, і жодна з них не може мати значення `nil` після завершення ініціалізації. В цьому сценарії, доречно скомбінувати безхазяйну властивосіть в одному класі з опціональною властивістю, що розгортається неявно в іншому класі. 
 
-This enables both properties to be accessed directly (without optional unwrapping) once initialization is complete, while still avoiding a reference cycle. This section shows you how to set up such a relationship.
+Це дозволяє звертатись до обох властивостей прямо (без розгортання опціоналу) після завершення ініціалізації, при цьому уникаючи циклу сильних посилань. Даний підрозділ демонструє, як налаштувати такий взаємозв'язок. 
 
-The example below defines two classes, `Country` and `City`, each of which stores an instance of the other class as a property. In this data model, every country must always have a capital city, and every city must always belong to a country. To represent this, the `Country` class has a `capitalCity` property, and the `City` class has a `country` property:
+У прикладі нижче оголошено два класи, `Country` та `City`, котрі моделюють країну та місто відповідно, при цьому кожен з цих класів своєю властивістю посилається на екземпляр іншого класу. У цій моделі даних, кожна країна повинна мати місто-столицю, а кожна місто повинно належати якійсь країні. Щоб відобразити це, клас `Country` містить властивість `capitalCity`, а клас `City` має властивість `country`:
 
 ```swift
 class Country {
@@ -360,36 +357,34 @@ class City {
 }
 ```
 
-To set up the interdependency between the two classes, the initializer for `City` takes a `Country` instance, and stores this instance in its `country` property.
+Щоб налаштувати взаємозв'язок між двома класами, ініціалізатор класу `City` приймає екземпляр класу `Country`, і зберігає його у своїй властивості `country`.
 
-The initializer for `City` is called from within the initializer for `Country`. However, the initializer for `Country` cannot pass self to the `City` initializer until a new `Country` instance is fully initialized, as described in [Two-Phase Initialization](13_initialization.md#Two-Phase-Initialization).
+Ініціалізатор класу `City` викликається всередині ініціалізатору класу `Country`. Однак, ініціалізатор класу `Country` не може передати `self` до ініціалізатору класу `City` допоки екземпляр класу `Country` не буде повністю ініціалізовано, як описано в підрозділі [Двофазна ініціалізація](13_initialization.md#Двофазна-ініціалізація).
 
-To cope with this requirement, you declare the `capitalCity` property of `Country` as an implicitly unwrapped optional property, indicated by the exclamation mark at the end of its type annotation (`City!`). This means that the `capitalCity` property has a default value of `nil`, like any other optional, but can be accessed without the need to unwrap its value as described in [Implicitly Unwrapped Optionals](0_the_basics.md#Implicitly-Unwrapped-Optionals).
+Щоб справитись із цією вимогою, властивість `capitalCity` класу `Country` оголошено як опціонал, що розгортається неявно, що позначається за допомогою знаку оклику в кінці анотації типу (`City!`). Це означає, що властивість `capitalCity` має значення за замовчанням `nil`, як і будь-який інший опціонал, але до неї можна звертатись без розгортання її значення, як описано в підрозділі [Опціонали, що розгортаються неявно](0_the_basics.md#Опціонали,-що-розгортаються-неявно).
 
-Because `capitalCity` has a default `nil` value, a new `Country` instance is considered fully initialized as soon as the `Country` instance sets its name property within its initializer. This means that the `Country` initializer can start to reference and pass around the implicit `self` property as soon as the `name` property is set. The `Country` initializer can therefore pass `self` as one of the parameters for the `City` initializer when the `Country` initializer is setting its own capitalCity property.
+Оскільки властивість`capitalCity` має значення за замовчанням `nil`, новий екземпляр `Country` вважається повністю проініціалізованим, як тільки його властивості `name` присвоєно значення всередині ініціалізатора. Це означає, що ініціалізатор класу `Country` може починати посилатись на властивість `self` та передавати її далі, як тільки властивості `name` було задано початкове значення. Таким чином ініціалізатор класу `Country` може передавати `self` як один з параметрів ініціалізатора класу `City` при ініціалізації властивості `capitalCity`.
 
-All of this means that you can create the `Country` and `City` instances in a single statement, without creating a strong reference cycle, and the `capitalCity` property can be accessed directly, without needing to use an exclamation mark to unwrap its optional value:
+Все це означає, що можна створити екземпляри класів `Country` та `City` єдиною інструкцією, без створення циклу сильних посилань, і до властивості `capitalCity` можна звертатись прямо, без необхідності використання знаку оклуки для розгортання опціоналу:
 
 ```swift
-var country = Country(name: "Canada", capitalName: "Ottawa")
-print("\(country.name)'s capital city is called \(country.capitalCity.name)")
-// Надрукує "Canada's capital city is called Ottawa"
+var country = Country(name: "Україна", capitalName: "Київ")
+print("Столиця країни \(country.name) має назву \(country.capitalCity.name).")
+// Надрукує "Столиця країни Україна має назву Київ."
 ```
 
-In the example above, the use of an implicitly unwrapped optional means that all of the two-phase class initializer requirements are satisfied. The `capitalCity` property can be used and accessed like a nonoptional value once initialization is complete, while still avoiding a strong reference cycle.
+У прикладі вище, використання опціоналів, що розгортаються неявно, дозволяє задовільнити всі вимоги двофазної ініціалізації класу. До властивості `capitalCity` тепер можна звертатись як і до неопціонального значення після завершення ініціалізації, при цьому уникаючи циклу сильних посилань.
 
-### Сильні циклічні посилання в замиканнях
-### Strong Reference Cycles for Closures
+### Цикли сильних посилань із замиканнями
+Вище ми бачили як цикли сильних посилань можуть утворюватись, коли дві властивості екземплярів класів тримають сильні посилання одна на одну. Ми також бачили, як слабкі та безхазяйні посилання допомагають розірвати ці цикли сильних посилань. 
 
-You saw above how a strong reference cycle can be created when two class instance properties hold a strong reference to each other. You also saw how to use weak and unowned references to break these strong reference cycles.
+Цикли сильних посилань можуть також утворюватись, якщо присвоїти замикання властивості екземпляру класу, і якщо тіло цього замикання захоплює даний екземпляр. Це може статись через те, що тіло замикання звертається до властивості екземпляру, наприклад, `self.someProperty`, або через виклик методу екземпляру, як, наприклад, `self.someMethod()`. В обох випадках, ці звернення змушують замикання “захопити” `self`, утворюючи цикл сильних посилань. 
 
-A strong reference cycle can also occur if you assign a closure to a property of a class instance, and the body of that closure captures the instance. This capture might occur because the closure’s body accesses a property of the instance, such as `self.someProperty`, or because the closure calls a method on the instance, such as `self.someMethod()`. In either case, these accesses cause the closure to “capture” `self`, creating a strong reference cycle.
+Ці цикли сильних посилань утворюють тому, що замикання, як і класи, є *типами-посиланнями*. Якщо присвоїти замикання властивості, присвоюється посилання на цю властивість. У сутності, це та ж само проблема, що й вище: два сильних посилання тримають одне одного живими. Однак, в цьому випадку не два екземпляри класів, а екземпляр класу та замикання тримають один одного живими.  
 
-This strong reference cycle occurs because closures, like classes, are *reference* types. When you assign a closure to a property, you are assigning a *reference* to that closure. In essence, it’s the same problem as above — two strong references are keeping each other alive. However, rather than two class instances, this time it’s a class instance and a closure that are keeping each other alive.
+У Swift є елегантне вирішення даної проблеми, механізм, що носить назву *список захоплення замикання*. Однак, перед тим, як ознайомитись з тим, як список захоплення замикання допомагає розірвати цикл сильних посилань, варто краще зрозуміти, як такі цикли утворюються. 
 
-Swift provides an elegant solution to this problem, known as a *closure capture list*. However, before you learn how to break a strong reference cycle with a closure capture list, it is useful to understand how such a cycle can be caused.
-
-The example below shows how you can create a strong reference cycle when using a closure that references `self`. This example defines a class called `HTMLElement`, which provides a simple model for an individual element within an HTML document:
+У прикладі нижче показано, як можна створити цикл сильних посилань внаслідок посилань замикання на `self`. У даному прикладі оголошено клас на ім'я `HTMLElement`, що представляє просту модель окремого елементу всередині документу HTML:
 
 ```swift
 class HTMLElement {
@@ -411,39 +406,39 @@ class HTMLElement {
     }
     
     deinit {
-        print("\(name) is being deinitialized")
+        print("\(name) деініціалізовується")
     }
     
 }
 ```
 
-The `HTMLElement` class defines a name property, which indicates the name of the element, such as `"h1"` for a heading element, `"p"` for a paragraph element, or `"br"` for a line break element. `HTMLElement` also defines an optional `text` property, which you can set to a string that represents the text to be rendered within that HTML element.
+У класі `HTMLElement` визначено властивість `name`, котра представляє назву елементу, таку як `"h1"`  для заголовка, `"p"` для абзацу, чи `"br"` для розриву рядка. У класі `HTMLElement` також визначего опціональну властивість `text`, котрій можна присвоїти рядок, що представляє текст всередині даного елементу HTML.
 
-In addition to these two simple properties, the `HTMLElement` class defines a lazy property called `asHTML`. This property references a closure that combines `name` and `text` into an HTML string fragment. The `asHTML` property is of type `() -> String`, or “a function that takes no parameters, and returns a `String` value”.
+Окрім цих двох простих властивостей, клас `HTMLElement` визначає ліниву властивість на ім'я `asHTML`. Як влстивість посилається за замикання, що поєднує значення `name` та `text` у рядок із фрагментом HTML. Властивість `asHTML` має тип `() -> String`, або “функція, що не приймає параметрів, та повертає значення типу `String`”.
 
-By default, the `asHTML` property is assigned a closure that returns a string representation of an HTML tag. This tag contains the optional `text` value if it exists, or no text content if `text` does not exist. For a paragraph element, the closure would return `"<p>some text</p>"` or `"<p />"`, depending on whether the text property equals `"some text"` or `nil`.
+За замовчанням, властивості `asHTML` присвоюється замикання, що повертає рядок з текстовим представленням тегу HTML. Цей тег містить опціональне значення `text`, якщо вого існує, або не містить контенту, якщо `text` дорівнює `nil`. Для елементу-абзацу, замикання поверне `"<p>якийсь текст</p>"` або `"<p />"`, в залежності, яке значення має властивість `text`,  `"якийсь текст"` чи `nil`.
 
-The `asHTML` property is named and used somewhat like an instance method. However, because `asHTML` is a closure property rather than an instance method, you can replace the default value of the `asHTML` property with a custom closure, if you want to change the HTML rendering for a particular HTML element.
+Властивість `asHTML` називається і використовується так, неначе вона є різновидом методу екземпляру. Однак, оскільки `asHTML` є властивістю-замиканням а не методом екземпляру, можна замінити її значення за замовчанням іншим замиканням, якщо для конкретного елементу HTML потрібно замінити спосіб його відображення на текст. 
 
-For example, the `asHTML` property could be set to a closure that defaults to some text if the `text` property is `nil`, in order to prevent the representation from returning an empty HTML tag:
+Наприклад, властивості `asHTML` можна присвоїти замикання, що вставляє значення за замовчанням, коли властивість `text` дорівнює `nil`, щоб запобігти відображенню елементу в порожній тег HTML:
 
 ```swift
 let heading = HTMLElement(name: "h1")
-let defaultText = "some default text"
+let defaultText = "якийсь текст за замовчанням"
 heading.asHTML = {
     return "<\(heading.name)>\(heading.text ?? defaultText)</\(heading.name)>"
 }
 print(heading.asHTML())
-// Надрукує "<h1>some default text</h1>"
+// Надрукує "<h1>якийсь текст за замовчанням</h1>"
 ```
 
 > **Примітка**
-> 
-> The `asHTML` property is declared as a lazy property, because it is only needed if and when the element actually needs to be rendered as a string value for some HTML output target. The fact that `asHTML` is a lazy property means that you can refer to `self` within the default closure, because the lazy property will not be accessed until after initialization has been completed and `self` is known to exist.
+>
+> Властивість `asHTML` оголошено як ліниву властивість, тому що вона потрібна лише тоді і лише в той момент, коли елемент потрібно відобразити в рядок із HTML. Той факт, що `asHTML` є лінивою властивістю, дає можливість звертатись до `self` всередині замикання: до лінивої властивості не можна звертатись до завершення іінціалізації, і до початку існування `self`. 
 
-The `HTMLElement` class provides a single initializer, which takes a `name` argument and (if desired) a `text` argument to initialize a new element. The class also defines a deinitializer, which prints a message to show when an `HTMLElement` instance is deallocated.
+Клас `HTMLElement` має єдиний ініціалізатор, котрий приймає аргументи `name` та (якщо потрібно) `text` для ініціалізації нового елемента. Цей клас також має деініціалізатор, котрий друкує повідомлення в момент деалокації екземпляру `HTMLElement`.
 
-Here’s how you use the `HTMLElement` class to create and print a new instance:
+Ось так створюється новий екземпляр `HTMLElement` та друкується його HTML представлення:
 
 ```swift
 var paragraph: HTMLElement? = HTMLElement(name: "p", text: "hello, world")
@@ -453,67 +448,66 @@ print(paragraph!.asHTML())
 
 > **Примітка**
 > 
-> The paragraph variable above is defined as an *optional* `HTMLElement`, so that it can be set to nil below to demonstrate the presence of a strong reference cycle.
+> Змінну `paragraph` вище оголошено як *опціональний* `HTMLElement`, щоб їй можна було присвоїти значення `nil` та продемонструвати присутність циклу сильних посилань. 
 
-Unfortunately, the `HTMLElement` class, as written above, creates a strong reference cycle between an `HTMLElement` instance and the closure used for its default `asHTML` value. Here’s how the cycle looks:
+Нажаль, оголошений вище клас `HTMLElement` створює цикл сильних посилань між екземпляром `HTMLElement` та замиканням, що використовується як значення властивості `asHTML` за замовчанням. Ось як виглядає цей цикл:
 
 ![](images/closureReferenceCycle01_2x.png)
-￼
-The instance’s `asHTML` property holds a strong reference to its closure. However, because the closure refers to `self` within its body (as a way to reference `self.name` and `self.text`), the closure *captures* `self`, which means that it holds a strong reference back to the `HTMLElement` instance. A strong reference cycle is created between the two. (For more information about capturing values in a closure, see [Capturing Values](6_closures.md#Capturing-Values).)
+Властивість екземпляру `asHTML` тримає сильне посилання на замикання. Однак, оскільки замикання посилається на `self` у своєму тілі (посилаючись до властивостей `self.name` та `self.text`), замикання  *захоплює* `self`, внаслідок чого утворюється сильне посилання на екземпляр `HTMLElement`. В результаті утворюється цикл сильних посилань між екземпляром та замиканням. (Детальніше із захопленням значень можна ознайомитись у підрозділі [Захоплення значень](6_closures.md#Захоплення-значень).)
 
 > **Примітка**
-> 
-> Even though the closure refers to `self` multiple times, it only captures one strong reference to the `HTMLElement` instance.
+>
+> Хоча замикання і звертається до `self` кілька разів, воно захоплює лише одне сильне посилання на екземпляр`HTMLElement`.
 
-If you set the `paragraph` variable to `nil` and break its strong reference to the `HTMLElement` instance, neither the `HTMLElement` instance nor its closure are deallocated, because of the strong reference cycle:
+Якщо присвоїти змінній `paragraph` значення `nil` і таким чином прибрати сильне посилання на екземпляр `HTMLElement`, ані екземпляр `HTMLElement` ані його замикання не буде деалоковано через цикл сильних посилань:
 
 ```swift
 paragraph = nil
 ```
 
-Note that the message in the `HTMLElement` deinitializer is not printed, which shows that the `HTMLElement` instance is not deallocated.
+Слід помітити, що жодного повідомлення про деініціалізацію `HTMLElement`  не буде надруковано, що демонструє, що екземпляр  `HTMLElement`не було деалоковано.
 
-### Resolving Strong Reference Cycles for Closures
+### Боротьба з циклами сильних посилань із замиканнями
 
-You resolve a strong reference cycle between a closure and a class instance by defining a *capture list* as part of the closure’s definition. A capture list defines the rules to use when capturing one or more reference types within the closure’s body. As with strong reference cycles between two class instances, you declare each captured reference to be a weak or unowned reference rather than a strong reference. The appropriate choice of weak or unowned depends on the relationships between the different parts of your code.
+Розірвати цикл сильних посилань між замиканням та екземпляром класу можна за допомогою *списку захоплення* в оголошенні замикання. Список захоплення визначає правила захоплення одного чи кількох типів-значень тілом замикання. Як і з циклами сильних посилань між двома екземплярами класів, кожне захоплене посилання оголошується слабким чи безхазяйним замість того, щоб бути сильним. Доречний вибір слабкого чи безхазяйного виду посилання визначається відношеннями між різними частинами коду. 
 
 > **Примітка**
-> 
-> Swift requires you to write `self.someProperty` or `self.someMethod()` (rather than just `someProperty` or `someMethod()`) whenever you refer to a member of `self` within a closure. This helps you remember that it’s possible to capture `self` by accident.
+>
+> Swift зобов'язує писати `self.someProperty` та `self.someMethod()`(замість просто  `someProperty` та `someMethod()`) щоразу при звертанні до члену `self` всередині замикання. Це допомагає пам'ятати про можливість випадкового захоплення `self`.
 
-#### Defining a Capture List
+#### Оголошення списку захоплення
 
-Each item in a capture list is a pairing of the `weak` or `unowned` keyword with a reference to a class instance (such as `self`) or a variable initialized with some value (such as `delegate = self.delegate!`). These pairings are written within a pair of square braces, separated by commas.
+Кожен елемент у списку захоплення є парою, котра складається з ключового слова `weak` або `unowned`, та посилання на екземпляр класу (як, наприклад, `self`) чи змінної, що ініціалізовується якимось значенням (як, наприклад, `delegate = self.delegate!`). Ці пари записуються всередині квадратних дужок і розділяються комами. 
 
-Place the capture list before a closure’s parameter list and return type if they are provided:
+Список захоплення має розміщуватись перед списком параметрів та типом, що повертається, якщо вони вказані: 
 
 ```swift
 lazy var someClosure: (Int, String) -> String = {
     [unowned self, weak delegate = self.delegate!] (index: Int, stringToProcess: String) -> String in
-    // closure body goes here
+    // тут йде тіло замикання
 }
 ```
 
-If a closure does not specify a parameter list or return type because they can be inferred from context, place the capture list at the very start of the closure, followed by the `in` keyword:
+Якщо в замиканні список параметрів чи тип, що повертається, можуть бути виведені з контексту і тому пропущені, список замикань слід вказувати одразу на початку замикання, а після нього вказувати ключове слово `in`:
 
 ```swift
 lazy var someClosure: () -> String = {
     [unowned self, weak delegate = self.delegate!] in
-    // closure body goes here
+    // тут йде тіло замикання
 }
 ```
 
-#### Weak and Unowned References
+#### Слабкі та безхазяйні посилання
 
-Define a capture in a closure as an unowned reference when the closure and the instance it captures will always refer to each other, and will always be deallocated at the same time.
+Слід оголошувати захоплення в замиканні безхазяйним, якщо замикання та екземпляр, що захоплюється, завжди посилатимуться один на одного, і будуть деалоковані одночасно. 
 
-Conversely, define a capture as a weak reference when the captured reference may become `nil` at some point in the future. Weak references are always of an optional type, and automatically become `nil` when the instance they reference is deallocated. This enables you to check for their existence within the closure’s body.
+І навпаки, слід оголошувати захоплення слабким, коли захоплене посилання може набути значення `nil` в якийсь момент у майбутньому. Слабкі посилання завжди мають опціональний тип, і автоматично набувають значення `nil`, коли екземпляр, на який вони посилаються, деалоковано. Це дозволяє перевіряти, чи існує екземпляр, в тілі замикання. 
 
 > **Примітка**
-> 
-> If the captured reference will never become `nil`, it should always be captured as an unowned reference, rather than a weak reference.
+>
+> Якщо захоплене посилання ніколи не набуде значення `nil`, його завжди слід захоплювати як безхазяйне посилання, а не слабке посилання. 
 
-An unowned reference is the appropriate capture method to use to resolve the strong reference cycle in the `HTMLElement` example from earlier. Here’s how you write the `HTMLElement` class to avoid the cycle:
+Безхазяйне посилання є доречним способом захоплення для того, щоб розірвати цикл сильних посилань у попередньому прикладі з `HTMLElement`. Ось як можна переписати клас `HTMLElement`, уникаючи циклу сильних посилань:
 
 ```swift
 class HTMLElement {
@@ -542,9 +536,9 @@ class HTMLElement {
 }
 ```
 
-This implementation of `HTMLElement` is identical to the previous implementation, apart from the addition of a capture list within the `asHTML` closure. In this case, the capture list is `[unowned self]`, which means “capture self as an unowned reference rather than a strong reference”.
+Дана реалізація класу `HTMLElement` є майже ідентичною до попередньої реалізації: єдиною відмінністю є список захоплення всередині замикання `asHTML`. В даному випадку, списком замикання є `[unowned self]`, що означає “захопити `self` як безхазяйне посилання, а не сильне”.
 
-You can create and print an `HTMLElement` instance as before:
+Можна створити екземпляр `HTMLElement` та надрукувати його HTML представлення, як і раніше:
 
 ```swift
 var paragraph: HTMLElement? = HTMLElement(name: "p", text: "hello, world")
@@ -552,15 +546,14 @@ print(paragraph!.asHTML())
 // Надрукує "<p>hello, world</p>"
 ```
 
-Here’s how the references look with the capture list in place:
+Ось як виглядають посилання, якщо скористатись списком захоплення:
 
 ![](images/closureReferenceCycle02_2x.png)
-￼
-This time, the capture of `self` by the closure is an unowned reference, and does not keep a strong hold on the `HTMLElement` instance it has captured. If you set the strong reference from the `paragraph` variable to `nil`, the `HTMLElement` instance is deallocated, as can be seen from the printing of its deinitializer message in the example below:
+Цього разу, `self` захоплюється замиканням як безхазяйне посилання, і тому замикання не тримає екземпляр `HTMLElement` сильно при захопленні. Якщо прибрати сильне посилання змінної `paragraph`, присвоївши їй значення `nil`, екземпляр `HTMLElement` буде деалоковано, що можна бачити по повідомленню деініціалізатора, котре надрукується в прикладі нижче:
 
 ```swift
 paragraph = nil
-// Надрукує "p is being deinitialized"
+// Надрукує "p деініціалізовується"
 ```
 
-For more information about capture lists, see [Capture Lists](04_expressions.md#Capture-Lists).
+Детальніше зі списками захоплення можна ознайомитись у підрозділі [Списки захоплення](04_expressions.md#Списки-захоплення).
