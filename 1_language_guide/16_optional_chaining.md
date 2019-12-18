@@ -79,13 +79,13 @@ if let roomCount = ostap.residence?.numberOfRooms {
 // Надрукує "Остапова хата має 1 кімнат(у)."
 ```
 
-### Defining Model Classes for Optional Chaining
+### Визначення модельних класів для ланцюжку опціоналів
 
-You can use optional chaining with calls to properties, methods, and subscripts that are more than one level deep. This enables you to drill down into subproperties within complex models of interrelated types, and to check whether it is possible to access properties, methods, and subscripts on those subproperties.
+Можна використовувати ланцюжки опціоналів зі зверненнями до властивостей, методів та індексів, в котрих є більш ніж один рівень вкладеності. Це дозволяє спускатись до підвластивостей у складних моделях взаємопов'язаних типів, і перевіряти, чи можливо звернутись до властивостей, методів та індексів у цих підвластивостях.
 
-The code snippets below define four model classes for use in several subsequent examples, including examples of multilevel optional chaining. These classes expand upon the `Person` and `Residence` model from above by adding a `Room` and `Address` class, with associated properties, methods, and subscripts.
+У фрагментах коду нижче визначено чотири модельні класи для використання у кількох наступних прикладах багаторівневих ланцюжків опціоналів. Ці класи розширюють модель, задану класами `Person` та `Residence` з прикладів вище, додаючи до неї класи `Room` та `Address`  (котрі моделюють кімнату та адресу відповідно), з асоційованими властивостями, методами та індексами. 
 
-The `Person` class is defined in the same way as before:
+Клас `Person` визначено так само, як і раніше:
 
 ```swift
 class Person {
@@ -93,7 +93,7 @@ class Person {
 }
 ```
 
-The `Residence` class is more complex than before. This time, the `Residence` class defines a variable property called `rooms`, which is initialized with an empty array of type `[Room]`:
+Клас `Residence` тепер є складнішим, ніж раніше. Цього разу, клас `Residence` має змінну властивість на ім'я `rooms`, котра ініціалізується порожнім масивом типу `[Room]`:
 
 ```swift
 class Residence {
@@ -110,21 +110,21 @@ class Residence {
         }
     }
     func printNumberOfRooms() {
-        print("The number of rooms is \(numberOfRooms)")
+        print("Кількість кімнат дорівнює \(numberOfRooms)")
     }
     var address: Address?
 }
 ```
 
-Because this version of `Residence` stores an array of `Room` instances, its `numberOfRooms` property is implemented as a computed property, not a stored property. The computed `numberOfRooms` property simply returns the value of the count property from the rooms array.
+Оскільки дана версія класу `Residence` зберігає масив екземплярів `Room`, її властивість `numberOfRooms` реалізовано як властивість, що обчислюється, а не зберігається. Властивість `numberOfRooms` тепер просто повертає значення кількості елементів в масиві `rooms`.
 
-As a shortcut to accessing its rooms array, this version of `Residence` provides a read-write subscript that provides access to the room at the requested index in the rooms array.
+Для швидкого доступу до масиву `rooms`, дана версія класу `Residence` реалізовує індекс для читання й запису, що дає доступ до кімнат по заданому індексу в масиві `rooms`.
 
-This version of `Residence` also provides a method called `printNumberOfRooms`, which simply prints the number of rooms in the residence.
+Дана версія класу `Residence` також має метод на ім'я `printNumberOfRooms`, котрий просто друкує кількість кімнат у помешканні. 
 
-Finally, `Residence` defines an optional property called address, with a type of `Address?`. The `Address` class type for this property is defined below.
+І нарешті, `Residence` має опціональну властивість на ім'я `address`, з типом `Address?`. `Address` – це клас, котрий буде оголошено далі. 
 
-The `Room` class used for the `rooms` array is a simple class with one property called `name`, and an initializer to set that property to a suitable room name:
+Клас `Room`, котрий використовується для масиву `rooms`, є простим класом з єдиною властивістю на ім'я `name`, та ініціалізатором, що задає цій властивості доречну назву кімнати:
 
 ```swift
 class Room {
@@ -133,7 +133,7 @@ class Room {
 }
 ```
 
-The final class in this model is called `Address`. This class has three optional properties of type `String?`. The first two properties, `buildingName` and `buildingNumber`, are alternative ways to identify a particular building as part of an address. The third property, street, is used to name the street for that address:
+Останнім класом у даній моделі є клас `Address`. Цей клас має три опціональні властивості типу `String?`. Перші дві властивості, `buildingName` та `buildingNumber`, представляють назву будинку та номер будинку відповідно, та є альтерними способами ідентифікувати певний будинок. Третя властивість, `street`, представляє назву вулиці в даній адресі:
 
 ```swift
 class Address {
@@ -152,7 +152,7 @@ class Address {
 }
 ```
 
-The `Address` class also provides a method called `buildingIdentifier()`, which has a return type of `String?`. This method checks the properties of the address and returns `buildingName` if it has a value, or `buildingNumber` concatenated with street if both have values, or `nil` otherwise.
+Клас `Address` також має метод, що називається `buildingIdentifier()`, котрий повертає значення типу `String?`. Цей метод перевіряє властивості даної адреси та повертає `buildingName`, якщо та має значення, або значення властивості `buildingNumber`, конкатеноване зі значенням властивості `street`, якщо вони обидві мають значення, або `nil` в інших випадках. 
 
 ### Accessing Properties Through Optional Chaining
 
