@@ -1,83 +1,234 @@
 ## Обробка помилок
 
-*Error handling* is the process of responding to and recovering from error conditions in your program. Swift provides first-class support for throwing, catching, propagating, and manipulating recoverable errors at runtime.
-Some operations aren’t guaranteed to always complete execution or produce a useful output. Optionals are used to represent the absence of a value, but when an operation fails, it’s often useful to understand what caused the failure, so that your code can respond accordingly.
-As an example, consider the task of reading and processing data from a file on disk. There are a number of ways this task can fail, including the file not existing at the specified path, the file not having read permissions, or the file not being encoded in a compatible format. Distinguishing among these different situations allows a program to resolve some errors and to communicate to the user any errors it can’t resolve.
-> **Note**
+*Обробка помилок* – це процес відповіді та відновлення з помилкових умов у програмі. Swift надає першокласну підтримку викидування, відловлення, поширення та маніпулювання відновлюваними помилками під час виконання програми.  
+
+Деякі операції не гарантують завершення виконання чи продукування корисного результату. Опціональні значення використовуються для представлення відсутності значення, однак коли операція завершується невдало, часто буває корисно зрозуміти, що саме спричинило невдачу, щоб прореагувати відповідним чином. 
+
+Як приклад, можна розглянути задачу читання та обробки інформації з файлу на диску. Є багато причин невдалого виконання цієї задачі, включаючи відсутність файлу на диску по вказаному шляху, відсутність дозволу на читання цього файлу, або файл закодовано в несумісному форматі. Можливість відрізнити ці ситуації дозволяють програмі розв'язати деякі з цих помилок та передати користувачу змістовне повідомлення, якщо якусь помилку розв'язати неможливо. 
+
+> **Примітка**
+>
+> Обробка помилок у Swift взаємодіє з шаблонами обробки помилок що використовують клас `NSError` у Cocoa та Objective-C. Детальніше с цим класом можна ознайомитись у розділі Обробка Помилок у книзі *Using Swift with Cocoa and Objective-C (Swift 3.0.1)*.
+
+### Представлення та викидання помилок
+
+У Swift помилки представляються значеннями типів, що підпорядковуються протоколу `Error`. Цей порожній протокол вказує на те, що тип можна використовувати для обробки помилок. 
+
+Перечислення у Swift найбільш вдало підходять для моделювання групи пов'язаних помилкових умов, при цьому їх асоційовані значення дозволяють передати додаткову інформацію про природу помилки. Наприклад, ось як можна представити помилкові умови для роботи автомату зі снеками всередині гри: 
+
+```swift
+enum VendingMachineError: Error {
+    case invalidSelection
+    case insufficientFunds(coinsNeeded: Int)
+    case outOfStock
+}
+```
+
+Викидання помилки дозволяє вам чітко означити, сталось щось неочікуване, і нормальний сценарій виконання програми не може бути продовжено. Помилки викидаються за допомогою інструкції `throw`. Наприклад, наступний код викидає помилку, котра означає, що для роботи автомату зі снеками не вистачає п'яти монет:
+
+```swift
+throw VendingMachineError.insufficientFunds(coinsNeeded: 5)
+```
+
+### Обробка помилок
+
+Коли викидається помилка, довколишній шматок коду повинен взяти відповідальність за її обробку – наприклад, виправляючи проблему, пробуючи альтернативний підхід або просто інформуючи користувача про помилку.
+
+У мові Swift є чотири способи обробки помилок. Можна передати помилку далі з поточної функції до коду, що викликає цю функцію, обробити помилку за допомогою інструкції `do`-`catch`, обробити помилку як опціональне значення, або допустити, що на практиці дана помилка неможлива, Кожен з цих підходів описанов даному розділі нижче.
+
+Коли функція викидає помилку, вона міняє потік виконання програми, і тому важливо мати можливість швидко ідентифікувати місця в коді, що можуть викидати помилки. Для ідентифікації таких місць, використовують ключове слово `try` (або його варіації: `try?` та `try!`) перед частиною коду, що викликає функцію, метод чи ініціалізатор, котрий може викинути помилку. Дані ключові слова описані в поточному розділі нижче. 
+
+> **Примітка**
+>
+> Обробка помилок у Swift нагадує обробку виключень в інших мовах, де також використовуються ключові слова `try`, `catch` та `throw`. На відміну від обробки помилок у багатьох мовах, включаючи Objective-C, обробка помилок у Swift не включає розгортання стеку викликів, процесу, що може бути обчислювально затратним. Характеристики швидкодії інструкції `throw` є сумірними з такими ж характеристиками інструкції `return`.
+
+#### Поширення помилок за допомогою функцій, що викидають помилки
+Щоб позначити, що функція, метод чи ініціалізатор може викинути помилку, використовують ключове слово `throws` в їх оголошенні, після списку параметрів. Функцію, котру позначено ключовим словом `throws`, називають *функцією, що викидає помилку*. Якщо функція визначає тип, що повертається, ключове слово `throws` записується перед стрілкою повернення (`->`).
+
+```swift
+func canThrowErrors() throws -> String
+ 
+func cannotThrowErrors() -> String
+```
+
+Фунція, що викидає помилку, поширює помилку, котру було викинено всередині її контексту, у контекст, в якому викликано її саму. 
+
+> **Примітка**
 > 
-> Error handling in Swift interoperates with error handling patterns that use the `NSError` class in Cocoa and Objective-C. For more information about this class, see Error Handling in *Using Swift with Cocoa and Objective-C (Swift 3.0.1)*.
-### Representing and Throwing Errors
-In Swift, errors are represented by values of types that conform to the `Error` protocol. This empty protocol indicates that a type can be used for error handling.
-Swift enumerations are particularly well suited to modeling a group of related error conditions, with associated values allowing for additional information about the nature of an error to be communicated. For example, here’s how you might represent the error conditions of operating a vending machine inside a game:
+> Тільки функці, що викидають помилку, можуть поширювати помилки. Будь-яка помилка, що викидається всередині функції, що не викидає помилку, повинна бути оброблена всередині функції. 
 
-```swiftenum VendingMachineError: Error {    case invalidSelection    case insufficientFunds(coinsNeeded: Int)    case outOfStock}
-```
-Throwing an error lets you indicate that something unexpected happened and the normal flow of execution can’t continue. You use a `throw` statement to throw an error. For example, the following code throws an error to indicate that five additional coins are needed by the vending machine:
+У прикладі нижче визначено клас `VendingMachine`, що модулює автомат зі снеками та має метод `vend(itemNamed:)`, що викидає помилку типу `VendingMachineError` у випадках, коли запитаний продукт недоступний, або закінчився, або якщо його вартість перевищує поточний депозит:
 
-```swiftthrow VendingMachineError.insufficientFunds(coinsNeeded: 5)
+```swift
+struct Item {
+    var price: Int
+    var count: Int
+}
+ 
+class VendingMachine {
+    var inventory = [
+        "Артек": Item(price: 12, count: 7),
+        "Контік": Item(price: 10, count: 4),
+        "Чіпси \"Люкс\"": Item(price: 7, count: 11)
+    ]
+    var coinsDeposited = 0
+    
+    func vend(itemNamed name: String) throws {
+        guard let item = inventory[name] else {
+            throw VendingMachineError.invalidSelection
+        }
+        
+        guard item.count > 0 else {
+            throw VendingMachineError.outOfStock
+        }
+        
+        guard item.price <= coinsDeposited else {
+            throw VendingMachineError.insufficientFunds(coinsNeeded: item.price - coinsDeposited)
+        }
+        
+        coinsDeposited -= item.price
+        
+        var newItem = item
+        newItem.count -= 1
+        inventory[name] = newItem
+        
+        print("Видача: \(name)")
+    }
+}
 ```
-### Handling Errors
-When an error is thrown, some surrounding piece of code must be responsible for handling the error — for example, by correcting the problem, trying an alternative approach, or informing the user of the failure.
-There are four ways to handle errors in Swift. You can propagate the error from a function to the code that calls that function, handle the error using a `do`-`catch` statement, handle the error as an optional value, or assert that the error will not occur. Each approach is described in a section below.
-When a function throws an error, it changes the flow of your program, so it’s important that you can quickly identify places in your code that can throw errors. To identify these places in your code, write the `try` keyword — or the `try?` or `try!` variation — before a piece of code that calls a function, method, or initializer that can throw an error. These keywords are described in the sections below.
-> **Note**
+
+Реалізація методу `vend(itemNamed:)` використовує інструкції `guard` для раннього виходу з методу із викиданням відповідних помилок, якщо певні вимоги для покупки снеку не виконуються. Оскільки інструкція `throw` одразу перериває виконання поточної функції, продукт буди видано лише за виконання усіх необхідних вимог. 
+
+Оскільки метод `vend(itemNamed:)` поширює усі помилки, котрі у ньому викидуються, будь-який код, що викликає цей метод, повинен або якось обробити ці помилки (шляхом використання інструкцій `do`-`catch`, або `try?`, чи `try!`), або продовжити поширювати ці помилки. Наприклад, функцію `buyFavoriteSnack(person:vendingMachine:)` у прикладі нижче також визначено як функцію, що викидає помилки, і тому усі помилки, що викидає метод  `vend(itemNamed:)`, будуть перекинуті далі до точки виклику функції `buyFavoriteSnack(person:vendingMachine:)`.
+
+```swift
+let favoriteSnacks = [
+    "Лана": "Контік",
+    "Яніна": "Чіпси \"Люкс\"",
+    "Уляна": "Артек",
+]
+func buyFavoriteSnack(person: String, vendingMachine: VendingMachine) throws {
+    let snackName = favoriteSnacks[person] ?? "Артек"
+    try vendingMachine.vend(itemNamed: snackName)
+}
+```
+
+У цьому прикладі, функція `buyFavoriteSnack(person: vendingMachine:)`шукає улюблений снек заданої особи, і пробує придбати його, викликавши метод `vend(itemNamed:)`. Оскільки метод `vend(itemNamed:)` може викинути помилку, перед його викликом йде ключове слово `try`.
+
+Ініціалізатори, що викидають помилки, поширюють помилки у той же спосіб, що й аналогічні функції. Наприклад, ініціалізатор структури `PurchasedSnack` з прикладу нижче в ході процесу ініціалізації викликає функцію, що викидає помилки, і оброблює будь-які помилки шляхом поширення їх до коду, що викликає даний ініціалізатор. 
+
+```swift
+struct PurchasedSnack {
+    let name: String
+    init(name: String, vendingMachine: VendingMachine) throws {
+        try vendingMachine.vend(itemNamed: name)
+        self.name = name
+    }
+}
+```
+
+#### Обробка помилок за допомогою інструкції Do-Catch
+
+Інструкція `do`-`catch` використовується для обробки помилок шляхом виконання блоку коду. Якщо помилку викинуто в блоці  `do`, для неї підшукується відповідний блок `catch`, в котрому буде оброблено цю помилку. 
+
+Ось так виглядає загальна форма інструкції `do`-`catch`:
+
+```swift
+do {
+    try вираз
+    інструкції
+} catch шаблон 1 {
+    інструкції
+} catch шаблон 2 where умова {
+    інструкції
+}
+```
+
+Шаблон після ключового слова `catch` позначає види помилок, котрі даний блок може обробити. Якщо блок `catch` не має шаблону, він оброблюватиме будь-які помилки, та прив'язуватиме помилку до локальної константи на ім'я `error`. Детальніше зі співпадінням із шаблонами можна ознайомитись у розділі [Шаблони](2_language_reference/08_patterns.md).
+
+Блоки `catch` не обов'язково повинні обробляти будь-яку можливу помилку, що може викинути блок `do`. Якщо жоден з блоків `catch` не оброблює помилку, її можна поширити до контексту вище. Однак, помилку потрібно обов'язково обробити в *якомусь* із контекстів вище: або за допомогою ще однієї інструкції  `do`-`catch`, або іншим способом. Наприклад, у коді нижче оброблюються усі три елементи перечислення `VendingMachineError`, але інші помилки повінні бути оброблені контекстом вище:
+
+```swift
+var vendingMachine = VendingMachine()
+vendingMachine.coinsDeposited = 8
+do {
+    try buyFavoriteSnack(person: "Лана", vendingMachine: vendingMachine)
+} catch VendingMachineError.invalidSelection {
+    print("Неможливий вибір.")
+} catch VendingMachineError.outOfStock {
+    print("Закінчились.")
+} catch VendingMachineError.insufficientFunds(let coinsNeeded) {
+    print("Недостатньо коштів. Будь ласка, вставте ще \(coinsNeeded) монет(и).")
+}
+// Надрукує "Недостатньо коштів. Будь ласка, вставте ще 2 монет(и)."
+```
+
+У прикладі вище, функція `buyFavoriteSnack(person:vendingMachine:)` викликається через вираз `try`, оскільки вона може викинути помилку. Якщо помилку викинуто, виконання негайно переходить до блоків `catch`, котрі вирішать, чи потрібно продовжити поширення помилки. Якщо помилку не буде викинуто, будуть виконані решта інструкції всередині блоку `do`. 
+
+#### Перетворення помилок на опціональні значення
+
+Ключове слово `try?` дозволяє обробити помилку, перетворивши її на опціональне значення. Якщо під час виконання буде викинуто помилку, результатом виразу буде `nil`. Наприклад, у наступному коді  `x` та `y` мають однакові значення та поведінку:
+
+```swift
+func someThrowingFunction() throws -> Int {
+    // ...
+}
+ 
+let x = try? someThrowingFunction()
+ 
+let y: Int?
+do {
+    y = try someThrowingFunction()
+} catch {
+    y = nil
+}
+```
+
+Якщо функція `someThrowingFunction()` викине помилку, значення `x` та `y` будуть `nil`. В іншому випадку, значення `x` та `y` збережуть результат виконання функції. Слід зазначити, що `x` та `y` є опціоналами типу, котрий відповідає типу, котрий повертає функція `someThrowingFunction()`. В даному випадку функція повертає цілочислене значення, і тому `x` та `y` є опціональними цілими.
+
+Використання інструкції `try?` дозволяє лаконічно записувати обробку кількох різних помилок одним способом. Наприклад, код нижче використовує кілька різних підходів отримання даних, або повертає `nil` у випадку, якщо всі вони виявились невдалими.
+
+```swift
+func fetchData() -> Data? {
+    if let data = try? fetchDataFromDisk() { return data }
+    if let data = try? fetchDataFromServer() { return data }
+    return nil
+}
+```
+
+#### Відключення поширення помилок
+
+Іноді ми буваємо впевнені у тому, що функція чи метод, котрі викидають помилки, фактично не будуть їх викидувати під час виконання. В таких випадках можна відключити поширення помилок, шляхом запису інструкції `try!` перед виразом, що викидає помилку, і таким чином загорнути виклик у перевірку часу виконання, що помилку не буде викинуто. Якщо помилку таки буде викинуто, ми отримаємо помилку часу виконання.
+
+Наприклад, наступний код використовує функцію `loadImage(atPath:)`, котра завантажує зображення по заданому шляху, або викидує помилку, якщо задане зображення не може бути завантаженим. В цьому випадку, оскільки зображення поставляється разом із додатком, ми можемо бути впевнені у тому, що під час виконання не буде викидатись жодних помилок, і тому доречним буде відключити поширення помилок.
+
+```swift
+let photo = try! loadImage(atPath: "./Resources/John Appleseed.jpg")
+```
+
+### Визначення дій очистки
+
+Інструкція `defer` дозволяє виконати набір інструкцій безпосередньо перед завершенням виконання поточного блоку коду. Ця інструкція дозволяє зробити необхідні дії по очищенню, котрі повинні бути виконані незалежно від того, *як* завершиться поточний блок коду – внаслідок викинутої помилки, чи інструкції на кшталт `return` чи `break`. Наприклад, можна використовувати інструкцію `defer` для того, щоб гарантувати, що відкритий раніше файл буде закрито, а виділену вручну пам'ять – вивільнено. 
+
+Інструкція `defer` буквально відкладає виконання свого коду до виходу із поточного контексту. Дана інструкція складається із ключового слова `defer` та інструкцій, виконання яких необхідно відкласти для пізнішого виконання. Відкладені інструкції не можуть містити жодного коду, що передає контроль до іншого блоку коду, як то інструкції `break` чи `return` або викидування помилки. Якщо у блоці коду є кілька інструкцій `defer`, вони виконуються у зворотньому порядку відносно їх появи у коді: інструкції першого `defer` виконуються після виконання інструкції другого `defer`, і так далі. 
+
+```swift
+func processFile(filename: String) throws {
+    if exists(filename) {
+        let file = open(filename)
+        defer {
+            close(file)
+        }
+        while let line = try file.readline() {
+            // Робота з файлом.
+        }
+        // close(file) викликається тут, у кінці контексту.
+    }
+}
+```
+
+У прикладі вище інструкція `defer` використовується для того, щоб гарантувати, що після кожного виклику функції `open(_:)` буде викликано відповідну функцію `close(_:)`.
+
+> **Примітка**
 > 
-> Error handling in Swift resembles exception handling in other languages, with the use of the `try`, `catch` and `throw` keywords. Unlike exception handling in many languages — including Objective-C — error handling in Swift does not involve unwinding the call stack, a process that can be computationally expensive. As such, the performance characteristics of a `throw` statement are comparable to those of a `return` statement.#### Поширення помилок за допомогою функцій, що викидають помилки#### Propagating Errors Using Throwing FunctionsTo indicate that a function, method, or initializer can throw an error, you write the `throws` keyword in the function’s declaration after its parameters. A function marked with `throws` is called a *throwing function*. If the function specifies a return type, you write the `throws` keyword before the return arrow (`->`).
-
-```swiftfunc canThrowErrors() throws -> String func cannotThrowErrors() -> String
-```
-A throwing function propagates errors that are thrown inside of it to the scope from which it’s called.
-> **Note**
-> 
-> Only throwing functions can propagate errors. Any errors thrown inside a nonthrowing function must be handled inside the function.
- In the example below, the `VendingMachine` class has a `vend(itemNamed:)` method that throws an appropriate `VendingMachineError` if the requested item is not available, is out of stock, or has a cost that exceeds the current deposited amount:
-
-```swiftstruct Item {    var price: Int    var count: Int} class VendingMachine {    var inventory = [        "Candy Bar": Item(price: 12, count: 7),        "Chips": Item(price: 10, count: 4),        "Pretzels": Item(price: 7, count: 11)    ]    var coinsDeposited = 0        func vend(itemNamed name: String) throws {        guard let item = inventory[name] else {            throw VendingMachineError.invalidSelection        }                guard item.count > 0 else {            throw VendingMachineError.outOfStock        }                guard item.price <= coinsDeposited else {            throw VendingMachineError.insufficientFunds(coinsNeeded: item.price - coinsDeposited)        }                coinsDeposited -= item.price                var newItem = item        newItem.count -= 1        inventory[name] = newItem                print("Dispensing \(name)")    }}
-```
-The implementation of the `vend(itemNamed:)` method uses `guard` statements to exit the method early and `throw` appropriate errors if any of the requirements for purchasing a snack aren’t met. Because a `throw` statement immediately transfers program control, an item will be vended only if all of these requirements are met.
-Because the `vend(itemNamed:)` method propagates any errors it throws, any code that calls this method must either handle the errors—using a `do`-`catch` statement, `try?`, or `try!` — or continue to propagate them. For example, the `buyFavoriteSnack(person:vendingMachine:)` in the example below is also a throwing function, and any errors that the `vend(itemNamed:)` method throws will propagate up to the point where the `buyFavoriteSnack(person:vendingMachine:)` function is called.
-
-```swiftlet favoriteSnacks = [    "Alice": "Chips",    "Bob": "Licorice",    "Eve": "Pretzels",]func buyFavoriteSnack(person: String, vendingMachine: VendingMachine) throws {    let snackName = favoriteSnacks[person] ?? "Candy Bar"    try vendingMachine.vend(itemNamed: snackName)}
-```
-In this example, the `buyFavoriteSnack(person: vendingMachine:)` function looks up a given person’s favorite snack and tries to buy it for them by calling the `vend(itemNamed:)` method. Because the `vend(itemNamed:)` method can throw an error, it’s called with the `try` keyword in front of it.
-Throwing initializers can propagate errors in the same way as throwing functions. For example, the initializer for the `PurchasedSnack` structure in the listing below calls a throwing function as part of the initialization process, and it handles any errors that it encounters by propagating them to its caller.
-
-```swiftstruct PurchasedSnack {    let name: String    init(name: String, vendingMachine: VendingMachine) throws {        try vendingMachine.vend(itemNamed: name)        self.name = name    }}
-```
-#### Handling Errors Using Do-Catch
-You use a `do`-`catch` statement to handle errors by running a block of code. If an error is thrown by the code in the `do` clause, it is matched against the `catch` clauses to determine which one of them can handle the error.
-Here is the general form of a `do`-`catch` statement:
-
-```swiftdo {    try expression    statements} catch pattern 1 {    statements} catch pattern 2 where condition {    statements}
-```
-You write a pattern after `catch` to indicate what errors that clause can handle. If a `catch` clause doesn’t have a pattern, the clause matches any error and binds the error to a local constant named `error`. For more information about pattern matching, see [Patterns](2_language_reference/08_patterns.md).
-The `catch` clauses don’t have to handle every possible error that the code in its `do` clause can throw. If none of the `catch` clauses handle the error, the error propagates to the surrounding scope. However, the error must be handled by *some* surrounding scope — either by an enclosing `do`-`catch` clause that handles the error or by being inside a throwing function. For example, the following code handles all three cases of the `VendingMachineError` enumeration, but all other errors have to be handled by its surrounding scope:
-
-```swiftvar vendingMachine = VendingMachine()vendingMachine.coinsDeposited = 8do {    try buyFavoriteSnack(person: "Alice", vendingMachine: vendingMachine)} catch VendingMachineError.invalidSelection {    print("Invalid Selection.")} catch VendingMachineError.outOfStock {    print("Out of Stock.")} catch VendingMachineError.insufficientFunds(let coinsNeeded) {    print("Insufficient funds. Please insert an additional \(coinsNeeded) coins.")}// Prints "Insufficient funds. Please insert an additional 2 coins."
-```
-In the above example, the `buyFavoriteSnack(person:vendingMachine:)` function is called in a `try` expression, because it can throw an error. If an error is thrown, execution immediately transfers to the `catch` clauses, which decide whether to allow propagation to continue. If no error is thrown, the remaining statements in the `do` statement are executed.
-
-#### Converting Errors to Optional Values
-You use `try?` to handle an error by converting it to an optional value. If an error is thrown while evaluating the `try?` expression, the value of the expression is `nil`. For example, in the following code `x` and `y` have the same value and behavior:
-
-```swiftfunc someThrowingFunction() throws -> Int {    // ...} let x = try? someThrowingFunction() let y: Int?do {    y = try someThrowingFunction()} catch {    y = nil}
-```
-If `someThrowingFunction()` throws an error, the value of `x` and `y` is `nil`. Otherwise, the value of `x` and `y` is the value that the function returned. Note that `x` and `y` are an optional of whatever type `someThrowingFunction()` returns. Here the function returns an integer, so `x` and `y` are optional integers.
-Using `try?` lets you write concise error handling code when you want to handle all errors in the same way. For example, the following code uses several approaches to fetch data, or returns `nil` if all of the approaches fail.
-
-```swiftfunc fetchData() -> Data? {    if let data = try? fetchDataFromDisk() { return data }    if let data = try? fetchDataFromServer() { return data }    return nil}
-```
-#### Disabling Error Propagation
-Sometimes you know a throwing function or method won’t, in fact, throw an error at runtime. On those occasions, you can write `try!` before the expression to disable error propagation and wrap the call in a runtime assertion that no error will be thrown. If an error actually is thrown, you’ll get a runtime error.
-For example, the following code uses a `loadImage(atPath:)` function, which loads the image resource at a given path or throws an error if the image can’t be loaded. In this case, because the image is shipped with the application, no error will be thrown at runtime, so it is appropriate to disable error propagation.
-
-```swiftlet photo = try! loadImage(atPath: "./Resources/John Appleseed.jpg")
-```
-### Specifying Cleanup Actions
-You use a `defer` statement to execute a set of statements just before code execution leaves the current block of code. This statement lets you do any necessary cleanup that should be performed regardless of *how* execution leaves the current block of code — whether it leaves because an error was thrown or because of a statement such as `return` or `break`. For example, you can use a `defer` statement to ensure that file descriptors are closed and manually allocated memory is freed.
-A `defer` statement defers execution until the current scope is exited. This statement consists of the `defer` keyword and the statements to be executed later. The deferred statements may not contain any code that would transfer control out of the statements, such as a `break` or a `return` statement, or by throwing an error. Deferred actions are executed in reverse order of how they are specified — that is, the code in the first `defer` statement executes after code in the second, and so on.
-
-```swiftfunc processFile(filename: String) throws {    if exists(filename) {        let file = open(filename)        defer {            close(file)        }        while let line = try file.readline() {            // Work with the file.        }        // close(file) is called here, at the end of the scope.    }}
-```
-The above example uses a defer statement to ensure that the `open(_:)` function has a corresponding call to `close(_:)`.> **Note**
-> > You can use a `defer` statement even when no error handling code is involved.
+> Інструкцію `defer` можна використовувати навіть тоді, коли поруч немає ніякої обробки помилок.
