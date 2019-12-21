@@ -79,3 +79,4 @@
 + Витік пам'яті - Memory leak [Вікіпедія](https://uk.wikipedia.org/wiki/Витік_пам%27яті)
 + список захоплення замикання - closure capture list
 + Ланцюжок опціоналів (Зчеплення опціоналів???) - Optional chaining
++ Downcasting - приведення типів
