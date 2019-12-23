@@ -1,92 +1,276 @@
 ## Розширення
-*Extensions* add new functionality to an existing class, structure, enumeration, or protocol type. This includes the ability to extend types for which you do not have access to the original source code (known as *retroactive modeling*). Extensions are similar to categories in Objective-C. (Unlike Objective-C categories, Swift extensions do not have names.)
-Extensions in Swift can:
- + Add computed instance properties and computed type properties + Define instance methods and type methods + Provide new initializers + Define subscripts + Define and use new nested types + Make an existing type conform to a protocol
- In Swift, you can even extend a protocol to provide implementations of its requirements or add additional functionality that conforming types can take advantage of. For more details, see [Protocol Extensions](20_extensions.md#Protocol-Extensions).
-> **Note**
-> > Extensions can add new functionality to a type, but they cannot override existing functionality.
-### Extension Syntax
-Declare extensions with the `extension` keyword:
 
-```swiftextension SomeType {    // new functionality to add to SomeType goes here}
-```
-An extension can extend an existing type to make it adopt one or more protocols. Where this is the case, the protocol names are written in exactly the same way as for a class or structure:
+*Розширення* додають нову функціональність до існуючого класу, структури, перечислення чи протоколу. Це включає можливість розширити тип, до вихідного коду якого у вас немає доступу (це називають *ретроактивним моделюванням*). Розширення є подібними до категорій в Objective-C, однак на відміну від категорій в Objective-C, розширення у Swift не носять назв.
 
-```swiftextension SomeType: SomeProtocol, AnotherProtocol {    // implementation of protocol requirements goes here}
-```
-Adding protocol conformance in this way is described in [Adding Protocol Conformance with an Extension](21_protocols.md#Adding-Protocol-Conformance-with-an-Extension).> **Note**
-> > If you define an extension to add new functionality to an existing type, the new functionality will be available on all existing instances of that type, even if they were created before the extension was defined.
- ### Computed Properties
-Extensions can add computed instance properties and computed type properties to existing types. This example adds five computed instance properties to Swift’s built-in `Double` type, to provide basic support for working with distance units:
+Розширення у Swift можуть:
 
-```swiftextension Double {    var km: Double { return self * 1_000.0 }    var m: Double { return self }    var cm: Double { return self / 100.0 }    var mm: Double { return self / 1_000.0 }    var ft: Double { return self / 3.28084 }}let oneInch = 25.4.mmprint("One inch is \(oneInch) meters")// Prints "One inch is 0.0254 meters"let threeFeet = 3.ftprint("Three feet is \(threeFeet) meters")// Prints "Three feet is 0.914399970739201 meters"
-```
-These computed properties express that a `Double` value should be considered as a certain unit of length. Although they are implemented as computed properties, the names of these properties can be appended to a floating-point literal value with dot syntax, as a way to use that literal value to perform distance conversions.
-In this example, a `Double` value of `1.0` is considered to represent “one meter”. This is why the `m` computed property returns self—the expression `1.m` is considered to calculate a `Double` value of `1.0`.
-Other units require some conversion to be expressed as a value measured in meters. One kilometer is the same as 1,000 meters, so the `km` computed property multiplies the value by `1_000.00` to convert into a number expressed in meters. Similarly, there are 3.28084 feet in a meter, and so the `ft` computed property divides the underlying `Double` value by `3.28084`, to convert it from feet to meters.
-These properties are read-only computed properties, and so they are expressed without the `get` keyword, for brevity. Their return value is of type `Double`, and can be used within mathematical calculations wherever a `Double` is accepted:
+ + Додавати властивості екземпляру або типу, що обчислюються
+ + Визначати методи екземпляру або типу
+ + Створювати нові ініціалізатори
+ + Визначати індекси
+ + Визначати та використовувати нові вкладені типи
+ + Підпорядковувати розширений тип до протоколу
 
-```swiftlet aMarathon = 42.km + 195.mprint("A marathon is \(aMarathon) meters long")// Prints "A marathon is 42195.0 meters long"
+У Swift, можна навіть розширити протокол, реалізувавши його вимоги чи додавши додаткову функціональність, якою можуть користуватись підпорядковані до цього протоколу типи. Детальніше з цим можна ознайомитись у підрозділі [Розширення протоколів](21_protocols.md#Розшинення-протоколів).
+
+In Swift, you can even extend a protocol to provide implementations of its requirements or add additional functionality that conforming types can take advantage of. For more details, see [Protocol Extensions](20_extensions.md#Protocol-Extensions).
+
+> **Примітка**
+>
+> Розширення можуть додавати нову функціональність до типу, але вони не можуть заміщувати існуючу функціональність. 
+
+### Синтаксис розширень
+
+Розширення оголошуються за допомогою ключового слова `extension`:
+
+```swift
+extension SomeType {
+    // тут йде функціональність, що додається до типу SomeType
+}
 ```
-> **Note**
-> > Extensions can add new computed properties, but they cannot add stored properties, or add property observers to existing properties.
- ### Initializers
-Extensions can add new initializers to existing types. This enables you to extend other types to accept your own custom types as initializer parameters, or to provide additional initialization options that were not included as part of the type’s original implementation.
-Extensions can add new convenience initializers to a class, but they cannot add new designated initializers or deinitializers to a class. Designated initializers and deinitializers must always be provided by the original class implementation.
-> **Note**
+
+Розширення може розширити існуючий тип, підпорядковуючи його до одного або кількох протоколів. В таких випадках, назви протоколів записуються точно так само, як і для класу або структури:
+
+```swift
+extension SomeType: SomeProtocol, AnotherProtocol {
+    // тут йде реаліазація вимог протоколів
+}
+```
+
+Підпорядкування протоколу через розширення детально описано в підрозділі [Підпорядкування протоколу за допомогою розширення](21_protocols.md#Підпорядкування-протоколу-за-допомогою-розширення).
+
+> **Примітка**
+>
+> Якщо оголосити розширення та додати нову функціональність до існуючого типу, нова функціональність буде доступною для всіх існуючих екземплярів цього типу, навіть якщо їх було створено до оголошення розширення.
+
+### Властивості, що обчислюються
+
+Розширення можуть додавати до існуючих типів властивості екземпляру, що обчислюються, та властивості типу, що обчислюються. У наступному прикладі, до вбудованого в Swift’s типу `Double` додаються п'ять властивостей, що обчислюються, що реалізовують базову підтримку роботи з одиницями довжини:
+
+```swift
+extension Double {
+    var km: Double { return self * 1_000.0 }
+    var m: Double { return self }
+    var cm: Double { return self / 100.0 }
+    var mm: Double { return self / 1_000.0 }
+    var ft: Double { return self / 3.28084 }
+}
+let oneInch = 25.4.mm
+print("Один дюйм - це \(oneInch) метрів")
+// Надрукує "Один дюйм - це 0.0254 метрів"
+let threeFeet = 3.ft
+print("Три фути - це \(threeFeet) метрів")
+// Надрукує "Три фути - це 0.914399970739201 метрів"
+```
+
+Ці властивості, що обчислюються, вважають значення `Double` виміром довжини в певних одиницях. Хоч вони й реалізовані як властивості, що обчислюються, назви цих властивостей можна додати до літералу числа з плаваючою комою через синтаксис крапки, і таким способом використовувати літерали для конвертації довжини.
+
+У цьому прикладі вважається, що значення `1.0` типу  `Double` виражає “один метр”. Тому властивість  `m` повертає `self` — вираз `1.m` повинен обчислити значення `1.0`. 
+
+Інші одиниці довжини потрібно конвертувати для вираження їх в метрах. Один кілометр – це 1000 метрів, і тому властивість `km` множить значення на `1_000.00` для вираження його в метрах. Аналогічно, в одному метрі 3.28084 футів, і тому властивість `ft` ділить значення `Double` на `3.28084` для перетворення футів у метри.
+
+Ці властивості є властивостями тільки для читання, і тому для лаконічності їх можна записувати без ключового слова `get`. Значення, що повертають ці властивості, мають тип `Double`, і тому їх можна використовувати в математичних розрахунках, усюди, де приймається тип `Double`:
+
+```swift
+let aMarathon = 42.km + 195.m
+print("Марафон має довжину \(aMarathon) метрів")
+// Надрукує "Марафон має довжину 42195.0 метрів"
+```
+
+> **Примітка**
+>
+> Розширення можуть додавати нові властивості, що обчислюються, але вони не можуть додавати властивостей, що зберігаються, або додавати спостерігачі за існуючими властивостями.
+
+### Ініціалізатори
+
+Розширення можуть додавати нові ініціалізатори до існуючих типів. Це дозволяє, наприклад, розширити інші типи для того, щоб вони приймали ваші власні типи в якості параметрів ініціалізації, або додати додаткових можливостей ініціалізації, котрі не буди включені в оригінальну реалізацію типу. 
+
+Розширення можуть додавати нові ініціалізатори класу для зручності, але вони не можуть додавати нових призначених ініціалізторів чи деініціалізаторів класу. Призначені ініціалізатори та деініціалізатори завжди повинні визначатись оригінальною реалізацією класу.
+
+> **Примітка**
+>
+> Якщо використовувати розширення для додавання ініціалізатору до типу-значення, що має значення за замовчанням для усіх своїх властивостей, що зберігаються, і не визначає ніяких ініціалізаторів явно, тоді всередині ініціалізатора в розширенні можна викликати ініціалізтор за замовчанням та почленний ініціалізатор.
+>
+> Це не працювало б, якщо записати ініціалізатор всередині оригінальної реалізації типу-значення, як описано в підрозділі [Делегування ініціалізації у типах-значеннях](13_initialization.md#Делегування-ініціалізації-у-типах-значеннях).
+
+У прикладі нижче визначено структуру `Rect` для представлення геометричного прямокутника. У цьому прикладі також визначено дві допоміжні структури `Size` та `Point`, обидві з них задають значення за замовчанням для всіх своїх властивостей:
+
+```swift
+struct Size {
+    var width = 0.0, height = 0.0
+}
+struct Point {
+    var x = 0.0, y = 0.0
+}
+struct Rect {
+    var origin = Point()
+    var size = Size()
+}
+```
+
+Оскільки структура `Rect` задає значення за замовчанням усім своїм властивостям, вона автоматично отримує ініціалізатор за замовчанням та почленний ініціалізатор, як описано в підрозділі [Ініціалізатори за замовчанням](13_initialization.md#Ініціалізатори-за-замовчанням). Ці ініціалізатори можна використовувати для створення нових екземплярів структури `Rect`:
+
+```swift
+let defaultRect = Rect()
+let memberwiseRect = Rect(origin: Point(x: 2.0, y: 2.0),
+                          size: Size(width: 5.0, height: 5.0))
+```
+
+Можна розширити структуру `Rect` та додати до неї додатковий ініціалізатор, що приймає центральну точку та розмір:
+
+```swift
+extension Rect {
+    init(center: Point, size: Size) {
+        let originX = center.x - (size.width / 2)
+        let originY = center.y - (size.height / 2)
+        self.init(origin: Point(x: originX, y: originY), size: size)
+    }
+}
+```
+
+Цей новий ініціалізатор починається з обчиснення початкової точки (`origin`) по наданим центральній точці (`center`) та розміру (`size`). Після цього ініціалізатор викликає автоматично створений почленний ініціалізатор `init(origin:size:)`, котрий зберігає нові значення `origin` та `size` у відповідних властивостях:
+
+```swift
+let centerRect = Rect(center: Point(x: 4.0, y: 4.0),
+                      size: Size(width: 3.0, height: 3.0))
+// centerRect має початкову точку (2.5, 2.5) та розмір (3.0, 3.0)
+```
+
+> **Примітка**
+>
+> При додаванні нового ініціалізатора через розширення, все ще потрібно дбати про те, щоб екземпляр був повністю проініціалізованим на момент завершення виконання ініціалізатора. 
+
+### Методи
+
+Розширення можуть додавати нові методи екземпляру та методи типу до існуючих типів. У наступному прикладі до вбудованого типу `Int` додається новий метод екземпляру на ім'я `repetitions`:
+
+```swift
+extension Int {
+    func repetitions(task: () -> Void) {
+        for _ in 0..<self {
+            task()
+        }
+    }
+}
+```
+
+Метод `repetitions(task:)` приймає єдиний аргумент типу `() -> Void`, котрий є функцією, що не має параметрів та не повертає значення.
+
+Після оголошення цього розширення, можна викликати метод `repetitions(task:)` на будь-якому цілому числі для виконання якоїсь задачі відповідну кількість разів:
+
+```swift
+3.repetitions {
+    print("Hello!")
+}
+// Hello!
+// Hello!
+// Hello!
+```
+
+#### Мутуючі методи екземплярів
+
+Методи екземпляру, що додаються за допомогою розширення, можуть змінювати, (або *мутувати*) сам екзмепляр. Методи структур та перечислень, що змінюють `self` або її властивості, повинні бути поміченими ключовим словом `mutating`, так само як і мутуючі методи в оригінальній реалізації типів-значень.
+
+У наступному прикладі до вбудованого в Swift’s типу `Int` додається новий метод на ім'я `square`, котрий підносить число до кадрату:
+
+```swift
+extension Int {
+    mutating func square() {
+        self = self * self
+    }
+}
+var someInt = 3
+someInt.square()
+// someInt тепер дорівнює 9
+```
+
+### Індекси
+
+Розширення може додавати нові індекси до існучого типу. У прикладі нижче до вбудованого в Swift’s типу `Int` додаються цілочисельний індекс. Цей індекс `[n]` повертає цифру на `n`-тій позицій справа в десятковому записі числа:
+
+```swift
+123456789[0] повертає 9
+123456789[1] повертає 8
+```
+
+…і так далі:
+
+```swift
+extension Int {
+    subscript(digitIndex: Int) -> Int {
+        var decimalBase = 1
+        for _ in 0..<digitIndex {
+            decimalBase *= 10
+        }
+        return (self / decimalBase) % 10
+    }
+}
+746381295[0]
+// повертає 5
+746381295[1]
+// повертає 9
+746381295[2]
+// повертає 2
+746381295[8]
+// повертає 7
+```
+
+Якщо значення `Int` не має достатньо цифр по запитаному індексу, реалізація індексу повертає `0`, так, ніби до числа були дописані незначущі нулі зліва:
+
+```swift
+746381295[9]
+// повертає 0, так ніби число записувалось, як:
+0746381295[9]
+```
+
+### Вкладені типи
+
+Розширення можуть додавати вкладені типи до існуючих класів, структур та перечислень:
+
+```swift
+extension Int {
+    enum Kind {
+        case negative, zero, positive
+    }
+    var kind: Kind {
+        switch self {
+        case 0:
+            return .zero
+        case let x where x > 0:
+            return .positive
+        default:
+            return .negative
+        }
+    }
+}
+```
+
+У цьому прикладі до вбудованого типу `Int` додається вкладене перечислення на ім'я `Kind`, котре виражає вид числа, представленого типом `Int`. Конретніше, це перечислення виражає, чи є число додатнім, від'ємним чи нулем.
+
+У цьому прикладі до типу `Int` також додається властивість, що обчислюється, на ім'я `kind`, котра повертає відповідний елемент перечислення `Kind` для цього цілого. 
+
+Вкладене перечислення тепер можна використовувати з будь-яким значенням типу `Int`:
+
+```swift
+func printIntegerKinds(_ numbers: [Int]) {
+    for number in numbers {
+        switch number.kind {
+        case .negative:
+            print("- ", terminator: "")
+        case .zero:
+            print("0 ", terminator: "")
+        case .positive:
+            print("+ ", terminator: "")
+        }
+    }
+    print("")
+}
+printIntegerKinds([3, 19, -27, 0, -6, 0, 7])
+// Надрукує "+ + - 0 - 0 + "
+```
+
+Ця функція, `printIntegerKinds(_:)`, приймає на вхід масив цілочисельних значень, та ітерує їх. Для кожного значення в масиві, функція розглядає властивість `kind` цього числа, та друкує відповідний опис.
+
+> **Примітка**
 > 
-> If you use an extension to add an initializer to a value type that provides default values for all of its stored properties and does not define any custom initializers, you can call the default initializer and memberwise initializer for that value type from within your extension’s initializer.
-> > This would not be the case if you had written the initializer as part of the value type’s original implementation, as described in [Initializer Delegation for Value Types](13_initialization.md#Initializer-Delegation-for-Value-Types).
-The example below defines a custom `Rect` structure to represent a geometric rectangle. The example also defines two supporting structures called `Size` and `Point`, both of which provide default values of `0.0` for all of their properties:
-
-```swiftstruct Size {    var width = 0.0, height = 0.0}struct Point {    var x = 0.0, y = 0.0}struct Rect {    var origin = Point()    var size = Size()}
-```
-Because the `Rect` structure provides default values for all of its properties, it receives a default initializer and a memberwise initializer automatically, as described in [Default Initializers](13_initialization.md#Default-Initializers). These initializers can be used to create new `Rect` instances:
-
-```swiftlet defaultRect = Rect()let memberwiseRect = Rect(origin: Point(x: 2.0, y: 2.0),                          size: Size(width: 5.0, height: 5.0))
-```
-You can extend the `Rect` structure to provide an additional initializer that takes a specific center point and size:
-
-```swiftextension Rect {    init(center: Point, size: Size) {        let originX = center.x - (size.width / 2)        let originY = center.y - (size.height / 2)        self.init(origin: Point(x: originX, y: originY), size: size)    }}
-```
-This new initializer starts by calculating an appropriate origin point based on the provided `center` point and `size` value. The initializer then calls the structure’s automatic memberwise initializer `init(origin:size:)`, which stores the new origin and size values in the appropriate properties:
-
-```swiftlet centerRect = Rect(center: Point(x: 4.0, y: 4.0),                      size: Size(width: 3.0, height: 3.0))// centerRect's origin is (2.5, 2.5) and its size is (3.0, 3.0)
-```
-> **Note**
-> > If you provide a new initializer with an extension, you are still responsible for making sure that each instance is fully initialized once the initializer completes.
- ### Methods
-Extensions can add new instance methods and type methods to existing types. The following example adds a new instance method called `repetitions` to the `Int` type:
-
-```swiftextension Int {    func repetitions(task: () -> Void) {        for _ in 0..<self {            task()        }    }}
-```
-The `repetitions(task:)` method takes a single argument of type `() -> Void`, which indicates a function that has no parameters and does not return a value.After defining this extension, you can call the `repetitions(task:)` method on any integer to perform a task that many number of times:
-
-```swift3.repetitions {    print("Hello!")}// Hello!// Hello!// Hello!
-```
-#### Mutating Instance Methods
-Instance methods added with an extension can also modify (or *mutate*) the instance itself. Structure and enumeration methods that modify `self` or its properties must mark the instance method as mutating, just like `mutating` methods from an original implementation.
-The example below adds a new mutating method called `square` to Swift’s `Int` type, which squares the original value:
-
-```swiftextension Int {    mutating func square() {        self = self * self    }}var someInt = 3someInt.square()// someInt is now 9
-```
-### Subscripts
-Extensions can add new subscripts to an existing type. This example adds an integer subscript to Swift’s built-in `Int` type. This subscript `[n]` returns the decimal digit `n` places in from the right of the number:
-
-```swift123456789[0] returns 9123456789[1] returns 8
-```
-…and so on:```swiftextension Int {    subscript(digitIndex: Int) -> Int {        var decimalBase = 1        for _ in 0..<digitIndex {            decimalBase *= 10        }        return (self / decimalBase) % 10    }}746381295[0]// returns 5746381295[1]// returns 9746381295[2]// returns 2746381295[8]// returns 7
-```
-If the `Int` value does not have enough digits for the requested index, the subscript implementation returns `0`, as if the number had been padded with zeros to the left:
-
-```swift746381295[9]// returns 0, as if you had requested:0746381295[9]
-```
-### Nested TypesExtensions can add new nested types to existing classes, structures, and enumerations:
-
-```swiftextension Int {    enum Kind {        case negative, zero, positive    }    var kind: Kind {        switch self {        case 0:            return .zero        case let x where x > 0:            return .positive        default:            return .negative        }    }}
-```
-This example adds a new nested enumeration to `Int`. This enumeration, called `Kind`, expresses the kind of number that a particular integer represents. Specifically, it expresses whether the number is negative, zero, or positive.This example also adds a new computed instance property to `Int`, called `kind`, which returns the appropriate `Kind` enumeration case for that integer.The nested enumeration can now be used with any `Int` value:```swiftfunc printIntegerKinds(_ numbers: [Int]) {    for number in numbers {        switch number.kind {        case .negative:            print("- ", terminator: "")        case .zero:            print("0 ", terminator: "")        case .positive:            print("+ ", terminator: "")        }    }    print("")}printIntegerKinds([3, 19, -27, 0, -6, 0, 7])// Prints "+ + - 0 - 0 + "
-```
-This function, `printIntegerKinds(_:)`, takes an input array of `Int` values and iterates over those values in turn. For each integer in the array, the function considers the `kind` computed property for that integer, and prints an appropriate description.
-> **Note**
-> > `number.kind` is already known to be of type `Int.Kind`. Because of this, all of the `Int.Kind` case values can be written in shorthand form inside the `switch` statement, such as `.negative` rather than `Int.Kind.negative`.
+> Оскільки відомо, що `number.kind` має тип `Int.Kind`, у випадках інструкції `switch` можна не писати `Int.Kind` для кожного елементу перечислення, і користуватись короткою формою: `.negative` замість `Int.Kind.negative`.
