@@ -1,24 +1,85 @@
 ## Вкладені типи
-Enumerations are often created to support a specific class or structure’s functionality. Similarly, it can be convenient to define utility classes and structures purely for use within the context of a more complex type. To accomplish this, Swift enables you to define *nested types*, whereby you nest supporting enumerations, classes, and structures within the definition of the type they support.
-To nest a type within another type, write its definition within the outer braces of the type it supports. Types can be nested to as many levels as are required.### Nested Types in Action
-The example below defines a structure called `BlackjackCard`, which models a playing card as used in the game of `Blackjack`. The `BlackJack` structure contains two nested enumeration types called `Suit` and `Rank`.
-In `Blackjack`, the `Ace` cards have a value of either one or eleven. This feature is represented by a structure called `Values`, which is nested within the `Rank` enumeration:
 
-```swiftstruct BlackjackCard {        // nested Suit enumeration    enum Suit: Character {        case spades = "♠", hearts = "♡", diamonds = "♢", clubs = "♣"    }        // nested Rank enumeration    enum Rank: Int {        case two = 2, three, four, five, six, seven, eight, nine, ten        case jack, queen, king, ace        struct Values {            let first: Int, second: Int?        }        var values: Values {            switch self {            case .ace:                return Values(first: 1, second: 11)            case .jack, .queen, .king:                return Values(first: 10, second: nil)            default:                return Values(first: self.rawValue, second: nil)            }        }    }        // BlackjackCard properties and methods    let rank: Rank, suit: Suit    var description: String {        var output = "suit is \(suit.rawValue),"        output += " value is \(rank.values.first)"        if let second = rank.values.second {            output += " or \(second)"        }        return output    }}
-```
-The `Suit` enumeration describes the four common playing card suits, together with a raw `Character` value to represent their symbol.
-The `Rank` enumeration describes the thirteen possible playing card ranks, together with a raw `Int` value to represent their face value. (This raw `Int` value is not used for the Jack, Queen, King, and Ace cards.)
-As mentioned above, the `Rank` enumeration defines a further nested structure of its own, called `Values`. This structure encapsulates the fact that most cards have one value, but the Ace card has two values. The `Values` structure defines two properties to represent this:
- + `first`, of type `Int` + `second`, of type `Int?`, or “optional `Int`”
-	`Rank` also defines a computed property, `values`, which returns an instance of the `Values` structure. This computed property considers the rank of the card and initializes a new Values instance with appropriate values based on its rank. It uses special values for `jack`, `queen`, `king`, and `ace`. For the numeric cards, it uses the rank’s raw `Int` value.
-The `BlackjackCard` structure itself has two properties — `rank` and `suit`. It also defines a computed property called `description`, which uses the values stored in `rank` and `suit` to build a description of the name and value of the card. The `description` property uses optional binding to check whether there is a second value to display, and if so, inserts additional description detail for that second value.
-Because `BlackjackCard` is a structure with no custom initializers, it has an implicit memberwise initializer, as described in [Memberwise Initializers for Structure Types](13_initialization.md#Memberwise-Initializers-for-Structure-Types). You can use this initializer to initialize a new constant called `theAceOfSpades`:
+Перечислення часто створюють для допомоги в реалізації функціональності певного класу чи структури. Аналогічно, буває зручно визначити допоміжні класи та структури для використання всередині контексту складнішого типу. Для цього у Swift можна визначати *вкладені типи*, тобто вкладувати допоміжні перечислення, класи та структури всередині оголошення, якому вони, власне, допомагають. 
 
-```swiftlet theAceOfSpades = BlackjackCard(rank: .ace, suit: .spades)print("theAceOfSpades: \(theAceOfSpades.description)")// Prints "theAceOfSpades: suit is ♠, value is 1 or 11"
-```
-Even though `Rank` and `Suit` are nested within `BlackjackCard`, their type can be inferred from context, and so the initialization of this instance is able to refer to the enumeration cases by their case names (.ace and .spades) alone. In the example above, the description property correctly reports that the Ace of Spades has a value of 1 or 11.
-### Referring to Nested TypesTo use a nested type outside of its definition context, prefix its name with the name of the type it is nested within:
+Щоб вкласти один тип всередині іншого, достатньо просто записати його визначення всередині фігурних дужок зовнішнього типу. Типи можна вкладувати на стільки рівнів, на скільки це потрібно.
 
-```swiftlet heartsSymbol = BlackjackCard.Suit.hearts.rawValue// heartsSymbol is "♡"
+### Вкладені типи в дії
+
+У прикладі нижче визначено структуру на ім'я `BlackjackCard`, котра моделює гральну карту для використання у грі Blackjack. Структура `BlackjackCard`містить два вкладені перечислення, що носять назви `Suit` та `Rank`, і моделюють відповідно масть та ранг.
+
+У грі Blackjack, тузи (`ace`) мають значення один або одинадцять. Цю поведінку представлено за допомогою структури `Values`, котру вкладено всередині перечислення `Rank`:
+
+```swift
+struct BlackjackCard {
+    
+    // вкладене перечислення Suit
+    enum Suit: Character {
+        case spades = "♠", hearts = "♡", diamonds = "♢", clubs = "♣"
+    }
+    
+    // вкладене перечислення Rank
+    enum Rank: Int {
+        case two = 2, three, four, five, six, seven, eight, nine, ten
+        case jack, queen, king, ace
+        struct Values {
+            let first: Int, second: Int?
+        }
+        var values: Values {
+            switch self {
+            case .ace:
+                return Values(first: 1, second: 11)
+            case .jack, .queen, .king:
+                return Values(first: 10, second: nil)
+            default:
+                return Values(first: self.rawValue, second: nil)
+            }
+        }
+    }
+    
+    // властивості та методи структури BlackjackCard
+    let rank: Rank, suit: Suit
+    var description: String {
+        var output = "масть дорівнює \(suit.rawValue),"
+        output += " значення дорівнює \(rank.values.first)"
+        if let second = rank.values.second {
+            output += " або \(second)"
+        }
+        return output
+    }
+}
 ```
-For the example above, this enables the names of `Suit`, `Rank`, and `Values` to be kept deliberately short, because their names are naturally qualified by the context in which they are defined.
+
+Перечислення `Suit` чотири загальні масті гральних карт, а його сирі значення типу `Character` містять символи цих мастей.
+
+Перечислення `Rank` описує тринадцять можливих рангів гральних карт, а сирі значення типу `Int` представляють їх числові значення. Ці сирі значення типу `Int` не використовуються для вальтів, дам, королів та тузів (`jack`, `queen`, `king`, та `ace` відповідно).
+
+Як згадувалось вище, перечислення `Rank` визначає власну вкладену структуру на ім'я `Values`. Ця структура інкапсулює те, що всі карти мають одне значення, в той час як тузи мають два значення. Структура `Values` визначає дві властивості для представлення цього факту:
+
+ + `first` – перше значення, типу `Int`
+ + `second` – друге значення, типу `Int?`, або “опціональний `Int`”
+
+Структура `Rank` також має властивість, що обчислюється, на ім'я `values`, котра повертає екземпляр структури `Values`. Ця властивість, що обчислюється, створює новий екземпляр `Values`, що відповідає даному рангу. Для числових карт, вона використовує цілочисельне сире значення. Для вальтів, дам, королів та тузів (`jack`, `queen`, `king`, та `ace`) викоритовуються спеціальні значення.
+
+Структура `BlackjackCard` сама по собі дві властивості — `rank` та `suit`. Вона також визначає властивість, що обчислюється `description`, котра використовує значення `rank` та `suit` для побудови текстового опису назви та значення карти. Властивість `description` використовує прив'язування опціоналу для перевірки значення `values.second`, і якщо воно є, додає в кінець опису інформацію про це значення. 
+
+Оскільки структура `BlackjackCard` є структурою без явних ініціалізаторів, вона має неявний почленний ініціалізатор, як описано в підрозділі [Почленні ініціалізатори для структур](13_initialization.md#Почленні-ініціалізатори-для-структур). Цей ініціалізатор можна використовувати для ініціалізації нової константи на ім'я `theAceOfSpades`:
+
+```swift
+let theAceOfSpades = BlackjackCard(rank: .ace, suit: .spades)
+print("theAceOfSpades: \(theAceOfSpades.description)")
+// Надрукує "theAceOfSpades: масть дорівнює ♠, значення дорівнює 1 або 11"
+```
+
+Хоч перечислення `Rank` та `Suit` і є вкладеними всередині `BlackjackCard`, їх типи все ще можна визначити з контексту, і тому в ініціалізації цього екземпляру можна посилатись на елементи перечислень лише за самими їх іменами, `.ace` та `.spades`. У прикладі вище, властивість `description` коректно повідомляє, що туз пік має значення 1 або 11.
+
+### Посилання на вкладені типи
+
+Для використання вкладеного типу поза контекстом, де його визначено, слід спершу вказувати назву типу, де його визначено:
+
+```swift
+let heartsSymbol = BlackjackCard.Suit.hearts.rawValue
+// heartsSymbol дорівнює "♡"
+```
+
+У прикладах вище, це дозволяє свідомо трамати назви типів `Suit`, `Rank`, та `Values` короткими, оскільки їх призначення зрозуміле з контексту, де їх визначено. 
