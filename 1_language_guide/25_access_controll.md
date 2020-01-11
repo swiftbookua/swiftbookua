@@ -47,7 +47,7 @@ For example:
 
 The specific implications of this guiding principle for different aspects of the language are covered in detail below.
 
-Default Access Levels
-All entities in your code (with a few specific exceptions, as described later in this chapter) have a default access level of internal if you don’t specify an explicit access level yourself. As a result, in many cases you don’t need to specify an explicit access level in your code[…]»
+#### Default Access Levels
 
-Уривок з: Apple Inc. «The Swift Programming Language (Swift 5.1)». iBooks. 
+All entities in your code (with a few specific exceptions, as described later in this chapter) have a default access level of internal if you don’t specify an explicit access level yourself. As a result, in many cases you don’t need to specify an explicit access level in your code.
+

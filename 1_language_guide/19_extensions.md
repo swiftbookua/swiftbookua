@@ -11,9 +11,9 @@
  + Визначати та використовувати нові вкладені типи
  + Підпорядковувати розширений тип до протоколу
 
-У Swift, можна навіть розширити протокол, реалізувавши його вимоги чи додавши додаткову функціональність, якою можуть користуватись підпорядковані до цього протоколу типи. Детальніше з цим можна ознайомитись у підрозділі [Розширення протоколів](21_protocols.md#Розшинення-протоколів).
+У Swift, можна навіть розширити протокол, реалізувавши його вимоги чи додавши додаткову функціональність, якою можуть користуватись підпорядковані до цього протоколу типи. Детальніше з цим можна ознайомитись у підрозділі [Розширення протоколів](20_protocols.md#Розшинення-протоколів).
 
-In Swift, you can even extend a protocol to provide implementations of its requirements or add additional functionality that conforming types can take advantage of. For more details, see [Protocol Extensions](20_extensions.md#Protocol-Extensions).
+In Swift, you can even extend a protocol to provide implementations of its requirements or add additional functionality that conforming types can take advantage of. For more details, see [Protocol Extensions](19_extensions.md#Protocol-Extensions).
 
 > **Примітка**
 >
@@ -37,7 +37,7 @@ extension SomeType: SomeProtocol, AnotherProtocol {
 }
 ```
 
-Підпорядкування протоколу через розширення детально описано в підрозділі [Підпорядкування протоколу за допомогою розширення](21_protocols.md#Підпорядкування-протоколу-за-допомогою-розширення).
+Підпорядкування протоколу через розширення детально описано в підрозділі [Підпорядкування протоколу за допомогою розширення](20_protocols.md#Підпорядкування-протоколу-за-допомогою-розширення).
 
 > **Примітка**
 >

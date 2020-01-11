@@ -99,6 +99,8 @@ var ncc1701 = Starship(name: "Enterprise", prefix: "USS")
 
 ### Вимоги методів
 
+Протоколи можуть вимагати, щоб підпорядковані екземпляри 
+
 Protocols can require specific instance methods and type methods to be implemented by conforming types. These methods are written as part of the protocol’s definition in exactly the same way as for normal instance and type methods, but without curly braces or a method body. Variadic parameters are allowed, subject to the same rules as for normal methods. Default values, however, cannot be specified for method parameters within a protocol’s definition.
 
 As with type property requirements, you always prefix type method requirements with the `static` keyword when they are defined in a protocol. This is true even though type method requirements are prefixed with the `class` or `static` keyword when implemented by a class:
@@ -413,7 +415,7 @@ game.play()
 
 ### Adding Protocol Conformance with an Extension
 
-You can extend an existing type to adopt and conform to a new protocol, even if you do not have access to the source code for the existing type. Extensions can add new properties, methods, and subscripts to an existing type, and are therefore able to add any requirements that a protocol may demand. For more about extensions, see [Extensions](20_extensions.md).
+You can extend an existing type to adopt and conform to a new protocol, even if you do not have access to the source code for the existing type. Extensions can add new properties, methods, and subscripts to an existing type, and are therefore able to add any requirements that a protocol may demand. For more about extensions, see [Extensions](19_extensions.md).
 
 > **Note**
 > 
@@ -727,7 +729,7 @@ You can define *optional requirements* for protocols, These requirements do not 
 
 When you use a method or property in an optional requirement, its type automatically becomes an optional. For example, a method of type `(Int) -> String` becomes `((Int) -> String)?`. Note that the entire function type is wrapped in the optional, not the method’s return value.
 
-An optional protocol requirement can be called with optional chaining, to account for the possibility that the requirement was not implemented by a type that conforms to the protocol. You check for an implementation of an optional method by writing a question mark after the name of the method when it is called, such as `someOptionalMethod?(someArgument)`. For information on optional chaining, see [Optional Chaining](16_optional_chaining.md).
+An optional protocol requirement can be called with optional chaining, to account for the possibility that the requirement was not implemented by a type that conforms to the protocol. You check for an implementation of an optional method by writing a question mark after the name of the method when it is called, such as `someOptionalMethod?(someArgument)`. For information on optional chaining, see [Optional Chaining](15_optional_chaining.md).
 
 The following example defines an integer-counting class called `Counter`, which uses an external data source to provide its increment amount. This data source is defined by the `CounterDataSource` protocol, which has two optional requirements:
 
@@ -766,7 +768,7 @@ The `increment()` method first tries to retrieve an increment amount by looking 
 
 Note that two levels of optional chaining are at play here. First, it is possible that `dataSource` may be nil, and so `dataSource` has a question mark after its name to indicate that `increment(forCount:)` should be called only if `dataSource` isn’t `nil`. Second, even if `dataSource` does exist, there is no guarantee that it implements `increment(forCount:)`, because it is an optional requirement. Here, the possibility that `increment(forCount:)` might not be implemented is also handled by optional chaining. The call to `increment(forCount:)` happens only if `increment(forCount:)` exists—that is, if it isn’t `nil`. This is why `increment(forCount:)` is also written with a question mark after its name.
 
-Because the call to `increment(forCount:)` can fail for either of these two reasons, the call returns an optional Int value. This is true even though `increment(forCount:)` is defined as returning a nonoptional Int value in the definition of `CounterDataSource`. Even though there are two optional chaining operations, one after another, the result is still wrapped in a single optional. For more information about using multiple optional chaining operations, see [Linking Multiple Levels of Chaining](16_optional_chaining.md#Linking-Multiple-Levels-of-Chaining).
+Because the call to `increment(forCount:)` can fail for either of these two reasons, the call returns an optional Int value. This is true even though `increment(forCount:)` is defined as returning a nonoptional Int value in the definition of `CounterDataSource`. Even though there are two optional chaining operations, one after another, the result is still wrapped in a single optional. For more information about using multiple optional chaining operations, see [Linking Multiple Levels of Chaining](15_optional_chaining.md#Linking-Multiple-Levels-of-Chaining).
 
 After calling `increment(forCount:)`, the optional `Int` that it returns is unwrapped into a constant called amount, using optional binding. If the optional `Int` does contain a value — that is, if the delegate and method both exist, and the method returned a value — the unwrapped amount is added onto the stored count property, and incrementation is complete.
 

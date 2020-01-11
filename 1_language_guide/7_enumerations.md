@@ -8,39 +8,54 @@
 
 Перечислення у Swift є самі по собі першокласними типами. Вони підтримують багато можливостей, які раніше традиційно підтримувилась лише класами, такі як властивсоті, що обчислються (щоб надавати додаткову інформацію про поточне значення перечислення), та методи екземплярів (щоб надавати функціональність, пов'язану зі значенням, котре представляє перечислення). Перечислення можуть також визначати ініціалізатори для задавання початкового значення елемента; для перечислень можна створювати розширення, щоб виводити їх функціональність за межі початкової реалізації; перечислення можуть підпорядковуватись до протоколів, щоб надавати стандартну функціональність.
 
-Детальніше з цими можливостями можна ознайомитись у розділах [Властивості](9_properties.md), [Методи](10_methods.md), [Ініціалізація](13_initialization.md), [Розширення](20_extensions.md), та [Протоколи](21_protocols.md).
+Детальніше з цими можливостями можна ознайомитись у розділах [Властивості](9_properties.md), [Методи](10_methods.md), [Ініціалізація](13_initialization.md), [Розширення](19_extensions.md), та [Протоколи](20_protocols.md).
 
 ### Синтаксис перечислень
 
 Щоб створити перечислення, слід використати ключове слово `enum` та помістити все оголошення в пару фігурних дужок:
 
-```swiftenum <ЯкесьПеречислення> {    // тут йде визначення перечислення}
+```swift
+enum <ЯкесьПеречислення> {
+    // тут йде визначення перечислення
+}
 ```
 
 Ось приклад перечислення для чотирьох основних точок компасу:
 
-```swiftenum CompassPoint {    case north    case south    case east    case west}
+```swift
+enum CompassPoint {
+    case north
+    case south
+    case east
+    case west
+}
 ```
 
 Значення, оголошені в перечисленні (такі як `north`, `south`, `east`, та `west`) є його *елементами перечислення*. Для оголошення нового елементу перечислення використовують ключове слово `case`.
-> **Примітка**
+
+> **Примітка**
 > 
 > Навідміну від C та Objective-C, елементам перечислень Swift при створенні не присвоюється цілочисельне значення за замовчанням. У прикладі вище, елементи перечислення `CompassPoint` – `north`, `south`, `east`, та `west` – не дорівнюватимуть неявно `0`, `1`, `2` та `3`, як це було б в C. Замість цього, елементи перечислення є повноцінними значеннями на власних правах, із явно визначеним типом – `CompassPoint`.
 
 Кілька різних елементів перечислення можуть оголошуватись в одному рядку, розділені комою:
- 
-```swiftenum Planet {    case mercury, venus, earth, mars, jupiter, saturn, uranus, neptune}
+
+```swift
+enum Planet {
+    case mercury, venus, earth, mars, jupiter, saturn, uranus, neptune
+}
 ```
 
 Кожне оголошення перечислення визначає новий тип. Як і інші типи у Swift, їх назви (такі як `CompassPoint` та `Planet`) прийнято писати з великої літери. Бажано давати перечисленням назви в однині, а не у множині, щоб вони читались самоочевидним чином:
 
-```swiftvar directionToHead = CompassPoint.west
+```swift
+var directionToHead = CompassPoint.west
 // дослівдно: var напрямокРуху = ТочкаКомпасу.захід
 ```
 
 Тип змінної `directionToHead` буде визначено з того, що вона ініціалізується одним із можливих значень типу `CompassPoint`. Після того, як змінну `directionToHead` оголошено як змінну типу `CompassPoint`, їй можна присвоїти нове значення типу `CompassPoint` за допомогою кототшого синтаксису, через точку:
 
-```swiftdirectionToHead = .east
+```swift
+directionToHead = .east
 ```
 
 Тип змінної `directionToHead` вже відомий, і тому  можна пропустити ім'я типу при присвоєнні нового значення. Це робить код набагато легшим для читання при роботі з явно типізованими значеннями перечислень.
@@ -49,35 +64,66 @@
 
 Визначити елементи перечислення можна за допомогою інструкції `switch` наступним чином:
 
-```swiftdirectionToHead = .southswitch directionToHead {case .north:    print("На багатьох планетах є північ")case .south:    print("Стережіться пінгвінів")case .east:    print("Тут встає сонце")case .west:    print("Тут небо синє")}// Надрукує "Стережіться пінгвінів"
+```swift
+directionToHead = .south
+switch directionToHead {
+case .north:
+    print("На багатьох планетах є північ")
+case .south:
+    print("Стережіться пінгвінів")
+case .east:
+    print("Тут встає сонце")
+case .west:
+    print("Тут небо синє")
+}
+// Надрукує "Стережіться пінгвінів"
 ```
 
 Цей код можна прочитати так:
 
-“Розглядаємо значення змінної `directionToHead`. Якщо вона дорівнює `.north`, друкуємо `"На багатьох планетах є північ"`. Якщо вона дорівнює `.south`, друкуємо `"Стережіться пінгвінів"`.”…і так далі.
+“Розглядаємо значення змінної `directionToHead`. Якщо вона дорівнює `.north`, друкуємо `"На багатьох планетах є північ"`. Якщо вона дорівнює `.south`, друкуємо `"Стережіться пінгвінів"`.”
+…і так далі.
 
 Як описано в розділі [Потік керування](4_control_flow.md), інструкція `switch` повинна бути вичерпною при розгляді елементів перечислення. Якщо пропистити випадок для елементу `.west`, код не скомпілюється, бо він не розглядатиме повного списку елементів `CompassPoint`. Вимога вичерпності гарантує, що елементи перечислення не будуть пропучені випадково.
 
 Якщо в даному випадку недоречно створювати окремий випадок для кожного можливого елементу перечислення, можна створити випадок за замовчанням `default` для покриття всіх елементів, які не оброблено явно:
 
-```swiftlet somePlanet = Planet.earth		// Планета.земляswitch somePlanet {case .earth:    print("Здебільшого, нешкідлива")default:    print("Небезпечне місце для людей")}// Надрукує "Здебільшого, нешкідлива"и
-```### Асоційовані значення
+```swift
+let somePlanet = Planet.earth		// Планета.земля
+switch somePlanet {
+case .earth:
+    print("Здебільшого, нешкідлива")
+default:
+    print("Небезпечне місце для людей")
+}
+// Надрукує "Здебільшого, нешкідлива"и
+```
 
-У прикладах в попередньому підрозділі показано, як елементи перечислення визначено (і типізовано) як повноправне значення. Константі чи змінній можна присвоїти значення `Planet.earth`, і звірити це значення пізніше. Однак, іноді буває корисно мати можливсіть зберігати *асоційовані значення* інших типів разом із елементами перечислень. Це дозволяє зберігати власну додаткову інформацію разом із елементом перечислення, і дозволяє цій інформації змінюватись при кожному використанні цього елементу перечислення у коді. У Swift можна оголошувани перечислення для зберігання асоційованих значень будь-якого заданого типу, і типи цих значень можуть за потреби бути різними для кожного елементу перечислення. Перечислення тикого виду відомі як *розмічені об'єднання*, *тип-сума* або *варіант* в інших мовах програмування.
+### Асоційовані значення
+
+У прикладах в попередньому підрозділі показано, як елементи перечислення визначено (і типізовано) як повноправне значення. Константі чи змінній можна присвоїти значення `Planet.earth`, і звірити це значення пізніше. Однак, іноді буває корисно мати можливсіть зберігати *асоційовані значення* інших типів разом із елементами перечислень. Це дозволяє зберігати власну додаткову інформацію разом із елементом перечислення, і дозволяє цій інформації змінюватись при кожному використанні цього елементу перечислення у коді. 
+
+У Swift можна оголошувани перечислення для зберігання асоційованих значень будь-якого заданого типу, і типи цих значень можуть за потреби бути різними для кожного елементу перечислення. Перечислення тикого виду відомі як *розмічені об'єднання*, *тип-сума* або *варіант* в інших мовах програмування.
 
 Наприклад, припустимо, що система інвентаризації магазину потребує, щоб товари відслідковувались за допомогою одного з двох видів штрих-кодів. Одні товари маруються одномірним штрих-кодом в форматі UPC, що використовує цифри від `0` до `9`. Кожен штрих-код містить цифру, що кодує “систему числення”, після цього йде п'ять цифр “коду виробника” та п'ять цифр “коду товарум. Останньою є “перевірочна” цифра, котра потрібна для підтвердження правильності зчитування коду:
 
 ![](images/barcode_UPC_2x.png)
-￼
+
+￼
 Інші товари маркуються двовимірним штрих-кодом у форматі QR-коду, що може використовувати будь-які символи в кодуванні ISO 8859-1, та може кодувати рядок довжиною до 2953 символів.
 
 ![](images/barcode_QR_2x.png)
 
 
-Для системи інвентаризації було б зручно мати можливість зберігати штрих-коди UPC як кортеж із чотирьох цілих чисел, а QR-коди - як рядки довільної довжини.￼
+Для системи інвентаризації було б зручно мати можливість зберігати штрих-коди UPC як кортеж із чотирьох цілих чисел, а QR-коди - як рядки довільної довжини.
+￼
 У Swift, можна створити перечислення, котре може зберігати штрих-коди обох типів:
 
-```swiftenum Barcode {    case upc(Int, Int, Int, Int)    case qrCode(String)}
+```swift
+enum Barcode {
+    case upc(Int, Int, Int, Int)
+    case qrCode(String)
+}
 ```
 
 Це можна прочитати так:
@@ -88,26 +134,42 @@
 
 Нові значення штрих-кодів можна створювати, шляхом використання одного із елементів перечислення:
 
-```swiftvar productBarcode = Barcode.upc(8, 85909, 51226, 3)
+```swift
+var productBarcode = Barcode.upc(8, 85909, 51226, 3)
 ```
 
 У цьому прикладу створено нову змінну на ім'я `productBarcode`, і їй присвоєно значення `Barcode.upc` з асоційованим значенням кортежу `(8, 85909, 51226, 3)`.
 
 Той же товар може мати штрих-код іншого типу:
 
-```swiftproductBarcode = .qrCode("ABCDEFGHIJKLMNOP")
+```swift
+productBarcode = .qrCode("ABCDEFGHIJKLMNOP")
 ```
 
 На даному етапі, початкове значення `Barcode.upc` та його цілочисельні значення було замінено новим значенням `Barcode.qrCode` та рядком. Константи та змінні типу `Barcode` можуть зберігати або значення `.upc`, або значення `.qrCode` (разом із їх асоційованими значеннями), але вони не можуть зберігати обидва значення одночасно. 
 
 Різні види штрих-кодів модуть визначатись за допомогою інструкції `switch`, як і раніше. Цього разу, однак, в інструкції `switch` можна витягувати асоційовані значення. Кожне з асоційованих значень можна витягнути у вигляді константи (за допомогою префіксу `let`) чи змінної (за допомогою префіксу `var`) для використання в тілі випадку інструкції `switch`:
 
-```swiftswitch productBarcode {case .upc(let numberSystem, let manufacturer, let product, let check):    print("UPC: \(numberSystem), \(manufacturer), \(product), \(check).")case .qrCode(let productCode):    print("QR: \(productCode).")}// Надрукує "QR: ABCDEFGHIJKLMNOP."
+```swift
+switch productBarcode {
+case .upc(let numberSystem, let manufacturer, let product, let check):
+    print("UPC: \(numberSystem), \(manufacturer), \(product), \(check).")
+case .qrCode(let productCode):
+    print("QR: \(productCode).")
+}
+// Надрукує "QR: ABCDEFGHIJKLMNOP."
 ```
 
 Якщо всі асоційовані значення елементу пересислення витягуються як константи, або якщо всі вони витягуються як змінні, для лаконічності можна вставляти лише одине ключове слово `let` чи `var` перед іменем цього елементу:
 
-```swiftswitch productBarcode {case let .upc(numberSystem, manufacturer, product, check):    print("UPC : \(numberSystem), \(manufacturer), \(product), \(check).")case let .qrCode(productCode):    print("QR: \(productCode).")}// Надрукує "QR: ABCDEFGHIJKLMNOP."
+```swift
+switch productBarcode {
+case let .upc(numberSystem, manufacturer, product, check):
+    print("UPC : \(numberSystem), \(manufacturer), \(product), \(check).")
+case let .qrCode(productCode):
+    print("QR: \(productCode).")
+}
+// Надрукує "QR: ABCDEFGHIJKLMNOP."
 ```
 
 ### Сирі значення
@@ -116,13 +178,19 @@
 
 Ось приклад перечислення, у якому разом з елементами перечислення зберігаються сирі тестові символи з кодування ASCII:
 
-```swiftenum ASCIIControlCharacter: Character {    case tab = "\t"    case lineFeed = "\n"    case carriageReturn = "\r"}
+```swift
+enum ASCIIControlCharacter: Character {
+    case tab = "\t"
+    case lineFeed = "\n"
+    case carriageReturn = "\r"
+}
 ```
 
 Тут визначено, що перечислення `ASCIIControlCharacter` має сирі значення типу `Character`, а його елементам відповідають деякі з досить уживаних контрольних символів з кодування ASCII. Детальніше текстові символи `Character` були описані в розділі [Рядки та символи](2_strings_and_characters.md).
 
 Сирим значенням може бути рядок, символи, чи будь-який з цілочисельних типів або типів чисел з плаваючою комою. Сирі значення в оголошенні перечислення не можуть повторюватись.
-> **Примітка**
+
+> **Примітка**
 > 
 > Сирі значення *не є* тип же само, що асоційоване значення. Сирі значення заповнюються одразу при їх оголошенні в перечисленні, як три коди ASCII вище. Сирі значення для певного елементу перечислення є завжди однаковими. Асоційовані значення задаються при створенні нової константи чи змінної з одного з елементів перечислення, і може бути щоразу різним.
 
@@ -134,7 +202,10 @@
 
 Перечислення нижче є вдосконаленням попереднього перечислення `Planet`, з цілочисельними сирими значеннями, що преставляють порядок планети від сонця:
 
-```swiftenum Planet: Int {    case mercury = 1, venus, earth, mars, jupiter, saturn, uranus, neptune}
+```swift
+enum Planet: Int {
+    case mercury = 1, venus, earth, mars, jupiter, saturn, uranus, neptune
+}
 ```
 
 У прикладі вище, елемент `Planet.mercury` має явне сире значення `1`, елемент `Planet.venus` має неявне сире значення `2`, і так далі.
@@ -143,14 +214,22 @@
 
 Перечислення нижче є вдосконаленням попереднього перечислення `CompassPoint`, із сирим значенням типу `String`, що представляє назву кожного напрямку:
 
-```swiftenum CompassPoint: String {    case north, south, east, west}
+```swift
+enum CompassPoint: String {
+    case north, south, east, west
+}
 ```
 
 У прикладі вище, елемент `CompassPoint.south` має сире значення `"south"`, і так далі.
 
 Отримати сире значення елементу перечислення можна за допомогою його властивості `rawValue`:
 
-```swiftlet earthsOrder = Planet.earth.rawValue// earthsOrder дорівнює 3 let sunsetDirection = CompassPoint.west.rawValue// sunsetDirection дорівнює "west"
+```swift
+let earthsOrder = Planet.earth.rawValue
+// earthsOrder дорівнює 3
+ 
+let sunsetDirection = CompassPoint.west.rawValue
+// sunsetDirection дорівнює "west"
 ```
 
 #### Ініціалізація за допомогою сирого значення
@@ -159,17 +238,32 @@
 
 Наступний приклад демонструє створення елементу, що відповідає планеті Уран, з числа `7`:
 
-```swiftlet possiblePlanet = Planet(rawValue: 7)// possiblePlanet має тип Planet? та дорівнює Planet.uranus
+```swift
+let possiblePlanet = Planet(rawValue: 7)
+// possiblePlanet має тип Planet? та дорівнює Planet.uranus
 ```
 
 Однак, не кожному можливому значенню `Int` відповідає планета з перечислення `Planet`. Через це, ініціалізатор сирим значенням завжди повертає *опціональний* елемент перечислення. У прикладі вище, `possiblePlanet` має тип `Planet?`, або “опціональна `Planet`.”
-> **Примітка**
+
+> **Примітка**
 > 
 > Ініціалізатор сирим значенням є ненадійним ініціалізатором, бо не для кожного сирого значення він поверте елемент перечислення. Детальніше з ненадійними ініціалізаторами можна познайомитись в розділі [Ненадійні ініціалізатори](2_language_reference/06_declarations.md/#Failable-Initializers).
- 
+
 Якщо спробувати знайти планету в позиції `11`, опціональне значення `Planet`, що повертенться з ініціалізатора сирим значенням, буде `nil`:
 
-```swiftlet positionToFind = 11if let somePlanet = Planet(rawValue: positionToFind) {    switch somePlanet {    case .earth:        print("Здебільшого, нешкідлива")    default:        print("Небезпечне місце для людей")    }} else {    print("Не існує планети в позиції \(positionToFind)")}// Надрукує "Не існує планети в позиції 11"
+```swift
+let positionToFind = 11
+if let somePlanet = Planet(rawValue: positionToFind) {
+    switch somePlanet {
+    case .earth:
+        print("Здебільшого, нешкідлива")
+    default:
+        print("Небезпечне місце для людей")
+    }
+} else {
+    print("Не існує планети в позиції \(positionToFind)")
+}
+// Надрукує "Не існує планети в позиції 11"
 ```
 
 У даному прикладі для доступу до планети, ініціалізованої сирим значенням `11`, використовується прив'язування опціоналу. Якщо інструкція `if let somePlanet = Planet(rawValue: 11)` створить планету, константі `somePlanet` буде присвоєно значення опціональної `Planet`. У цьому ж випадку, планету з позицією  `11` створити неможливо, тому виконується гілка коду `else`.
@@ -180,22 +274,49 @@
 
 Наприклад, ось перечислення, що зберігає прості арифметичні вирази:
 
-```swiftenum ArithmeticExpression {    case number(Int)    indirect case addition(ArithmeticExpression, ArithmeticExpression)    indirect case multiplication(ArithmeticExpression, ArithmeticExpression)}
+```swift
+enum ArithmeticExpression {
+    case number(Int)
+    indirect case addition(ArithmeticExpression, ArithmeticExpression)
+    indirect case multiplication(ArithmeticExpression, ArithmeticExpression)
+}
 ```
 
 Такоже можна вказати ключове слово `indirect` перед початком оголошення перечислення, щоб дозволити кожному з елементів перечислення бути за потреби рекурсивним:
 
-```swiftindirect enum ArithmeticExpression {    case number(Int)    case addition(ArithmeticExpression, ArithmeticExpression)    case multiplication(ArithmeticExpression, ArithmeticExpression)}
+```swift
+indirect enum ArithmeticExpression {
+    case number(Int)
+    case addition(ArithmeticExpression, ArithmeticExpression)
+    case multiplication(ArithmeticExpression, ArithmeticExpression)
+}
 ```
 
 Дане перечислення може зберігати три види арифметичних виразів: ціле число, додавання двох виразів, та множення двох виразів. Елементи `addition` та `multiplication` мають асоційовані значення, що є теж арифметичними виразами – ці асоційовані значення дозволяють створювати вкладені вирази. Наприклад, вираз `(5 + 4) * 2` містить число справа від знаку множення та інший вираз зліва від знаку множення. Оскільки вираз `(5 + 4)` є вкладеним в вираз `(5 + 4) * 2`, перечислення, в якому ці вирази моделюються, теж повинні підтримувати вкладеність, тобто бути рекурсивними. У коді нижче демонструється рекурсивне перечислення `ArithmeticExpression`, створене для моделювання виразу `(5 + 4) * 2`:
 
-```swiftlet five = ArithmeticExpression.number(5)let four = ArithmeticExpression.number(4)let sum = ArithmeticExpression.addition(five, four)let product = ArithmeticExpression.multiplication(sum, ArithmeticExpression.number(2))
+```swift
+let five = ArithmeticExpression.number(5)
+let four = ArithmeticExpression.number(4)
+let sum = ArithmeticExpression.addition(five, four)
+let product = ArithmeticExpression.multiplication(sum, ArithmeticExpression.number(2))
 ```
 
 Природнім способом роботи із даними з рекурсивною структурою є рекурсивна функція. Наприклад, ось функція, що обчислює значення арифметичного виразу:
 
-```swiftfunc evaluate(_ expression: ArithmeticExpression) -> Int {    switch expression {    case let .number(value):        return value    case let .addition(left, right):        return evaluate(left) + evaluate(right)    case let .multiplication(left, right):        return evaluate(left) * evaluate(right)    }} print(evaluate(product))// Надрукує "18"
+```swift
+func evaluate(_ expression: ArithmeticExpression) -> Int {
+    switch expression {
+    case let .number(value):
+        return value
+    case let .addition(left, right):
+        return evaluate(left) + evaluate(right)
+    case let .multiplication(left, right):
+        return evaluate(left) * evaluate(right)
+    }
+}
+ 
+print(evaluate(product))
+// Надрукує "18"
 ```
 
 Ця функція обчислює вираз "ціле число" просто повертаючи асоційоване значення елементу `number`. Додавання та множення обчислюється шляхом обчислення лівого виразу, обчислення правого виразу, та додавання/множення результатів цих обчислень.
