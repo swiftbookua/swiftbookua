@@ -1,6 +1,6 @@
 ## Протоколи
 
-*Протокол* визначає план методів, властивостей, та інших вимог, котрі підходять для певної задачі чи частини функціональності. Протоколам можуть підпорядковуватись класи, структури та перечислення, надаючи реалізації до цих вимог. Якщо тип виконує всі вимоги певного протоколу, про нього кажуть, що тип *підпорядковується* протоколу. 
+*Протокол* визначає список методів, властивостей, та інших вимог, котрі підходять для певної задачі чи частини функціональності. Класи, структури та перечислення можуть підпорядковуватись протоколам, надаючи реалізації до цих вимог. Якщо тип виконує всі вимоги певного протоколу, про нього кажуть, що тип *підпорядковується* протоколу. 
 
 Окрім визначення вимог, яким повинні відповідати підпорядковані типи, протоколи можуть бути розширеними для реалізації цих вимог, або для реалізації додаткової функціональності, котрою можуть скористатись підпорядковані типи. 
 
@@ -99,11 +99,9 @@ var ncc1701 = Starship(name: "Enterprise", prefix: "USS")
 
 ### Вимоги методів
 
-Протоколи можуть вимагати, щоб підпорядковані екземпляри 
+Протоколи можуть вимагати, щоб підпорядковані типи реалізовували певні методи екземплярів чи методи типів. Ці вимоги записуються в оголошенні протоколу точно так само, як і самі методи, тільки без фігурних дужок та тіла методу. Дозволяються варіативні параметри, котрі регулюються тими ж правилами, що й звичайні методи. Однак, нажаль у визначені протоколу не можна вказувати значення параметрів методу за замовчанням.
 
-Protocols can require specific instance methods and type methods to be implemented by conforming types. These methods are written as part of the protocol’s definition in exactly the same way as for normal instance and type methods, but without curly braces or a method body. Variadic parameters are allowed, subject to the same rules as for normal methods. Default values, however, cannot be specified for method parameters within a protocol’s definition.
-
-As with type property requirements, you always prefix type method requirements with the `static` keyword when they are defined in a protocol. This is true even though type method requirements are prefixed with the `class` or `static` keyword when implemented by a class:
+Як і з вимогами властивостей, слід завжди позначати вимоги методів типів за допомогою ключового слова `static`. При цьому реалізації цих методів у класах можуть позначатись як ключовим словом `static`, так і ключовим словом  `class`:
 
 ```swift
 protocol SomeProtocol {
@@ -111,7 +109,7 @@ protocol SomeProtocol {
 }
 ```
 
-The following example defines a protocol with a single instance method requirement:
+У наступному прикладі визначено протокол з єдиною вимогою методу екземпляру:
 
 ```swift
 protocol RandomNumberGenerator {
@@ -119,11 +117,11 @@ protocol RandomNumberGenerator {
 }
 ```
 
-This protocol, `RandomNumberGenerator`, requires any conforming type to have an instance method called `random`, which returns a `Double` value whenever it is called. Although it is not specified as part of the protocol, it is assumed that this value will be a number from `0.0` up to (but not including) `1.0`.
+Даний протокол `RandomNumberGenerator` вимагає, щоб підпорядковані типи мали метод екземпляру на ім'я `random`, котрий при виклику повертає випадкове значення типу `Double`. Хоч в протоколі це не зазначено явно, будемо вважати, що метод має повертати числове значення в діапазоні від  `0.0` включно до `1.0` невключно.
 
-The `RandomNumberGenerator` protocol does not make any assumptions about how each random number will be generated—it simply requires the generator to provide a standard way to generate a new random number.
+Протокол `RandomNumberGenerator` не робить жодних припущень щодо того, як буде згенеровано кожне випадкове число – він просто вимагає, щоб генератор випадкових чисел, котрий до нього підпорядкований, мав  стандартний спосіб генерації випадкового числа. 
 
-Here’s an implementation of a class that adopts and conforms to the `RandomNumberGenerator` protocol. This class implements a pseudorandom number generator algorithm known as a *linear congruential generator*:
+Ось реалізація класу, підпорядкованого до протоколу `RandomNumberGenerator`. Цей клас реалізовує алгоритм геренації псевдовипадкових чисел, відомий як *лінійний конгруентний метод*:
 
 ```swift
 class LinearCongruentialGenerator: RandomNumberGenerator {
@@ -137,27 +135,25 @@ class LinearCongruentialGenerator: RandomNumberGenerator {
     }
 }
 let generator = LinearCongruentialGenerator()
-print("Here's a random number: \(generator.random())")
-// Prints "Here's a random number: 0.37464991998171"
-print("And another one: \(generator.random())")
-// Prints "And another one: 0.729023776863283"
+print("Ось випадкове число: \(generator.random())")
+// Надрукує "Ось випадкове число: 0.37464991998171"
+print("А ось іще одне: \(generator.random())")
+// Надрукує "А ось іще одне: 0.729023776863283"
 ```
 
 ### Вимоги мутуючих методів
 
-### Mutating Method Requirements
+У методах часом буває потрібно змінити (або *мутувати*) екземпляр, до якого належить даний метод. Методи екземплярів типів-значень (тобто структур та перечислень), що можуть змінювати свій екземпляр або будь-яку з його властивостей, повинні позначатись ключовим словом `mutating` перед ключовим словом `func`. Цей процес детально описаний у підрозділі [Зміни типів-значень в методах екземплярів](10_methods.md#Зміни-типів-значень-в-методах-екземплярів).
 
-It is sometimes necessary for a method to modify (or *mutate*) the instance it belongs to. For instance methods on value types (that is, structures and enumerations) you place the `mutating` keyword before a method’s `func` keyword to indicate that the method is allowed to modify the instance it belongs to and any properties of that instance. This process is described in [Modifying Value Types from Within Instance Methods](10_methods.md#Modifying-Value-Types-from-Within-Instance-Methods).
+При визначенні у протоколі вимог методів екземплярів, котрі призначені для зміни цих екземплярів, слід позначати такі вимоги ключовим словом `mutating` у оголошенні протоколу. Це дозволяє структурам та перечисленням підпорядковуватись протоколу та задовольняти вимоги мутуючих методів. 
 
-If you define a protocol instance method requirement that is intended to mutate instances of any type that adopts the protocol, mark the method with the `mutating` keyword as part of the protocol’s definition. This enables structures and enumerations to adopt the protocol and satisfy that method requirement.
-
-> **Note**
+> **Примітка**
 > 
-> If you mark a protocol instance method requirement as `mutating`, you do not need to write the `mutating` keyword when writing an implementation of that method for a class. The `mutating` keyword is only used by structures and enumerations.
+> Якщо позначити вимогу методу екземпляру ключовим словом `mutating`, при реалізації даного методу в класі, підпорядкованому даному протоколу, вказувати це ключове слово не потрібно. Ключове слово `mutating` використовується тільки для структур та перечислень. 
 
-The example below defines a protocol called `Togglable`, which defines a single instance method requirement called toggle. As its name suggests, the `toggle()` method is intended to toggle or invert the state of any conforming type, typically by modifying a property of that type.
+У прикладі нижче оголошено протокол на ім'я `Togglable`, котрий визначає єдину вимогу методу екземпляру на ім'я `toggle`. Метод `toggle()` призначений для інвертування стану підпорядкованого типу, тобто для переключення стану на протилежний, шляхом зміни властивості цього типу. 
 
-The `toggle()` method is marked with the `mutating` keyword as part of the `Togglable` protocol definition, to indicate that the method is expected to mutate the state of a conforming instance when it is called:
+В оголошенні протоколу  `Togglable` вимогу методу `toggle()` позначено ключовим словом `mutating`, щоб відобразити, що метод `toggle()` призначений для зміни стану підпорядкованого екземпляру: 
 
 ```swift
 protocol Togglable {
@@ -165,9 +161,9 @@ protocol Togglable {
 }
 ```
 
-If you implement the `Togglable` protocol for a structure or enumeration, that structure or enumeration can conform to the protocol by providing an implementation of the `toggle()` method that is also marked as `mutating`.
+Якщо реалізовувати протокол `Togglable` у структурі чи перечисленні, ця структура чи перечислення повинна мати реалізацію методу `toggle()`, що також є позначеною ключовим словом `mutating`. 
 
-The example below defines an enumeration called `OnOffSwitch`. This enumeration toggles between two states, indicated by the enumeration cases `on` and `off`. The enumeration’s toggle implementation is marked as `mutating`, to match the `Togglable` protocol’s requirements:
+У прикладі далі оголошено перечислення на ім'я `OnOffSwitch`, котре моделює стан перемикача світла. Це перечислення переключається між двома станами, що виражаються елеметнами перечислення `on` (увімкнено) та `off` (вимкнено). Реалізація методу `toggle` є позначеною ключовим словом `mutating`, як того вимагає протокол `Togglable`:
 
 ```swift
 enum OnOffSwitch: Togglable {
@@ -183,14 +179,12 @@ enum OnOffSwitch: Togglable {
 }
 var lightSwitch = OnOffSwitch.off
 lightSwitch.toggle()
-// lightSwitch is now equal to .on
+// lightSwitch тепер дорівнює .on
 ```
 
 ### Вимоги ініціалізаторів
 
-### Initializer Requirements
-
-Protocols can require specific initializers to be implemented by conforming types. You write these initializers as part of the protocol’s definition in exactly the same way as for normal initializers, but without curly braces or an initializer body:
+Протоколи можуть вимагати, щоб підпорядковані типи мали певні ініціалізатори. Ці вимоги ініціалізаторів записуються як частина оголошення протоколу, в точно такий же спосіб, як і звичайні ініціалізатори, але без фігурних дужок та тіла ініціалізатора:
 
 ```swift
 protocol SomeProtocol {
@@ -198,27 +192,27 @@ protocol SomeProtocol {
 }
 ```
 
-#### Class Implementations of Protocol Initializer Requirements
+#### Реалізація вимог ініціалізаторів у класах
 
-You can implement a protocol initializer requirement on a conforming class as either a designated initializer or a convenience initializer. In both cases, you must mark the initializer implementation with the `required` modifier:
+Вимоги ініціалізаторів у класах можна реалізовувати як у вигляді призначених ініціалізаторів, так і у вигляді ініціалізаторів для зручності. В обох випадках, слід реалізацію ініціалізатору слід позначати ключовим словом `required`:
 
 ```swift
 class SomeClass: SomeProtocol {
     required init(someParameter: Int) {
-        // initializer implementation goes here
+        // тут йде реалізація ініціалізатора
     }
 }
 ```
 
-The use of the `required` modifier ensures that you provide an explicit or inherited implementation of the initializer requirement on all subclasses of the conforming class, such that they also conform to the protocol.
+Використання модифікатора `required` гарантує, що явну чи успадковану реалізацію ініціалізатора буде надано *в усіх нащадках* підпорядкованого класу, і таким чином вони також підпорядковуються до даного протоколу.  
 
-For more information on required initializers, see [Required Initializers](13_initialization.md#Required-Initializers).
+Детальніше з обов'язковими ініціалізаторами можна ознайомитись у підрозділі [Обов'язкові ініціалізатори](13_initialization.md#Обов'язкові-ініціалізатори).и
 
-> **Note**
-> 
-> You do not need to mark protocol initializer implementations with the `required` modifier on classes that are marked with the `final` modifier, because `final` classes cannot be subclassed. For more on the final modifier, see [Preventing Overrides](12_inheritance.md#Preventing-Overrides).
+> **Примітка**
+>
+> Для класів, позначених ключовим словом `final`, позначати реалізацію ініціалізатора протоколу не потрібно, оскільки фінальні класи не можна наслідувати. Детальніше з ключовим словом `final` можна ознайомитись у підрозділі [Запобігання заміщенню](12_inheritance.md#Запобігання-заміщенню).
 
-If a subclass overrides a designated initializer from a superclass, and also implements a matching initializer requirement from a protocol, mark the initializer implementation with both the `required` and `override` modifiers:
+Якщо клас-нададок заміщує призначений ініціалізатор батьківського класу, і він також реалізовує вимогу ініціалізатора протоколу, реалізацію ініціалізатора в нащадку слід позначати одночасно ключовими словами  `required` та `override`:
 
 ```swift
 protocol SomeProtocol {
@@ -226,28 +220,27 @@ protocol SomeProtocol {
 }
  
 class SomeSuperClass {
-    init() {
-        // initializer implementation goes here
+    init() {        
+        // тут йде реалізація ініціалізатора
     }
 }
  
 class SomeSubClass: SomeSuperClass, SomeProtocol {
-    // "required" from SomeProtocol conformance; "override" from SomeSuperClass
+    // "required" через підпорядкованість до протоколу SomeProtocol; 
+    // "override" через наслідування SomeSuperClass:
     required override init() {
-        // initializer implementation goes here
+        // тут йде реалізація ініціалізатора
     }
 }
 ```
 
-#### Failable Initializer Requirements
+#### Вимоги ненадійних ініціалізаторів
 
-Protocols can define failable initializer requirements for conforming types, as defined in [Failable Initializers](13_initialization.md#Failable-Initializers).
+Протоколи можуть визначати вимоги ненадійних ініціалізаторів, котрі описані у підрозділі [Ненадійні ініціалізатори](13_initialization.md#Ненадійні ініціалізатори).
 
-A failable initializer requirement can be satisfied by a failable or nonfailable initializer on a conforming type. A nonfailable initializer requirement can be satisfied by a nonfailable initializer or an implicitly unwrapped failable initializer.
+Вимогу ненадійного ініціалізатору можна задовольнити як ненадійним, так і звичайним, надійним ініціалізатором підпорядкованого типу. Вимогу надійного ініціалізатору можна задовольнити або надійним ініціалізатором, або ненадійним ініціалізатором `init!`.
 
 ### Протоколи як типи
-
-### Protocols as Types
 
 Protocols do not actually implement any functionality themselves. Nonetheless, any protocol you create will become a fully-fledged type for use in your code.
 
@@ -257,7 +250,7 @@ Because it is a type, you can use a protocol in many places where other types ar
  + As the type of a constant, variable, or property
  + As the type of items in an array, dictionary, or other container
 
-> **Note**
+> **Примітка**
 > 
 > Because protocols are types, begin their names with a capital letter (such as `FullyNamed` and `RandomNumberGenerator`) to match the names of other types in Swift (such as `Int`, `String`, and `Double`).
 
@@ -417,7 +410,7 @@ game.play()
 
 You can extend an existing type to adopt and conform to a new protocol, even if you do not have access to the source code for the existing type. Extensions can add new properties, methods, and subscripts to an existing type, and are therefore able to add any requirements that a protocol may demand. For more about extensions, see [Extensions](19_extensions.md).
 
-> **Note**
+> **Примітка**
 > 
 > Existing instances of a type automatically adopt and conform to a protocol when that conformance is added to the instance’s type in an extension.
 
@@ -446,7 +439,7 @@ Any `Dice` instance can now be treated as `TextRepresentable`:
 ```swift
 let d12 = Dice(sides: 12, generator: LinearCongruentialGenerator())
 print(d12.textualDescription)
-// Prints "A 12-sided dice"
+// Надрукує "A 12-sided dice"
 ```
 
 Similarly, the `SnakesAndLadders` game class can be extended to adopt and conform to the `TextRepresentable` protocol:
@@ -458,7 +451,7 @@ extension SnakesAndLadders: TextRepresentable {
     }
 }
 print(game.textualDescription)
-// Prints "A game of Snakes and Ladders with 25 squares"
+// Надрукує "A game of Snakes and Ladders with 25 squares"
 ```
 
 #### Declaring Protocol Adoption with an Extension
@@ -481,10 +474,10 @@ Instances of `Hamster` can now be used wherever `TextRepresentable` is the requi
 let simonTheHamster = Hamster(name: "Simon")
 let somethingTextRepresentable: TextRepresentable = simonTheHamster
 print(somethingTextRepresentable.textualDescription)
-// Prints "A hamster named Simon"
+// Надрукує "A hamster named Simon"
 ```
 
-> **Note**
+> **Примітка**
 > 
 > Types do not automatically adopt a protocol just by satisfying its requirements. They must always explicitly declare their adoption of the protocol.
 
@@ -579,7 +572,7 @@ protocol SomeClassOnlyProtocol: AnyObject, SomeInheritedProtocol {
 
 In the example above, `SomeClassOnlyProtocol` can only be adopted by class types. It is a compile-time error to write a structure or enumeration definition that tries to adopt `SomeClassOnlyProtocol`.
 
-> **Note**
+> **Примітка**
 >
 > Use a class-only protocol when the behavior defined by that protocol’s requirements assumes or requires that a conforming type has reference semantics rather than value semantics. For more on reference and value semantics, see [Структури і перечислення як типи-значення](8_classes_and_structures.md#Структури-і-перечислення-як-типи-значення) and [Класи як типи-посилання](8_classes_and_structures.md#Класи-як-типи-посилання).
 
@@ -609,7 +602,7 @@ func wishHappyBirthday(to celebrator: Named & Aged) {
 }
 let birthdayPerson = Person(name: "Malcolm", age: 21)
 wishHappyBirthday(to: birthdayPerson)
-// Prints "Happy birthday, Malcolm, you're 21!"
+// Надрукує "Happy birthday, Malcolm, you're 21!"
 ```
 
 In this example, the `Named` protocol has a single requirement for a gettable `String` property called `name`. The `Aged` protocol has a single requirement for a gettable Int property called `age`. Both protocols are adopted by a structure called `Person`.
@@ -642,7 +635,7 @@ func beginConcert(in location: Location & Named) {
 
 let seattle = City(name: "Seattle", latitude: 47.6, longitude: -122.3)
 beginConcert(in: seattle)
-// Prints "Hello, Seattle!"
+// Надрукує "Hello, Seattle!"
 ```
 
 The `beginConcert(in:)` function takes a parameter of type `Location & Named`, which means “any type that’s a subclass of `Location` and that conforms to the `Named` protocol.” In this case, `City` satisfies both requirements.
@@ -742,7 +735,7 @@ The following example defines an integer-counting class called `Counter`, which 
 
 The `CounterDataSource` protocol defines an optional method requirement called `increment(forCount:)` and an optional property requirement called `fixedIncrement`. These requirements define two different ways for data sources to provide an appropriate increment amount for a `Counter` instance.
 
-> **Note**
+> **Примітка**
 >
 > Strictly speaking, you can write a custom class that conforms to CounterDataSource without implementing either protocol requirement. They are both optional, after all. Although technically allowed, this wouldn’t make for a very good data source.
 
@@ -853,9 +846,9 @@ By creating an extension on the protocol, all conforming types automatically gai
 ```swift
 let generator = LinearCongruentialGenerator()
 print("Here's a random number: \(generator.random())")
-// Prints "Here's a random number: 0.3746499199817101"
+// Надрукує "Here's a random number: 0.3746499199817101"
 print("And here's a random Boolean: \(generator.randomBool())")
-// Prints "And here's a random Boolean: true"
+// Надрукує "And here's a random Boolean: true"
 ```
 
 Protocol extensions can add implementations to conforming types but can’t make a protocol extend or inherit from another protocol. Protocol inheritance is always specified in the protocol declaration itself.
@@ -864,7 +857,7 @@ Protocol extensions can add implementations to conforming types but can’t make
 
 You can use protocol extensions to provide a default implementation to any method or computed property requirement of that protocol. If a conforming type provides its own implementation of a required method or property, that implementation will be used instead of the one provided by the extension.
 
-> **Note**
+> **Примітка**
 >
 > Protocol requirements with default implementations provided by extensions are distinct from optional protocol requirements. Although conforming types don’t have to provide their own implementation of either, requirements with default implementations can be called without optional chaining.
 >
@@ -908,12 +901,12 @@ let differentNumbers = [100, 100, 200, 100, 200]
 Because arrays conform to Collection and integers conform to Equatable, equalNumbers and differentNumbers can use the allEqual() method:
 
 print(equalNumbers.allEqual())
-// Prints "true"
+// Надрукує "true"
 print(differentNumbers.allEqual())
-// Prints "false"
+// Надрукує "false"
 ```
 
-> **Note**
+> **Примітка**
 >
 > If a conforming type satisfies the requirements for multiple constrained extensions that provide implementations for the same method or property, Swift uses the implementation corresponding to the most specialized constraints.
 >
