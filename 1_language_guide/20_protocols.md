@@ -242,19 +242,19 @@ class SomeSubClass: SomeSuperClass, SomeProtocol {
 
 ### Протоколи як типи
 
-Protocols do not actually implement any functionality themselves. Nonetheless, any protocol you create will become a fully-fledged type for use in your code.
+Протоколи самі по собі фактично не реалізовують жодної функціональності. Тим не менше, кожен протокол можна використовувати у коді як повноцінний тип.
 
-Because it is a type, you can use a protocol in many places where other types are allowed, including:
+Оскільки протокол є типом, його можна використовувати у багатьох місцях, де дозволяються інші типи, в тому числі:
 
- + As a parameter type or return type in a function, method, or initializer
- + As the type of a constant, variable, or property
- + As the type of items in an array, dictionary, or other container
+ + Як тип параметра чи тип, що повертається у функціях, методах чи ініціалізаторах.
+ + Як тип константи, змінної чи властивості
+ + Як тип елементів масиву, словнику чи іншої колекції.
 
 > **Примітка**
-> 
-> Because protocols are types, begin their names with a capital letter (such as `FullyNamed` and `RandomNumberGenerator`) to match the names of other types in Swift (such as `Int`, `String`, and `Double`).
+>
+> Оскільки протоколи є типами, слід записувати їх назви з великої літери (як, наприклад, `FullyNamed` та `RandomNumberGenerator`), щоб відповідати іншим назвам типів у Swift (як, наприклад, `Int`, `String`, та `Double`).
 
-Here’s an example of a protocol used as a type:
+Ось приклад використання протоколу як типу:
 
 ```swift
 class Dice {
@@ -270,35 +270,33 @@ class Dice {
 }
 ```
 
-This example defines a new class called `Dice`, which represents an *n*-sided dice for use in a board game. `Dice` instances have an integer property called `sides`, which represents how many sides they have, and a property called `generator`, which provides a random number generator from which to create dice roll values.
+У даному прикладі оголошено новий клас на ім'я `Dice`, котрий представляє *n*-сторонні гральні кості для використання в настільній грі. Екземпляри `Dice` мають цілочисельну властивість `sides`, котра представляє кількість сторін, що має кость, та властивість на ім'я `generator`, котра містить генератор випадкових чисел для моделювання значення кидка костей. 
 
-The `generator` property is of type `RandomNumberGenerator`. Therefore, you can set it to an instance of *any type* that adopts the `RandomNumberGenerator` protocol. Nothing else is required of the instance you assign to this property, except that the instance must adopt the `RandomNumberGenerator` protocol.
+Властивість `generator` має тип `RandomNumberGenerator`. Таким чином, їй можна присвоїти екземпляр *будь-якого типу*, що підпорядковується до протоколу `RandomNumberGenerator`. Для того, щоб екземпляр можна було присвоїти властивості `RandomNumberGenerator`, не вимагається нічого, крім підпорядкованості протоколу `RandomNumberGenerator`. 
 
-`Dice` also has an initializer, to set up its initial state. This initializer has a parameter called `generator`, which is also of type `RandomNumberGenerator`. You can pass a value of any conforming type in to this parameter when initializing a new `Dice` instance.
+Екземпляри `Dice` також має ініціалізатор, що задає їх початковий стан. Цей ініціалізатор має параметр на ім'я `generator`, котрий також має тип `RandomNumberGenerator`. Таким чином при ініціалізації нового екземпляру `Dice` можна передавати значення будь-якого підпорядкованого типу в якості цього параметра.
 
-`Dice` provides one instance method, `roll`, which returns an integer value between 1 and the number of sides on the dice. This method calls the generator’s `random()` method to create a new random number between `0.0` and `1.0`, and uses this random number to create a dice roll value within the correct range. Because generator is known to adopt `RandomNumberGenerator`, it is guaranteed to have a `random()` method to call.
+Клас `Dice` також має метод екземпляру, `roll()`, що повертає цілочисельне значення в проміжку від `1` до `sides` (кількості сторін гральної кості). Цей метод викликає метод `random()` властивості `generator`, котрий повертає випадкове число в діапазоні від `0.0` до `1.0`, після чого це число використовується для отримання значення кості всередині її діапазону значень. Оскільки екземпляр `generator` є підпорядкованим протоколу `RandomNumberGenerator`, він гарантовано має метод `random()`.
 
-Here’s how the `Dice` class can be used to create a six-sided dice with a `LinearCongruentialGenerator` instance as its random number generator:
+Ось приклад використання класу `Dice` для створення шестигранної гральної кості з екземпляром `LinearCongruentialGenerator` в якості її генератора випадкових чисел:
 
 ```swift
 var d6 = Dice(sides: 6, generator: LinearCongruentialGenerator())
 for _ in 1...5 {
-    print("Random dice roll is \(d6.roll())")
+    print("Випадковий кидок кості: \(d6.roll())")
 }
-// Random dice roll is 3
-// Random dice roll is 5
-// Random dice roll is 4
-// Random dice roll is 5
-// Random dice roll is 4
+// Випадковий кидок кості: 3
+// Випадковий кидок кості: 5
+// Випадковий кидок кості: 4
+// Випадковий кидок кості: 5
+// Випадковий кидок кості: 4
 ```
-
-### Delegation
 
 ### Делегування
 
-*Delegation* is a design pattern that enables a class or structure to hand off (or *delegate*) some of its responsibilities to an instance of another type. This design pattern is implemented by defining a protocol that encapsulates the delegated responsibilities, such that a conforming type (known as a delegate) is guaranteed to provide the functionality that has been delegated. Delegation can be used to respond to a particular action, or to retrieve data from an external source without needing to know the underlying type of that source.
+*Делегування* – це шаблон проектування, що дозволяє класу чи стурктурі передати (або делегувати) якісь із своїх відповідальностей до екземпляру іншого типу. Цей шаблон проектування реалізовується за допомогою протоколу, що інкапсулює делеговані відповідальності таким чином, що підпорядкований тип (котрий називають делегатом) гарантовано реалізовує делеговану функціональність. Делегування може використовуватись як відповідь на певну дію, чи для отримання даних із зовнішнього джерела, без необхідності знати фактичний тип цього джерела. 
 
-The example below defines two protocols for use with dice-based board games:
+У прикладі нижче визначено два протоколи для використання у настільних іграх, де потрібні гральні кості:
 
 ```swift
 protocol DiceGame {
@@ -311,9 +309,9 @@ protocol DiceGameDelegate {
     func gameDidEnd(_ game: DiceGame)
 }
 ```
-The `DiceGame` protocol is a protocol that can be adopted by any game that involves dice. The `DiceGameDelegate` protocol can be adopted by any type to track the progress of a `DiceGame`.
+Протоколу `DiceGame` може підпорядковуватись будь-яка гра, що передбачає кидання костей. Протоколу `DiceGameDelegate` може підпорядковуватись будь-який тип, якому потрібно відстежувати прогрес у грі, що предаставляє `DiceGame`. 
 
-Here’s a version of the *Snakes and Ladders* game originally introduced in [Control Flow](4_control_flow.md). This version is adapted to use a `Dice` instance for its dice-rolls; to adopt the `DiceGame` protocol; and to notify a `DiceGameDelegate` about its progress:
+Ось версія гри *Ліла* (або *Змії і сходи*), котру вперше було представлено у розділі [Потік керування](4_control_flow.md). Ця версія є адаптованою до використання екземпляру `Dice` для кидків костей, підпорядкованою до протоколу `DiceGame`, та повідомляє свій прогрес за допомогою протоколу `DiceGameDelegate`:
 
 ```swift
 class SnakesAndLadders: DiceGame {
@@ -348,19 +346,19 @@ class SnakesAndLadders: DiceGame {
 }
 ```
 
-For a description of the *Snakes and Ladders* gameplay, see [Break](4_control_flow.md#Break) section of the [Control Flow](4_control_flow.md).
+Описання ігрового процесу гри Ліла можна знайти у секції [Інструкція Break](4_control_flow.md#Інструкція-Break) розділу [Потік керування](4_control_flow.md).
 
-This version of the game is wrapped up as a class called `SnakesAndLadders`, which adopts the `DiceGame` protocol. It provides a gettable dice property and a `play()` method in order to conform to the protocol. (The `dice` property is declared as a constant property because it does not need to change after initialization, and the protocol only requires that it is gettable.)
+Ця версія гри є загорнутою в клас `SnakesAndLadders`, котрий реалізовує протокол `DiceGame`. Він має властивість для читання `dice` та метод `play()`, і таким чином підпорядковується до цього протоколу. (Властивість `dice` оголошено як константну властивість, оскільки вона не змінюється після ініціалізації, а протокол вимагає лише щоб цю властивість можна було прочитати).
 
-The *Snakes and Ladders* game board setup takes place within the class’s `init()` initializer. All game logic is moved into the protocol’s `play` method, which uses the protocol’s required `dice` property to provide its dice roll values.
+Налаштування дошки в грі *Ліла* відбувається у ініціалізаторі класу `init()`. Вся ігрова логіка переїхала до методу реалізації методу протоколу `play()`, в котрій використовується властивість протоколу `dice`, для отримання значення кинутої кості. 
 
-Note that the `delegate` property is defined as an optional `DiceGameDelegate`, because a delegate isn’t required in order to play the game. Because it is of an optional type, the delegate property is automatically set to an initial value of `nil`. Thereafter, the game instantiator has the option to set the property to a suitable delegate.
+Слід помітити, що властивість `delegate` визначено як опціональний `DiceGameDelegate`, оскільки для гри не обов'язково мати делегат. Оскільки властивість `delegate` має опціональний тип, вона автоматично отримує початкове значення `nil`. Після цього, той, хто створив гру, має можливість присвоїти властивості `delegate` відповідне значення.
 
-`DiceGameDelegate` provides three methods for tracking the progress of a game. These three methods have been incorporated into the game logic within the `play()` method above, and are called when a new game starts, a new turn begins, or the game ends.
+Протокол `DiceGameDelegate` має три методи для відслідковування прогресу гри. Ці методи було інкорпоровано в ігрову логіку всередині методу `play()` вище; вони викликаються на початку гри, на початку ходу та в кінці гри. 
 
-Because the `delegate` property is an *optional* `DiceGameDelegate`, the `play()` method uses optional chaining each time it calls a method on the delegate. If the delegate property is `nil`, these delegate calls fail gracefully and without error. If the delegate property is non-`nil`, the delegate methods are called, and are passed the `SnakesAndLadders` instance as a parameter.
+Оскільки властивість `delegate` є опціональним `DiceGameDelegate`, метод `play()` викликає методи делегату за допомогою ланцюжку опціоналів. Якщо властивість `delegate` має значення `nil`, ці звернення до делегату будуть проігноровані, без помилок. Якщо властивість `delegate` має значення і воно не `nil`, будуть викликані методи делегату, і до них буде передано екземпляр `SnakesAndLadders` в якості параметра.
 
-This next example shows a class called `DiceGameTracker`, which adopts the `DiceGameDelegate` protocol:
+У наступному прикладі показано клас на ім'я `DiceGameTracker`, котрий підпорядковується до протоколу `DiceGameDelegate`:
 
 ```swift
 class DiceGameTracker: DiceGameDelegate {
@@ -368,53 +366,51 @@ class DiceGameTracker: DiceGameDelegate {
     func gameDidStart(_ game: DiceGame) {
         numberOfTurns = 0
         if game is SnakesAndLadders {
-            print("Started a new game of Snakes and Ladders")
+            print("Розпочалась нова гра у Змії та Сходи")
         }
-        print("The game is using a \(game.dice.sides)-sided dice")
+        print("У грі використовуються \(game.dice.sides)-сторонні гральні кості")
     }
     func game(_ game: DiceGame, didStartNewTurnWithDiceRoll diceRoll: Int) {
         numberOfTurns += 1
-        print("Rolled a \(diceRoll)")
+        print("На костях випало \(diceRoll)")
     }
     func gameDidEnd(_ game: DiceGame) {
-        print("The game lasted for \(numberOfTurns) turns")
+        print("Гра тривала \(numberOfTurns) ходи(ів)")
     }
 }
 ```
 
-`DiceGameTracker` implements all three methods required by `DiceGameDelegate`. It uses these methods to keep track of the number of turns a game has taken. It resets a `numberOfTurns` property to zero when the game starts, increments it each time a new turn begins, and prints out the total number of turns once the game has ended.
+Клас `DiceGameTracker` реалізовує всі три методи, що вимагаються протоколом `DiceGameDelegate`. Він використовує ці методи для відслідковування кількості ходів у грі. Він скидає значення властивості `numberOfTurns` до нуля на початку нової гри, збільшує його на одиницю при кожному ході, та друкує загальну кількість ходів у грі, як тільки завершиться гра.
 
-The implementation of `gameDidStart(_:)` shown above uses the game parameter to print some introductory information about the game that is about to be played. The game parameter has a type of `DiceGame`, not `SnakesAndLadders`, and so `gameDidStart(_:)` can access and use only methods and properties that are implemented as part of the `DiceGame` protocol. However, the method is still able to use type casting to query the type of the underlying instance. In this example, it checks whether game is actually an instance of `SnakesAndLadders` behind the scenes, and prints an appropriate message if so.
+Показана вище реалізація методу `gameDidStart(_:)` використовує параметр `game` для друку деякої вступної інформації про те, що гра починається. Параметр `game` має тип `DiceGame`, а не `SnakesAndLadders`, тому метод `gameDidStart(_:)` має доступ лише до методів та властивостей, що були оголошені як частина протоколу `DiceGame`. Однак, все ще можна використати приведення типів всередині методу, щоб отримати тип фактично переданого екземпляру. У даному прикладі, перевіряється, чи є параметр `game` фактично екземпляром класу `SnakesAndLadders` за лаштунками, і якщо так – друкує відповідне повідомлення. 
 
-The `gameDidStart(_:)` method also accesses the dice property of the passed game parameter. Because game is known to conform to the `DiceGame` protocol, it is guaranteed to have a dice property, and so the `gameDidStart(_:)` method is able to access and print the dice’s sides property, regardless of what kind of game is being played.
+Метод `gameDidStart(_:)` також звертається до властивості `dice` переданого параметру `game`. Оскільки параметр `game` має будь-який тип, підпорядкований протоколу `DiceGame`, він гарантовано має властивість `dice`, і тому метод `gameDidStart(_:)` може звертатись до неї та друкувати її значення, незалежно від того, яка саме гра зараз відбувається. 
 
-Here’s how `DiceGameTracker` looks in action:
+Ось як виглядає `DiceGameTracker` в дії:
 
 ```swift
 let tracker = DiceGameTracker()
 let game = SnakesAndLadders()
 game.delegate = tracker
 game.play()
-// Started a new game of Snakes and Ladders
-// The game is using a 6-sided dice
-// Rolled a 3
-// Rolled a 5
-// Rolled a 4
-// Rolled a 5
-// The game lasted for 4 turns
+// Розпочалась нова гра у Змії та Сходи
+// У грі використовуються 6-сторонні гральні кості
+// На костях випало  3
+// На костях випало  5
+// На костях випало  4
+// На костях випало  5
+// Гра тривала 4 ходи(ів)
 ```
 
 ### Підпорядкування протоколу за допомогою розширення
 
-### Adding Protocol Conformance with an Extension
-
-You can extend an existing type to adopt and conform to a new protocol, even if you do not have access to the source code for the existing type. Extensions can add new properties, methods, and subscripts to an existing type, and are therefore able to add any requirements that a protocol may demand. For more about extensions, see [Extensions](19_extensions.md).
+Можна розширити існуючий тип для підпорядкування його новому протоколу, навіть якщо у вас доступу до вихідного коду існуючого типу. Розширення можуть додавати нові властивості, методи та індекси до існуючих типів, і тому їм до снаги реалізувати будь-які вимоги, що можуть бути проголошені протоколом. Більше про розширення можна прочитати у розділі [Розширення](19_extensions.md).
 
 > **Примітка**
-> 
-> Existing instances of a type automatically adopt and conform to a protocol when that conformance is added to the instance’s type in an extension.
+>
+> Коли тип підпорядковується протоколу за допомогою розширення, існуючі екземпляри цього типу підпорядковуються протоколу та реалізовують його автоматично.
 
-For example, this protocol, called `TextRepresentable`, can be implemented by any type that has a way to be represented as text. This might be a description of itself, or a text version of its current state:
+Наприклад, цей протокол, що називається `TextRepresentable`, може бути реалізованим будь-яким типом, що може бути представленим у вигляді тексту. Це може бути опис себе, або текстова версія поточного стану:
 
 ```swift
 protocol TextRepresentable {
@@ -422,64 +418,64 @@ protocol TextRepresentable {
 }
 ```
 
-The `Dice` class from earlier can be extended to adopt and conform to `TextRepresentable`:
+Клас `Dice` з попередніх прикладів може бути розширеним для підпорядкування до протоколу `TextRepresentable`:
 
 ```swift
 extension Dice: TextRepresentable {
     var textualDescription: String {
-        return "A \(sides)-sided dice"
+        return "\(sides)-стороння гральна кість"
     }
 }
 ```
 
-This extension adopts the new protocol in exactly the same way as if `Dice` had provided it in its original implementation. The protocol name is provided after the type name, separated by a colon, and an implementation of all requirements of the protocol is provided within the extension’s curly braces.
+Це розширення підпорядковує клас `Dice` новому протоколу так, ніби цей клас підпорядковувався би до ного у своїй оригінальній реалізації. Назва протоколу йде після імені типу, відділяючись комою, а реалізація всіх вимог протоколу йде далі у фігурних дужках.
 
-Any `Dice` instance can now be treated as `TextRepresentable`:
+До будь-який екземпляру класу `Dice` тепер можна звертатись як до `TextRepresentable`:
 
 ```swift
 let d12 = Dice(sides: 12, generator: LinearCongruentialGenerator())
 print(d12.textualDescription)
-// Надрукує "A 12-sided dice"
+// Надрукує "12-стороння гральна кість"
 ```
 
-Similarly, the `SnakesAndLadders` game class can be extended to adopt and conform to the `TextRepresentable` protocol:
+Аналогічно, клас гри `SnakesAndLadders` може бути розширеним для підпорядкування протоколу `TextRepresentable`:
 
 ```swift
 extension SnakesAndLadders: TextRepresentable {
     var textualDescription: String {
-        return "A game of Snakes and Ladders with \(finalSquare) squares"
+        return "Гра ліла на \(finalSquare) клітинок"
     }
 }
 print(game.textualDescription)
-// Надрукує "A game of Snakes and Ladders with 25 squares"
+// Надрукує "Гра ліла на 25 клітинок"
 ```
 
-#### Declaring Protocol Adoption with an Extension
+#### Оголошення підпорядкування протоколу за допомогою розширення
 
-If a type already conforms to all of the requirements of a protocol, but has not yet stated that it adopts that protocol, you can make it adopt the protocol with an empty extension:
+Якщо тип вже реалізовує всі вимоги протоколу, але явно не вказує, що підпорядковується до цього протоколу, можна підпорядкувати його до протоколу за допомогою порожнього розширення:
 
 ```swift
 struct Hamster {
     var name: String
     var textualDescription: String {
-        return "A hamster named \(name)"
+        return "Хом'як на ім'я \(name)"
     }
 }
 extension Hamster: TextRepresentable {}
 ```
 
-Instances of `Hamster` can now be used wherever `TextRepresentable` is the required type:
+Екземпляри класу `Hamster` тепер можна використовувати будь-де, де вимагається тип `TextRepresentable`:
 
 ```swift
-let simonTheHamster = Hamster(name: "Simon")
+let simonTheHamster = Hamster(name: "Сомко")
 let somethingTextRepresentable: TextRepresentable = simonTheHamster
 print(somethingTextRepresentable.textualDescription)
-// Надрукує "A hamster named Simon"
+// Надрукує "Хом'як на ім'я Сомкои"
 ```
 
 > **Примітка**
-> 
-> Types do not automatically adopt a protocol just by satisfying its requirements. They must always explicitly declare their adoption of the protocol.
+>
+> Типи не підпорядковуються до протоколів автоматично, лише задовольняючи його вимоги. Вони мають явно оголошувати їх підпорядкування до протоколу.
 
 ### Collections of Protocol Types
 
