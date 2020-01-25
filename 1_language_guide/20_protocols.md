@@ -443,11 +443,11 @@ print(d12.textualDescription)
 ```swift
 extension SnakesAndLadders: TextRepresentable {
     var textualDescription: String {
-        return "Гра ліла на \(finalSquare) клітинок"
+        return "Гра \"Ліла\s" на \(finalSquare) клітинок"
     }
 }
 print(game.textualDescription)
-// Надрукує "Гра ліла на 25 клітинок"
+// Надрукує "Гра "Ліла" на 25 клітинок"
 ```
 
 #### Оголошення підпорядкування протоколу за допомогою розширення
@@ -470,49 +470,45 @@ extension Hamster: TextRepresentable {}
 let simonTheHamster = Hamster(name: "Сомко")
 let somethingTextRepresentable: TextRepresentable = simonTheHamster
 print(somethingTextRepresentable.textualDescription)
-// Надрукує "Хом'як на ім'я Сомкои"
+// Надрукує "Хом'як на ім'я Сомко"
 ```
 
 > **Примітка**
 >
 > Типи не підпорядковуються до протоколів автоматично, лише задовольняючи його вимоги. Вони мають явно оголошувати їх підпорядкування до протоколу.
 
-### Collections of Protocol Types
-
 ### Колекції протоколів
 
-A protocol can be used as the type to be stored in a collection such as an array or a dictionary, as mentioned in [Protocols as Types](#Protocols-as-Types). This example creates an array of `TextRepresentable` things:
+Протокол можу використовуватись як тип, і в тому числі зберігатись у колекції на кшталт масиву чи словнику, як зазначено в [Протоколи як типи](#Protocols-as-Types). У наступному прикладі створюється масив з трьох речей, підпорядкованих протоколу `TextRepresentable`:
 
 ```swift
 let things: [TextRepresentable] = [game, d12, simonTheHamster]
 ```
 
-It is now possible to iterate over the items in the array, and print each item’s textual description:
+Тепер можливо проітерувати елементи цього масиву, і надрукувати текстовий опис кожного елементу: 
 
 ```swift
 for thing in things {
     print(thing.textualDescription)
 }
-// A game of Snakes and Ladders with 25 squares
-// A 12-sided dice
-// A hamster named Simon
+// Гра "Ліла" на 25 клітинок
+// 12-стороння гральна кість
+// Хом'як на ім'я Сомко
 ```
 
-Note that the thing constant is of type `TextRepresentable`. It is not of type `Dice`, or `DiceGame`, or `Hamster`, even if the actual instance behind the scenes is of one of those types. Nonetheless, because it is of type `TextRepresentable`, and anything that is `TextRepresentable` is known to have a `textualDescription` property, it is safe to access `thing.textualDescription` each time through the loop.
+Слід зазначити, що константа `thing` має тип `TextRepresentable`. Її тип не `Dice`, не `DiceGame`, і не `Hamster`, навіть якщо фактичний екземпляр за лаштунками має один з цих типів. Тим не менше, оскільки вона має тип `TextRepresentable`, а всі підпорядковані цьому протоколу типи мають властивість `textualDescription`, можна безпечно звертатись до `thing.textualDescription` в кожній ітерації циклу. 
 
 ### Наслідування протоколів
 
-### Protocol Inheritance
-
-A protocol can *inherit* one or more other protocols and can add further requirements on top of the requirements it inherits. The syntax for protocol inheritance is similar to the syntax for class inheritance, but with the option to list multiple inherited protocols, separated by commas:
+Протокол може *наслідувати* один або декілька інших протоколів, і додавати подальші вимоги поверх успадкованих вимог. Синтаксис наслідування протоколів є аналогічним синтаксису наслідування класів, але з можливістю перечислити декілька успадкованих протоколів, розділяючи їх комами:
 
 ```swift
 protocol InheritingProtocol: SomeProtocol, AnotherProtocol {
-    // protocol definition goes here
+    // тут йде визначення протоколу
 }
 ```
 
-Here’s an example of a protocol that inherits the `TextRepresentable` protocol from above:
+Ось приклад протоколу, що наслідує вищезазначений протокол `TextRepresentable`:
 
 ```swift
 protocol PrettyTextRepresentable: TextRepresentable {
@@ -520,9 +516,9 @@ protocol PrettyTextRepresentable: TextRepresentable {
 }
 ```
 
-This example defines a new protocol, `PrettyTextRepresentable`, which inherits from `TextRepresentable`. Anything that adopts `PrettyTextRepresentable` must satisfy all of the requirements enforced by `TextRepresentable`, *plus* the additional requirements enforced by `PrettyTextRepresentable`. In this example, `PrettyTextRepresentable` adds a single requirement to provide a gettable property called `prettyTextualDescription` that returns a `String`.
+У цьому прикладі визначено новий протокол на ім'я `PrettyTextRepresentable`, котрий наслідує протокол `TextRepresentable`. Всі типи, що підпорядковуються протоколу `PrettyTextRepresentable`, повинні задовольняти усім вимогам, що визначає протокол `TextRepresentable`, *плюс* усім додатковим вимогам, що визначає протокол `PrettyTextRepresentable`. У цьому прикладі, протокол `PrettyTextRepresentable` додає єдину вимогу: мати властивість для читання на ім'я `prettyTextualDescription`, що повертає тип `String`.
 
-The `SnakesAndLadders` class can be extended to adopt and conform to `PrettyTextRepresentable`:
+Клас `SnakesAndLadders` можна розширити для підпорядкування його протоколу `PrettyTextRepresentable`:
 
 ```swift
 extension SnakesAndLadders: PrettyTextRepresentable {
@@ -543,44 +539,43 @@ extension SnakesAndLadders: PrettyTextRepresentable {
 }
 ```
 
-This extension states that it adopts the `PrettyTextRepresentable` protocol and provides an implementation of the `prettyTextualDescription` property for the `SnakesAndLadders` type. Anything that is `PrettyTextRepresentable` must also be `TextRepresentable`, and so the implementation of `prettyTextualDescription` starts by accessing the `textualDescription` property from the `TextRepresentable` protocol to begin an output string. It appends a colon and a line break, and uses this as the start of its pretty text representation. It then iterates through the array of board squares, and appends a geometric shape to represent the contents of each square:
+Це розширення підпорядковує клас `SnakesAndLadders` до протоколу `PrettyTextRepresentable`, і надає реалізацію властивості `prettyTextualDescription`. Будь-що, підпорядковане протоколу `PrettyTextRepresentable`, має бути також підпорякованим протоколу `TextRepresentable`, і тому реалізація властивості `prettyTextualDescription` починається зі звернення до властивості `textualDescription` з протоколу `TextRepresentable`, щоб створити початковий рядок `output`. До цього рядка додається двокрапка та перехід на новий рядок (`":\n"`), і цей рядок є початковим у формуванні гарного текстового представлення. Після цього йде ітерування масиву клітинок на дошці, і додаються символи, що представляють вміст кожної клітинки:
 
-If the square’s value is greater than 0, it is the base of a ladder, and is represented by ▲.
-If the square’s value is less than 0, it is the head of a snake, and is represented by ▼.
-Otherwise, the square’s value is 0, and it is a “free” square, represented by ○.
-The prettyTextualDescription property can now be used to print a pretty text description of any SnakesAndLadders instance:
+Якщо значення клітинки більше нуля, ця клітинка представляє основу сходів, і представляється символом ▲.
+Якщо значення клітинки менше нуля, ця клітинка представляє голову змії, і представляється символом ▼.
+В інших випадках, значення клітинки дорівнює нулю, ця клітинка є вільною і представляється символом ○.и
+
+Властивість `prettyTextualDescription` тепер можна використовувати для друку гарного опису будь-якого екземпляру класу `SnakesAndLadders`:
 
 ```swift
 print(game.prettyTextualDescription)
-// A game of Snakes and Ladders with 25 squares:
+// Гра "Ліла" на 25 клітинок:
 // ○ ○ ▲ ○ ○ ▲ ○ ○ ▲ ▲ ○ ○ ○ ▼ ○ ○ ○ ○ ▼ ○ ○ ▼ ○ ▼ ○
 ```
 
-### Class-Only Protocols
+### Протоколи лише для класів
 
-You can limit protocol adoption to class types (and not structures or enumerations) by adding the `AnyObject` protocol to a protocol’s inheritance list.
+Можна зробити протокол доступним для підпорядкування лише класів (а не структур чи перечислень), додавши протокол `AnyObject` до списку наслідування протоколу.
 
 ```swift
 protocol SomeClassOnlyProtocol: AnyObject, SomeInheritedProtocol {
-    // class-only protocol definition goes here
+    // тут йде визначення протоколи лише для класів
 }
 ```
 
-In the example above, `SomeClassOnlyProtocol` can only be adopted by class types. It is a compile-time error to write a structure or enumeration definition that tries to adopt `SomeClassOnlyProtocol`.
+У прикладі вище, протоколу `SomeClassOnlyProtocol` можна підпорядковувати лише класи. Якщо спробувати підпорядкувати йому структуру чи перечислення, виникне помилка часу компіляції. 
 
 > **Примітка**
 >
-> Use a class-only protocol when the behavior defined by that protocol’s requirements assumes or requires that a conforming type has reference semantics rather than value semantics. For more on reference and value semantics, see [Структури і перечислення як типи-значення](8_classes_and_structures.md#Структури-і-перечислення-як-типи-значення) and [Класи як типи-посилання](8_classes_and_structures.md#Класи-як-типи-посилання).
-
-### Protocol Composition
+> Слід використовувати протоколи лише для класів тоді, коли поведінка, що визначається вимогами протоколу, передбачає, що підпорядкований тип має семантику типу-посилання, а не типу значення. Детальніше з семантикою типів-значень та типів-посилань можна ознайомитись у підрозділах  [Структури і перечислення як типи-значення](8_classes_and_structures.md#Структури-і-перечислення-як-типи-значення) та [Класи як типи-посилання](8_classes_and_structures.md#Класи-як-типи-посилання).
 
 ### Композиція протоколів
 
-It can be useful to require a type to conform to multiple protocols at the same time. You can combine multiple protocols into a single requirement with a *protocol composition*. Protocol compositions behave as if you defined a temporary local protocol that has the combined requirements of all protocols in the composition. Protocol compositions don’t define any new protocol types.
+Іноді буває потрібно вимагати підпорядкування типу кільком протоколам одночасно. Для цього можна скомбінувати кілька протоколів у єдину вимогу за допомогою *композиції протоколів*. Композиції протоколів ведуть себе так, ніби було оголошено тимчасовий локальний протокол, що об'єднує у собі вимоги усіх протоколів у композиції. Композиції протоколів, утім, не визначають жодних нових протоколів. 
 
-Protocol compositions have the form `SomeProtocol & AnotherProtocol`. You can list as many protocols as you need, separating them with ampersands (`&`). In addition to its list of protocols, a protocol composition can also contain one class type, which you can use to specify a required superclass.
+Композиції протоколів записуються у формі `SomeProtocol & AnotherProtocol`. Можна перечислити будь-яку необхідну кількість протоколів, розділяючи їх амперсандами (`&`). Окрім списку протоколів, композиція протоколів може містити один клас: таким чином можна висловити вимогу бути нащадком цього класу. 
 
-Here’s an example that combines two protocols called `Named` and `Aged` into a single protocol composition requirement on a function parameter:
+Ось приклад, в якому комбінуються два протоколи, що називаються `Named` та `Aged`, в єдину композицію протоколів, котра використовується як параметр функції:
 
 ```swift
 protocol Named {
@@ -594,20 +589,20 @@ struct Person: Named, Aged {
     var age: Int
 }
 func wishHappyBirthday(to celebrator: Named & Aged) {
-    print("Happy birthday, \(celebrator.name), you're \(celebrator.age)!")
+    print("З Днем Народження, \(celebrator.name), вам \(celebrator.age)!")
 }
-let birthdayPerson = Person(name: "Malcolm", age: 21)
+let birthdayPerson = Person(name: "Максим", age: 21)
 wishHappyBirthday(to: birthdayPerson)
-// Надрукує "Happy birthday, Malcolm, you're 21!"
+// Надрукує "З Днем Народження, Максим, вам 21!"
 ```
 
-In this example, the `Named` protocol has a single requirement for a gettable `String` property called `name`. The `Aged` protocol has a single requirement for a gettable Int property called `age`. Both protocols are adopted by a structure called `Person`.
+У цьому прикладі, протокол `Named` має єдину вимогу властивості для читання типу `String` на ім'я `name`. Протокол `Aged` має єдину вимогу властивості для читання типу `Int` на ім'я `age`. Структура `Person` представляє дані про особу, і підпорядковується обом цим протоколам. 
 
-The example also defines a `wishHappyBirthday(to:)` function. The type of the celebrator parameter is `Named & Aged`, which means “any type that conforms to both the `Named` and `Aged` protocols.” It doesn’t matter which specific type is passed to the function, as long as it conforms to both of the required protocols.
+У прикладі також визначено функцію `wishHappyBirthday(to:)`, що друкує вітання з днем народження. Параметр `celebrator` цієї функції має тип `Named & Aged`, що значить “будь-який тип, що підпорядковується протоколам `Named` та `Aged` одночасно”. Не має значення, який саме тип передати до функції, головне, щоб він був підпорядкованим обом цим протоколам. 
 
-The example then creates a new `Person` instance called `birthdayPerson` and passes this new instance to the `wishHappyBirthday(to:)` function. Because `Person` conforms to both protocols, this call is valid, and the `wishHappyBirthday(to:)` function can print its birthday greeting.
+У прикладі далі створюється новий екземпляр `Person`, що називається `birthdayPerson`, і цей новий екземпляр передається до функції `wishHappyBirthday(to:)`. Оскільки структура `Person` підпорядкована обом протоколам, цей виклик є коректним, і функція `wishHappyBirthday(to:)` друкує привітання з днем народження.
 
-Here’s an example that combines the `Named` protocol from the previous example with a `Location` class:
+Ось приклад, в яком протокол `Named` з попереднього прикладу комбінується із класом `Location`:
 
 ```swift
 class Location {
@@ -626,29 +621,27 @@ class City: Location, Named {
     }
 }
 func beginConcert(in location: Location & Named) {
-    print("Hello, \(location.name)!")
+    print("Привіт, \(location.name)!")
 }
 
-let seattle = City(name: "Seattle", latitude: 47.6, longitude: -122.3)
+let seattle = City(name: "Славутич", latitude: 47.6, longitude: -122.3)
 beginConcert(in: seattle)
-// Надрукує "Hello, Seattle!"
+// Надрукує "Привіт, Славутич!"
 ```
 
-The `beginConcert(in:)` function takes a parameter of type `Location & Named`, which means “any type that’s a subclass of `Location` and that conforms to the `Named` protocol.” In this case, `City` satisfies both requirements.
+Функція `beginConcert(in:)` приймає параметр типу `Location & Named`, що означає “будь-який клас-нащадок класу `Location`, що підпорядковується до протоколу `Named`”. В даному випадку, клас `City` задовольняє обом цим вимогам. 
 
-Passing `birthdayPerson` to the `beginConcert(in:)` function is invalid because `Person` isn’t a subclass of `Location`. Likewise, if you made a subclass of `Location` that didn’t conform to the `Named` protocol, calling `beginConcert(in:)` with an instance of that type is also invalid.
-
-### Checking for Protocol Conformance
+Передача екземпляру `birthdayPerson` до функції `beginConcert(in:)` є некоректним, оскільки `Person` не є класом-нащадком класу `Location`. Так само, якщо створити клас-нащадок класу `Location`, що не підпорядковується протоколу `Named`, виклик функції `beginConcert(in:)` з екземпляром цього класу буде також некоректним.
 
 ### Перевірка на підпорядкованість протоколу
 
-You can use the is and as operators described in [Type Casting]() to check for protocol conformance, and to cast to a specific protocol. Checking for and casting to a protocol follows exactly the same syntax as checking for and casting to a type:
+Щоб перевірити тип на підпорядкованість протоколу, або привести тип до певного протоколу, можна використовувати описані в розділі [Приведення типів](17_type_casting.md) оператори `is` та `as`. Перевірка на підпорядкованість та приведення до протоколу має точно такий же синтаксис, що й перевірка на тип чи приведення до типу:
 
-- The is operator returns true if an instance conforms to a protocol and returns false if it does not.
-- The `as?` version of the downcast operator returns an optional value of the protocol’s type, and this value is nil if the instance does not conform to that protocol.
-- The `as!` version of the downcast operator forces the downcast to the protocol type and triggers a runtime error if the downcast does not succeed.
+- Оператор `is` повертає `true`, якщо екземпляр підпорядкований до протоколу, і повертає `false`, якщо не підпорядкований.
+- Версія `as?` оператору приведення типу повертає опціональне значення типу протоколу, і це значення дорівнює `nil` у випадках, коли тип не підпорядкований до протоколу.
+- Версія `as!` оператору приведення типу примусово приводить до типу протоколу, і призводить до помилки часу виконання, якщо приведення невдале.
 
-This example defines a protocol called `HasArea`, with a single property requirement of a gettable `Double` property called area:
+У цьому прикладі визначено протокол, що називається `HasArea`, що представляє будь-що, що має площу, з єдиною вимогою властивості для читання типу `Double` на ім'я `area ` (що й виражає площу):
 
 ```swift
 protocol HasArea {
@@ -656,7 +649,7 @@ protocol HasArea {
 }
 ```
 
-Here are two classes, `Circle` and `Country`, both of which conform to the `HasArea` protocol:
+Ось два класи, `Circle` та `Country`, що моделюють коло та країну відповідно, обидва підпорядковані протоколу `HasArea`:
 
 ```swift
 class Circle: HasArea {
@@ -671,8 +664,9 @@ class Country: HasArea {
 }
 ```
 
-The `Circle` class implements the area property requirement as a computed property, based on a stored radius property. The `Country` class implements the area requirement directly as a stored property. Both classes correctly conform to the `HasArea` protocol.
-Here’s a class called `Animal`, which does not conform to the `HasArea` protocol:
+Клас `Circle` реалізовує вимогу властивості `area` за допомогою властивості, що обчислюється, базуючись на властивості `radius`, що зберігається. Клас `Country`реалізовує вимогу властивості `area` прямо, за допомогою властивості, що зберігається. Обидва класи коректно підпорядковуються до протоколу `HasArea`.
+
+Ось клас `Animal`, що моделює тварину і не підпорядковується протоколу `HasArea`:
 
 ```swift
 class Animal {
@@ -681,46 +675,46 @@ class Animal {
 }
 ```
 
-The `Circle`, `Country` and `Animal` classes do not have a shared base class. Nonetheless, they are all classes, and so instances of all three types can be used to initialize an array that stores values of type `AnyObject`:
+Класи `Circle`, `Country` та `Animal` не мають спільного базового класу. Тим не менше, всі вони є класами, і тому екземпляри усіх цих трьох типів можуть бути використані для ініціалізації масиву, що зберігає значення типу `AnyObject`:
 
 ```swift
 let objects: [AnyObject] = [
     Circle(radius: 2.0),
-    Country(area: 243_610),
+    Country(area: 603_628),
     Animal(legs: 4)
 ]
 ```
 
-The objects array is initialized with an array literal containing a `Circle` instance with a radius of 2 units; a `Country` instance initialized with the surface area of the United Kingdom in square kilometers; and an `Animal` instance with four legs.
+Цей масив `objects` було ініцілалізовано за допомогою літералу масиву, що містить екземпляр `Circle` з радіусом в 2 одиниці, екземпляр `Country`, ініціалізований площею України в квадратних кілометрах, та екземпляр `Animal`, що представляє тварину з чотирма лапами. 
 
-The objects array can now be iterated, and each object in the array can be checked to see if it conforms to the `HasArea` protocol:
+Тепер масив `objects` можна проітерувати, і кожен об'єкт у масиві можна перевірити на підпорядкованість протоколу `HasArea`:
 
 ```swift
 for object in objects {
     if let objectWithArea = object as? HasArea {
-        print("Area is \(objectWithArea.area)")
+        print("Площа дорівнює \(objectWithArea.area)")
     } else {
-        print("Something that doesn't have an area")
+        print("Щось, що не має площі")
     }
 }
-// Area is 12.5663708
-// Area is 243610.0
-// Something that doesn't have an area
+// Площа дорівнює 12.5663708
+// Площа дорівнює 603628.0
+// Щось, що не має площі
 ```
 
-Whenever an object in the array conforms to the `HasArea` protocol, the optional value returned by the `as?` operator is unwrapped with optional binding into a constant called `objectWithArea`. The `objectWithArea` constant is known to be of type `HasArea`, and so its area property can be accessed and printed in a type-safe way.
+Для кожного об'єкту в масиві, що підпорядкований протоколу `HasArea`, оператор `as?` поверне опціональне значення, що буде розгорнуте за допомогою прив'язування опціонала у константу на ім'я `objectWithArea`. Константа `objectWithArea` має тип `HasArea`, тому можна у типобезпечний спосіб звертатись до її властивості `area` та друкувати її значення.
 
-Note that the underlying objects are not changed by the casting process. They continue to be a `Circle`, a `Country` and an `Animal`. However, at the point that they are stored in the `objectWithArea` constant, they are only known to be of type `HasArea`, and so only their area property can be accessed.
+Слід помітити, що об'єкти за лаштунками не змінюються внаслідок процесу приведення типів. Вони продовжують бути екзмеплярами `Circle`, `Country` та `Animal`. Однак, про посилання на один з них у константі `objectWithArea` відомо лише те, що воно має тип `HasArea`, і тому можна звертатись лише до властивостей цього типу. 
 
-### Optional Protocol Requirements
+### Опціональні вимоги протоколів
 
-You can define *optional requirements* for protocols, These requirements do not have to be implemented by types that conform to the protocol. Optional requirements are prefixed by the optional modifier as part of the protocol’s definition. Optional requirements are available so that you can write code that interoperates with Objective-C. Both the protocol and the optional requirement must be marked with the `@objc` attribute. Note that `@objc` protocols can be adopted only by classes that inherit from Objective-C classes or other `@objc` classes. They can’t be adopted by structures or enumerations.
+Протокол може визначати *опціональні вимоги*. Ці вимоги не обов'язково повинні бути реалізованими підпорядкованими до протоколу типами. Опціональні вимоги позначаються модифікатором `optional` в оголошенні протоколу. Опціональні вимоги у Swift присутні головним чином через необхідність взаємодії з кодом на Objective-C. Тому як протокол, так і опціональні вимоги в ньому повинні також позначатись атрибутом `@objc`. Слід зазначити, що протоколам, позначеним атрибутом `@objc`, можуть підпорядковуватись лише класи, успадковані від класів Objective-C чи інших класів, позначених модифікатором `@objc`. Таким протоколам не можна підпорядкувати структуру чи перечислення. 
 
-When you use a method or property in an optional requirement, its type automatically becomes an optional. For example, a method of type `(Int) -> String` becomes `((Int) -> String)?`. Note that the entire function type is wrapped in the optional, not the method’s return value.
+При створенні опціональних вимог методів чи властивостей, їх тип автоматично стає опціональним. Наприклад, метод типу `(Int) -> String` стає методом типу `((Int) -> String)?`. Варто помітити, що опціональним стає тип самого методу, а не тип, що повертає цей метод. 
 
-An optional protocol requirement can be called with optional chaining, to account for the possibility that the requirement was not implemented by a type that conforms to the protocol. You check for an implementation of an optional method by writing a question mark after the name of the method when it is called, such as `someOptionalMethod?(someArgument)`. For information on optional chaining, see [Optional Chaining](15_optional_chaining.md).
+До опціональної вимоги протоколу можна звертатись за допомогою ланцюжка опціоналів, щоб врахувати можливість, що вимогу не було реалізовано підпорядкованим до цього протоколу типом. Щоб перевірити, чи було реалізовано опціональний метод, слід писати знак питання після імені методу, що викликається, наприклад: `someOptionalMethod?(someArgument)`. Детальніше з ланцюжками опціоналів можна ознайомитись у розділі [Ланцюжки опціоналів](15_optional_chaining.md).
 
-The following example defines an integer-counting class called `Counter`, which uses an external data source to provide its increment amount. This data source is defined by the `CounterDataSource` protocol, which has two optional requirements:
+У наступному прикладі оголошено клас на ім'я `Counter`, що реалізовує цілочисельний лічильник, котрий використовує зовнішнє джерело даних для визначення значення приросту. Це джерело даних визначається протоколом `CounterDataSource`, котрий має дві опціональних вимоги:
 
 ```swift
 @objc protocol CounterDataSource {
@@ -729,13 +723,13 @@ The following example defines an integer-counting class called `Counter`, which 
 }
 ```
 
-The `CounterDataSource` protocol defines an optional method requirement called `increment(forCount:)` and an optional property requirement called `fixedIncrement`. These requirements define two different ways for data sources to provide an appropriate increment amount for a `Counter` instance.
+Протокол `CounterDataSource` оголошує опціональну вимогу методу на ім'я `increment(forCount:)`, та опціональну вимогу властивості на ім'я `fixedIncrement`. Ці вимоги визначають два різних способи, в які джерело даних може надати значення приросту екземплярові  `Counter`.
 
 > **Примітка**
 >
-> Strictly speaking, you can write a custom class that conforms to CounterDataSource without implementing either protocol requirement. They are both optional, after all. Although technically allowed, this wouldn’t make for a very good data source.
+> Строго кажучи, можна написати клас, що є підпорядкованим протоколу `CounterDataSource`, не реалізувавши жодну з його вимог. Врешті, вони обидві опціональні. Однак, хоч це й можливо технічно, на практиці це буде не дуже хороше джерело даних.
 
-The `Counter` class, defined below, has an optional `dataSource` property of type `CounterDataSource?`:
+Клас `Counter`, оголошений нижче, має опціональну властивість `dataSource` типу `CounterDataSource?`:
 
 ```swift
 class Counter {
@@ -751,19 +745,19 @@ class Counter {
 }
 ```
 
-The `Counter` class stores its current value in a variable property called count. The `Counter` class also defines a method called increment, which increments the count property every time the method is called.
+Клас `Counter` зберігає поточне значення лічильника у властивості на ім'я `count`. Клас `Counter` також визначає метод `increment()`, що збільшує значення властивості `count` щоразу при виклику.
 
-The `increment()` method first tries to retrieve an increment amount by looking for an implementation of the `increment(forCount:)` method on its data source. The `increment()` method uses optional chaining to try to call `increment(forCount:)`, and passes the current count value as the method’s single argument.
+Метод `increment()` спершу намагається отримати значення приросту за допомогою методу `increment(forCount:)` його джерела даних. Метод `increment()` використовує ланцюжок опціоналу для виклику методу `increment(forCount:)`, і передає поточне значення `count` в якості єдиного аргумента цього методу. 
 
-Note that two levels of optional chaining are at play here. First, it is possible that `dataSource` may be nil, and so `dataSource` has a question mark after its name to indicate that `increment(forCount:)` should be called only if `dataSource` isn’t `nil`. Second, even if `dataSource` does exist, there is no guarantee that it implements `increment(forCount:)`, because it is an optional requirement. Here, the possibility that `increment(forCount:)` might not be implemented is also handled by optional chaining. The call to `increment(forCount:)` happens only if `increment(forCount:)` exists—that is, if it isn’t `nil`. This is why `increment(forCount:)` is also written with a question mark after its name.
+Слід помітитити, що в даному випадку мають місце два рівні ланцюжку опціоналів. Перший полягає в тому, що властивість `dataSource` може мати значення `nil` , і тому `dataSource` позначено знаком питання після її імені, щоб метод `increment(forCount:)` викликався лише тоді, коли `dataSource` не `nil`. Другий полягає в тому, що навіть якщо `dataSource` не `nil`, все ще нема гарантії, що воно реалізовує метод `increment(forCount:)`, оскільки це опціональна вимога. Тут можливість того, що метод `increment(forCount:)` не реалізований, опрацьовується за допомогою ланцюжка опціоналів. Виклик `increment(forCount:)` відбувається тільки тоді, коли він існує – тобто, коли він не `nil`. Тому виклик `increment(forCount:)` записується зі знаком питання після назви методу. 
 
-Because the call to `increment(forCount:)` can fail for either of these two reasons, the call returns an optional Int value. This is true even though `increment(forCount:)` is defined as returning a nonoptional Int value in the definition of `CounterDataSource`. Even though there are two optional chaining operations, one after another, the result is still wrapped in a single optional. For more information about using multiple optional chaining operations, see [Linking Multiple Levels of Chaining](15_optional_chaining.md#Linking-Multiple-Levels-of-Chaining).
+Оскільки виклик `increment(forCount:)` може впасти через одну з двох причин, виклик повертає опціональний `Int`. Це так, незважаючи на те, що у визначенні методу `increment(forCount:)` в протоколі `CounterDataSource` вказано неопціональний `Int`. І хоч в даному випадку ланцюжок опціоналів подвійний, результат є загорнутим лише в один опціонал. Детальніше з багаторівневими ланцюжками опціоналів можна ознайомитись у підрозділі [Зв'язування кількох рівнів ланцюжків опціоналів](15_optional_chaining.md#Linking-Multiple-Levels-of-Chaining).
 
-After calling `increment(forCount:)`, the optional `Int` that it returns is unwrapped into a constant called amount, using optional binding. If the optional `Int` does contain a value — that is, if the delegate and method both exist, and the method returned a value — the unwrapped amount is added onto the stored count property, and incrementation is complete.
+Після виклику `increment(forCount:)`, опціональне значення `Int` повертрається і розгортається у константу `amount`, за допомогою прив'язування опціоналу. Якщо опаціональний `Int` має значення – тобто, `dataSource` та метод існують одночасно – розгорнуте значення `amount` додається до властивості `count`, що зберігається, і виклик `increment()` завершується.
 
-If it is not possible to retrieve a value from the `increment(forCount:)` method — either because `dataSource` is `nil`, or because the data source does not implement `increment(forCount:)` — then the `increment()` method tries to retrieve a value from the data source’s fixedIncrement property instead. The fixedIncrement property is also an optional requirement, so its value is an optional `Int` value, even though fixedIncrement is defined as a nonoptional Int property as part of the `CounterDataSource` protocol definition.
+Якщо витягнути значення з методу `increment(forCount:)` неможливо – або через те, що `dataSource` дорівнює `nil`, або через те, що `dataSource` не реалізовує метод `increment(forCount:)` – тоді метод `increment()` пробує витягнути значення із властивості `fixedIncrement`. Властивість `fixedIncrement` також є опціональною вимогою протоколу, тому її значення – опціональний `Int`, хоч в оголошенні протоколу `CounterDataSource` вона має неопціональний тип `Int`.
 
-Here’s a simple `CounterDataSource` implementation where the data source returns a constant value of `3` every time it is queried. It does this by implementing the optional fixedIncrement property requirement:
+Ось приклад реалізації протоколу `CounterDataSource`, де джерело даних повертає константне значення `3` при кожному зверненні. Це робиться шляхом реалізації опціональної вимоги властивості `fixedIncrement`:
 
 ```swift
 class ThreeSource: NSObject, CounterDataSource {
@@ -771,7 +765,7 @@ class ThreeSource: NSObject, CounterDataSource {
 }
 ```
 
-You can use an instance of `ThreeSource` as the data source for a new `Counter` instance:
+Можна використовувати екземпляр `ThreeSource` як джерело даних нового екземпляру `Counter`:
 
 ```swift
 var counter = Counter()
@@ -786,9 +780,9 @@ for _ in 1...4 {
 // 12
 ```
 
-The code above creates a new `Counter` instance; sets its data source to be a new `ThreeSource` instance; and calls the counter’s increment() method four times. As expected, the counter’s count property increases by three each time increment() is called.
+У коді вище створюється новий екземпляр `Counter`, після чого його властивості `dataSource` присвоюється новий екземпляр `ThreeSource`, і чотири рази викликається метод лічильника `increment()`. Як і очікується, властивість лічильника `count` збільшується на три при кожному виклику методу `increment()`.
 
-Here’s a more complex data source called TowardsZeroSource, which makes a Counter instance count up or down towards zero from its current count value:
+Ось приклад складнішого джерела даних у вигляді класу `TowardsZeroSource`, що змушує екземпляр `Counter` змінювати значення `count` в сторону нуля:
 
 ```swift
 @objc class TowardsZeroSource: NSObject, CounterDataSource {
@@ -804,8 +798,9 @@ Here’s a more complex data source called TowardsZeroSource, which makes a Coun
 }
 ```
 
-The `TowardsZeroSource` class implements the optional increment(forCount:) method from the CounterDataSource protocol and uses the count argument value to work out which direction to count in. If count is already zero, the method returns 0 to indicate that no further counting should take place.
-You can use an instance of TowardsZeroSource with the existing Counter instance to count from -4 to zero. Once the counter reaches zero, no more counting takes place:
+Клас `TowardsZeroSource` реалізовує опціональний метод `increment(forCount:)` з протоколу `CounterDataSource` і використовує значення агрумента `count` для визначення напрямку, в який слід робити відлік. Якщо `count` вже дорівнює нуля, метод повертає `0`, щоб позначити, що подальші зміни не потрібні. 
+
+Можна використати екземпляр `TowardsZeroSource` разом з існуючим екземпляром `Counter`, щоб відрахувати з `-4` до нуля. Як тільки лічильник досягає нуля, він перестає змінюватись:
 
 ```swift
 counter.count = -4
@@ -823,11 +818,9 @@ for _ in 1...5 {
 
 ### Розширення протоколів
 
-### Protocol Extensions
+Протоколи можна розширити, щоб додати реалізації методів, ініціалізаторів, індексів чи властивостей, що обчислюються, що підпорядкованих типів. Це дозволяє визначати поведінку в самих протоколах, замість того, щоб робити це окремо в кожному з підпорядкованих типів, чи в глобальній функції.
 
-Protocols can be extended to provide method, initializer, subscript, and computed property implementations to conforming types. This allows you to define behavior on protocols themselves, rather than in each type’s individual conformance or in a global function.
-
-For example, the `RandomNumberGenerator` protocol can be extended to provide a randomBool() method, which uses the result of the required random() method to return a random Bool value:
+Наприклад, протокол `RandomNumberGenerator` можна розширити медотом `randomBool()`, котрий використовує результат виклику методу `random()` для повернення випадкового булевого значення:
 
 ```swift
 extension RandomNumberGenerator {
@@ -837,28 +830,27 @@ extension RandomNumberGenerator {
 }
 ```
 
-By creating an extension on the protocol, all conforming types automatically gain this method implementation without any additional modification.
+Створення розширення протоколу автоматично наділяє всі підпорядковані типи реалізаціями цього методу без їх додаткової модифікації. 
 
 ```swift
 let generator = LinearCongruentialGenerator()
-print("Here's a random number: \(generator.random())")
-// Надрукує "Here's a random number: 0.3746499199817101"
-print("And here's a random Boolean: \(generator.randomBool())")
-// Надрукує "And here's a random Boolean: true"
+print("Це випадкове число: \(generator.random())")
+// Надрукує "Це випадкове число: 0.3746499199817101"
+print("А це – випадкове булеве значення: \(generator.randomBool())")
+// Надрукує "А це – випадкове булеве значення: true"
 ```
 
-Protocol extensions can add implementations to conforming types but can’t make a protocol extend or inherit from another protocol. Protocol inheritance is always specified in the protocol declaration itself.
+Розширення протоколів можуть додавати реалізації до підпорядкованих типів, за допомогою них не можна розширити протокол новими вимогами, чи успадкувати інший протокол. Наслідування завжди повинно бути зазначеним у оголошенні самого протоколу.
 
-#### Providing Default Implementations
+#### Реалізації вимог за замовчанням
 
-You can use protocol extensions to provide a default implementation to any method or computed property requirement of that protocol. If a conforming type provides its own implementation of a required method or property, that implementation will be used instead of the one provided by the extension.
+За допомогою розширення протоколу можна надавати реалізації за замовчанням для будь-яких вимог методів чи властивостей, що обчислюються цього протоколу. Якщо підпорядкований тип має власну реалізацію вимоги методу чи властивості, ця реалізація буде використовуватись замість реалізації з розширення протоколу. 
 
 > **Примітка**
 >
-> Protocol requirements with default implementations provided by extensions are distinct from optional protocol requirements. Although conforming types don’t have to provide their own implementation of either, requirements with default implementations can be called without optional chaining.
->
+> Вимоги протоколу з реалізаціями за замовчанням, що містяться в розширення, це не те ж саме, що опціональні вимоги протоколу. Хоч підпорядковані типи й не повинні надавати власні реалізації в обох випадках, вимоги з реалізаціями за замовчанням можуть викликатись без ланцюжка опціоналів.
 
-For example, the PrettyTextRepresentable protocol, which inherits the TextRepresentable protocol can provide a default implementation of its required prettyTextualDescription property to simply return the result of accessing the textualDescription property:
+Наприклад, протокол `PrettyTextRepresentable`, що наслідує протокол `TextRepresentable`, може мати реалізацію вимоги властивості  `prettyTextualDescription`, котра просто повертатиме результат доступу до властивості `textualDescription`:
 
 ```swift
 extension PrettyTextRepresentable  {
@@ -868,11 +860,11 @@ extension PrettyTextRepresentable  {
 }
 ```
 
-#### Adding Constraints to Protocol Extensions
+#### Додавання обмежень до розширень протоколів
 
-When you define a protocol extension, you can specify constraints that conforming types must satisfy before the methods and properties of the extension are available. You write these constraints after the name of the protocol you’re extending by writing a generic where clause. For more about generic where clauses, see Generic Where Clauses.
+При оголошенні розширення протоколу, можна вказати обмеження, які накладаються на підпорядковані типи, котрим будуть доступні методи та властивості з розширення протоколу. Ці обмеження записуються після назви протоколу, що розширюється, за допомогою інструкції узагальнення `where`. Детальніше з нею можна ознайомитись у підрозділі [Інструкція узагальнення Where](21_generics.md#Інструкція-узагальнення-Where).
 
-For example, you can define an extension to the Collection protocol that applies to any collection whose elements conform to the Equatable protocol. By constraining a collection’s elements to the Equatable protocol, a part of the standard library, you can use the == and != operators to check for equality and inequality between two elements.
+Наприклад, можна визначити розширення протоколу `Collection`, що стосується лише колекцій, чиї елементи підпорядковані до протоколу `Equatable`. Обмежуючи елементи колекції до протоколу `Equatable`, котрий є частиною стандартної бібліотеки, можна використовувати оператори `==` та `!=` для визначення рівності/нерівності між двома елементами. 
 
 ```swift
 extension Collection where Element: Equatable {
@@ -887,15 +879,18 @@ extension Collection where Element: Equatable {
 }
 ```
 
-The allEqual() method returns true only if all the elements in the collection are equal.
+Метод `allEqual()` повертає `true` тільки у тому випадку, коли всі елементи в колекції рівні між собою.
 
-Consider two arrays of integers, one where all the elements are the same, and one where they aren’t:
+Нехай є два масиви цілих чисел, в одному з яких усі елементи рівні, а в іншому - ні:
 
 ```swift
 let equalNumbers = [100, 100, 100, 100, 100]
 let differentNumbers = [100, 100, 200, 100, 200]
-Because arrays conform to Collection and integers conform to Equatable, equalNumbers and differentNumbers can use the allEqual() method:
+```
 
+Оскільки масиви підпорядковуються до протоколу `Collection`, а цілі числа підпорядковуються до протоколу `Equatable`, у екземплярів  `equalNumbers` та  `differentNumbers` з'являється метод `allEqual()`:
+
+```swift
 print(equalNumbers.allEqual())
 // Надрукує "true"
 print(differentNumbers.allEqual())
@@ -904,5 +899,4 @@ print(differentNumbers.allEqual())
 
 > **Примітка**
 >
-> If a conforming type satisfies the requirements for multiple constrained extensions that provide implementations for the same method or property, Swift uses the implementation corresponding to the most specialized constraints.
->
+> Якщо підпорядкований тип задовольняє вимогам кількох обмежених розширень, що містять реалізації одного й того ж методу чи властивості, Swift буде використовувати реалізацію, що відповідає найбільш конкретним обмеженням. 
