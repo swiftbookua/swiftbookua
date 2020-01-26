@@ -1,12 +1,12 @@
 ## Узагальнення
 
-*Generic code* enables you to write flexible, reusable functions and types that can work with any type, subject to requirements that you define. You can write code that avoids duplication and expresses its intent in a clear, abstracted manner.
+*Узагальнений код* дозволяє писати гнучкі функції та типи, котрі можна повторно використовувати, що працюють із будь-якими типами відповідно до ваших вимог. Таким способом можна писати код, що уникає повторень, та виражає намір автора у зрозумілій та абстрагованій манері. 
 
-Generics are one of the most powerful features of Swift, and much of the Swift standard library is built with generic code. In fact, you’ve been using generics throughout the *Language Guide*, even if you didn’t realize it. For example, Swift’s `Array` and `Dictionary` types are both generic collections. You can create an array that holds Int values, or an array that holds `String` values, or indeed an array for any other type that can be created in Swift. Similarly, you can create a dictionary to store values of any specified type, and there are no limitations on what that type can be.
+Узагальнення є однією з найбільш потужних можливостей мови Swift, і велика частина стандартної бібліотеки Swift побудована за допомогою узагальненого коду. Фактично, ми користувались узагальненнями всюди у *Керівництві з мови*, навіть якщо ми не усвідомлювали цього. Наприклад, типи `Array` та `Dictionary` у Swift є узагальненими колекціями. Можна створити масив, що зберігає значення типу `Int`, або типу `String`, або будь-якого іншого типу, що можна створити у Swift. Аналогічно, можна створити словник, що зберігає значення будь-якого вказаного типу, і немає жодних обмежень щодо типу цих значень. 
 
-### The Problem That Generics Solve
+### Проблема, котру вирішують узагальнення
 
-Here’s a standard, nongeneric function called swapTwoInts(_:_:), which swaps two Int values:
+Ось стандартна, неузагальнена функція, що називається `swapTwoInts(_:_:)`, та міняє місцями два значення типу `Int`:
 
 ```swift
 func swapTwoInts(_ a: inout Int, _ b: inout Int) {
@@ -16,20 +16,19 @@ func swapTwoInts(_ a: inout Int, _ b: inout Int) {
 }
 ```
 
+Ця функція для обміну значень `a` та `b` використовує двонаправлені параметри, що описані у підрозділі [Двонаправлені параметри](5_functions.md#Двонаправлені-параметри).
 
-This function makes use of in-out parameters to swap the values of `a` and `b`, as described in [Двонаправлені параметри](5_functions.md#Двонаправлені-параметри).
-
-The `swapTwoInts(_:_:)` function swaps the original value of `b` into `a`, and the original value of `a` into `b`. You can call this function to swap the values in two `Int` variables:
+Функція `swapTwoInts(_:_:)` підставляє початкове значення `b` у змінну `a`, і початкове значення `a` у змінну  `b`. Можна викликати цю функцію для обміну двох значень типу `Int`:
 
 ```swift
 var someInt = 3
 var anotherInt = 107
 swapTwoInts(&someInt, &anotherInt)
-print("someInt is now \(someInt), and anotherInt is now \(anotherInt)")
-// Prints "someInt is now 107, and anotherInt is now 3"
+print("someInt тепер дорівнює \(someInt), а anotherInt тепер дорівнює \(anotherInt)")
+// Надрукує "someInt тепер дорівнює 107, а anotherInt тепер дорівнює 3"
 ```
 
-The `swapTwoInts(_:_:)` function is useful, but it can only be used with Int values. If you want to swap two String values, or two Double values, you have to write more functions, such as the `swapTwoStrings(_:_:)` and `swapTwoDoubles(_:_:)` functions shown below:
+Функція `swapTwoInts(_:_:)` є корисною, але її можна застосувати лише до пари значень типу `Int`. Якщо потрібно обміняти значеннями дві змінні типу `String` чи `Double`, потрібно написати ще функцій, наприклад `swapTwoStrings(_:_:)` та `swapTwoDoubles(_:_:)`:
 
 ```swift
 func swapTwoStrings(_ a: inout String, _ b: inout String) {
@@ -45,14 +44,13 @@ func swapTwoDoubles(_ a: inout Double, _ b: inout Double) {
 }
 ```
 
-You may have noticed that the bodies of the `swapTwoInts(_:_:)`, `swapTwoStrings(_:_:)`, and `swapTwoDoubles(_:_:)` functions are identical. The only difference is the type of the values that they accept (`Int`, `String`, and `Double`).
+Слід помітити, що тіла функцій `swapTwoInts(_:_:)`, `swapTwoStrings(_:_:)`, та `swapTwoDoubles(_:_:)` повністю співпадаються. Єдиною відмінністю є тип значень, що приймають ці функції (`Int`, `String`, та `Double`).
 
-It’s more useful, and considerably more flexible, to write a single function that swaps two values of any type. Generic code enables you to write such a function. (A generic version of these functions is defined below.)
+Було б ефективніше та набагато більш гнучко написати одну функцію, що обмінює значеннями два значення будь-якого типу. Узагальнений код дозволяє написати таку функцію. (Узагальнена версія цих трьох функцій оголошується далі).
 
-> **Note**
+> **Примітка**
 >
-> In all three functions, the types of `a` and `b` must be the same. If `a` and `b` aren’t of the same type, it isn’t possible to swap their values. Swift is a type-safe language, and doesn’t allow (for example) a variable of type `String` and a variable of type `Double` to swap values with each other. Attempting to do so results in a compile-time error.
->
+> У всіх цих трьох функціях, тип у змінних `a` та `b` має бути однаковим. Якщо тип у `a` та `b` не співпадає, неможливо обміняти їх значеннями. Swift є типобезпечною мовою, і тому не дозволяє (наприклад) обміняти значеннями змінні типу `String` та `Double`. Спроба зробити це призводить до помилки часу компіляції.
 
 ### Generic Functions
 
@@ -93,7 +91,7 @@ swapTwoValues(&someString, &anotherString)
 // someString is now "world", and anotherString is now "hello"
 ```
 
-> **Note**
+> **Примітка**
 >
 > The swapTwoValues(_:_:) function defined above is inspired by a generic function called swap, which is part of the Swift standard library, and is automatically made available for you to use in your apps. If you need the behavior of the swapTwoValues(_:_:) function in your own code, you can use Swift’s existing swap(_:_:) function rather than providing your own implementation.
 >
@@ -110,7 +108,7 @@ You can provide more than one type parameter by writing multiple type parameter 
 
 In most cases, type parameters have descriptive names, such as Key and Value in Dictionary<Key, Value> and Element in Array<Element>, which tells the reader about the relationship between the type parameter and the generic type or function it’s used in. However, when there isn’t a meaningful relationship between them, it’s traditional to name them using single letters such as T, U, and V, such as T in the swapTwoValues(_:_:) function above.
 
-> **Note**
+> **Примітка**
 >
 > Always give type parameters upper camel case names (such as T and MyTypeParameter) to indicate that they’re a placeholder for a type, not a value.
 >
@@ -121,7 +119,7 @@ In addition to generic functions, Swift enables you to define your own *generic 
 
 This section shows you how to write a generic collection type called Stack. A stack is an ordered set of values, similar to an array, but with a more restricted set of operations than Swift’s Array type. An array allows new items to be inserted and removed at any location in the array. A stack, however, allows new items to be appended only to the end of the collection (known as pushing a new value on to the stack). Similarly, a stack allows items to be removed only from the end of the collection (known as popping a value off the stack).
 
-> **Note**
+> **Примітка**
 >
 > The concept of a stack is used by the UINavigationController class to model the view controllers in its navigation hierarchy. You call the UINavigationController class pushViewController(_:animated:) method to add (or push) a view controller on to the navigation stack, and its popViewControllerAnimated(_:) method to remove (or pop) a view controller from the navigation stack. A stack is a useful collection model whenever you need a strict “last in, first out” approach to managing a collection.
 >
@@ -236,7 +234,7 @@ The topItem computed property can now be used with any Stack instance to access 
 if let topItem = stackOfStrings.topItem {
     print("The top item on the«stack is \(topItem).")
 }
-// Prints "The top item on the stack is tres."
+// Надрукує "The top item on the stack is tres."
 ```
 
 Extensions of a generic type can also include requirements that instances of the extended type must satisfy in order to gain the new functionality, as discussed in Extensions with a Generic Where Clause below.
@@ -287,7 +285,7 @@ let strings = ["cat", "dog", "llama", "parakeet", "terrapin"]
 if let foundIndex = findIndex(ofString: "llama", in: strings) {
     print("The index of llama is \(foundIndex)")
 }
-// Prints "The index of llama is 2"
+// Надрукує "The index of llama is 2"
 ```
 
 The principle of finding the index of a value in an array isn’t useful only for strings, however. You can write the same functionality as a generic function by replacing any mention of strings with values of some type T instead.
@@ -586,7 +584,7 @@ if allItemsMatch(stackOfStrings, arrayOfStrings) {
 } else {
     print("Not all items match.")
 }
-// Prints "All items match."
+// Надрукує "All items match."
 ```
 
 The example above creates a Stack instance to store String values, and pushes three strings onto the stack. The example also creates an Array instance initialized with an array literal containing the same three strings as the stack. Even though the stack and the array are of a different type, they both conform to the Container protocol, and both contain the same type of values. You can therefore call the allItemsMatch(_:_:) function with these two containers as its arguments. In the example above, the allItemsMatch(_:_:) function correctly reports that all of the items in the two containers match.
@@ -616,7 +614,7 @@ if stackOfStrings.isTop("tres") {
 } else {
     print("Top element is something else.")
 }
-// Prints "Top element is tres.
+// Надрукує "Top element is tres.
 ```
 
 If you try to call the isTop(_:) method on a stack whose elements aren’t equatable, you’ll get a compile-time error.
@@ -647,7 +645,7 @@ if [9, 9, 9].startsWith(42) {
 } else {
     print("Starts with something else.")
 }
-// Prints "Starts with something else."
+// Надрукує "Starts with something else."
 ```
 
 The generic where clause in the example above requires Item to conform to a protocol, but you can also write a generic where clauses that require Item to be a specific type. For example:
@@ -663,7 +661,7 @@ extension Container where Item == Double {
     }
 }
 print([1260.0, 1200.0, 98.6, 37.0].average())
-// Prints "648.9"
+// Надрукує "648.9"
 ```
 
 This example adds an average() method to containers whose Item type is Double. It iterates over the items in the container to add them up, and divides by the container’s count to compute the average. It explicitly converts the count from Int to Double to be able to do floating-point division.
