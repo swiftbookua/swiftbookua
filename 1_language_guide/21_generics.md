@@ -52,9 +52,9 @@ func swapTwoDoubles(_ a: inout Double, _ b: inout Double) {
 >
 > У всіх цих трьох функціях, тип у змінних `a` та `b` має бути однаковим. Якщо тип у `a` та `b` не співпадає, неможливо обміняти їх значеннями. Swift є типобезпечною мовою, і тому не дозволяє (наприклад) обміняти значеннями змінні типу `String` та `Double`. Спроба зробити це призводить до помилки часу компіляції.
 
-### Generic Functions
+### Узагальнені функції
 
-Generic functions can work with any type. Here’s a generic version of the `swapTwoInts(_:_:)` function from above, called `swapTwoValues(_:_:)`:
+Узагальнені функції можуть працювати з будь-яким типом. Ось приклад узагальненої версії функції `swapTwoInts(_:_:)` з прикладу вище, котра називається `swapTwoValues(_:_:)`:
 
 ```swift
 func swapTwoValues<T>(_ a: inout T, _ b: inout T) {
@@ -64,80 +64,74 @@ func swapTwoValues<T>(_ a: inout T, _ b: inout T) {
 }
 ```
 
-The body of the `swapTwoValues(_:_:)` function is identical to the body of the `swapTwoInts(_:_:)` function. However, the first line of `swapTwoValues(_:_:)` is slightly different from `swapTwoInts(_:_:)`. Here’s how the first lines compare:
+Тіло функції `swapTwoValues(_:_:)` є ідентичним до тіла функції `swapTwoInts(_:_:)`. Однак, перший рядок функції `swapTwoValues(_:_:)` трохи відрізняється від `swapTwoInts(_:_:)`. Ось перші два рядки в порівнянні:
 
 ```swift
 func swapTwoInts(_ a: inout Int, _ b: inout Int)
 func swapTwoValues<T>(_ a: inout T, _ b: inout T)
 ```
 
-The generic version of the function uses a placeholder type name (called T, in this case) instead of an actual type name (such as Int, String, or Double). The placeholder type name doesn’t say anything about what T must be, but it does say that both a and b must be of the same type T, whatever T represents. The actual type to use in place of T is determined each time the swapTwoValues(_:_:) function is called.
+Узагальнена функція використовує замісник назви типу (що в даному випадку називається `T`) замість фактичної назви типу (на кшталт `Int`, `String`, чи `Double`). Замісник назви типу нічого не каже про то, чим може бути  `T`, але він каже, що `a` та `b` повинні мати однаковий тип `T`, яким би він не був. Фактичний тип для використання замість `T` встановлюється в момент виклику функції `swapTwoValues(_:_:)`.
 
-The other difference between a generic function and a nongeneric function is that the generic function’s name (swapTwoValues(_:_:)) is followed by the placeholder type name (T) inside angle brackets (<T>). The brackets tell Swift that T is a placeholder type name within the swapTwoValues(_:_:) function definition. Because T is a placeholder, Swift doesn’t look for an actual type called T.
+Різниця між узагальненою та неузагальненою функцією полягає також у тому, що після назви узагальненої функції (`swapTwoValues(_:_:)`) йде замісник назви типу (`T`) у фігурних дужках (`<T>`). Фігурні дужки підказують  компілятору Swift, що `T` – це замісник назви типу у визначенні функції `swapTwoValues(_:_:)`. Оскільки `T` – це замісник назви типу, компілятор Swift не шукатиме фактичний тип, що називається `T`.
 
-The swapTwoValues(_:_:) function can now be called in the same way as swapTwoInts, except that it can be passed two values of any type, as long as both of those values are of the same type as each other. Each time swapTwoValues(_:_:) is called, the type to use for T is inferred from the types of values passed to the function.
+Функція `swapTwoValues(_:_:)` може тепер викликатись так само, як і `swapTwoInts(_:_:)`, але їй можна передавати пару значень будь-якого типу, головне, щоб це були значення одного й того ж типу. При кожному виклику `swapTwoValues(_:_:)`, тип, який слід використовувати замість `T`, визначається з типів значень, що передаються до функції.
 
-In the two examples below, T is inferred to be Int and String respectively:
+У двох прикладах нижче, `T` визначається як `Int`  та  `String` відповідно:
 
 ```swift
 var someInt = 3
 var anotherInt = 107
 swapTwoValues(&someInt, &anotherInt)
-// someInt is now 107, and anotherInt is now 3
+// someInt тепер дорівнює 107, а anotherInt тепер дорівнює 3
 
 var someString = "hello"
 var anotherString = "world"
 swapTwoValues(&someString, &anotherString)
-// someString is now "world", and anotherString is now "hello"
+// someString тепер дорівнює "world", а anotherString тепер дорівнює "hello"
 ```
 
 > **Примітка**
 >
-> The swapTwoValues(_:_:) function defined above is inspired by a generic function called swap, which is part of the Swift standard library, and is automatically made available for you to use in your apps. If you need the behavior of the swapTwoValues(_:_:) function in your own code, you can use Swift’s existing swap(_:_:) function rather than providing your own implementation.
->
+> Визначена вище функція `swapTwoValues(_:_:)` є аналогом узагальненої функції `swap(::)`, що є частиною стандартної бібліотеки Swift, та є автоматично доступною для використання у ваших додатках. Якщо вам потрібна поведінка функції `swapTwoValues(_:_:)` у вашому коді, слід використовувати існуючу функцію `swap(::)` замість того, щоб реалізовувати її самотужки.
 
-### Type Parameters
+### Параметри типів
 
-In the swapTwoValues(_:_:) example above, the placeholder type T is an example of a type parameter. Type parameters specify and name a placeholder type, and are written immediately after the function’s name, between a pair of matching angle brackets (such as <T>).
+У прикладі з `swapTwoValues(_:_:)`, замісник назви типу `T` є прикладом параметра типу. Параметри типів визначають та іменують замісник типу, і записуються одназу після назви функції, всередині пари кутових дужок (наприклад, `<T>`).
 
-Once you specify a type parameter, you can use it to define the type of a function’s parameters (such as the a and b parameters of the swapTwoValues(_:_:) function), or as the function’s return type, or as a type annotation within the body of the function. In each case, the type parameter is replaced with an actual type whenever the function is called. (In the swapTwoValues(_:_:) example above, T was replaced with Int the first time the function was called, and was replaced with String the second time it was called.)
+Як тільки вказано параметр типу, його можна використовувати для визначення типу параметрів функції (наприклад, типи параметрів `a` та `b` функції `swapTwoValues(_:_:)`), або типу, що повертається функцією, або як анотацію типу всередині тіла функції. В кожному випадку, тип параметра замінюється фактичним типом при кожному виклику функції. (У прикладі з `swapTwoValues(_:_:)` вище, `T` замінювався на `Int` у першому виклику функції, та на `String` у другому виклику функції).
 
-You can provide more than one type parameter by writing multiple type parameter names within the angle brackets, separated by commas.
+Функція може мати декілька параметрів типів, їх так само записують у кутових дужках, розділюючи комами. 
 
-#### Naming Type Parameters
+#### Іменування параметрів типів
 
-In most cases, type parameters have descriptive names, such as Key and Value in Dictionary<Key, Value> and Element in Array<Element>, which tells the reader about the relationship between the type parameter and the generic type or function it’s used in. However, when there isn’t a meaningful relationship between them, it’s traditional to name them using single letters such as T, U, and V, such as T in the swapTwoValues(_:_:) function above.
-
-> **Примітка**
->
-> Always give type parameters upper camel case names (such as T and MyTypeParameter) to indicate that they’re a placeholder for a type, not a value.
->
-
-### Generic Types
-
-In addition to generic functions, Swift enables you to define your own *generic types*. These are custom classes, structures, and enumerations that can work with any type, in a similar way to Array and Dictionary.
-
-This section shows you how to write a generic collection type called Stack. A stack is an ordered set of values, similar to an array, but with a more restricted set of operations than Swift’s Array type. An array allows new items to be inserted and removed at any location in the array. A stack, however, allows new items to be appended only to the end of the collection (known as pushing a new value on to the stack). Similarly, a stack allows items to be removed only from the end of the collection (known as popping a value off the stack).
+У більшості випадків, параметри типів мають змісновті назви, як наприклад `Key` (ключ) та `Value` (значення) у `Dictionary<Key, Value>`, котрі вказують читачу на зв'язкок між параметром типу та узагальненим типом або функцією, в якому він використовується. Однак, у випадках, коли між ними нема змістовного зв'язку, традиційно типи параметрів однією великою літерою, зазвичай `T`, `U`, чи `V`, як `T` у функції `swapTwoValues(_:_:)` вище.
 
 > **Примітка**
 >
-> The concept of a stack is used by the UINavigationController class to model the view controllers in its navigation hierarchy. You call the UINavigationController class pushViewController(_:animated:) method to add (or push) a view controller on to the navigation stack, and its popViewControllerAnimated(_:) method to remove (or pop) a view controller from the navigation stack. A stack is a useful collection model whenever you need a strict “last in, first out” approach to managing a collection.
+> Слід завжди давати параметрам типів назви, що пишуться [ВерхнімВерблюжимРегістром](https://uk.wikipedia.org/wiki/Верблюжий_регістр) (наприклад, `T` або `MyTypeParameter`), щоб позначити, що це замісник типу, а не значення.
+
+### Узагальнені типи
+
+Окрім узагальнених функцій, Swift дає можливість створювати власні *узагальнені типи*. Ними можуть бути власні класи, структури та перечислення, що можуть працювати з будь-яким типом, аналогічно до вбудованих `Array` та `Dictionary`.
+
+Цей підрозділ покаже, як написати власну узагальнену колекцію на ім'я `Stack`. Стек - це впорядкована множина значень, аналогічна до масиву, але із більш обмеженим набором операцій, ніж у масивів у Swift. Масиви у Swift дозволяють вставляти чи видаляти елементи в будь-якій позиції. Стек дозволяють новим елементам додаватись лише в кінець колекції (про що кажуть: "заштовхнути елемент у стек", або push). Стек також дозволяє елементам видалятись, але лише з кінця колекції (про що кажуть: "виштовхнути елемент зі стека", або pop).
+
+> **Примітка**
 >
+> Концепція стеку використовується класом `UINavigationController` для моделювання в'ю-контоллерів у ієрархії навігації в додатках на iOS. Щоб додати в'ю-контроллер до навігаційного стеку, слід викликати метод `pushViewController(_:animated:)` класу `UINavigationController`, а щоб прибрати (тобто виштовхнути) в'ю-контроллер з навігаційного стеку – метод `popViewControllerAnimated(_:)`. Стек є корисною моделлю колекції в тих випадках, де для керування колекцією потрібне строге правило “останнім прийшов — першим пішов” (або LIFO, від англійсього “last in, first out”).
 
-The illustration below shows the push and pop behavior for a stack:
+Ілюстрація нижче демонструє поведінку стека і його операції push та pop:
 
-![](/Users/slavick/Projects/-swift/1_language_guide/images/stackPushPop_2x.png)
+![](images/stackPushPop_2x.png)
 
-1. There are currently three values on the stack.
-2. A fourth value is pushed onto the top of the stack.
-3. The stack now holds four values, with the most recent one at the top.
+1. У стеку зберігаються три значення.
+2. До стеку заштовхується четверте значення.
+3. Стек тепер тримає чотири значення, при цьому останнє лежить на його вершині.
+4. Зі стеку виштовхується значення.
+5. Після виштовхування значення, стек знову містить три початкові значення.
 
-4. The top item in the stack is popped.
-
-5. After popping a value, the stack once again holds three values.
-
-
-Here’s how to write a nongeneric version of a stack, in this case for a stack of `Int` values:
+Ось як можна записати неузагальнену версію стеку, в даному випадку для стеку значень типу `Int`:
 
 ```swift
 struct IntStack {
@@ -151,11 +145,11 @@ struct IntStack {
 }
 ```
 
-This structure uses an `Array` property called items to store the values in the stack. Stack provides two methods, push and pop, to push and pop values on and off the stack. These methods are marked as mutating, because they need to modify (or mutate) the structure’s items array.
+У даній струкрурі для зберігання значень у стеку використовується масив значень типу `Int`, що зберігається у властивості на ім'я `items`. Цей стек має два методи, `push()` та  `pop()`, що відповідно заштовхують та виштовхують елементи стеку. Ці методи позначені модифікатором `mutating`, оскільки їм потрібно змінити масив, що зберігається у даній структурі.
 
-The `IntStack` type shown above can only be used with Int values, however. It would be much more useful to define a generic Stack class, that can manage a stack of any type of value.
+Однак тип `IntStack` може використовуватись лише для зберігання значень типу `Int`. Було б набагато більш ефективно створити узагальнений клас `Stack`, котрий би керував стеком значень будь-якого типу. 
 
-Here’s a generic version of the same code:
+Ось узагальнена версію того ж коду:
 
 ```swift
 struct Stack<Element> {
@@ -169,20 +163,17 @@ struct Stack<Element> {
 }
 ```
 
-Note how the generic version of Stack is essentially the same as the nongeneric version, but with a type parameter called Element instead of an actual type of Int. This type parameter is written within a pair of angle brackets (`<Element>`) immediately after the structure’s name.
+Слід помітити, що узагальнена версія `Stack` є практично такою ж, як і неузагальнена версія, єдиною відмінністю є параметр типу на ім'я `Element` замість фактичного типу `Int`. Параметр типу записується всередині пари кутових дужок (`<Element>`) одразу після назви структури.
 
-Element defines a placeholder name for a type to be provided later. This future type can be referred to as Element anywhere within the structure’s definition. In this case, Element is used as a placeholder in three places:
+`Element` визначає замісник назви типу, що буде надана пізніше. До цього майбутнього типу далі можна звертатись як `Element` будь-де у визначенні структури. В даному випадку, `Element` використовується як замісник у трьох місцях:
 
-- To create a property called items, which is initialized with an empty array of values of type `Element`
+- Для створення властивості `items`, котра ініціалізується порожнім масивом значень типу `Element`.
+- Щоб вказати, що метод `push(_:)` має єдиний параметр на ім'я `item`, котрий повинен мати тип `Element`.
+- Щоб вказати, що метод `pop()` повертає значення типу `Element`.
 
-- To specify that the `push(_:)` method has a single parameter called item, which must be of type Element
+Оскільки `Stack` є узагальненим типом, його можна використовувати для створення стеку будь-якого типу Swift, аналогічно до `Array` та `Dictionary`.
 
-- To specify that the value returned by the pop() method will be a value of type `Element`
-
-
-Because it’s a generic type, `Stack` can be used to create a stack of any valid type in Swift, in a similar manner to `Array` and `Dictionary`.
-
-You create a new Stack instance by writing the type to be stored in the stack within angle brackets. For example, to create a new stack of strings, you write `Stack<String>()`:
+Щоб створити новий екземпляр `Stack`, слід записати тип значень, що зберігатиметься у стеку, у фігурних дужках. Наприклад, щоб створити стек рядків, слід написати `Stack<String>()`:
 
 ```swift
 var stackOfStrings = Stack<String>()
@@ -190,23 +181,23 @@ stackOfStrings.push("uno")
 stackOfStrings.push("dos")
 stackOfStrings.push("tres")
 stackOfStrings.push("cuatro")
-// the stack now contains 4 strings
+// стек містить 4 рядки
 ```
 
-Here’s how `stackOfStrings` looks after pushing these four values on to the stack:
+Ось як виглядає стек `stackOfStrings` після заштовхування в нього чотирьох значень:
 
-![](/Users/slavick/Projects/-swift/1_language_guide/images/stackPushedFourStrings_2x.png)
+![](images/stackPushedFourStrings_2x.png)
 
-Popping a value from the stack removes and returns the top value, "cuatro":
+Виштовхування значень зі стеку видаляє та повертає значення на вершині стеку, `"cuatro"`:
 
 ```swift
 let fromTheTop = stackOfStrings.pop()
-// fromTheTop is equal to "cuatro", and the stack now contains 3 strings
+// fromTheTop тепер дорівнює "cuatro", а стек тепер містить 3 рядки
 ```
 
-Here’s how the stack looks after popping its top value:
+Ось як виглядає стек після виштовхування верхнього значення:
 
-![](/Users/slavick/Projects/-swift/1_language_guide/images/stackPoppedOneString_2x.png)
+![](images/stackPoppedOneString_2x.png)
 
 ### Extending a Generic Type
 

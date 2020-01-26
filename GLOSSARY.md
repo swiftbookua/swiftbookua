@@ -82,4 +82,7 @@
 + Downcasting - приведення типів
 + Opaque Data Type - непрозорий тип даних ([ukr wiki](https://uk.wikipedia.org/wiki/Непрозорий_тип_даних) [eng wiki](https://en.wikipedia.org/wiki/Opaque_data_type))
 + Безпека доступу до пам'яті - Memory Safety ([ukr wiki](https://uk.wikipedia.org/wiki/Безпека_доступу_до_пам%27яті) [eng wiki](https://en.wikipedia.org/wiki/Memory_safety))
-+ и – Generic Where clause
++ Інструкція узагальнення Where – Generic Where clause
++ замісник назви типу - placeholder type name (про T в шаблонах)
++ Параметри типів - Type Parameters
++ Стек - [Стек](https://uk.wikipedia.org/wiki/Стек), push - заштовхнути, pop - виштовхнути. 
