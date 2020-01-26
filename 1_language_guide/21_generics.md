@@ -199,11 +199,11 @@ let fromTheTop = stackOfStrings.pop()
 
 ![](images/stackPoppedOneString_2x.png)
 
-### Extending a Generic Type
+### Розширення узагальнених типів
 
-When you extend a generic type, you don’t provide a type parameter list as part of the extension’s definition. Instead, the type parameter list from the original type definition is available within the body of the extension, and the original type parameter names are used to refer to the type parameters from the original definition.
+При розширенні узагальненого типу не потрібно вказувати список параметрів типів у оголошенні розширення. При цьому список параметрів типів з оригінального оголошення типу є доступним для тіла розширення, і оригінальні назви параметрів типів можна використовувати для посилання на параметри в оригінальному оголошенні. 
 
-The following example extends the generic Stack type to add a read-only computed property called topItem, which returns the top item on the stack without popping it from the stack:
+Наступний приклад розширює узагальнений тип `Stack`, додаючи до нього властивість тільки для читання, що обчислюється і називається `topItem`, котра повертає елемент на вершині стеку, без виштовхування цього елементу зі стеку:
 
 ```swift
 extension Stack {
@@ -213,22 +213,20 @@ extension Stack {
 }
 ```
 
+Властивість `topItem` повертає опціональне значення типу `Element`. Якщо стер порожній, `topItem` поверне `nil`; якщо стек не порожній, `topItem` поверне останній елемент у масиві `items`.
 
+Варто помітити, що розширення не оголошує список параметрів типів. При цьому назва існуючого параметра типу `Element` використовується всередині розширення для позначення опціонального типу властивості `topItem`.
 
-The topItem property returns an optional value of type Element. If the stack is empty, topItem returns nil; if the stack isn’t empty, topItem returns the final item in the items array.
-
-Note that this extension doesn’t define a type parameter list. Instead, the Stack type’s existing type parameter name, Element, is used within the extension to indicate the optional type of the topItem computed property.
-
-The topItem computed property can now be used with any Stack instance to access and query its top item without removing it.
+Властивість, що обчислюється, `topItem` тепер може бути використаною з будь-яким екземпляром `Stack` для отримання елемента на вершині стеку без його видалення:
 
 ```swift
 if let topItem = stackOfStrings.topItem {
-    print("The top item on the«stack is \(topItem).")
+    print("Елементом на вершині стеку є '\(topItem)'.")
 }
-// Надрукує "The top item on the stack is tres."
+// Надрукує "Елементом на вершині стеку є 'tres'."
 ```
 
-Extensions of a generic type can also include requirements that instances of the extended type must satisfy in order to gain the new functionality, as discussed in Extensions with a Generic Where Clause below.
+Розширення узагальненого типу можуть також включати вимоги, котрі мають задовольняти типи, що отримають нову функціональність. Це детальніше описано далі, в підрозділі [Розшинення з інструкцією узагальнення Where](#Розшинення-з-інструкцією-узагальнення-Where).
 
 ### Type Constraints
 
@@ -581,6 +579,8 @@ if allItemsMatch(stackOfStrings, arrayOfStrings) {
 The example above creates a Stack instance to store String values, and pushes three strings onto the stack. The example also creates an Array instance initialized with an array literal containing the same three strings as the stack. Even though the stack and the array are of a different type, they both conform to the Container protocol, and both contain the same type of values. You can therefore call the allItemsMatch(_:_:) function with these two containers as its arguments. In the example above, the allItemsMatch(_:_:) function correctly reports that all of the items in the two containers match.
 
 #### Extensions with a Generic Where Clause
+
+#### Розшинення з інструкцією узагальнення Where
 
 You can also use a generic `where` clause as part of an extension. The example below extends the generic Stack structure from the previous examples to add an isTop(_:) method.
 
