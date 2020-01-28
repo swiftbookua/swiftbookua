@@ -228,31 +228,31 @@ if let topItem = stackOfStrings.topItem {
 
 Розширення узагальненого типу можуть також включати вимоги, котрі мають задовольняти типи, що отримають нову функціональність. Це детальніше описано далі, в підрозділі [Розшинення з інструкцією узагальнення Where](#Розшинення-з-інструкцією-узагальнення-Where).
 
-### Type Constraints
+### Обмеження типів
 
-The swapTwoValues(_:_:) function and the Stack type can work with any type. However, it’s sometimes useful to enforce certain type constraints on the types that can be used with generic functions and generic types. Type constraints specify that a type parameter must inherit from a specific class, or conform to a particular protocol or protocol composition.
+Функція  `swapTwoValues(_:_:)` та тип `Stack` можуть працювати із будь-яким типом. Однак, часто буває потрібно накласти певні обмеження на типи, які можуть використовуватись в узагальнених функціях та типах. Обмеження типів вказують, що параметр типу повинен наслідуватись від певного класу, або підпорядковуватись певному протоколу, чи композиції протоколів.
 
-For example, Swift’s Dictionary type places a limitation on the types that can be used as keys for a dictionary. As described in Dictionaries, the type of a dictionary’s keys must be hashable. That is, it must provide a way to make itself uniquely representable. Dictionary needs its keys to be hashable so that it can check whether it already contains a value for a particular key. Without this requirement, Dictionary could not tell whether it should insert or replace a value for a particular key, nor would it be able to find a value for a given key that is already in the dictionary.
+Наприклад, тип `Dictionary` у Swift вводить обмеження на типи, що можуть використовуватись в якості ключів у словнику. Як описано у підрозділі [Словники](3_collection_types.md#Словники), тип ключа у словнику має підпорядковуватись протоколу `Hashable`, тобто вміти обчислити свій хеш. Іншими словами, ключ повинен надавати своє однозначне представлення. Словнику потрібно знаходити хеш ключа для того, щоб перевіряти, чи містить він для цього ключа значення. Без цього обмеження, словник не мав би змоги з'ясувати, потрібно вставляти нове значення чи заміняти існуючи, а також не мав би змоги з'ясувати, чи міститься у ньому значення за заданим ключем. 
 
-This requirement is enforced by a type constraint on the key type for Dictionary, which specifies that the key type must conform to the Hashable protocol, a special protocol defined in the Swift standard library. All of Swift’s basic types (such as String, Int, Double, and Bool) are hashable by default.
+Дана вимога ставиться за допомогою обмеження типу ключа для `Dictionary`, котра визначає, що ключ має підпорядковуватись протоколу `Hashable`, спеціальному протоколу зі стандартної бібліотеки Swift. Всі базові типи Swift (такі, як `String`, `Int`, `Double`, та `Bool`) є за замовчанням підпорядкованими цьому протоколу. 
 
-You can define your own type constraints when creating custom generic types, and these constraints provide much of the power of generic programming. Abstract concepts like Hashable characterize types in terms of their conceptual characteristics, rather than their concrete type.
+Створюючи власні узагальнені типи, можна ставити власні обмеження типів, і ці обмеження містять у собі велику силу узагальненого програмування. Абстрактні концепції на кшталт `Hashable` характеризуть типи з точки зору їх концептуальних характеристик, допомагаючи уникати використання конкретних типів. 
 
-#### Type Constraint Syntax
+#### Синтаксис обмежень типів
 
-You write type constraints by placing a single class or protocol constraint after a type parameter’s name, separated by a colon, as part of the type parameter list. The basic syntax for type constraints on a generic function is shown below (although the syntax is the same for generic types):
+Обмеження типів записуються шляхом вказування назви класу чи протоколу у списку параметрів типів, після назви параметру типу, відділяючись від нього комою. Базовий синтаксис обмеження типів узагальненої функції показано нижче (синтаксис для узагальнених функцій та типів однаковий):
 
 ```swift
 func someFunction<T: SomeClass, U: SomeProtocol>(someT: T, someU: U) {
-    // function body goes here
+    // тут йде тіло функції
 }
 ```
 
-The hypothetical function above has two type parameters. The first type parameter, T, has a type constraint that requires T to be a subclass of `SomeClass`. The second type parameter, `U`, has a type constraint that requires `U` to conform to the protocol `SomeProtocol`.
+Гіпотетична функція вище має два параметри типів. Перший параметр типу, `T`, має обмеження типу, що вимагає `T` бути класом-нащадком класу  `SomeClass`. Другий параметр, `U`, має обмеження типу, що вимагає `U` бути підпорядкованим протоколу `SomeProtocol`.
 
-#### Type Constraints in Action
+#### Обмеження типів у дії
 
-Here’s a nongeneric function called `findIndex(ofString:in:)`, which is given a String value to find and an array of String values within which to find it. The findIndex(ofString:in:) function returns an optional Int value, which will be the index of the first matching string in the array if it’s found, or nil if the string can’t be found:
+Ось приклад неузагальненої функції на ім'я `findIndex(ofString:in:)`, котра шукає зананий рядок у заданому масиві рядків. Функція `findIndex(ofString:in:)` повертає опціональне цілочисельне значення, котре виражає індекс першого рядка в масиві, що співпав із заданим, або `nil`, якщо не співпав жоден:
 
 ```swift
 func findIndex(ofString valueToFind: String, in array: [String]) -> Int? {
@@ -265,9 +265,7 @@ func findIndex(ofString valueToFind: String, in array: [String]) -> Int? {
 }
 ```
 
-
-
-The findIndex(ofString:in:) function can be used to find a string value in an array of strings:
+Функцію `findIndex(ofString:in:)` можна використовувати для знаходження рядку у масиві рядків:
 
 ```swift
 let strings = ["cat", "dog", "llama", "parakeet", "terrapin"]

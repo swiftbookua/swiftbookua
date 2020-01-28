@@ -85,4 +85,5 @@
 + Інструкція узагальнення Where – Generic Where clause
 + замісник назви типу - placeholder type name (про T в шаблонах)
 + Параметри типів - Type Parameters
++ Обмеження типів - Type Constraints
 + Стек - [Стек](https://uk.wikipedia.org/wiki/Стек), push - заштовхнути, pop - виштовхнути. 
