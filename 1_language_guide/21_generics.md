@@ -268,16 +268,16 @@ func findIndex(ofString valueToFind: String, in array: [String]) -> Int? {
 Функцію `findIndex(ofString:in:)` можна використовувати для знаходження рядку у масиві рядків:
 
 ```swift
-let strings = ["cat", "dog", "llama", "parakeet", "terrapin"]
-if let foundIndex = findIndex(ofString: "llama", in: strings) {
-    print("The index of llama is \(foundIndex)")
+let strings = ["кіт", "пес", "лама", "папуга", "черепаха"]
+if let foundIndex = findIndex(ofString: "лама", in: strings) {
+    print("Рядок 'лама' має індекс \(foundIndex)")
 }
-// Надрукує "The index of llama is 2"
+// Надрукує "Рядок 'лама' має індекс 2"
 ```
 
-The principle of finding the index of a value in an array isn’t useful only for strings, however. You can write the same functionality as a generic function by replacing any mention of strings with values of some type T instead.
+Однак, принцип знаходження індексу значення в масиві може стати в нагоді не лише для рядків. Можна написати аналогічну функціональність у вигляді узагальненої функції, замінюючи згадки типу `String` на параметр типу `T`.
 
-Here’s how you might expect a generic version of findIndex(ofString:in:), called findIndex(of:in:), to be written. Note that the return type of this function is still Int?, because the function returns an optional index number, not an optional value from the array. Be warned, though—this function doesn’t compile, for reasons explained after the example:
+Ось як можла б виглядати узагальнена версія функції `findIndex(ofString:in:)`, що носила б назву `findIndex(of:in:)`. Слід помітити, що тип, що повертається цією функцією, все ще є `Int?`, оскільки функція повертає опціональний індекс у масиві, а не опціональне значення з масиву. Однак, маємо попередити: дана функція не скомпілюється через причини, які ми пояснимо далі після цього прикладу:
 
 ```swift
 func findIndex<T>(of valueToFind: T, in array:[T]) -> Int? {
@@ -290,11 +290,11 @@ func findIndex<T>(of valueToFind: T, in array:[T]) -> Int? {
 }
 ```
 
-This function doesn’t compile as written above. The problem lies with the equality check, “if value == valueToFind”. Not every type in Swift can be compared with the equal to operator (==). If you create your own class or structure to represent a complex data model, for example, then the meaning of “equal to” for that class or structure isn’t something that Swift can guess for you. Because of this, it isn’t possible to guarantee that this code will work for every possible type T, and an appropriate error is reported when you try to compile the code.
+Функція вище не скомпілюється. Проблема лежить в перевірці на рівність,  “`if value == valueToFind`”. Не кожен тип у Swift можна порівнювати за допомогою оператору рівності (`==`). Якщо, наприклад, створити власний клас чи структуру, що представляє якусь модель даних, тоді значення операції “дорівнює” для цього класу чи структури не є очевидним для Swift, і компілятор не може його вгадати. Через це, неможливо гарантувати, що даний код буде працювати для будь-якого можливого типу `T`, і компілятор вкаже на це у повідомленні про помилку. 
 
-All is not lost, however. The Swift standard library defines a protocol called Equatable, which requires any conforming type to implement the equal to operator (==) and the not equal to operator (!=) to compare any two values of that type. All of Swift’s standard types automatically support the Equatable protocol.
+Однак, не все втрачено. У стандартній бібліотеці Swift є протокол, що носить назву `Equatable`, котрий вимагає в підпорядкованого типу реалізовувати оператори рівності (`==`) та нерівності (`!=`) для порівняння двох значень даного типу. Всі стандартні типи Swift автоматично підпорядковані протоколу `Equatable`.
 
-Any type that is Equatable can be used safely with the findIndex(of:in:) function, because it’s guaranteed to support the equal to operator. To express this fact, you write a type constraint of Equatable as part of the type parameter’s definition when you define the function:
+Будь-який тип, підпорядкований протоколу `Equatable`, можна безпечно використовувати у функції `findIndex(of:in:)`, оскільки він гарантовано підтриимує оператор рівності. Для вираження цього факту, вимога підпорядковуватись протоколу `Equatable` записується як обмеження типу `T` у визначенні функції:
 
 ```swift
 func findIndex<T: Equatable>(of valueToFind: T, in array:[T]) -> Int? {
@@ -307,15 +307,15 @@ func findIndex<T: Equatable>(of valueToFind: T, in array:[T]) -> Int? {
 }
 ```
 
-The single type parameter for findIndex(of:in:) is written as T: Equatable, which means “any type T that conforms to the `Equatable` protocol.
+Єдиний параметр типу функції `findIndex(of:in:)` записуєтсья як `T: Equatable`, що означає “будь-який `T`, що підпорядковується протоколу `Equatable`.
 
-The findIndex(of:in:) function now compiles successfully and can be used with any type that is Equatable, such as Double or String:
+Функція `findIndex(of:in:)` тепер успішно компілюється та може використовуватись із будь-яким підпорядкованим протоколу `Equatable` типом, наприклад, `Double` чи `String`:
 
 ```swift
 let doubleIndex = findIndex(of: 9.3, in: [3.14159, 0.1, 0.25])
-// doubleIndex is an optional Int with no value, because 9.3 isn't in the array
-let stringIndex = findIndex(of: "Andrea", in: ["Mike", "Malcolm", "Andrea"])
-// stringIndex is an optional Int containing a value of 2
+// doubleIndex є опціональним Int без значення, бо значення 9.3 відсутнє в масиві
+let stringIndex = findIndex(of: "Антоніна", in: ["Михайло", "Максим", "Антоніна"])
+// stringIndex є опціональним Int зі значенням 2
 ```
 
 ### Associated Types
