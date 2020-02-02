@@ -566,11 +566,9 @@ if allItemsMatch(stackOfStrings, arrayOfStrings) {
 
 У прикладі вище створено екземпляр `Stack`, що зберігає значення типу `String`, і в нього заштовхнуто три рядки. Далі у прикладі створено масив, що ініціалізовано літералом масиву, котрий містить ці ж само три рядки, що було заштовхнуто до стеку. Хоч `Stack` та `Array` - різні типи, вони обидва підпорядковуються протоколу `Container`, і обидва містять значення одного й того ж типу. Тому можна викликати функцію `allItemsMatch(_:_:)` із цими двома контейнерами в якості аргументів. У пиркладі вище, функція `allItemsMatch(_:_:)` коректно визначає, що всі елементи у цих двох контейнерах співпадають.
 
-#### Extensions with a Generic Where Clause
-
 #### Розшинення з інструкцією узагальнення Where
 
-You can also use a generic `where` clause as part of an extension. The example below extends the generic Stack structure from the previous examples to add an isTop(_:) method.
+Інструкцію узагальнення `where` можна також використовувати як частину розширення. У прикладі нижче узагальнену структуру `Stack` з попередній прикладів розширено, додаючи у неї метод `isTop(_:)`.
 
 ```swift
 extension Stack where Element: Equatable {
@@ -583,30 +581,30 @@ extension Stack where Element: Equatable {
 }
 ```
 
-This new `isTop(_:)` method first checks that the stack isn’t empty, and then compares the given item against the stack’s topmost item. If you tried to do this without a generic where clause, you would have a problem: The implementation of isTop(_:) uses the == operator, but the definition of Stack doesn’t require its items to be equatable, so using the == operator results in a compile-time error. Using a generic where clause lets you add a new requirement to the extension, so that the extension adds the isTop(_:) method only when the items in the stack are equatable.
+Цей новий метод `isTop(_:)` спершу перевіряє, чи не є стек порожнім, і потім порівнює передане значення із елементом на горі стеку. Якщо спробувати зробити це без інструкції узагальнення where, буде проблема: реалізація функції `isTop(_:)` використовує оператор `==`, але визначення структури `Stack` не вимагає, щоб її елементи були порівнюваними, тому використання оператору `==` призводить до помилки часу компіляції. Використання інструкції узагальнення where дозволяє додати нову вимогу до розширення, таким чином дане розширення додає функцію `isTop(_:)` лише для тоді, коли елементи у `Stack` підпорядковані протоколу `Equatable`.
 
-Here’s how the isTop(_:) method looks in action:
+Ось як виглядає у дії метод `isTop(_:)`:
 
 ```swift
-if stackOfStrings.isTop("tres") {
-    print("Top element is tres.")
+if stackOfStrings.isTop("üç") {
+    print("Елементом на горі є üç.")
 } else {
-    print("Top element is something else.")
+    print("Елементом на горі є щось інше.")
 }
-// Надрукує "Top element is tres.
+// Надрукує "Елементом на горі є üç".
 ```
 
-If you try to call the isTop(_:) method on a stack whose elements aren’t equatable, you’ll get a compile-time error.
+Якщо спробувати викликати метод `isTop(_:)` на стеку, чиї елементи не є порівнюванимии, отримаємо помилку компіляції:
 
 ```swift
 struct NotEquatable { }
 var notEquatableStack = Stack<NotEquatable>()
 let notEquatableValue = NotEquatable()
 notEquatableStack.push(notEquatableValue)
-notEquatableStack.isTop(notEquatableValue)  // Error
+notEquatableStack.isTop(notEquatableValue)  // Помилка
 ```
 
-«You can use a generic where clause with extensions to a protocol. The example below extends the Container protocol from the previous examples to add a startsWith(_:) method.
+Інструкцію узагальнення where можна також використовувати у розширеннях протоколів. У прикладі нижче протокол `Container` з попередніх прикладів розширено методом `startsWith(_:)`.
 
 ```swift
 extension Container where Item: Equatable {
@@ -616,18 +614,18 @@ extension Container where Item: Equatable {
 }
 ```
 
-The startsWith(_:) method first makes sure that the container has at least one item, and then it checks whether the first item in the container matches the given item. This new startsWith(_:) method can be used with any type that conforms to the Container protocol, including the stacks and arrays used above, as long as the container’s items are equatable.
+Метод `startsWith(_:)` спершу упевнюється в тому, що контейнер містить хоча б один елемент, і потім перевіряє, чи співпадає передане значення з першим елементом у контейнері. Цей новий метод `startsWith(_:)` можна тепер використовувати із будь-яким підпорядкованим протоколу `Container` типом, влючно зі стеками та масивами, що використовувались вище. Єдиною вимогою для цього є підпорядкування елементів контейнера протоколу `Equatable`.
 
 ```swift
 if [9, 9, 9].startsWith(42) {
-    print("Starts with 42.")
+    print("Починається із 42.")
 } else {
-    print("Starts with something else.")
+    print("Починається із чогось іще.")
 }
-// Надрукує "Starts with something else."
+// Надрукує "Починається із чогось іще."
 ```
 
-The generic where clause in the example above requires Item to conform to a protocol, but you can also write a generic where clauses that require Item to be a specific type. For example:
+Інструкція узагальнення where у прикладі вище вимагає, щоб тип `Item` підпорядковувався протоколу, але можна також написати інструкцію узагальнення where, що вимагатиме, щоб тип `Item` був певним типом. Наприклад:
 
 ```swift
 extension Container where Item == Double {
@@ -643,15 +641,13 @@ print([1260.0, 1200.0, 98.6, 37.0].average())
 // Надрукує "648.9"
 ```
 
-This example adds an average() method to containers whose Item type is Double. It iterates over the items in the container to add them up, and divides by the container’s count to compute the average. It explicitly converts the count from Int to Double to be able to do floating-point division.
+У даному прикладі до усіх контейнерів, чиїм типом `Item` є `Double`, додається метод `average()`, котрий підраховує середнє арифметичне значення усіх елементів контейнера. Для цього цей метод ітерує усі елементи у контейнері, підраховуючи їх суму, і ділить цю суму на кількість елементів у контейнері. У ньому значення `count` явно перетворюється із `Int` на `Double` для уможливлення ділення. 
 
-You can include multiple requirements in a generic where clause that is part of an extension, just like you can for a generic where clause that you write elsewhere. Separate each requirement in the list with a comma.
-
-### Associated Types with a Generic Where Clause
+Для розширень також можна вказувати декілька вимог у одній інструкції узагальнення where, як це можна робити у будь-якій інструкції узагальнення where. Можна вимога у списку повинна відділятися комою. 
 
 ### Асоційовані типи із інструкцією узагальнення Where
 
-You can include a generic where clause on an associated type. For example, suppose you want to make a version of Container that includes an iterator, like what the Sequence protocol uses in the standard library. Here’s how you write that:
+Інструкція узагальнення where може застосовуватись до асоційованого типу. Наприклад, припустимо, що вам потрібно створити версію протоколу `Container`, що включає у себе ітератор, аналогічно до протоколу `Sequence` зі стандартної бібліотеки. Ось як це можна записати:
 
 ```swift
 protocol Container {
@@ -665,17 +661,17 @@ protocol Container {
 }
 ```
 
-The generic where clause on Iterator requires that the iterator must traverse over elements of the same item type as the container’s items, regardless of the iterator’s type. The `makeIterator()` function provides access to a container’s iterator.
+Інструкція узагальнення where на асоційованому типі `Iterator` вимагає, щоб ітератор переходив по елементам того ж типу, що містяться в контейнері, незалежно від типу самого контейнера. Функція `makeIterator()` надає доступ до ітератору контейнера. 
 
-For a protocol that inherits from another protocol, you add a constraint to an inherited associated type by including the generic where clause in the protocol declaration. For example, the following code declares a ComparableContainer protocol that requires Item to conform to Comparable:
+Якщо протокол наслідується від іншого протоколу, до нього можна додавати обмеження на успадкований асоційований тип, включаючи інструкцію узагальнення where до оголошення протоколу. Наприклад, у наступному коді оголошується протокол `ComparableContainer`, що вимагає, щоб тип `Item` був підпорядкованим протоколу `Comparable`:
 
 ```swift
 protocol ComparableContainer: Container where Item: Comparable { }
 ```
 
-### Generic Subscripts
+### Узагальнені індекси
 
-Subscripts can be generic, and they can include generic where clauses. You write the placeholder type name inside angle brackets after subscript, and you write a generic where clause right before the opening curly brace of the subscript’s body. For example:
+Індекси також можуть бути узагальненими, і вони також можуть мати інструкцію узагальнення where. Назву замісника типу записують всередині кутових дужок після ключового слова `subscript`, а інструкцію узагальнення where – прямо перед кутовою дужкою, з якої починається тіло індексу. Наприклад:
 
 ```swift
 extension Container {
@@ -690,12 +686,10 @@ extension Container {
 }
 ```
 
-This extension to the Container protocol adds a subscript that takes a sequence of indices and returns an array containing the items at each given index. This generic subscript is constrained as follows:
+Це розширення протоколу `Container` додає до нього індекс, що приймає послідовність індексів у контейнері, та повертає масив, що містить елементи за кожним із переданих індексів. Цей узагальнений індекс має наступні обмеження:
 
-- The generic parameter Indices in angle brackets has to be a type that conforms to the Sequence protocol from the standard library.
+- Параметр типу `Indices` у кутових дужках повинен мати тип, що підпорядковується протоколу `Sequence` зі стандартної бібліотеки.
+- Індекс приймає єдиний параметр, `indices`, котрий є екземпляром цього типу `Indices`.
+- Інструкція узагальнення where вимагає, щоб ітератор послідовності `Indices` переходив по елементам типу `Int`. Це гарантує, що індекси у послідовності `indices` матимуть той же тип, що й індекси у контейнері.
 
-- The subscript takes a single parameter, indices, which is an instance of that Indices type.
-- The generic where clause requires that the iterator for the sequence must traverse over elements of type Int. This ensures that the indices in the sequence are the same type as the indices used for a container.
-
-Taken together, these constraints mean that the value passed for the indices parameter is a sequence of integers.
-
+Узяті разом, дані обмеження означають, що передане в якості параметра `indices` значення є послідовністю цілих чисел.
