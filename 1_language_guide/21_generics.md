@@ -318,13 +318,13 @@ let stringIndex = findIndex(of: "Антоніна", in: ["Михайло", "Ма
 // stringIndex є опціональним Int зі значенням 2
 ```
 
-### Associated Types
+### Асоційовані типи
 
-When defining a protocol, it’s sometimes useful to declare one or more associated types as part of the protocol’s definition. An associated type gives a placeholder name to a type that is used as part of the protocol. The actual type to use for that associated type isn’t specified until the protocol is adopted. Associated types are specified with the associatedtype keyword.
+При визначенні протоколу, іноді буває зручно оголошувати один чи декілька асоційованих типів у оголошенні протоколу. Асоційовані типи виступають замісником назви типу, що може використовуватись у протоколі. Фактичний тип заміщує асоційований тип в момент підпорядкування протоколу якимось типом. Асоційовані типи оголошуються за домопогою ключового слова `associatedtype`.
 
-#### Associated Types in Action
+#### Асоційовані типи в дії
 
-Here’s an example of a protocol called Container, which declares an associated type called Item:
+Ось приклад протоколу, що носить назву `Container` та оголошує асоційований тип на ім'я `Item`:
 
 ```swift
 protocol Container {
@@ -335,27 +335,25 @@ protocol Container {
 }
 ```
 
-The Container protocol defines three required capabilities that any container must provide:
+Протокол `Container` визначає три необхідні можливості, що повинен надавати будь-який контейнер:
 
-- It must be possible to add a new item to the container with an append(_:) method.
+- Додавати нові елементи в контейнер за допомогою методу `append(_:)`.
+- Дізнаватись про кількість елементів у контейнері за допомогою цілочислельної властивості для читання `count`
+- Отримувати елемент з контейнеру за цілочисельним індексом.
 
-- It must be possible to access a count of the items in the container through a count property that returns an Int value.
+Даний протокол не визначає, як повинні зберігатися елементи в контейнері, чи якого типу вони повинні бути. Протокол визначає лише три кавалки функціональності, котрі повинний надати тип для того, щоб вважатись контейнером. Підпорядкований тип може надавати й додаткову функціональність, однак при цьому він повинен задовольняти дані три вимоги. 
 
-- It must be possible to retrieve each item in the container with a subscript that takes an Int index value.
+Будь-який підпорядкований протоколові `Container` тип повинен вказати тип значення, що в ньому зберігатимуться. Зокрема, він має гарантувати, що додати до контейнера можна лише елементи правильного типу, і що дістати з контейнера за індексом можна лише елементи цього ж типу. 
 
-This protocol doesn’t specify how the items in the container should be stored or what type they’re allowed to be. The protocol only specifies the three bits of functionality that any type must provide in order to be considered a Container. A conforming type can provide additional functionality, as long as it satisfies these three requirements.
+Щоб визначити ці вимоги, протокол `Container` повинен посилатись на тип елементів, що зберігатимуться в контейнері, не знаючи якого конкретно вони будуть типу. Протокол `Container` повинен вказати, що будь-яке значення, що передається до методу `append(_:)` повинно мати той же тип, що зберігається у контейнері, і що значення, котре повертається індексом контейнера теж має той же тип, що зберігається у контейнері.
 
-Any type that conforms to the Container protocol must be able to specify the type of values it stores. Specifically, it must ensure that only items of the right type are added to the container, and it must be clear about the type of the items returned by its subscript.
+Щоб досягти цього, у протоколі `Container` оголошується асоційований тип на ім'я `Item`, що записується як `associatedtype Item`. Протокол не визначає, чим є `Item`: право визначати цю інформацію залишається за підпорядкованим типом. І тим не менше, псевдонім `Item` надає спосіб посилатись на тип елементів у протоколі `Container`: визначати тип, що передається до методу `append(_:)` та повертається індексом, і таким чином змушувати будь-який `Container` мати очікувану поведінку. 
 
-To define these requirements, the Container protocol needs a way to refer to the type of the elements that a container will hold, without knowing what that type is for a specific container. The Container protocol needs to specify that any value passed to the append(_:) method must have the same type as the container’s element type, and that the value returned by the container’s subscript will be of the same type as the container’s element type.
-
-To achieve this, the Container protocol declares an associated type called Item, written as `associatedtype Item`. The protocol doesn’t define what Item is — that information is left for any conforming type to provide. Nonetheless, the Item alias provides a way to refer to the type of the items in a Container, and to define a type for use with the append(_:) method and subscript, to ensure that the expected behavior of any Container is enforced.
-
-Here’s a version of the nongeneric IntStack type from [Generic Types](#Generic-Types) above, adapted to conform to the Container protocol:
+Ось приклад неузагальненого типу `IntStack` з підрозділу [Узагальнені типи](#Узагальнені-типи) вище, котрий було підпорядковано протоколу `Container`:
 
 ```swift
 struct IntStack: Container {
-    // original IntStack implementation
+    // початкова реалізація IntStack
     var items = [Int]()
     mutating func push(_ item: Int) {
         items.append(item)
@@ -363,7 +361,7 @@ struct IntStack: Container {
     mutating func pop() -> Int {
         return items.removeLast()
     }
-    // conformance to the Container protocol
+    // підпорядкування протоколу Container
     typealias Item = Int
     mutating func append(_ item: Int) {
         self.push(item)
@@ -377,17 +375,17 @@ struct IntStack: Container {
 }
 ```
 
-The IntStack type implements all three of the Container protocol’s requirements, and in each case wraps part of the IntStack type’s existing functionality to satisfy these requirements.
+Тип `IntStack` реалізовує всі три вимоги протоколу `Container`, і в кожному випадку вже існуюча частина функціональності `IntStack` обгортається для задоволення цих вимог.
 
-Moreover, IntStack specifies that for this implementation of Container, the appropriate Item to use is a type of Int. The definition of typealias Item = Int turns the abstract type of Item into a concrete type of Int for this implementation of the Container protocol.
+Більше того, структура `IntStack` тепер визначає, що для даної реалізації протоколу `Container`, тип `Int` грає роль типу `Item`. Визначення псевдоніму `typealias Item = Int` перетворює абстрактний тип `Item` на конкретний тип `Int` для цієї реалізації протоколу `Container`.
 
-Thanks to Swift’s type inference, you don’t actually need to declare a concrete Item of Int as part of the definition of IntStack. Because IntStack conforms to all of the requirements of the Container protocol, Swift can infer the appropriate Item to use, simply by looking at the type of the append(_:) method’s item parameter and the return type of the subscript. Indeed, if you delete the typealias Item = Int line from the code above, everything still works, because it’s clear what type should be used for Item.
+Завдяки визначенню типів у Swift, фактично не потрібно визначати конкретний `Item` типу `Int` у оголошенні `IntStack`. Оскільки `IntStack` підпорядковується до усіх вимог протоколу `Container`, Swift може визначати відповідний тип для використання у ролі `Item`, просто поглянувши на тип параметра методу `append(_:)`, або тип, що повертається індексом. Справді, якщо з коду видалити рядок із псевдонімом типу `typealias Item = Int`, він все одно працюватиме, оскільки зрозуміло, який тип слід використовувати в якості `Item`.
 
-You can also make the generic Stack type conform to the Container protocol:
+Узагальнений тип `Stack` можна також підпорядкувати протоколу `Container`:
 
 ```swift
 struct Stack<Element>: Container {
-    // original Stack<Element> implementation
+    // початкова реалізація Stack<Element>
     var items = [Element]()
     mutating func push(_ item: Element) {
         items.append(item)
@@ -395,7 +393,7 @@ struct Stack<Element>: Container {
     mutating func pop() -> Element {
         return items.removeLast()
     }
-    // conformance to the Container protocol
+    // підпорядкування протоколу Container
     mutating func append(_ item: Element) {
         self.push(item)
     }
@@ -408,23 +406,25 @@ struct Stack<Element>: Container {
 }
 ```
 
-«This time, the type parameter Element is used as the type of the append(_:) method’s item parameter and the return type of the subscript. Swift can therefore infer that Element is the appropriate type to use as the Item for this particular container.
+Цього разу, в якості типу параметру методу `append(_:)`, та типу, що повертається індексом, використовується тип `Element`. В цьому випадку визначення типів у Swift знову допомагає встановити, що в якості типу `Item` слід використовувати тип `Element`.
 
-#### Extending an Existing Type to Specify an Associated Type
+#### Розшинення існуючого типу для визначення асоційованого типу
 
-You can extend an existing type to add conformance to a protocol, as described in [Adding Protocol Conformance with an Extension](). This includes a protocol with an associated type.
+Існуючі типи можна розширювати для підпорядкування їх певному протоколу, як це описано у підрозділі [Підпорядкування протоколу за допомогою розширення](20_protocols.md#Підпорядкування-протоколу-за-допомогою-розширення). Це стосується також і протоколів з асоційованими типами. 
 
-Swift’s Array type already provides an append(_:) method, a count property, and a subscript with an Int index to retrieve its elements. These three capabilities match the requirements of the Container protocol. This means that you can extend Array to conform to the Container protocol simply by declaring that Array adopts the protocol. You do this with an empty extension, as described in [Declaring Protocol Adoption with an Extension]():
+Тип `Array` у Swift вже має метод `append(_:)`, властивість `count` та цілочисельний індекс, що повертає його елементи. Ці три можливості співпадають з вимогами протоколу `Container`. Це означає, що можна розширити масив, підпорядковуючи його протоколові `Container`, просто оголосивши, що `Array` є підпорядкований протоколу. Це можна зробити за допомогою порожнього розширення, що описано у підрозділі [Оголошення підпорядкування протоколу за допомогою розширення](20_protocols.md#Оголошення-підпорядкування-протоколу-за-допомогою-розширення):
 
 ```swift
 extension Array: Container {}
 ```
 
-Array’s existing append(_:) method and subscript enable Swift to infer the appropriate type to use for Item, just as for the generic Stack type above. After defining this extension, you can use any Array as a Container.
+Існуючі метод `append(_:)` та цілочисельний індекс дозволяють Swift визначити правильний тип для використання в якості асоційованого типу `Item`, так само, як і у випадку з узагальненим типом `Stack` вище. Після визначення цього розширення, будь-який масив можна використовувати як `Container`.
 
-#### Adding Constraints to an Associated Type
+#### Додавання обмежень на асоційований тип
 
-You can add type constraints to an associated type in a protocol to require that conforming types satisfy those constraints. For example, the following code defines a version of Container that requires the items in the container to be equatable.
+Можна додати обмеження типу на асоційований тип у протоколі, щоб вимагати у підпорядкованих типів задоволення цих обмежень. 
+
+У протоколах обмеження типу на асоційовані типи додають для того, щоб вимагати у підпорядкованих типів задовольняти умови цих обмежень. Наприклад, у наступному прикладі оголошено версію протоколу `Container`, що вимагає, щоб елементи в контейнері підпорядковувались протоколу `Equatable`.
 
 ```swift
 protocol Container {
@@ -435,11 +435,11 @@ protocol Container {
 }
 ```
 
-To conform to this version of Container, the container’s Item type has to conform to the Equatable protocol.
+Щоб підпорядковуватись даній версії протоколу `Container`, тип `Item` контейнера повинен підпорядковуватись протоколу `Equatable`.
 
-#### Using a Protocol in Its Associated Type’s Constraints
+#### Використання протоколів із обмеженнями асоційованих типів
 
-A protocol can appear as part of its own requirements. For example, here’s a protocol that refines the Container protocol, adding the requirement of a suffix(_:) method. The suffix(_:) method returns a given number of elements from the end of the container, storing them in an instance of the Suffix type.
+Протокол може з'являтись як частина власних обмежень. Наприклад, ось протокол, що удосконалює протокол `Container`, додаючи до вимог метод `suffix(_:)`. Метод `suffix(_:)` повертає задану кількість елементів з кінця контейнера, зберігаючи їх у екземплярі типу `Suffix`.
 
 ```swift
 protocol SuffixableContainer: Container {
@@ -448,9 +448,9 @@ protocol SuffixableContainer: Container {
 }
 ```
 
-In this protocol, Suffix is an associated type, like the Item type in the `Container` example above. Suffix has two constraints: It must conform to the `SuffixableContainer` protocol (the protocol currently being defined), and its Item type must be the same as the container’s Item type. The constraint on Item is a generic where clause, which is discussed in [Associated Types with a Generic Where Clause]() below.
+У цьому протоколі, `Suffix` є асоційованим типом, як і тип `Item` у протоколі `Container` у прикладах вище. Асоційований тип `Suffix` має два обмеження: він має підпорядковуватись протоколу `SuffixableContainer` (протоколу, що в даний момент оголошується), та його тип `Item` повинен співпадати із типом `Item` даного контейнера. Обмеження на `Item` задається за допомогою інструкції узагальнення where, що описана далі у підрозділі [Асоційовані типи із інструкцією узагальнення Where](#Асоційовані-типи-із-інструкцією-узагальнення-Where).
 
-Here’s an extension of the Stack type from Generic Types above that adds conformance to the `SuffixableContainer` protocol:
+Ось розширення типу `Stack` із підрозділу [Узагальнені типи](#Узагальнені типи), котре підпорядковує його до протоколу `SuffixableContainer`:
 
 ```swift
 extension Stack: SuffixableContainer {
@@ -461,17 +461,17 @@ extension Stack: SuffixableContainer {
         }
         return result
     }
-    // Inferred that Suffix is Stack.
+    // Тип Suffix визначено як Stack.
 }
 var stackOfInts = Stack<Int>()
 stackOfInts.append(10)
 stackOfInts.append(20)
 stackOfInts.append(30)
 let suffix = stackOfInts.suffix(2)
-// suffix contains 20 and 30
+// suffix містить елементи 20 та 30
 ```
 
-In the example above, the Suffix associated type for Stack is also Stack, so the suffix operation on Stack returns another Stack. Alternatively, a type that conforms to SuffixableContainer can have a Suffix type that’s different from itself—meaning the suffix operation can return a different type. For example, here’s an extension to the nongeneric IntStack type that adds SuffixableContainer conformance, using Stack<Int> as its suffix type instead of IntStack:
+У прикладі вище, асоційованим типом `Suffix` для структури `Stack` є також `Stack`, таким чиином операція `suffix` на типі `Stack` повертає інший `Stack`. Однак, підпорядкований протоколу `SuffixableContainer` тип може мати `Suffix`, що на співпадає з цим же типом: іншими словами, операція `suffix` може повертати інший тип. Наприклад, ось розширення неузагальненого типу `IntStack`, що підпорядковує його протоколові `SuffixableContainer`, використовуючи тип `Stack<Int>` як тип `Suffix` замість типу `IntStack`:
 
 ```swift
 extension IntStack: SuffixableContainer {
@@ -482,99 +482,89 @@ extension IntStack: SuffixableContainer {
         }
         return result
     }
-    // Inferred that Suffix is Stack<Int>.
+    // Тип Suffix визначено як Stack<Int>.
 }
 ```
 
-### Generic Where Clauses
-
 ### Інструкція узагальнення Where
 
-«Type constraints, as described in [Type Constraints](), enable you to define requirements on the type parameters associated with a generic function, subscript, or type.
+Обмеження типів, описані у підрозділі [Обмеження типів](#Обмеження-типів) вище, дозволяють визначати обмеження на параметри типу узагальнених функцій, індексів чи типів. 
 
-It can also be useful to define requirements for associated types. You do this by defining a generic where clause. A generic where clause enables you to require that an associated type must conform to a certain protocol, or that certain type parameters and associated types must be the same. A generic where clause starts with the where keyword, followed by constraints for associated types or equality relationships between types and associated types. You write a generic where clause right before the opening curly brace of a type or function’s body.
+Також буває потрібно визначати вимоги до асоційований типів. Це можна зробити за допомогою інструкції узагальнення where. Інструкція узагальнення where дозволяє вимагати, щоб асоційований тип підпорядковувався певному протоколу, або щоб певні параметри типів та асоційовані типи були однаковими. Інструкція узагальнення where починається з ключового слова `where`, після чого йдуть обмеження на асоційовані типи, чи відношення рівності між типами та асоційованими типами. Інструкції узагальнення where записуються прямо перед фігурною дужкою, з якої починається тіло типу чи функції. 
 
-The example below defines a generic function called allItemsMatch, which checks to see if two Container instances contain the same items in the same order. The function returns a Boolean value of true if all items match and a value of false if they don’t.
+У прикладі нижче визначено узагальнену функцію, що називається `allItemsMatch`, котра перевіряє, чи співпадають елементи двох контейнерів, тобто чи містять два контейнери однакові елементи в одному й тому ж порядку. Дана функція повертає булеве значення `true`, якщо всі елементи співпадають, та `false`, якщо ні. 
 
-The two containers to be checked don’t have to be the same type of container (although they can be), but they do have to hold the same type of items. This requirement is expressed through a combination of type constraints and a generic where clause:
+Два контейнери, що перевіряються, не обов'язково повинні бути одного типу (хоч вони й можуть буту одного типу), але вони повинні містити елементи одного типу. Цю вимогу можна виразити за допомогою комбінації обмеження типів та інструкції узагальнення where:
 
 ```swift
 func allItemsMatch<C1: Container, C2: Container>
     (_ someContainer: C1, _ anotherContainer: C2) -> Bool
     where C1.Item == C2.Item, C1.Item: Equatable {
 
-        // Check that both containers contain the same number of items.
+        // Перевіряємо, що обидва контейнери містять однакову кількість елементів.
         if someContainer.count != anotherContainer.count {
             return false
         }
     
-        // Check each pair of items to see if they're equivalent.
+        // Перевіряємо пари елементів, щоб переконатись, що вони еквівалентні.
         for i in 0..<someContainer.count {
             if someContainer[i] != anotherContainer[i] {
                 return false
              }
         }
 
-        // All items match, so return true.
+        // Якщо всі елементи співпадають, повертаємо true.
         return true
 }
 ```
 
-This function takes two arguments called someContainer and anotherContainer. The someContainer argument is of type C1, and the anotherContainer argument is of type C2. Both C1 and C2 are type parameters for two container types to be determined when the function is called.
+Ця функція приймає два аргументи, що називаються `someContainer` та `anotherContainer`.  Аргумент `someContainer` має тип `C1`, а аргумент `anotherContainer` – `C2`. Як `C1`, так і `C2` є параметрами типу, що є типами-контейнерами, і конкретні їх типи будуть визначені під час виклику функції.
 
-The following requirements are placed on the function’s two type parameters:
+До двох параметрів типу даної функції виставляються наступні вимоги:
 
-- C1 must conform to the Container protocol (written as C1: Container).
+- `C1` має підпорядковуватись протоколу `Container` (записується як `C1: Container`).
+- `C2` також має підпорядковуватись протоколу `Container` (записується як `C2: Container`).
+- Тип `Item` для `C1` має співпадати із типом `Item` для C2 (записується як `C1.Item == C2.Item`).
+- Тип `Item` для `C1` має підпорядковуватись протоколу `Equatable` (записується як `C1.Item: Equatable`).
 
-- C2 must also conform to the Container protocol (written as C2: Container).
+Перша та друга вимоги оголошуються прямо у списку параметрів типу функції, а третя та четверта вимоги оголошуються у інструкції узагальнення where даної функції.
 
-- The Item for C1 must be the same as the Item for C2 (written as C1.Item == C2.Item).
+Ці вимоги означають, що:
 
-- The Item for C1 must conform to the Equatable protocol (written as C1.Item: Equatable).
+- `someContainer` є контейнером типу `C1`.
+- `anotherContainer` є контейнером типу `C2`.
+- `someContainer` та `anotherContainer` містять елементи одного типу.
+- Елементи у `someContainer` можна перевіртити на нерівність за допомогою оператору нерівності `!=`, щоб дізнатись, чи відрізняються вони один від одного.
 
+Поєднання третьої та четвертої вимог означає, що елементи у `anotherContainer` *також* можна перевірити на нерівність за допомогою оператору `!=`, оскільки вони мають точно такий же тип, що і елементи у `someContainer`.
 
-The first and second requirements are defined in the function’s type parameter list, and the third and fourth requirements are defined in the function’s generic where clause.
+Ці вимоги дозволяють функції `allItemsMatch(_:_:)` порівнювати два контейнери, навіть якщо вони мають різний тип. 
 
-These requirements mean:
+Функція `allItemsMatch(_:_:)` розпочинається із перевірки, що обидва контейнери мають однакову кількість елементів. Якщо контейнери містять різну кількість елементів, вони ні в якому разі не можуть співпадати, і функція повертає `false`.
 
-- someContainer is a container of type C1.
+Після цієї перевірки, функція ітерує усі елементи у контейнері `someContainer` за допомогою циклу `for`-`in` та напіввідкритого оператору діапазону  (`..<`). Для кожного елемента, функція перевіряє, чи дорівнює елемент із `someContainer` його відповіднику із `anotherContainer`. Якщо два елементи не співпадають, тоді й два контейнери не співпадають, і функція повертає `false`.
 
-- anotherContainer is a container of type C2.
+Якщо цикл закінчується, не знайшовши неспівпадіння, тоді обидва контейнери співпадають, і функція повертає `true`. 
 
-- someContainer and anotherContainer contain the same type of items.
-
-- The items in someContainer can be checked with the not equal operator (!=) to see if they’re different from each other.
-
-
-The third and fourth requirements combine to mean that the items in anotherContainer can *also* be checked with the != operator, because they’re exactly the same type as the items in someContainer.
-
-These requirements enable the `allItemsMatch(_:_:)` function to compare the two containers, even if they’re of a different container type.
-
-The `allItemsMatch(_:_:)` function starts by checking that both containers contain the same number of items. If they contain a different number of items, there’s no way that they can match, and the function returns false.
-
-After making this check, the function iterates over all of the items in someContainer with a for-in loop and the half-open range operator (..<). For each item, the function checks whether the item from someContainer isn’t equal to the corresponding item in anotherContainer. If the two items aren’t equal, then the two containers don’t match, and the function returns false.
-
-If the loop finishes without finding a mismatch, the two containers match, and the function returns true.
-
-Here’s how the allItemsMatch(_:_:) function looks in action:
+Ось як функція  `allItemsMatch(_:_:)` виглядає у дії:
 
 ```swift
 var stackOfStrings = Stack<String>()
-stackOfStrings.push("uno")
-stackOfStrings.push("dos")
-stackOfStrings.push("tres")
+stackOfStrings.push("bir")
+stackOfStrings.push("eki")
+stackOfStrings.push("üç")
 
-var arrayOfStrings = ["uno", "dos", "tres"]
+var arrayOfStrings = ["bir", "eki", "üç"]
 
 if allItemsMatch(stackOfStrings, arrayOfStrings) {
-    print("All items match.")
+    print("Всі елементи співпадають.")
 } else {
-    print("Not all items match.")
+    print("Не всі елементи співпадають.")
 }
-// Надрукує "All items match."
+// Надрукує "Всі елементи співпадають."
 ```
 
-The example above creates a Stack instance to store String values, and pushes three strings onto the stack. The example also creates an Array instance initialized with an array literal containing the same three strings as the stack. Even though the stack and the array are of a different type, they both conform to the Container protocol, and both contain the same type of values. You can therefore call the allItemsMatch(_:_:) function with these two containers as its arguments. In the example above, the allItemsMatch(_:_:) function correctly reports that all of the items in the two containers match.
+У прикладі вище створено екземпляр `Stack`, що зберігає значення типу `String`, і в нього заштовхнуто три рядки. Далі у прикладі створено масив, що ініціалізовано літералом масиву, котрий містить ці ж само три рядки, що було заштовхнуто до стеку. Хоч `Stack` та `Array` - різні типи, вони обидва підпорядковуються протоколу `Container`, і обидва містять значення одного й того ж типу. Тому можна викликати функцію `allItemsMatch(_:_:)` із цими двома контейнерами в якості аргументів. У пиркладі вище, функція `allItemsMatch(_:_:)` коректно визначає, що всі елементи у цих двох контейнерах співпадають.
 
 #### Extensions with a Generic Where Clause
 
@@ -658,6 +648,8 @@ This example adds an average() method to containers whose Item type is Double. I
 You can include multiple requirements in a generic where clause that is part of an extension, just like you can for a generic where clause that you write elsewhere. Separate each requirement in the list with a comma.
 
 ### Associated Types with a Generic Where Clause
+
+### Асоційовані типи із інструкцією узагальнення Where
 
 You can include a generic where clause on an associated type. For example, suppose you want to make a version of Container that includes an iterator, like what the Sequence protocol uses in the standard library. Here’s how you write that:
 
