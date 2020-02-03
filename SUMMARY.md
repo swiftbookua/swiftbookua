@@ -49,9 +49,9 @@
     * [Шаблони](2_language_reference/08_patterns.md)
     * [Параметри і аргументи шаблонів](2_language_reference/09_generic_parameters_and_arguments.md)
     * [Конспект граматики](2_language_reference/10_summary_of_the_grammar.md)
-* [Глосарій](3_glossary/glossary.md)
-* [Історія ревізій](4_revision_history/revision_history.md)
-* [Торгові марки](5_trademarks/copyright_and_notices.md)
+* [Глосарій](GLOSSARY.md)
+* [Історія ревізій](3_revision_history/revision_history.md)
+* [Торгові марки](4_trademarks/copyright_and_notices.md)
 
 
 
