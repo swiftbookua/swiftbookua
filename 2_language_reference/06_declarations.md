@@ -1,5 +1,7 @@
 ## Оголошення
 
+### Operator Declarations
+
 ### Failable Initializers
 
 ### Двонаправлені параметри
