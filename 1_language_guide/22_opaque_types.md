@@ -70,15 +70,15 @@ print(joinedTriangles.draw())
 
 ### Повернення непрозорих типів
 
-You can think of an opaque type like being the reverse of a generic type. Generic types let the code that calls a function pick the type for that function’s parameters and return value in a way that’s abstracted away from the function implementation. For example, the function in the following code returns a type that depends on its caller:
+Непрозорі типи можна уявляти узагальненими типами навпаки. Узагальнені типи дозволяють коду, що викликає функцію, обирати тип паметрів функції та тип, що нею повертається, у абстрагований від реалізації функції спосіб. Наприклад, функція у наступному коді повертає тип, що залижить від коду, що викликає дану функцію:
 
 ```swift
 func max<T>(_ x: T, _ y: T) -> T where T: Comparable { ... }
 ```
 
-The code that calls max(_:_:) chooses the values for x and y, and the type of those values determines the concrete type of T. The calling code can use any type that conforms to the Comparable protocol. The code inside the function is written in a general way so it can handle whatever type the caller provides. The implementation of max(_:_:) uses only functionality that all Comparable types share.
+Код, що викликає функцію `max(_:_:)` обирає значення `x` та `y`, і тип цих значень визначеє конкретний тип `T`. Код, що викликає цю функцію, може використовувати будь-який підпорядкований протоколу `Comparable` тип. Код усередині функції записаний в узагальнений спосіб, тому він може опрацювати будь-який наданий тип. Реалізація функції `max(_:_:)` використовує лише ту функціональність, котру мають усі підпорядковані протоколу `Comparable` типи.
 
-Those roles are reversed for a function with an opaque return type. An opaque type lets the function implementation pick the type for the value it returns in a way that’s abstracted away from the code that calls the function. For example, the function in the following example returns a trapezoid without exposing the underlying type of that shape.
+Ці ролі міняються місцями для функції, що повертає непрозорий тип. Непрозорий тип дозволяє реалізації функції обирати тип значення, що вона повертає, у спосіб, абстрагований від коду, що викликає дану функцію. Наприклад, у наступному фрагменті коду функція повертає трапецію, без викривання фактичного типу даної фігури. 
 
 ```swift
 struct Square: Shape {
@@ -110,11 +110,11 @@ print(trapezoid.draw())
 // *
 ```
 
-The makeTrapezoid() function in this example declares its return type as some Shape; as a result, the function returns a value of some given type that conforms to the Shape protocol, without specifying any particular concrete type. Writing makeTrapezoid() this way lets it express the fundamental aspect of its public interface—the value it returns is a shape—without making the specific types that the shape is made from a part of its public interface. This implementation uses two triangles and a square, but the function could be rewritten to draw a trapezoid in a variety of other ways without changing its return type.
+Функція `makeTrapezoid()` у цьому прикладі оголошує тип, що повертається, як `some Shape`. Як результат, функція повертає значення якогось заданого типу, що підпорядковується до протоколу `Shape`, не вказуючи будь-якого конкретного типу. Оголошення функції `makeTrapezoid()` у такий спосіб виражає фундаментальний аспект її публічного інтерфейсу – значення, що повертається, є фігурою – без зазначення фактичних типів з яких складається фігура у публічному інтерфейсі. Дана реалізація використовує два трикутники та квадрат, однак цю функцію можна переписати, генеруючи трапецію одним із багатьох різних способів, не змінюючи тип, що повертається. 
 
-This example highlights the way that an opaque return type is like the reverse of a generic type. The code inside makeTrapezoid() can return any type it needs to, as long as that type conforms to the Shape protocol, like the calling code does for a generic function. The code that calls the function needs to be written in a general way, like the implementation of a generic function, so that it can work with any Shape value that’s returned by makeTrapezoid().
+У даному прикладі підкреслюється той факт, що непрозорий тип, що повертається, є подібним до узагальненого типу навпаки. Код всередині `makeTrapezoid()` може повертати будь-який тип, який потрібно, аби лише цей тип був підпорядкований протоколу `Shape`, аналогічно до коду, що викликає узагальнену функцію. Код, що викликає функцію `makeTrapezoid()`, повинен бути написаним в узагальненій манері, аналогічно до реалізації узагальненої функції, так, щоб він міг працювати із будь-яким значенням `Shape`, що повертається функцією `makeTrapezoid()`.
 
-You can also combine opaque return types with generics. The functions in the following code both return a value of some type that conforms to the Shape protocol.
+Можна також комбінувати непрозорі типи, що повертаються, із узагальненнями. Обидві функції у коді нижче повертають значення якогось типу, що підпорядковується протоколу `Shape`:
 
 ```swift
 func flip<T: Shape>(_ shape: T) -> some Shape {
@@ -134,22 +134,20 @@ print(opaqueJoinedTriangles.draw())
 // *
 ```
 
-The value of opaqueJoinedTriangles in this example is the same as joinedTriangles in the generics example in the The Problem That Opaque Types Solve section earlier in this chapter. However, unlike the value in that example, flip(_:) and join(_:_:) wrap the underlying types that the generic shape operations return in an opaque return type, which prevents those types from being visible. Both functions are generic because the types they rely on are generic, and the type parameters to the function pass along the type information needed by FlippedShape and JoinedShape.
+Значення `opaqueJoinedTriangles` у цьому прикладі є таким же, як і `joinedTriangles` у прикладі з узагальненнями у підрозділі [Проблема, яку вирішують непрозорі типи](#Проблема,-яку-вирішують-непрозорі-типи) вище. Однак, на відміну від значення у тому прикладі, функції `flip(_:)` та `join(_:_:)` обгортають тип за лаштунками таким чином, що узагальнені операції з фігурами стають прихованими за непрозорим типом, що запобігає видимості цих операцій. Обидві функції є узагальненими, оскільки типи, на які вони покладаються, є узагальненими, а параметри типів, що передаються до цих функції, передають інформацію про тип, потрібну для структур `FlippedShape` та `JoinedShape`.
 
-
-
-If a function with an opaque return type returns from multiple places, all of the possible return values must have the same type. For a generic function, that return type can use the function’s generic type parameters, but it must still be a single type. For example, here’s an invalid version of the shape-flipping function that includes a special case for squares:
+У функції, котра повертає непрозорий тип із декілької різних місць, усі можливі значення, що повертаються, повинні мати однаковий тип. В тому числі й для узагальненої функції, у якої тип, що повертається, може визначатись одним із параметрів типу, це має бути одним типом. Наприклад, ось некоректна версія функції, котра перевертає фігуру, та обробляє квадрати окремим чином:
 
 ```swift
 func invalidFlip<T: Shape>(_ shape: T) -> some Shape {
     if shape is Square {
-        return shape // Error: return types don't match
+        return shape // Помилка: типи, що повертаються, не співпадають
     }
-    return FlippedShape(shape: shape) // Error: return types don't match
+    return FlippedShape(shape: shape) // Помилка: типи, що повертаються, не співпадають
 }
 ```
 
-If you call this function with a Square, it returns a Square; otherwise, it returns a FlippedShape. This violates the requirement to return values of only one type and makes invalidFlip(_:) invalid code. One way to fix invalidFlip(_:) is to move the special case for squares into the implementation of FlippedShape, which lets this function always return a FlippedShape value:
+Якщо викликати функцію із аргументом типу `Square`, вона повертає `Square`, в інших випадках вона повертає `FlippedShape`. Це суперечить вимозі співпадіння типів, що повертаються, та робить реалізацію `invalidFlip(_:)` некоректним кодом. Одним зі способів виправити функцію `invalidFlip(_:)` є перенесення спеціального випадку для квадратів до реалізації структури `FlippedShape`, що дозволяє функції завжди повертати значення типу `FlippedShape`:
 
 ```swift
 struct FlippedShape<T: Shape>: Shape {
@@ -164,7 +162,7 @@ struct FlippedShape<T: Shape>: Shape {
 }
 ```
 
-The requirement to always return a single type doesn’t prevent you from using generics in an opaque return type. Here’s an example of a function that incorporates its type parameter into the underlying type of the value it returns:
+Вимога завжди повертати значення одного типу не заважає використовувати узагальнення у не прозорих типах, що повертаються. Ось приклад функції, що вбудовує параметр типу у внутрішній тип значення, що повертається: 
 
 ```swift
 func `repeat`<T: Shape>(shape: T, count: Int) -> some Collection {
@@ -172,9 +170,11 @@ func `repeat`<T: Shape>(shape: T, count: Int) -> some Collection {
 }
 ```
 
-In this case, the underlying type of the return value varies depending on T: Whatever shape is passed it, repeat(shape:count:) creates and returns an array of that shape. Nevertheless, the return value always has the same underlying type of [T], so it follows the requirement that functions with opaque return types must return values of only a single type.
+В даному прикладі, тип значення, що повертається, залежить від `T`: яка б фігура не передавалась, функція `repeat(shape:count:)` створює та повертає масив типу цієї фігури. Тим не менш, значення, що повертається, завжди має один і той же тип `[T]`, тому дана функція відповідає вимозі, що функції що повертають непрозорий тип, повинні повертати значення одного типу. 
 
-### Differences Between Opaque Types and Protocol TYpes
+### Різниця між непрозорими типами та протоколами
+
+### Differences Between Opaque Types and Protocol Types
 
 Returning an opaque type looks very similar to using a protocol type as the return type of a function, but these two kinds of return type differ in whether they preserve type identity. An opaque type refers to one specific type, although the caller of the function isn’t able to see which type; a protocol type can refer to any type that conforms to the protocol. Generally speaking, protocol types give you more flexibility about the underlying types of the values they store, and opaque types let you make stronger guarantees about those underlying types.
 
