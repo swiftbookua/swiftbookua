@@ -1,24 +1,22 @@
-## Memory Safety
-
 ## Безпека доступу до пам'яті
 
-By default, Swift prevents unsafe behavior from happening in your code. For example, Swift ensures that variables are initialized before they’re used, memory isn’t accessed after it’s been deallocated, and array indices are checked for out-of-bounds errors.
+За замовчанням, Swift запобігає небезпечній поведінці вашого коду. Наприклад, Swift гарантує, що змінні є проініціалізованими перед їх використанням, що до пам'яті не звертаються після її деалокації, а індекси масивів перевіряються на вихід за межі масиву. 
 
-Swift also makes sure that multiple accesses to the same area of memory don’t conflict, by requiring code that modifies a location in memory to have exclusive access to that memory. Because Swift manages memory automatically, most of the time you don’t have to think about accessing memory at all. However, it’s important to understand where potential conflicts can occur, so you can avoid writing code that has conflicting access to memory. If your code does contain conflicts, you’ll get a compile-time or runtime error.
+Swift також слідкує за тим, щоб кілька звернень до однієї зони пам'яті не конфліктували, вимагаючи, щоб код, який змінює регіон у пам'яті, мав ексклюзивний доступ до цієї пам'яті. Оскільки Swift керує пам'яттю автоматично, більшість часу вам взагалі не потрібно думати про доступ до пам'яті. Однак, важливо розуміти де можуть виникнути потенційні конфлікти, щоб мати можливість уникнути написання коду, що містить конфліктний доступ до пам'яті. Якщо ваш код містить конфлікти, ви отримаєте або помилку компіляції, або помилку часу виконання. 
 
-Understanding Conflicting Access to Memory
+### Розуміння конфліктного доступу до пам'яті
 
-Access to memory happens in your code when you do things like set the value of a variable or pass an argument to a function. For example, the following code contains both a read access and a write access:
+Доступ до пам'яті відбувається тоді, коли ваш код робить речі на кшталт присвоєння значення змінній, або передачі аргументу до функції. Наприклад, наступний код містить як читання, так і запис пам'яті:
 
 ```swift
-// A write access to the memory where one is stored.
+// Доступ до пам'яті (запис), де зберігається змінна one.
 var one = 1
 
-// A read access from the memory where one is stored.
-print("We're number \(one)!")
+// Доступ до пам'яті (читання), де зберігається змінна one.
+print("Ми – номер \(one)!")
 ```
 
-A conflicting access to memory can occur when different parts of your code are trying to access the same location in memory at the same time. Multiple accesses to a location in memory at the same time can produce unpredictable or inconsistent behavior. In Swift, there are ways to modify a value that span several lines of code, making it possible to attempt to access a value in the middle of its own modification.
+Конфліктний доступ до пам'яті може статись, коли різні частини вашого коду намагаються доступитись до однієї і тієї ж зони пам'яті одночасно. Одночасні звернення до регіону пам'яті можуть призвести до непередбачуваної та непостійної поведінки. У Swift є способи змінити значення, що тривають кілька рядків коду, що робить можливими спроби доступу до значення під час його модифікації. 
 
 You can see a similar problem by thinking about how you update a budget that’s written on a piece of paper. Updating the budget is a two-step process: First you add the items’ names and prices, and then you change the total amount to reflect the items currently on the list. Before and after the update, you can read any information from the budget and get a correct answer, as shown in the figure below.
 
