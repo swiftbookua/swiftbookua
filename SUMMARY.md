@@ -1,5 +1,6 @@
 # Summary
 
+* [Мова програмування Swift](mova-programuvannya-swift.md)
 * [Від перекладачів](README.md)
 * [Ласкаво просимо до Swift](0_welcome_to_swift/welcome_to_swift.md)
   * [Про Swift](0_welcome_to_swift/about_swift.md)
