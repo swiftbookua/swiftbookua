@@ -174,11 +174,9 @@ func `repeat`<T: Shape>(shape: T, count: Int) -> some Collection {
 
 ### Різниця між непрозорими типами та протоколами
 
-### Differences Between Opaque Types and Protocol Types
+Повернення непрозорого типу є дуже схожим на використання протоколу як типу, що повертається функцією, але ці два різновиди типів, що повертаються, відрізняються у тому, чи зберігають вони ідентичність типу. Непрозорий тип посилається на один конкретний тип, хоч той, хто викликає функцію, не може бачити, на який саме. Тип-протокол може посилатись на будь-який підпорякований йому тип. Взагалі, протоколи дають більше гнучності щодо фактичних типів значень, що вони зберігають, а непрозорі типи дозволяють давати сильніші гарантії щодо цих фактичних типів. 
 
-Returning an opaque type looks very similar to using a protocol type as the return type of a function, but these two kinds of return type differ in whether they preserve type identity. An opaque type refers to one specific type, although the caller of the function isn’t able to see which type; a protocol type can refer to any type that conforms to the protocol. Generally speaking, protocol types give you more flexibility about the underlying types of the values they store, and opaque types let you make stronger guarantees about those underlying types.
-
-For example, here’s a version of flip(_:) that returns a value of protocol type instead of using an opaque return type:
+Наприклад, ось версія функції `flip(_:)`, що повертає значення типу протоколу, замість використання непрозорого типу: 
 
 ```swift
 func protoFlip<T: Shape>(_ shape: T) -> Shape {
@@ -186,7 +184,7 @@ func protoFlip<T: Shape>(_ shape: T) -> Shape {
 }
 ```
 
-This version of protoFlip(_:) has the same body as flip(_:), and it always returns a value of the same type. Unlike flip(_:), the value that protoFlip(_:) returns isn’t required to always have the same type—it just has to conform to the Shape protocol. Put another way, protoFlip(_:) makes a much looser API contract with its caller than flip(_:) makes. It reserves the flexibility to return values of multiple types:
+Ця версія `protoFlip(_:)` має таке ж тіло, що й `flip(_:)`, і вона завжди повертає значення одного й того ж типу. Навідміну від функції `flip(_:)`, значення, котре повертає функція `protoFlip(_:)` не повинно завжди мати однаковий тип – достатньо лише, щоб воно підпорядковувалось до протоколу `Shape`. Іншими словами, функція `protoFlip(_:)` укладає більш широкий API-контракт з кодом, що її викликає, аніж функція `flip(_:)`. Вона залишає за собою гнучкість повертати значення кілької різних типів:
 
 ```swift
 func protoFlip<T: Shape>(_ shape: T) -> Shape {
@@ -198,21 +196,21 @@ func protoFlip<T: Shape>(_ shape: T) -> Shape {
 }
 ```
 
-The revised version of the code returns an instance of Square or an instance of FlippedShape, depending on what shape is passed in. Two flipped shapes returned by this function might have completely different types. Other valid versions of this function could return values of different types when flipping multiple instances of the same shape. The less specific return type information from protoFlip(_:) means that many operations that depend on type information aren’t available on the returned value. For example, it’s not possible to write an == operator comparing results returned by this function.
+Ця уточнена версія функції повертає або екземпляр `Square`, або екземпляр `FlippedShape`, в залежності від того, яку фігуру в неї передали. Дві фігури, що повертаються даною функцією, можуть мати зовсім різні типи. Інші коректні версії цієї функції можуть повертати значення різних типів при повороті різних екземплярів фігури одного типу. Менш конкретна інформація про тип, що повертається функцією `protoFlip(_:)`, означає, що багато залежних від інформації про тип операцій на значенні, що повертається, є недоступними. Наприклад, неможливо написати оператор `==`, що порівнював би між собою результати викликів цієї функції.
 
 ```swift
 let protoFlippedTriangle = protoFlip(smallTriangle)
 let sameThing = protoFlip(smallTriangle)
-protoFlippedTriangle == sameThing  // Error
+protoFlippedTriangle == sameThing  // Помилка
 ```
 
-The error on the last line of the example occurs for several reasons. The immediate issue is that the Shape doesn’t include an == operator as part of its protocol requirements. If you try adding one, the next issue you’ll encounter is that the == operator needs to know the types of its left-hand and right-hand arguments. This sort of operator usually takes arguments of type Self, matching whatever concrete type adopts the protocol, but adding a Self requirement to the protocol doesn’t allow for the type erasure that happens when you use the protocol as a type.
+Помилка в останньому рядку даного прикладу трапляється з кількох причин. Першоченгова проблема у тому, що протокол `Shape` не включає оператор `==` до списку своїх вимог. Якщо спробувати додати його, наступною проблемою стане те, що оператору `==` потрібно буде знати типи свого лівого та правого аргумента. Цей різновид оператору зазвичай приймає аргументи типу `Self`, що співпадають із будь-яким конкретним підпорядкованим до цього протоколу типом. Але додавання вимог з посиланням на `Self` до протоколу запобігає стиранню інформації про тип, що відбувається при використанні протоколу як типу. 
 
-Using a protocol type as the return type for a function gives you the flexibility to return any type that conforms to the protocol. However, the cost of that flexibility is that some operations aren’t possible on the returned values. The example shows how the == operator isn’t available—it depends on specific type information that isn’t preserved by using a protocol type.
+Використання протоколу як типу, що повертається функцією, дає гнучність повертати будь-який підпорядкований протоколу тип. Однак, платою за цю гнучкість є те, що деякі операції над значеннями, що повертаються, стають недоступними. Зокрема, приклад демонструє недоступність оператору `==`: він залежить від інформації про конкретний тип, що не зберігається при використанні протоколу як типу. 
 
-Another problem with this approach is that the shape transformations don’t nest. The result of flipping a triangle is a value of type Shape, and the protoFlip(_:) function takes an argument of some type that conforms to the Shape protocol. However, a value of a protocol type doesn’t conform to that protocol; the value returned by protoFlip(_:) doesn’t conform to Shape. This means code like protoFlip(protoFlip(smallTriange)) that applies multiple transformations is invalid because the flipped shape isn’t a valid argument to protoFlip(_:).
+Іншою проблемою з даним підходом є те, що перетворення фігур не можна вкладати одне в одне. Результатом перевертання трикутника є значення типу `Shape`, а функція `protoFlip(_:)` приймає аргумент якогось підпорядкованого до протоколу `Shape` типу. Однак, значення типу-протоколу не підпорядковується до цього протоколу; значення, що повертається функцією `protoFlip(_:)`, не підпорядковується до протоколу `Shape`. Це означає, що код на кшталт `protoFlip(protoFlip(smallTriange))`, що приміняє декілька трансформацій, є некоректним: перевернута фігура не є коректним аргументом для функції `protoFlip(_:)`.
 
-In contrast, opaque types preserve the identity of the underlying type. Swift can infer associated types, which lets you use an opaque return value in places where a protocol type can’t be used as a return value. For example, here’s a version of the Container protocol from [Generics](21_generics.md):
+На відміну від протоколів, непрозорі типи зберігають ідентичність фактичного типу. Swift може визначити асоційовані типи, що дозволяє повертати непрозорі типи у тих місцях, де неможливо повертати протоколи. Наприклад, ось версія протоколу `Container` із розділу [Узагальнення](21_generics.md):
 
 ```swift
 protocol Container {
@@ -223,21 +221,21 @@ protocol Container {
 extension Array: Container { }
 ```
 
-You can’t use Container as the return type of a function because that protocol has an associated type. You also can’t use it as constraint a generic return type because there isn’t enough information outside the function body to infer what the generic type needs to be.
+Протокол `Container` не можна використовувати як тип, що повертає функція, оскільки цей протокол має асоційований тип. Його також не можна використовувати як обмеження на параметр типу, що повертається функцією, оскільки за межами тіла функції недостатньо інформації, щоб визначити, яким повинен бути узагальнений тип. 
 
 ```swift
-// Error: Protocol with associated types can't be used as a return type.
+// Помилка: протокол із асоційованим типом не можна використовувати як тип значення, що повертається.
 func makeProtocolContainer<T>(item: T) -> Container {
     return [item]
 }
 
-// Error: Not enough information to infer C.
+// Помилка: недостатньо інформації для визначення типу C.
 func makeProtocolContainer<T, C: Container>(item: T) -> C {
     return [item]
 }
 ```
 
-Using the opaque type some Container as a return type expresses the desired API contract—the function returns a container, but declines to specify the container’s type:
+Використання непрозорого типу `some Container` як типу, що повертається, виражає бажаний API-контракт: функція повертає контейнер, але відмовляється визначити тип контейнера:
 
 ```swift
 func makeOpaqueContainer<T>(item: T) -> some Container {
@@ -246,8 +244,8 @@ func makeOpaqueContainer<T>(item: T) -> some Container {
 let opaqueContainer = makeOpaqueContainer(item: 12)
 let twelve = opaqueContainer[0]
 print(type(of: twelve))
-// Prints "Int"
+// Надрукує "Int"
 ```
 
-The type of twelve is inferred to be Int, which illustrates the fact that type inference works with opaque types. In the implementation of makeOpaqueContainer(item:), the underlying type of the opaque container is [T]. In this case, T is Int, so the return value is an array of integers and the Item associated type is inferred to be Int. The subscript on Container returns Item, which means that the type of twelve is also inferred to be Int.
+Тип змінної `twelve` визначено як `Int`, що ілюструє факт, що визначення типів працює з непрозорими типами. У реалізації функції `makeOpaqueContainer(item:)`, фактичним типом непрозорого контейнера є `[T]`. У цьому випадку, `T` є типом `Int`, тому значення, що повертається, є масивом цілих, а асоційований тип `Item` визначено як `Int`. Індекс протоколу `Container` повертає значення типу `Item`, що означає, що тип змінної `twelve` також визначено як `Int`.
 
