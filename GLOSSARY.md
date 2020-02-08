@@ -87,3 +87,5 @@
 + Параметри типів - Type Parameters
 + Обмеження типів - Type Constraints
 + Стек - [Стек](https://uk.wikipedia.org/wiki/Стек), push - заштовхнути, pop - виштовхнути. 
++ Рівночасні обчислeння (Concurrent computing) [Вікіпедія](https://uk.wikipedia.org/wiki/Рівночасні_обчислення)
++ Багатопоточні обчислення (Multithreading) [Вікіпедія](https://uk.wikipedia.org/wiki/Багатонитковість)

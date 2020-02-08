@@ -18,31 +18,31 @@ print("Ми – номер \(one)!")
 
 Конфліктний доступ до пам'яті може статись, коли різні частини вашого коду намагаються доступитись до однієї і тієї ж зони пам'яті одночасно. Одночасні звернення до регіону пам'яті можуть призвести до непередбачуваної та непостійної поведінки. У Swift є способи змінити значення, що тривають кілька рядків коду, що робить можливими спроби доступу до значення під час його модифікації. 
 
-You can see a similar problem by thinking about how you update a budget that’s written on a piece of paper. Updating the budget is a two-step process: First you add the items’ names and prices, and then you change the total amount to reflect the items currently on the list. Before and after the update, you can read any information from the budget and get a correct answer, as shown in the figure below.
+Аналогічну проблему можна побачити, розмірковуючи про оновлення бюджету, що записаний на папері. Оновлення бюджену є процесом із двох кроків: спершу слід дописати назви та ціни нових покупок, а потім - змінити суму ватостей усіх покупок, щоб відобразити зміни у списку. До і після оновлення, можна прочитати будь-яку інформацію з бюджету та отримати вірну відповідь, як показано на малюнку нижче.
 
 ![](images/memory_shopping_2x.png)
 
-While you’re adding items to the budget, it’s in a temporary, invalid state because the total amount hasn’t been updated to reflect the newly added items. Reading the total amount during the process of adding an item gives you incorrect information.
+Під час додавання покупок до бюджету, він знаходиться у тимчасовому некоректному стані, оскільки суму бюджету ще не було оновлено для відображення вартості доданих покупок. Зчитування суми під час процусу додавання покупок дає некоректну інформацію. 
 
-This example also demonstrates a challenge you may encounter when fixing conflicting access to memory: There are sometimes multiple ways to fix the conflict that produce different answers, and it’s not always obvious which answer is correct. In this example, depending on whether you wanted the original total amount or the updated total amount, either $5 or $320 could be the correct answer. Before you can fix the conflicting access, you have to determine what it was intended to do.
+Даний приклад демонструє виклик, з яким можна зустрітись при усунення конфліктного доступу до пам'яті: іноді існує декілька способів усунути конфлікт, що приводять до кілької відповідей, і не завжди очевидно, яка з цих відповідей є правильною. У даному прикладі, в залежності від того, що нам потрібно: початкова сума чи оновлена, правильною відповіддю буде або ₴35, або ₴9305. Перед тим, як усунути конфліктний доступ, слід визначатись із тим, що взагалі потрібно робити. 
 
-> **Note**
+> **Примітка**
 >
-> If you’ve written concurrent or multithreaded code, conflicting access to memory might be a familiar problem. However, the conflicting access discussed here can happen on a single thread and doesn’t involve concurrent or multithreaded code.
+> Якщо вам доводилось писати [рівночасний](https://uk.wikipedia.org/wiki/Рівночасні_обчислення) чи [багатопотоковий](https://uk.wikipedia.org/wiki/Багатонитковість) код, конфліктний доступ має бути знайомою проблемою. Однак, конфліктний доступ, що обговорюється в даному розділі, може статись і в одному потоці, без залучення рівночасного чи багатопотокового коду. 
 >
-> If you have conflicting access to memory from within a single thread, Swift guarantees that you’ll get an error at either compile time or runtime. For multithreaded code, use Thread Sanitizer to help detect conflicting access across threads.
+> Якщо у вас є конфліктний доступ в одному потоці, Swift гарантує, що ви отримаєте або помилку компіляції, або помилку часу виконання. Щодо багатопоточного коду, для виявлення конфліктного доступу між потоками слід використовувати [Thread Sanitizer](https://developer.apple.com/documentation/code_diagnostics/thread_sanitizer).
 
-### Characteristics of Memory Access
+### Характеристики доступу до пам'яті
 
-There are three characteristics of memory access to consider in the context of conflicting access: whether the access is a read or a write, the duration of the access, and the location in memory being accessed. Specifically, a conflict occurs if you have two accesses that meet all of the following conditions:
+Існує три характеристики доступу до пом'яті з точки зору контексту конфліктного доступу: характер доступу (на читання чи на запис), тривалість доступу, та регіон у пам'яті. Конкретніше, конфлікт відбувається, якщо є два доступи, котрі задовольняють наступні умови:
 
-+ At least one is a write access.
-+ They access the same location in memory.
-+ Their durations overlap.
++ Хоча б один із доступів є записом.
++ Обидва доступи стосуються одного й того ж регіону в пам'яті.
++ Їх тривалості перетинаються. 
 
-The difference between a read and write access is usually obvious: a write access changes the location in memory, but a read access doesn’t. The location in memory refers to what is being accessed—for example, a variable, constant, or property. The duration of a memory access is either instantaneous or long-term.
+Різниця між доступом на читання та доступом на запис пам'яті зазвичай очевидна: запис змінює регіон у пам'яті, а читання – ні. Регіон у пам'яті означає те, до чого йде доступ: наприклад, змінна, константа чи властивість. Тривалість доступу до пам'яті буває як миттєва, так і довготривала. 
 
-An access is instantaneous if it’s not possible for other code to run after that access starts but before it ends. By their nature, two instantaneous accesses can’t happen at the same time. Most memory access is instantaneous. For example, all the read and write accesses in the code listing below are instantaneous:
+Доступ є миттєвим, якщо після його початку і перед його закінченням неможлвиво запустити інший код. За своєю природою, два миттєвих доступи не можуть статись одночасно. Більшість доступів до пам'яті є миттєвими. Наприклад, всі доступи на читання й на запис у настопному фрагметні коду є миттєвими:
 
 ```swift
 func oneMore(than number: Int) -> Int {
@@ -52,14 +52,14 @@ func oneMore(than number: Int) -> Int {
 var myNumber = 1
 myNumber = oneMore(than: myNumber)
 print(myNumber)
-// Prints "2"
+// Надрукує "2"
 ```
 
-However, there are several ways to access memory, called long-term accesses, that span the execution of other code. The difference between instantaneous access and long-term access is that it’s possible for other code to run after a long-term access starts but before it ends, which is called overlap. A long-term access can overlap with other long-term accesses and instantaneous accesses.
+Однак, є кілька способів звертатись до пам'яті довготривалим чином, що перетинається із виконанням іншого коду. Різниця між миттєвим і довготривалим доступом полягає у тому, що після початку довготривалого доступу і перед його закінченням може виконувитась інший код; таку ситуацію називають перетином. Довготривалий доступ може перетинатись із іншими довготривалими чи миттєвими доступами. 
 
-Overlapping accesses appear primarily in code that uses in-out parameters in functions and methods or mutating methods of a structure. The specific kinds of Swift code that use long-term accesses are discussed in the sections below.
+Перетин доступів з'являється в першу чергу в коді, що використовує двонаправлені параметри у функціях та методах, або в мутуючих методах структури. Конкретні типи коду на Swift, що використовують довготривалий доступ, обговорюються у підрозділах нижче. 
 
-### Conflicting Access to In-Out Parameters
+### Конфліктний доступ у двонаправлених параметрах
 
 A function has long-term write access to all of its in-out parameters. The write access for an in-out parameter starts after all of the non-in-out parameters have been evaluated and lasts for the entire duration of that function call. If there are multiple in-out parameters, the write accesses start in the same order as the parameters appear.
 
@@ -111,7 +111,7 @@ balance(&playerOneScore, &playerOneScore)
 
 The balance(_:_:) function above modifies its two parameters to divide the total value evenly between them. Calling it with playerOneScore and playerTwoScore as arguments doesn’t produce a conflict—there are two write accesses that overlap in time, but they access different locations in memory. In contrast, passing playerOneScore as the value for both parameters produces a conflict because it tries to perform two write accesses to the same location in memory at the same time.
 
-> **Note**
+> **Примітка**
 >
 > Because operators are functions, they can also have long-term accesses to their in-out parameters. For example, if balance(_:_:) was an operator function named <^>, writing playerOneScore <^> playerOneScore would result in the same conflict as balance(&playerOneScore, &playerOneScore).
 
