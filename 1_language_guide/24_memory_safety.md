@@ -61,9 +61,9 @@ print(myNumber)
 
 ### Конфліктний доступ у двонаправлених параметрах
 
-A function has long-term write access to all of its in-out parameters. The write access for an in-out parameter starts after all of the non-in-out parameters have been evaluated and lasts for the entire duration of that function call. If there are multiple in-out parameters, the write accesses start in the same order as the parameters appear.
+Функція має довготривалий доступ на запис до усіх її двонаправлених параметрів. Доступ на запис до двонаправлених параметрів розпочинається після того, як усі не двонаправлені параметри були обчислені та триває під час усього виклику функції. Якщо є кілька двонаправлених параметрів, доступ на запис починається в тому ж порядку, в якому оголошені двонаправлені параметри. 
 
-One consequence of this long-term write access is that you can’t access the original variable that was passed as in-out, even if scoping rules and access control would otherwise permit it—any access to the original creates a conflict. For example:
+Одним наслідком із довготривалого доступу є неможливість доступу до оригінальної змінної, що передається двонаправленим чином, навіть якщо правила контролю доступу це дозволяють: будь-який доступ до оригіналу створює конфлікт. Наприклад:
 
 ```swift
 var stepSize = 1
@@ -73,28 +73,28 @@ func increment(_ number: inout Int) {
 }
 
 increment(&stepSize)
-// Error: conflicting accesses to stepSize
+// Помилка: конфліктний доступ до змінної stepSize
 ```
 
-In the code above, stepSize is a global variable, and it is normally accessible from within increment(_:). However, the read access to stepSize overlaps with the write access to number. As shown in the figure below, both number and stepSize refer to the same location in memory. The read and write accesses refer to the same memory and they overlap, producing a conflict.
+У коді вище, `stepSize` є глобальною змінною, і вона зазвичає є доступною всередині функції `increment(_:)`. Однак, доступ на читання `stepSize` перетинається із доступом на запис `number`. Як показано на ілюстрації нижче, змінні `number` та `stepSize` посилаються на одну й ту ж локацію в пам'яті. Доступи на читання і на запис однієї і тієї ж локації в пам'яті перетинаються, призводячи до конфлікту. 
 
 ![](images/memory_increment_2x.png)
 
-One way to solve this conflict is to make an explicit copy of stepSize:
+Одним із способів вирішити конфлікт є створення явної копії `stepSize`:
 
 ```swift
-// Make an explicit copy.
+// Створення явної копії.
 var copyOfStepSize = stepSize
 increment(&copyOfStepSize)
 
-// Update the original.
+// Оновлення оригіналу.
 stepSize = copyOfStepSize
-// stepSize is now 2
+// stepSize тепер дорівнює 2
 ```
 
-When you make a copy of stepSize before calling increment(_:), it’s clear that the value of copyOfStepSize is incremented by the current step size. The read access ends before the write access starts, so there isn’t a conflict.
+При створенні копії `stepSize` перед викликом `increment(_:)`, зрозуміло, що значення `copyOfStepSize` збільшується на поточне значення `stepSize`. Доступ на читання закінчується до початку доступу на запис, тому конфлікту немає. 
 
-Another consequence of long-term write access to in-out parameters is that passing a single variable as the argument for multiple in-out parameters of the same function produces a conflict. For example:
+Іншим прикладом конфлікту у довготривалому доступі на запис двонаправлених параметрів є передача єдиної змінної в якості аргумента кількох двонаправлених параметрів однієї і тієї ж функції. Наприклад:
 
 ```swift
 func balance(_ x: inout Int, _ y: inout Int) {
@@ -106,18 +106,18 @@ var playerOneScore = 42
 var playerTwoScore = 30
 balance(&playerOneScore, &playerTwoScore)  // OK
 balance(&playerOneScore, &playerOneScore)
-// Error: conflicting accesses to playerOneScore
+// Помилка: конфліктний доступ до playerOneScore
 ```
 
-The balance(_:_:) function above modifies its two parameters to divide the total value evenly between them. Calling it with playerOneScore and playerTwoScore as arguments doesn’t produce a conflict—there are two write accesses that overlap in time, but they access different locations in memory. In contrast, passing playerOneScore as the value for both parameters produces a conflict because it tries to perform two write accesses to the same location in memory at the same time.
+Функція `balance(_:_:)` вище змінює два параметри, розділяючи їх суму в порівну між ними. Виклик цієї функції зі змінними `playerOneScore` та `playerTwoScore` в якості аргументів не призводить до конфлікту: є два доступи на запис, що перетинаються в часі, але вони доступаються до різних регіонів у пам'яті. Одначе, якщо передати змінну `playerOneScore` як значення обох параметрів – це викличе конфлікт, тому що буде спроба доступу на запис одного й того ж регіону в пам'яті в один і той же час. 
 
 > **Примітка**
 >
-> Because operators are functions, they can also have long-term accesses to their in-out parameters. For example, if balance(_:_:) was an operator function named <^>, writing playerOneScore <^> playerOneScore would result in the same conflict as balance(&playerOneScore, &playerOneScore).
+> Оскільки оператори є функціями, вони також мають довготривалий доступ до своїх двонаправлених параметрів. Наприклад, якби функція `balance(_:_:)` була би фунцією-оператором на ім'я `<^>`, запис `playerOneScore <^> playerOneScore`  теж виливався би у той же само конфлікт, як і `balance(&playerOneScore, &playerOneScore)`.
 
-### Conflicting Access to self in Methods
+### Конфліктний доступ до self у методах
 
-A mutating method on a structure has write access to self for the duration of the method call. For example, consider a game where each player has a health amount, which decreases when taking damage, and an energy amount, which decreases when using special abilities.
+Мутуючий метод структури під час виклику має доступ на запис `self`. Наприклад, розглянемо гру, в якій кожен гравець має кількість здоров'я (`health`), котра зменшується щоразу, коли гравець отримує пошкодження; а також кількість енергії (`energy`), котра зменшується при використанні особливих здібностей.
 
 ```swift
 struct Player {
@@ -132,7 +132,7 @@ struct Player {
 }
 ```
 
-In the restoreHealth() method above, a write access to self starts at the beginning of the method and lasts until the method returns. In this case, there’s no other code inside restoreHealth() that could have an overlapping access to the properties of a Player instance. The shareHealth(with:) method below takes another Player instance as an in-out parameter, creating the possibility of overlapping accesses.
+У методі `restoreHealth()` вище, доступ на запис до `self` розпочинається на початку методу, і триває до виходу з методу. У цьому випадку, всередині методу `restoreHealth()` немає іншого коду, котрий має конфліктний доступ до властивостей екземпляру `Player`. Метод `shareHealth(with:)` нижче приймає інший екземпляр `Player` як двонаправлений параметр, створюючи можливість доступу, що перетинається з доступом до `self`.
 
 ```swift
 extension Player {
@@ -146,41 +146,41 @@ var maria = Player(name: "Maria", health: 5, energy: 10)
 oscar.shareHealth(with: &maria)  // OK
 ```
 
-In the example above, calling the shareHealth(with:) method for Oscar’s player to share health with Maria’s player doesn’t cause a conflict. There’s a write access to oscar during the method call because oscar is the value of self in a mutating method, and there’s a write access to maria for the same duration because maria was passed as an in-out parameter. As shown in the figure below, they access different locations in memory. Even though the two write accesses overlap in time, they don’t conflict.
+У прикладі вище, виклик методу `shareHealth(with:)` для гравця на ім'я Oscar, щоб поділитись здоров'ям із гравцем на ім'я Maria, не призводить до конфлікту. Під час виклику методу є доступ на запис екземпляру `oscar`, оскільки `oscar` є значенням `self` в мутуючому методі, і є доступ на запис екземпляру `maria` у цей же проміжок часу, оскільки екземпляр `maria` було передано як двонаправлений параметр. Як показано на ілюстрації нижче, йде доступ до різних регіонів пам'яті. Хоч два доступи на запис і перетинаються у часі, вони не конфліктують.
 
 ![](images/memory_share_health_maria_2x.png)
 
-However, if you pass oscar as the argument to shareHealth(with:), there’s a conflict:
+Однак, якщо передати `oscar` як аргумент методу `shareHealth(with:)`, отримаємо конфлікт:
 
 ```swift
 oscar.shareHealth(with: &oscar)
-// Error: conflicting accesses to oscar
+// Помилка: конфліктний доступ до oscar
 ```
 
-The mutating method needs write access to self for the duration of the method, and the in-out parameter needs write access to teammate for the same duration. Within the method, both self and teammate refer to the same location in memory—as shown in the figure below. The two write accesses refer to the same memory and they overlap, producing a conflict.
+Мутуючий метод під час виконання потребує доступу на запис `self`, а двонаправлений параметр потребує доступу на запис `teammate` у той же час. Всередині методу, `self` та `teammate` посилаються на один і той же регіон у пам'яті, як показано на ілюстрації нижче. Два доступи на запис одного й того ж регіону пам'яті, що перетинаються у часі, призводять до конфлікту.
 
 ![](images/memory_share_health_oscar_2x.png)
 
-### Conflicting Access to Properties
+### Конфліктний доступ до властивостей
 
-Types like structures, tuples, and enumerations are made up of individual constituent values, such as the properties of a structure or the elements of a tuple. Because these are value types, mutating any piece of the value mutates the whole value, meaning read or write access to one of the properties requires read or write access to the whole value. For example, overlapping write accesses to the elements of a tuple produces a conflict:
+Такі типи як структури, кортежі, та перечислення складаються із окремих складових значень, таких як властивості структури чи елеметри кортежу. Оскільки вони є типами-значеннями, зміна будь-якого із складових значень змінює все значення; це означає, що читання чи запис однієї властивості потребує читання чи запису усього значення. Наприклад, перетин доступів на запис елементів кортежу призводять до конфлікту:
 
 ```swift
 var playerInformation = (health: 10, energy: 20)
 balance(&playerInformation.health, &playerInformation.energy)
-// Error: conflicting access to properties of playerInformation
+// Помилка: конфліктний доступ до властивостей playerInformation
 ```
 
-In the example above, calling balance(_:_:) on the elements of a tuple produces a conflict because there are overlapping write accesses to playerInformation. Both playerInformation.health and playerInformation.energy are passed as in-out parameters, which means balance(_:_:) needs write access to them for the duration of the function call. In both cases, a write access to the tuple element requires a write access to the entire tuple. This means there are two write accesses to playerInformation with durations that overlap, causing a conflict.
+У прикладі вище, виклик функції `balance(_:_:)` на елементах кортежу призводить до конфлікту, адже там присутній перетин доступів на запис кортежу `playerInformation`. Як `playerInformation.health`, так і `playerInformation.energy` передаються як двонаправлені параметри, з чого слідує, що функція `balance(_:_:)` потребує доступу на їх запис під час виклику функції. В обох випадках, доступ на запис елементу кортежу потребує доступу на запис усього кортежу. Це означає, що є два доступи на запис `playerInformation`, які перетинаються у часі, спричиняючи конфлікт. 
 
-The code below shows that the same error appears for overlapping write accesses to the properties of a structure that’s stored in a global variable.
+Код нижче показує, як та ж само помилка з'являється у випадку одночасних доступів на запис властивостей екземпляру структури, котра зберігається у глобальній змінній.
 
 ```swift
 var holly = Player(name: "Holly", health: 10, energy: 10)
-balance(&holly.health, &holly.energy)  // Error
+balance(&holly.health, &holly.energy)  // Помилка
 ```
 
-In practice, most access to the properties of a structure can overlap safely. For example, if the variable holly in the example above is changed to a local variable instead of a global variable, the compiler can prove that overlapping access to stored properties of the structure is safe:
+На практиці, більшість доступів до властивостей структури можуть безпечно перетинатись. Наприклад, якщо змінну `holly` змінити на локальну змінну замість глобальної, компілятор зможе довести, що одночасний доступ до властивостей структури, що зберігаються, є безпечним:
 
 ```swift
 func someFunction() {
@@ -189,12 +189,12 @@ func someFunction() {
 }
 ```
 
-In the example above, Osscar’s health and energy are passed as the two in-out parameters to balance(_:_:). The compiler can prove that memory safety is preserved because the two stored properties don’t interact in any way.
+У прикладі вище, властивості `health` та `energy ` екземпляру `oscar` передаються як двонаправлені параметри до методу `balance(_:_:)`. Компілятор може довести, що безпека доступу до пам'яті зберігається, оскільки дві властивості, що зберігаються, жодним чином не перетинаються. 
 
-The restriction against overlapping access to properties of a structure isn’t always necessary to preserve memory safety. Memory safety is the desired guarantee, but exclusive access is a stricter requirement than memory safety—which means some code preserves memory safety, even though it violates exclusive access to memory. Swift allows this memory-safe code if the compiler can prove that the nonexclusive access to memory is still safe. Specifically, it can prove that overlapping access to properties of a structure is safe if the following conditions apply:
+Обмеження одночасного доступу до властивостей структури не є завжди необхідним для збереження безпеки доступу до пам'яті. Безпека пам'яті є бажаною гарантією, але взаємовиключний доступ є більш строгою вимогою, ніж безпека пам'яті. Це означає, що деякий код може зберігати безпеку доступу до пам'яті, хоч і порушувати взаємовиключний доступ до пам'яті. Swift дозвляє цей безпечний з точки зору пам'яті код, якщо компілятор може довести, що одночасний доступ до пам'яті все ще є безпечним. Конкретно, він може довести, що одночасний доступ до властивостей структури є безпечним, якщо виконуються наступні умови:
 
-+ You’re accessing only stored properties of an instance, not computed properties or class properties.
-+ The structure is the value of a local variable, not a global variable.
-+ The structure is either not captured by any closures, or it’s captured only by nonescaping closures.
++ Відбувається доступ лише до властивостей, що зберігаються, не до властивостей, що обчислюються, чи властивостей типу. 
++ Структура є значенням локальної змінної, не глобальної змінної.
++ Структура або не захоплюється жодним замиканням, або захоплюється лише неємігруючими замиканнями. 
 
-If the compiler can’t prove the access is safe, it doesn’t allow the access.
+Якщо компілятор не може довести безпечність доступу, він не дозволяє цей доступ.
