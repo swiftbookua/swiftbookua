@@ -1,51 +1,55 @@
 ## Контроль доступу
 
-*Access control* restricts access to parts of your code from code in other source files and modules. This feature enables you to hide the implementation details of your code, and to specify a preferred interface through which that code can be accessed and used.
+*Контроль доступу* обмежує доступ до частин вашого коду із коду в інших вихідних файлах та модулях. Цей механізм дозволяє приховувати деталі реалізації вашого коду, та визначати доречний інтерфейс, через який слід звертатись до вашого коду та використовувати його. 
 
-You can assign specific access levels to individual types (classes, structures, and enumerations), as well as to properties, methods, initializers, and subscripts belonging to those types. Protocols can be restricted to a certain context, as can global constants, variables, and functions.
+Конкретний рівень доступу можна присвоїти окремим типам (класам, структурам та перечисленням), так само як і властивостям, методам, ініціалізаторам, та індексам, що належать до цих типів. Протоколи також можна обмежети до певного контексту, а також глобальні константи, змінні та функції. 
 
-In addition to offering various levels of access control, Swift reduces the need to specify explicit access control levels by providing default access levels for typical scenarios. Indeed, if you are writing a single-target app, you may not need to specify explicit access control levels at all.
+Окрім пропонування різних рівнів контролю доступу, Swift зменшує потребу вказувати рівень контролю доступу явно, надаючи рівні доступу за замовчанням для типових сценаріїв. Дійсно: якщо ви пишете простий монолітний додаток з єдиним таргетом, вам узагалі не обов'язково вказувати рівні доступу явно.
 
-> **Note**
+> **Примітка**
 >
-> The various aspects of your code that can have access control applied to them (properties, types, functions, and so on) are referred to as “entities” in the sections below, for brevity.
->
+> Різні частини коду, що можуть мати рівень доступу (властивості, типи, функції, і так далі) будуть називатись у даному розділі “сутностями” заради лаконічності.
 
-### Modules and Source Files
+### Модулі та вихідні файли
 
-Swift’s access control model is based on the concept of modules and source files.
+Модель контролю доступу у Swift базується на концепції модулів та вихідних файлів. 
 
-A module is a single unit of code distribution—a framework or application that is built and shipped as a single unit and that can be imported by another module with Swift’s import keyword.
+*Модуль* – це окрема одиниця дистрибуції коду: фреймворк чи додаток, що будується і поставляється як окрема одиниця, що може імпортуватись іншим модулем за допомогою ключового слова `import`.
 
-Each build target (such as an app bundle or framework) in Xcode is treated as a separate module in Swift. If you group together aspects of your app’s code as a stand-alone framework—perhaps to encapsulate and reuse that code across multiple applications—then everything you define within that framework will be part of a separate module «when it’s imported and used within an app, or when it’s used within another framework.
+Кожен таргет збірки (як, наприклад, додаток чи фреймворк) у Xcode вважається окремим модулем у Swift. Якщо згрупувати разом частини коду вашого додатку у окремий фреймворк – наприклад, щоб інкапсулювати та повторно використовувати цей код у кількох різних додатках – тоді все, що буде оголошено всередині цього фреймворка, буде частиною окремого модуля при імпортуванні та використанні всередині додатку, чи при використанні у іншому фреймворку. 
 
-A *source file* is a single Swift source code file within a module (in effect, a single file within an app or framework). Although it’s common to define individual types in separate source files, a single source file can contain definitions for multiple types, functions, and so on.
+*Вихідним файлом* є окремий файл із вихідним кодом на Swift всередині модуля (фактично, окремий файл всередині додатку чи фреймворка). Хоч загальноприйнятим вважається оголошувати кожен тип в окремому файлі, в одному вихідному файлі можуть міститись визначення кількох типів, функцій і так далі. 
 
-### Access Levels
+### Рівні доступу
 
-Swift provides five different access levels for entities within your code. These access levels are relative to the source file in which an entity is defined, and also relative to the module that source file belongs to.
+У Swift є п'яті різних рівнів доступу до сутностей всередині коду. Ці рівні доступу є відносними до вихідного файлу, в якому оголошено сутність, і також відностими до модулю, до якого належить файл із вихідним кодом.
 
-- *Open access* and *public access* enable entities to be used within any source file from their defining module, and also in a source file from another module that imports the defining module. You typically use open or public access when specifying the public interface to a framework. The difference between open and public access is described below.
-- *Internal access* enables entities to be used within any source file from their defining module, but not in any source file outside of that module. You typically use internal access when defining an app’s or a framework’s internal structure.
-- *File-private access* restricts the use of an entity to its own defining source file. Use file-private access to hide the implementation details of a specific piece of functionality when those details are used within an entire file.
-- *Private access* restricts the use of an entity to the enclosing declaration, and to extensions of that declaration that are in the same file. Use private access to hide the implementation details of a specific piece of functionality when those details are used only within a single declaration.
+- *Відкритий доступ* (`open`) та *публічний доступ* (`public`) дозволяють сутностям використовуватись у будь-якому вихідному файлі як у модулі, де вони оголошені, так і у будь-якому іншому модулі, що імпортує модуль, в якому вони оголошені. Як правило, відкритий та публічний доступ використовуються при визначенні публічного інтерфейсу для фреймворка. Різниця між ними описана далі.
+- *Внутрішній доступ* (`internal`) дозволяє сутностям використовуватись у будь-якому вихідному файлі в модулі, де вони оголошуються, але забороняє їм використовуватись зовні цього модуля. Зазвичай внутрішній доступ використовується для визначення внутрішньої структури додатку чи фреймворку. 
+- *Файлоприватний доступ* (`fileprivate`) забороняє використовувати сутності зовні файлу, де вони оголошені. Файлоприватний доступ використовується для приховання деталей реалізації певної частини функціональності, дозволяючи цим деталям використовуватись в рамках одного файлу. 
+- *Приватний доступ* (`private`)  забороняє використовувати сутність за межами довколишнього оголошення та розширень цього оголошення, що знаходяться в тому ж самому файлі. Приватний доступ використовується для приховання деталей реалізації конкретної частини функціональності, коли ці деталі використовуються лише всередині окремого оголошення.
 
-Open access is the highest (least restrictive) access level and private access is the lowest (most restrictive) access level.
+Відкритий доступ є найвищим (найменш обмежуючим) рівнем доступу, а приватний доступ є найнижчим (найбіль обмежуючим) рівнем доступу. 
 
-Open access applies only to classes and class members, and it differs from public access by allowing code outside the module to subclass and override, as discussed below in [Subclassing](). Marking a class as open explicitly indicates that you’ve considered the impact of code from other modules using that class as a superclass, and that you’ve designed your class’s code accordingly.
+Відкритий доступ застосовується лише до класів та членів класу, і відрізняється від публічному доступу наступним чином:
 
-#### Guiding Principle of Access Levels
++ Класи з публічним доступом, або більш строгим рівнем доступу, можуть бути успадкованими лише всередині модуля, де вони оголошені.
++ Члени класу із публічним доступом, або більш строгим рівнем доступу, можуть бути заміщеними лише всередині модуля, де їх оголошено.
++ Відкриті класи можуть бути успадкованими як всередині модуля, де їх оголошено, так і зовні цього модуля, у будь-якому модулі, що імпортує модуль, де їх оголошено.
++ Члени відкритих класів можуть бути заміщеними у класах-нащадках як всередині модуля, де їх оголошено, так і всередині будь-якого модуля, що імпортує модуль, де їх оголошено. 
 
-Access levels in Swift follow an overall guiding principle: *No entity can be defined in terms of another entity that has a lower (more restrictive) access level*.
+Якщо клас є відкритим, це явним чином вказує на те, що автор врахував вплив коду із інших модулів, котрий використовує даний клас як батьківський клас, і що автор спроектував код всередині цього класу відповідним чином.
 
-For example:
+#### Керівний принцип рівнів доступу
 
-- A public variable can’t be defined as having an internal, file-private, or private type, because the type might not be available everywhere that the public variable is used.
+Рівні доступу у Swift підкоряються загальному керівному принципу: *Жодна сутність не може бути оголошеною в контексті іншої сутності, що має нижчий (більш обмежуючий) рівнь доступу*.
 
-- A function can’t have a higher access level than its parameter types and return type, because the function could be used in situations where its constituent types are unavailable to the surrounding code.
+Наприклад:
 
+- Публічна змінна може не може оголошуватись із внутрішнім, файлоприватним чи приватним типом, оскільки цей тип може бути доступним не у всіх місцях, де може використовуватись публічна змінна.
+- Функція не може мати вищого рівня доступу, аніж типи її параметрів та тип, котрий вона повертає, оскільки функція може використовуватись у ситуаціях, коли її складові типи є недоступними для довколишнього коду.
 
-The specific implications of this guiding principle for different aspects of the language are covered in detail below.
+Конкретні наслідки цього керівного принципу у різних аспектах мови детально розкриті нижче.
 
 #### Default Access Levels
 
@@ -59,7 +63,7 @@ When you write a simple single-target app, the code in your app is typically sel
 
 When you develop a framework, mark the public-facing interface to that framework as open or public so that it can be viewed and accessed by other modules, such as an app that imports the framework. This public-facing interface is the application programming interface (or API) for the framework.
 
-> **Note**
+> **Примітка**
 >
 > Any internal implementation details of your framework can still use the default access level of internal, or can be marked as private or file private if you want to hide them from other parts of the framework’s internal code. You need to mark an entity as open or public only if you want it to become part of your framework’s API.
 
@@ -128,7 +132,7 @@ private class SomePrivateClass {                // explicitly private class
 
 The access level for a tuple type is the most restrictive access level of all types used in that tuple. For example, if you compose a tuple from two different types, one with internal access and one with private access, the access level for that compound tuple type will be private.
 
-> **Note** 
+> **Примітка** 
 >
 > Tuple types don’t have a standalone definition in the way that classes, structures, enumerations, and functions do. A tuple type’s access level is deduced automatically when the tuple type is used, and can’t be specified explicitly.
 
@@ -229,7 +233,7 @@ Getters and setters for constants, variables, properties, and subscripts automat
 
 You can give a setter a lower access level than its corresponding getter, to restrict the read-write scope of that variable, property, or subscript. You assign a lower access level by writing fileprivate(set), private(set), or internal(set) before the var or subscript introducer.
 
-> **Note**
+> **Примітка**
 >
 > This rule applies to stored properties as well as computed properties. Even though you don’t write an explicit getter and setter for a stored property, Swift still synthesizes an implicit getter and setter for you to provide access to the stored property’s backing storage. Use fileprivate(set), private(set), and internal(set) to change the access level of this synthesized setter in exactly the same way as for an explicit setter in a computed property.
 
@@ -258,7 +262,7 @@ stringToEdit.value = "This string will be tracked."
 stringToEdit.value += " This edit will increment numberOfEdits."
 stringToEdit.value += " So will this one."
 print("The number of edits is \(stringToEdit.numberOfEdits)")
-// Prints "The number of edits is 3"
+// Надрукує "The number of edits is 3"
 ```
 
 Although you can query the current value of the numberOfEdits property from within another source file, you can’t modify the property from another source file. This restriction protects the implementation details of the TrackedString edit-tracking functionality, while still providing convenient access to an aspect of that functionality.
@@ -303,7 +307,7 @@ If you want to assign an explicit access level to a protocol type, do so at the 
 
 The access level of each requirement within a protocol definition is automatically set to the same access level as the protocol. You can’t set a protocol requirement to a different access level than the protocol it supports. This ensures that all of the protocol’s requirements will be visible on any type that adopts the protocol.
 
-> **Note**
+> **Примітка**
 >
 > If you define a public protocol, the protocol’s requirements require a public access level for those requirements when they’re implemented. This behavior is different from other types, where a public type definition implies an access level of internal for the type’s members.
 
@@ -319,7 +323,7 @@ The context in which a type conforms to a particular protocol is the minimum of 
 
 When you write or extend a type to conform to a protocol, you must ensure that the type’s implementation of each protocol requirement has at least the same access level as the type’s conformance to that protocol. For example, if a public type conforms to an internal protocol, the type’s implementation of each protocol requirement must be at least “internal”.
 
-> **Note**
+> **Примітка**
 >
 > In Swift, as in Objective-C, protocol conformance is global—it isn’t possible for a type to conform to a protocol in two different ways within the same program.
 
@@ -369,6 +373,6 @@ The access level for a generic type or generic function is the minimum of the ac
 
 Any type aliases you define are treated as distinct types for the purposes of access control. A type alias can have an access level less than or equal to the access level of the type it aliases. For example, a private type alias can alias a private, file-private, internal, public, or open type, but a public type alias can’t alias an internal, file-private, or private type.
 
-> **Note** 
+> **Примітка** 
 >
 > This rule also applies to type aliases for associated types used to satisfy protocol conformances.
