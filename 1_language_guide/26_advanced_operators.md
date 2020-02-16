@@ -1,78 +1,76 @@
 ## Розширені оператори
 
-## Advanced Operators
+Окрім операторів, які описані у розділі [Базові оператори](1_base_operators.md), Swift має певну кількість розширених операторів, для виконання складніших маніпуляції зі значеннями. Вони включають у себе побітові оператори та бітові зсуви, з якими ви можете бути знайомими з мови C та Objective-C.
 
-In addition to the operators described in [Basic Operators](), Swift provides several advanced operators that perform more complex value manipulation. These include all of the bitwise and bit shifting operators you will be familiar with from C and Objective-C.
+Навідміну від арифметичних операторів у мові C, арифметичні оператори у Swift за замовчанням не дозволяють переповнення змінних. Щоб увімкнути поведінку переповнення, у Swift використовується другий набір арифметичних операторів, що за замовчанням дозволяють переповнення, як, наприклад, оператор додавання з переповненням (`&+`). Усі ці оператори з переповненням починаються із амперсанду (`&`).
 
-Unlike arithmetic operators in C, arithmetic operators in Swift do not overflow by default. Overflow behavior is trapped and reported as an error. To opt in to overflow behavior, use Swift’s second set of arithmetic operators that overflow by default, such as the overflow addition operator (`&+`). All of these overflow operators begin with an ampersand (`&`).
+При створення власних структур, класів та перечислень, буває корисною можливість створювати власні реалізації стандартних операторів Swift для цих власних типів. Swift дозволяє легко надавати спеціалізовані реалізації цих операторів та точно визначати поведінку для кожного з типів, що ви створюєте.
 
-When you define your own structures, classes, and enumerations, it can be useful to provide your own implementations of the standard Swift operators for these custom types. Swift makes it easy to provide tailored implementations of these operators and to determine exactly what their behavior should be for each type you create.
+Ви не обмежені попередньо визначеними операторами. Swift дає свободу визначати ваші власні інфіксні, префіксні та постфіксні оператори, оператори присвоєння, із власними пріорітетами та асоціативністю. Ці оператори можнуть використовуватись у вашому коді, як і будь-які інші попередньо визначені оператори, і ви навіль можете розширювати існуючі типи для підтримки ваших власних операторів. 
 
-You’re not limited to the predefined operators. Swift gives you the freedom to define your own custom infix, prefix, postfix, and assignment operators, with custom precedence and associativity values. These operators can be used and adopted in your code like any of the predefined operators, and you can even extend existing types to support the custom operators you define.
+### Побітові оператори
 
-### Bitwise Operators
+*Побітові оператори* дозволяють маніпулювати окремими бітами даних усередині структури даних. Вона часто використовуються для низькорівневого програмування, зокрема у програмуванні графіки та створенні драйверів. Побітові оператори можуть також стати у нагоді при роботі із сирими даними із зовнішніх джерел, наприклад при кодуванні та декодуванні даних для комунікації по власному протоколу.
 
-*Bitwise operators* enable you to manipulate the individual raw data bits within a data structure. They are often used in low-level programming, such as graphics programming and device driver creation. Bitwise operators can also be useful when you work with raw data from external sources, such as encoding and decoding data for communication over a custom protocol.
+Swift підтримує усі побітові оператори, що є у мові C, котрі описані нижче.
 
-Swift supports all of the bitwise operators found in C, as described below.
+#### Оператор побітового НЕ
 
-#### Bitwise NOT Operator
-
-The *bitwise NOT operator* (`~`) inverts all bits in a number:
+*Оператор побітового НЕ* (`~`) інвертує усі біти у числі:
 
 ![](images/bitwiseNOT_2x.png)
 
-The bitwise NOT operator is a prefix operator, and appears immediately before the value it operates on, without any white space:
+Оператор побітового НЕ є префіксним оператором, і пишеться безпосередньо перед значенням, над яким він оперує, без пробілу:
 
 ```swift
 let initialBits: UInt8 = 0b00001111
-let invertedBits = ~initialBits  // equals 11110000
+let invertedBits = ~initialBits  // дорівнює 11110000
 ```
 
-UInt8 integers have eight bits and can store any value between 0 and 255. This example initializes a UInt8 integer with the binary value 00001111, which has its first four bits set to 0, and its second four bits set to 1. This is equivalent to a decimal value of 15.
+Цілі числа типу `UInt8` мають вісім біт та можуть зберігати значення від `0` до `255`. У цьому прикладі ініціалізовано ціле типу `UInt8` з бінарним значенням `00001111`, в якому перші чотири біти дорівнюють нулю, а другі чотири біти дорівнюють одиниці. Це є еквівалентом десяткового значенням `15`.
 
-The bitwise NOT operator is then used to create a new constant called invertedBits, which is equal to initialBits, but with all of the bits inverted. Zeros become ones, and ones become zeros. The value of invertedBits is 11110000, which is equal to an unsigned decimal value of 240.
+Оператор побітового НЕ далі використовується для створення нової константи на ім'я `invertedBits`, котра дорівнює `initialBits`, однак з інвертованими бітами. Нулі стають одиницями, а одиниці стають нулями. Значення `invertedBits` дорівнює `11110000`, що є еквівалентом беззнакового десяткового значення `240`.
 
-#### Bitwise AND Operator
+#### Оператор побітового І
 
-The *bitwise AND operator* (`&`) combines the bits of two numbers. It returns a new number whose bits are set to 1 only if the bits were equal to 1 in *both* input numbers:
+*Оператор побітового І*  (`&`) поєднує біти двох чисел. Він повертає нове число, чиї біти дорівнюють `1` лише тоді, коли відповідні біти дорівнюють `1` в *обох* вхідних числах.
 
 ![](images/bitwiseAND_2x.png)
 
-In the example below, the values of firstSixBits and lastSixBits both have four middle bits equal to 1. The bitwise AND operator combines them to make the number 00111100, which is equal to an unsigned decimal value of 60:
+У прикладі нижче, значення `firstSixBits` та `lastSixBits` мають чотири біти посередині, що дорівнюють `1`. Оператор побітового І поєднує їх для створення числа `00111100`, що є еквівалентом беззнакового десяткового значення `60`:
 
 ```swift
 let firstSixBits: UInt8 = 0b11111100
 let lastSixBits: UInt8  = 0b00111111
-let middleFourBits = firstSixBits & lastSixBits  // equals 00111100
+let middleFourBits = firstSixBits & lastSixBits  // дорівнює 00111100
 ```
 
-#### Bitwise OR Operator
+#### Оператор побітового АБО
 
-The *bitwise OR operator* (|) compares the bits of two numbers. The operator returns a new number whose bits are set to 1 if the bits are equal to 1 in *either* input number:
+*Оператор побітового АБО* (`|`) порівнює біти двох чисел. Оператор повертає нове число, чиї біти дорівнюють `1`  у позиціях, де біти *хоча б одного* із двох вхідних чисел дорівнюють `1`:
 
 ![](images/bitwiseOR_2x.png)
 
-In the example below, the values of `someBits` and `moreBits` have different bits set to 1. The bitwise OR operator combines them to make the number 11111110, which equals an unsigned decimal of 254:
+У прикладі нижче, значення `someBits` та `moreBits` мають різні біти, що дорівнюють `1`. Оператор побітового АБО поєднує їх для створення числа `11111110`, що є еквівалентом беззнакового десяткового числа `254`:
 
 ```swift
 let someBits: UInt8 = 0b10110010
 let moreBits: UInt8 = 0b01011110
-let combinedbits = someBits | moreBits  // equals 11111110
+let combinedbits = someBits | moreBits  // дорівнює 11111110
 ```
 
-#### Bitwise XOR Operator
+#### Оператор побітового виключного АБО (XOR)
 
-The *bitwise XOR operator*, or “exclusive OR operator” (^), compares the bits of two numbers. The operator returns a new number whose bits are set to 1 where the input bits are different and are set to 0 where the input bits are the same:
+*Оператор побітового виключного АБО*, або XOR (від “exclusive OR”) (^), поєднує біти двох чисел. Оператор повертає нове число, чиї біти дорівнюють `1` там, де біти вхідних чисел відрізняються, та `0` там, де біти вхідних чисел співпадають:
 
 ![](images/bitwiseXOR_2x.png)
 
-In the example below, the values of firstBits and otherBits each have a bit set to 1 in a location that the other does not. The bitwise XOR operator sets both of these bits to 1 in its output value. All of the other bits in firstBits and otherBits match and are set to 0 in the output value:
+У прикладі нижче, значення `firstBits` та `otherBits` мають одиничні біти у різних позиціях. Оператор побітового виключного АБО присвоює результату 1 у двох позиціях, котрі відрізняється. Решта біт `firstBits` та `otherBits` співпададють, і тому в цих позиціях результат має значення `0`:
 
 ```swift
 let firstBits: UInt8 = 0b00010100
 let otherBits: UInt8 = 0b00000101
-let outputBits = firstBits ^ otherBits  // equals 00010001
+let outputBits = firstBits ^ otherBits  // дорівнює 00010001
 ```
 
 #### Bitwise Left and Right Shift Operators
