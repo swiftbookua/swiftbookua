@@ -6,7 +6,7 @@
 
 При створення власних структур, класів та перечислень, буває корисною можливість створювати власні реалізації стандартних операторів Swift для цих власних типів. Swift дозволяє легко надавати спеціалізовані реалізації цих операторів та точно визначати поведінку для кожного з типів, що ви створюєте.
 
-Ви не обмежені попередньо визначеними операторами. Swift дає свободу визначати ваші власні інфіксні, префіксні та постфіксні оператори, оператори присвоєння, із власними пріорітетами та асоціативністю. Ці оператори можнуть використовуватись у вашому коді, як і будь-які інші попередньо визначені оператори, і ви навіль можете розширювати існуючі типи для підтримки ваших власних операторів. 
+Ви не обмежені попередньо визначеними операторами. Swift дає свободу визначати ваші власні інфіксні, префіксні та постфіксні оператори, оператори присвоєння, із власною черговістю та асоціативністю. Ці оператори можнуть використовуватись у вашому коді, як і будь-які інші попередньо визначені оператори, і ви навіль можете розширювати існуючі типи для підтримки ваших власних операторів. 
 
 ### Побітові оператори
 
@@ -73,30 +73,30 @@ let otherBits: UInt8 = 0b00000101
 let outputBits = firstBits ^ otherBits  // дорівнює 00010001
 ```
 
-#### Bitwise Left and Right Shift Operators
+#### Оператори побітового зсуву вліво та вправо
 
-The *bitwise left shift operator* (`<<`) and *bitwise right shift operator* (`>>`) move all bits in a number to the left or the right by a certain number of places, according to the rules defined below.
+*Оператор побітового зсуву вліво* (`<<`) та *оператор побітового зсуву вправо* (`>>`) пересувають усі біти числа вліво чи вправо на певну кількість позицій, відповідно до правил нижче.
 
-Bitwise left and right shifts have the effect of multiplying or dividing an integer by a factor of two. Shifting an integer’s bits to the left by one position doubles its value, whereas shifting it to the right by one position halves its value.
+Побітовий зсув уліво та вправо має той же ефект, що й множення та ділення цілого на степінь двійки. Зсув бітів цілого числа вліво на одиницю подвоює це число, в той час як зсув вправо ділить це число на два. 
 
-##### Shifting Behavior for Unsigned Integers
+##### Поведінка зсуву беззнакових цілих
 
-The bit-shifting behavior for unsigned integers is as follows:
+Поведінка зсуву для беззнакових цілих є наступною:
 
-1. Existing bits are moved to the left or right by the requested number of places.
-2. Any bits that are moved beyond the bounds of the integer’s storage are discarded.
-3. Zeros are inserted in the spaces left behind after the original bits are moved to the left or right.
+1. Існуючі біти пересуваються вліво чи вправо на задану кількість позицій.
+2. Усі біти, що зсуваються за межі сховища цілого числа відкидаються.
+3. Вивільнене місце зліва чи справа після оригінальних бітів заповнюється нулями. 
 
-This approach is known as a *logical shift*.
+Даний підхід є відомий як *логічний зсув*.
 
-The illustration below shows the results of 11111111 << 1 (which is 11111111 shifted to the left by 1 place), and 11111111 >> 1 (which is 11111111 shifted to the right by 1 place). Blue numbers are shifted, gray numbers are discarded, and orange zeros are inserted:
+Ілюстрація нижче демонструє результати зсуву `11111111 << 1` (тобто число `11111111` зсунуте на 1 позицію вліво), та зсуву `11111111 >> 1` (тобто `11111111` зсунуте на 1 позицію вправо). Сині біти зсовуються, сірі – відкидаються, а помаранчеві – вставляються:
 
 ![](images/bitshiftUnsigned_2x.png)
 
-Here’s how bit shifting looks in Swift code:
+Ось як побітовий зсув виглядає у коді мовою Swift:
 
 ```swift
-let shiftBits: UInt8 = 4   // 00000100 in binary
+let shiftBits: UInt8 = 4   // 00000100 у двійковій системі числення
 shiftBits << 1             // 00001000
 shiftBits << 2             // 00010000
 shiftBits << 5             // 10000000
@@ -104,173 +104,171 @@ shiftBits << 6             // 00000000
 shiftBits >> 2             // 00000001
 ```
 
-You can use bit shifting to encode and decode values within other data types:
+Побітовий зсув можна використовувати для кодування та декодування значень інших типів даних:
 
 ```swift
-let pink: UInt32 = 0xCC6699
-let redComponent = (pink & 0xFF0000) >> 16    // redComponent is 0xCC, or 204
-let greenComponent = (pink & 0x00FF00) >> 8   // greenComponent is 0x66, or 102
-let blueComponent = pink & 0x0000FF           // blueComponent is 0x99, or 153
+let pink: UInt32 = 0xCC6699                   // рожевий колір у RGB
+let redComponent = (pink & 0xFF0000) >> 16    // червона компонента дорівнює 0xCC, або 204
+let greenComponent = (pink & 0x00FF00) >> 8   // зелена компонента дорівнює 0x66, або 102
+let blueComponent = pink & 0x0000FF           // синя компонента дорівнює 0x99, або 153
 ```
 
-This example uses a UInt32 constant called pink to store a Cascading Style Sheets color value for the color pink. The CSS color value #CC6699 is written as 0xCC6699 in Swift’s hexadecimal number representation. This color is then decomposed into its red (CC), green (66), and blue (99) components by the bitwise AND operator (&) and the bitwise right shift operator (>>).
+У даному прикладі константа типу `UInt32` на ім'я `pink` використовується для зберігання рожевого кольору у форматі [CSS](https://uk.wikipedia.org/wiki/CSS). Значення кольору CSS `#CC6699` записується у Swift як шістнадцяткове число `0xCC6699`. Цей колір потім декомпонується на його червону (`СС`), зелену (`66`) та синю (`99`) компоненти за допомогою оператору побітового І (`&`) та оператору побітового зсуву вправо (`>>`). 
 
-The red component is obtained by performing a bitwise AND between the numbers 0xCC6699 and 0xFF0000. The zeros in 0xFF0000 effectively “mask” the second and third bytes of 0xCC6699, causing the 6699 to be ignored and leaving 0xCC0000 as the result.
+Червона компонента отримується за допомогою виконання побітового І між числами `0xCC6699` та `0xFF0000`. Нулі у `0xFF0000` фактично “маскують” другий та третій байти у `0xCC6699`, змушуючи частину `6699` бути проігнорованою та залишаючи результатом `0xCC0000`.
 
-This number is then shifted 16 places to the right (>> 16). Each pair of characters in a hexadecimal number uses 8 bits, so a move 16 places to the right will convert 0xCC0000 into 0x0000CC. This is the same as 0xCC, which has a decimal value of 204.
+Далі це число зсовується на 16 позицій вправо (`>> 16`). Кожна пара символів у шістнадцятковому числі використовує 8 біт, тому зсув на 16 позицій вправо перетворить `0xCC0000` на `0x0000CC`. Це те ж саме, що число `0xCC`, котре в десятковому записі має вигляд “`204`”.
 
-Similarly, the green component is obtained by performing a bitwise AND between the numbers 0xCC6699 and 0x00FF00, which gives an output value of 0x006600. This output value is then shifted eight places to the right, giving a value of 0x66, which has a decimal value of 102.
+Аналогічно, зелена компонента отримується за допомого виконання побітового І між числами `0xCC6699` та `0x00FF00`, котрі дають вихідне значення `0x006600`. Це значення потім зсувається на 8 позицій вправо, що дає значення `0x66`, або `102` в десятковому записі.
 
-Finally, the blue component is obtained by performing a bitwise AND between the numbers 0xCC6699 and 0x0000FF, which gives an output value of 0x000099. There’s no need to shift this to the right, as 0x000099 already equals 0x99, which has a decimal value of 153.
+Нарешті, синя компонента отримується за допомогою виконання побітового І між числами `0xCC6699` та `0x0000FF`, що дає вихідне значення `0x000099`. Немає потреби зсувати це число вправо, оскільки `0x000099` вже дорівнює `0x99`, або `153` в десятковому записі.
 
-##### Shifting Behavior for Signed Integers
+##### Поведінка зсуву знакових цілих
 
-The shifting behavior is more complex for signed integers than for unsigned integers, because of the way signed integers are represented in binary. (The examples below are based on 8-bit signed integers for simplicity, but the same principles apply for signed integers of any size.)
+Поведінка зсуву для знакових цілих є складнішою ніж для беззнакових цілих, через спосіб представлення знакових цілих у бінарному вигляді. (Приклади нижче базуються на 8-бітних знакових цілих для простоти, однак ті ж само принципи стосуються знакових цілих будь-якого розміру).
 
-Signed integers use their first bit (known as the *sign bit*) to indicate whether the integer is positive or negative. A sign bit of 0 means positive, and a sign bit of 1 means negative.
+У знакових цілих перший біт використовується для зберігання знаку числа, тому він носить назву “[знаковий біт](https://uk.wikipedia.org/wiki/Знаковий_біт)”  та визначає, чи є число додатнім або від'ємним. Якщо знаковий біт дорівнює `0` – число вважається додатнім, якщо `1` – від'ємним. 
 
-The remaining bits (known as the *value bits*) store the actual value. Positive numbers are stored in exactly the same way as for unsigned integers, counting upwards from 0. Here’s how the bits inside an Int8 look for the number 4:
+Решта біт позначають величину числа (або абсолютне значення), тому їх називають *бітами значення*. Додатні числа зберігаються у той же спосіб, що й беззнакові цілі, рахуючи вгору від нуля. Ось як виглядають біти всередині числа `4` типу `Int8`:
 
 ![bitshiftSignedFour_2x](images/bitshiftSignedFour_2x.png)
 
-The sign bit is 0 (meaning “positive”), and the seven value bits are just the number 4, written in binary notation.
+Знаковий біт дорівнює `0` (означаючи “додатнє”), а сім бітів значення формують число 4, записане у бінарній формі.
 
-Negative numbers, however, are stored differently. They are stored by subtracting their absolute value from 2 to the power of n, where n is the number of value bits. An eight-bit number has seven value bits, so this means 2 to the power of 7, or 128.
+Від'ємні числа зберігаються в інший спосіб. Вони зберігаються у вигляді їх абсолютного значення, віднятого від `2` в степені `n`, де `n` – це кількість бітів значення. Восьмибітне знакове число має сім бітів значення, тому використовується `2` в степені `7`, тобто `128`.
 
-Here’s how the bits inside an Int8 look for the number -4:
+Ось як виглядають біти всередині числа `-4` типу `Int8`:
 
 ![bitshiftSignedMinusFour_2x](images/bitshiftSignedMinusFour_2x.png)
 
-This time, the sign bit is 1 (meaning “negative”), and the seven value bits have a binary value of 124 (which is 128 - 4):
+Цього разу, знаковий біт дорівнює `1` (означаючи “від'ємне”), а сім біт значення містять бінарне значення `124` (тобто `128 - 4`):
 
 ![bitshiftSignedMinusFourValue_2x](images/bitshiftSignedMinusFourValue_2x.png)
 
-This encoding for negative numbers is known as a *two’s complement* representation. It may seem an unusual way to represent negative numbers, but it has several advantages.
+Це кодування ві'дємних чисел також відоме як [*доповняльний код*](https://uk.wikipedia.org/wiki/Доповняльний_код). Це може здаватись незвичниим способом представляти від'ємні числа, однак він має кілька переваг.
 
-First, you can add -1 to -4, simply by performing a standard binary addition of all eight bits (including the sign bit), and discarding anything that doesn’t fit in the eight bits once you’re done:
+По-перше, щоб додати `-1` до `-4`, достатньо виконати стандартне бінарне додавання на всіх восьми бітах (включно із знаковим бітом), та відкинути все, що не вміщується у `8` біт по завершенню операції:
 
 ![bitshiftSignedAddition_2x](images/bitshiftSignedAddition_2x.png)
 
-Second, the two’s complement representation also lets you shift the bits of negative numbers to the left and right like positive numbers, and still end up doubling them for every shift you make to the left, or halving them for every shift you make to the right. To achieve this, an extra rule is used when signed integers are shifted to the right: When you shift signed integers to the right, apply the same rules as for unsigned integers, but fill any empty bits on the left with the sign bit, rather than with a zero.
+По-друге, у доповляльний код дозволяє зсовувати біти від'ємних чисел вліво та вправо аналогічно до додатніх чисел, все ще подвоюючи їх при кожному зсуві вліво, та розділюючи їх на два при кожному зсуві вправо. Щоб досягнути цього, вводиться додаткове правило, що використовується при зсуві знакових цілих вправо: при зсуві знакових цілих вправо, виконують ті ж правила, що й при зсуві беззнакових цілих, однак порожні біти зліва заповнюються значенням знакового біту замість нуля.
 
 ![bitshiftSigned_2x](images/bitshiftSigned_2x.png)
 
-This action ensures that signed integers have the same sign after they are shifted to the right, and is known as an arithmetic shift.
+Ця дія гарантує, що знакові цілі мають той же знак після зсуву вправо, а цей різновид зсуву називають *арифметичним зсувом*.
 
-Because of the special way that positive and negative numbers are stored, shifting either of them to the right moves them closer to zero. Keeping the sign bit the same during this shift means that negative integers remain negative as their value moves closer to zero.
-
-### Overflow Operators
+Внаслідок особливого способу зберігання додатніх та від'ємних чисел, зсув як додатніх, так і від'ємних чисел вправо наближує їх до нуля. Зберігання знакового біту однаковим при такому зсуві дозволяє від'ємним цілим числам зберігати свій знак, рухаючись ближче до нуля.
 
 ### Оператори переповнення
 
-If you try to insert a number into an integer constant or variable that cannot hold that value, by default Swift reports an error rather than allowing an invalid value to be created. This behavior gives extra safety when you work with numbers that are too large or too small.
+Якщо спробувати вставити число у цілочисельну константу чи змінну, що не може втримати це значення, за замовчанням Swift повідомить про помилку, не дозволяючи створити це некоректне значення. Ця поведінка дає додаткову безпеку при роботі із нанадто великими чи занадто малими числами. 
 
-For example, the Int16 integer type can hold any signed integer between -32768 and 32767. Trying to set an Int16 constant or variable to a number outside of this range causes an error:
+Наприклад, цілочисельний тип `Int16` може зберігати знакові цілочисельні значення між `-32768` та `32767`. Спроба присвоїти константі чи змінній типу `Int16` значення за межами цього діапазону призведе до помилки:
 
 ```swift
 var potentialOverflow = Int16.max
-// potentialOverflow equals 32767, which is the maximum value an Int16 can hold
+// potentialOverflow дорівнює 32767, що є максимальним значенням, яке може втримати Int16
 potentialOverflow += 1
-// this causes an error
+// це призводить до помилки
 ```
 
-Providing error handling when values get too large or too small gives you much more flexibility when coding for boundary value conditions.
+Забезпечення обробки помилок, коли значення стають занадто великими або занадто малими, дає вам набагато більше гнучкості при кодуванні для граничних умов.
 
-However, when you specifically want an overflow condition to truncate the number of available bits, you can opt in to this behavior rather than triggering an error. Swift provides three arithmetic overflow operators that opt in to the overflow behavior for integer calculations. These operators all begin with an ampersand (&):
+Однак, коли вам спеціально потрібна поведінка переповнення, щоб обрізати число до доступних бітів, можна увімкнути її замість провокування помилок. Swift має три арифметичних оператори переповнення, що дозволяють поведінку переповнення для цілочисельних розрахунків. Ці оператори починаються із символу (`&`):
 
-+ Overflow addition (&+)
-+ Overflow subtraction (&-)
-+ Overflow multiplication (&*)
++ Додавання з переповненням (&+)
++ Віднімання з переповненням (&-)
++ Множення з переповненням (&*)
 
-#### Value Overflow
+#### Переповнення значень
 
-Numbers can overflow in both the positive and negative direction.
+Числа можуть переповнюватись як у додатньому, так і у від'ємному напрямках.
 
-Here’s an example of what happens when an unsigned integer is allowed to overflow in the positive direction, using the overflow addition operator (&+):
+Ось приклад того, що трапляється, коли беззнакове ціле переповнюється у додатньому напрямку, за допомогою оператору додавання з переповненням: (`&+`):
 
 ```swift
 var unsignedOverflow = UInt8.max
-// unsignedOverflow equals 255, which is the maximum value a UInt8 can hold
+// unsignedOverflow дорівнює 255, що є максимальним значенням типу UInt8
 unsignedOverflow = unsignedOverflow &+ 1
-// unsignedOverflow is now equal to 0
+// unsignedOverflow тепер дорівнює 0
 ```
 
-The variable unsignedOverflow is initialized with the maximum value a UInt8 can hold (255, or 11111111 in binary). It is then incremented by 1 using the overflow addition operator (&+). This pushes its binary representation just over the size that a UInt8 can hold, causing it to overflow beyond its bounds, as shown in the diagram below. The value that remains within the bounds of the UInt8 after the overflow addition is 00000000, or zero.
+Змінну `unsignedOverflow` ініціалізовано із максимальним значенням типу `UInt8` (`255`, або `11111111` у бінарному представленні). До нього додається число `1` за допомогою оператору додавання з переповненням (`&+`). Це збільшує бінарне представлення до розміру, що на 1 більше за розмір числа, що вміщається у типі `UInt8`, призводячи до переповнення його меж, як показано на діаграмі нижче. Значення, що вміщається в межах `UInt8` після переповнення є `00000000`, або нуль.
 
 ![overflowAddition_2x](images/overflowAddition_2x.png)
 
-Something similar happens when an unsigned integer is allowed to overflow in the negative direction. Here’s an example using the overflow subtraction operator (&-):
+Щось аналогічне відбувається, коли беззнакове ціло переповнюється у від'ємному напрямку. Ось приклад використання оператору віднімання із переповненням (`&-`):
 
 ```swift
 var unsignedOverflow = UInt8.min
-// unsignedOverflow equals 0, which is the minimum value a UInt8 can hold
+// unsignedOverflow дорівнює 0, що є мінімальним значенням типу UInt8
 unsignedOverflow = unsignedOverflow &- 1
-// unsignedOverflow is now equal to 255
+// unsignedOverflow тепер дорівнює 255
 ```
 
-The minimum value that a UInt8 can hold is zero, or 00000000 in binary. If you subtract 1 from 00000000 using the overflow subtraction operator (&-), the number will overflow and wrap around to 11111111, or 255 in decimal.
+Мінімальним значенням, що лежить в межах `UInt8` є нуль, або `00000000` у двійковому представленні. Якщо відняти `1` від `00000000` використовуючи оператор віднімання із переповненням (`&-`), число переповниться та обріжеться до `11111111`, або `255` у десятковому записі.
 
-Overflow also occurs for signed integers. All addition and subtraction for signed integers is performed in bitwise fashion, with the sign bit included as part of the numbers being added or subtracted, as described in [Bitwise Left and Right Shift Operators](#Bitwise-Left-and-Right-Shift-Operators).
+Переповнення також відбувається знаковими цілими. Додавання та віднімання знакових цілих відбувається у побітовий спосіб, зі знаковим бітом як частиною числа, що додається чи віднімається, як описано вище у підрозділі [Оператори побітового зсуву вліво та вправо](#Оператори-побітового-зсуву-вліво-та-вправо). 
 
 ```swift
 var signedOverflow = Int8.min
-// signedOverflow equals -128, which is the minimum value an Int8 can hold
+// signedOverflow дорівнює -128, що є мінімальним значенням типу Int8
 signedOverflow = signedOverflow &- 1
-// signedOverflow is now equal to 127
+// signedOverflow тепер дорівнює 127
 ```
 
-The minimum value that an Int8 can hold is -128, or 10000000 in binary. Subtracting 1 from this binary number with the overflow operator gives a binary value of 01111111, which toggles the sign bit and gives positive 127, the maximum positive value that an Int8 can hold.
+Мінімальним значенням типу `Int8` є `-128`, або `10000000` у бінарній формі. Віднімаючи `1` від цього бінарного числа за допомогою оператору з переповненням дає бінарне значення `01111111`, що переключає знаковий біт та дає додатнє `127`, максимальне додатнє значення, що може міститись у `Int8`.
 
 ![overflowSignedSubtraction_2x](images/overflowSignedSubtraction_2x.png)
 
-For both signed and unsigned integers, overflow in the positive direction wraps around from the maximum valid integer value back to the minimum, and overflow in the negative direction wraps around from the minimum value to the maximum.
+Як знакові, так і беззнакові цілі при переповненні у додатньому напрямку переходять із максимального коректного цілого до мінімального, а при переповненні у від'ємному напрямку переходять із мінімального значення до максимального.
 
-### Precedence and Associativity
+### Черговість та асоціативність
 
-Operator precedence gives some operators higher priority than others; these operators are applied first.
+Черговість операторів дає одним операторам пріорітет над іншими; ці оператори застосовуються першими.
 
-Operator associativity defines how operators of the same precedence are grouped together—either grouped from the left, or grouped from the right. Think of it as meaning “they associate with the expression to their left,” or “they associate with the expression to their right.”
+Осоціативність операторів визначає, як оператори однієї черговості групуються разом: зліва направо чи справа наліво. Слід думати про це як “вони асоційовані з виразом зліва від них,” або “вони асоційовані з виразом справа від них”.
 
-It is important to consider each operator’s precedence and associativity when working out the order in which a compound expression will be calculated. For example, operator precedence explains why the following expression equals 17.
+Важливо пам'ятати про черговість кожного оператора та асоціатисність при визначенні порядку, у якому буде обчислено складний вираз. Наприклад, черговість операторів пояснює, чому наступний вираз дорівнює 17.
 
 ```swift
 2 + 3 % 4 * 5
-// this equals 17
+// це дорівнює 17
 ```
 
-If you read strictly from left to right, you might expect the expression to be calculated as follows:
+Якщо читати цей вираз строго зліва направо, можна очікувати, що вираз буде обчислено наступним чином:
 
-+ 2 plus 3 equals 5
-+ 5 remainder 4 equals 1
-+ 1 times 5 equals 5
++ 2 плюс 3 дорівнює 5
++ остача від ділення 5 на 4 дорівнює 1
++ 1 помножити на 5 дорівнює 5
 
-However, the actual answer is 17, not 5. Higher-precedence operators are evaluated before lower-precedence ones. In Swift, as in C, the remainder operator (%) and the multiplication operator (*) have a higher precedence than the addition operator (+). As a result, they are both evaluated before the addition is considered.
+Однак, фактична відповідь є 17, не 5. Оператори з вищою черговістю опрацьовуються перед операторами з нижчою черговістю. У Swift, як і у C, оператор остачі від ділення (`%`) та оператор множення мають вищу черговість, ніж оператор додавання (`+`). У результаті вони обидва опрацьовуються перед додаванням.
 
-However, remainder and multiplication have the same precedence as each other. To work out the exact evaluation order to use, you also need to consider their associativity. Remainder and multiplication both associate with the expression to their left. Think of this as adding implicit parentheses around these parts of the expression, starting from their left:
+Однак, оператори остачі та множення мають однакову черговість по відношенню один до одного. Щоб зрозуміти порядок виконання обчислення, слід також узяти до уваги їх асоціативність. Як остача, так і множення є асоційованими із виразами зліва від них. Про це слід думати як про додавання неявних дужок довкола цих частин виразу, починаючи зліва:
 
 ```swift
 2 + ((3 % 4) * 5)
 ```
 
-`(3 % 4)` is `3`, so this is equivalent to:
+`(3 % 4)` дорівнює `3`, тому це є еквівалентом:
 
 ```swift
 2 + (3 * 5)
 ```
 
-`(3 * 5)` is `15`, so this is equivalent to:
+`(3 * 5)` дорівнює `15`, тому це є еквівалентом:
 
 ```swift
 2 + 15
 ```
 
-This calculation yields the final answer of 17.
+Дане обчислення видає остаточну відповідь 17.
 
-For information about the operators provided by the Swift standard library, including a complete list of the operator precedence groups and associativity settings, see [Operator Declarations](#Operator-Declarations).
+Детальніше із операторами, що є у стандартній бібліотеці Swift, включно зі списком груп черговості операторів, та налаштувань асоціативності, можна ознайомитись за посиланням [Operator Declarations](https://developer.apple.com/documentation/swift/swift_standard_library/operator_declarations).
 
 > **Note**
 >
-> Swift’s operator precedences and associativity rules are simpler and more predictable than those found in C and Objective-C. However, this means that they are not exactly the same as in C-based languages. Be careful to ensure that operator interactions still behave in the way you intend when porting existing code to Swift.
+> Правила черговості та асоціативності операторів у Swift’s є простішими та передбачуванішими, аніж аналогічні у мовах C та Objective-C. Однак, це означає, що вони не точно такі ж як у C-подібних мовах. При портуванні існуючого коду на Swift слід бути обережним та пересвідчуватись, що взаємодія між операторами зберігає бажану поведінку.
 
 ### Operator Methods
 
