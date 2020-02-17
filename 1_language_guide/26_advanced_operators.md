@@ -270,15 +270,13 @@ signedOverflow = signedOverflow &- 1
 >
 > Правила черговості та асоціативності операторів у Swift’s є простішими та передбачуванішими, аніж аналогічні у мовах C та Objective-C. Однак, це означає, що вони не точно такі ж як у C-подібних мовах. При портуванні існуючого коду на Swift слід бути обережним та пересвідчуватись, що взаємодія між операторами зберігає бажану поведінку.
 
-### Operator Methods
-
 ### Методи-оператори
 
-Classes and structures can provide their own implementations of existing operators. This is known as *overloading* the existing operators.
+Класи та структури можуть мати їх власні реалізації існуючих операторів. Це відомо як *перевантаження* існуючих операторів.
 
-The example below shows how to implement the arithmetic addition operator (+) for a custom structure. The arithmetic addition operator is a *binary operator* because it operates on two targets and is said to be *infix* because it appears in between those two targets.
+У прикладі нижче показано, як реалізувати арифметичний оператор додавання (`+`) для власної структури. Арифметичний оператор додавання є *бінарним оператором*, оскільки він оперує над двома аргументами, та вважається *інфіксним*, оскільки він пишеться посередині між двома аргументами.
 
-The example defines a Vector2D structure for a two-dimensional position vector (x, y), followed by a definition of an *operator method* to add together instances of the Vector2D structure:
+У прикладі визначено структуру `Vector2D` для моделювання двовимірного вектору `(x, y)`, та визначення *методу-оператору* для додавання двох екземплярів структури `Vector2D`:
 
 ```swift
 struct Vector2D {
@@ -292,11 +290,11 @@ extension Vector2D {
 }
 ```
 
-The operator method is defined as a type method on Vector2D, with a method name that matches the operator to be overloaded (+). Because addition isn’t part of the essential behavior for a vector, the type method is defined in an extension of Vector2D rather than in the main structure declaration of Vector2D. Because the arithmetic addition operator is a binary operator, this operator method takes two input parameters of type Vector2D and returns a single output value, also of type Vector2D.
+Метод-оператор визначений як метод типу `Vector2D`, з іменем методу, що співпадає з оператором, котрий перевантажується (`+`). Оскільки додавання не є основною поведінкою вектора, метод типу визначено не у основному визначенні структури `Vector2D`, а натомість у її розширенні. Оскільки арифметичний оператор додавання є бінарним оператором, цей метод приймає два вхідних параметри типу `Vector2D` та повертає єдиние вихідне значення, також типу `Vector2D`.
 
-In this implementation, the input parameters are named left and right to represent the Vector2D instances that will be on the left side and right side of the + operator. The method returns a new Vector2D instance, whose x and y properties are initialized with the sum of the x and y properties from the two Vector2D instances that are added together.
+У цій реалізації, вхідні параметри іменуються як `left` (лівий) та  `right` (правий), щоб представляти екземпляри `Vector2D`, що будуть відповідно по ліву та праву сторону від оператору `+`. Метод повертає новий екземпляр `Vector2D`, чиї властивості `x` та `y` ініціалізуються сумами відповідних властивостей `x` та `y` кожного з двох екземплярів `Vector2D`, що додаються.
 
-The type method can be used as an infix operator between existing Vector2D instances:
+Метод типу можна використовувати як інфіксний оператор між існуючими екземплярами `Vector2D`:
 
 ```swift
 let vector = Vector2D(x: 3.0, y: 1.0)
@@ -305,7 +303,7 @@ let combinedVector = vector + anotherVector
 // combinedVector is a Vector2D instance with values of (5.0, 5.0)
 ```
 
-This example adds together the vectors (3.0, 1.0) and (2.0, 4.0) to make the vector (5.0, 5.0), as illustrated below.
+У даному прикладі додаються вектори `(3.0, 1.0)` та `(2.0, 4.0)`, що дає у результаті вектор `(5.0, 5.0)`, як показано на зображенні нижче.
 
 ![vectorAddition_2x](images/vectorAddition_2x.png)
 
