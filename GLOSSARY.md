@@ -90,3 +90,4 @@
 + Рівночасні обчислeння (Concurrent computing) [Вікіпедія](https://uk.wikipedia.org/wiki/Рівночасні_обчислення)
 + Багатопоточні обчислення (Multithreading) [Вікіпедія](https://uk.wikipedia.org/wiki/Багатонитковість)
 + Черговість операторів - Operator precedence [Вікіпедія](https://uk.wikipedia.org/wiki/Черговість_операцій)
++ Складені оператори присвоєння - Compound Assignment Operators [Вікіпедія](https://uk.wikipedia.org/wiki/Оператори_в_C_та_C%2B%2B#Складені_оператори_присвоєння)

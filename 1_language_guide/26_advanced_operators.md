@@ -300,18 +300,18 @@ extension Vector2D {
 let vector = Vector2D(x: 3.0, y: 1.0)
 let anotherVector = Vector2D(x: 2.0, y: 4.0)
 let combinedVector = vector + anotherVector
-// combinedVector is a Vector2D instance with values of (5.0, 5.0)
+// combinedVector є екземпляром Vector2D зі значеннями (5.0, 5.0)
 ```
 
 У даному прикладі додаються вектори `(3.0, 1.0)` та `(2.0, 4.0)`, що дає у результаті вектор `(5.0, 5.0)`, як показано на зображенні нижче.
 
 ![vectorAddition_2x](images/vectorAddition_2x.png)
 
-#### Prefix and Postfix Operators
+#### Префіксні та постфіксні оператори
 
-The example shown above demonstrates a custom implementation of a binary infix operator. Classes and structures can also provide implementations of the standard unary operators. Unary operators operate on a single target. They are prefix if they precede their target (such as -a) and *postfix operators* if they follow their target (such as b!).
+У прикладі вище демонструється власна реалізація бінарного інфіксного оператору. Класи та структури також можуть мати реалізації стандартних унарних операторів. Унарні оператори оперують над одним аргументом. Вони бувають *префіксними*, коли вони пишуться перед своїм аргументом (наприклад, `-a`), та *постфіксними*, коли вони пишуться після свого аргументу (наприклад, `b!`).
 
-You implement a prefix or postfix unary operator by writing the prefix or postfix modifier before the func keyword when declaring the operator method:
+Префіксні та постфіксні унарні оператори реалізовуються за допомогою модифікаторів `prefix` та `postfix` віддповідно, які вказуються перед ключовим словом `func` у оголошенні методу-оператора:
 
 ```swift
 extension Vector2D {
@@ -321,23 +321,23 @@ extension Vector2D {
 }
 ```
 
-The example above implements the unary minus operator (-a) for Vector2D instances. The unary minus operator is a prefix operator, and so this method has to be qualified with the prefix modifier.
+У прикладі вище реалізовано оператор унарного мінуса (`-a`) для екземплярів `Vector2D`. Оператор унарного мінуса є префіксним оператором, і тому цей метод цей метод позначено модифікатором `prefix`.
 
-For simple numeric values, the unary minus operator converts positive numbers into their negative equivalent and vice versa. The corresponding implementation for Vector2D instances performs this operation on both the x and y properties:
+Для простих числових значень, унарний мінус перетворює додатні числа на їх від'ємін еквіваленти та навпаки. Відповідна реалізація для екземпляру `Vector2D` виконує цю операцію над кожною з властивостей `x` та `y`.
 
 ```swift
 let positive = Vector2D(x: 3.0, y: 4.0)
 let negative = -positive
-// negative is a Vector2D instance with values of (-3.0, -4.0)
+// negative є екземпляром Vector2D зі значеннями (-3.0, -4.0)
 let alsoPositive = -negative
-// alsoPositive is a Vector2D instance with values of (3.0, 4.0)
+// alsoPositive є екземпляром Vector2D зі значеннями (3.0, 4.0)
 ```
 
-#### Compound Assignment Operators
+#### Складені оператори присвоєння
 
-Compound assignment operators combine assignment (=) with another operation. For example, the addition assignment operator (+=) combines addition and assignment into a single operation. You mark a compound assignment operator’s left input parameter type as inout, because the parameter’s value will be modified directly from within the operator method.
+Складені оператори присвоєння поєднують присвоєння із іншою операцією. Наприклад, оператор додавання з присвоєнням (`+=`) поєднує додавання із присвоєнням в єдиній операції. Лівий параметр складеного оператору присвоєння повинен бути двонаправленим параметром (поміченим модифікатором `inout`), оскільки значення цього параметру буде змінено прямо у ході операції.
 
-The example below implements an addition assignment operator method for Vector2D instances:
+У прикладі нижче реалізовано метод-оператор додавання з присвоєнням для екземплярів `Vector2D`:
 
 ```swift
 extension Vector2D {
@@ -347,18 +347,18 @@ extension Vector2D {
 }
 ```
 
-Because an addition operator was defined earlier, you don’t need to reimplement the addition process here. Instead, the addition assignment operator method takes advantage of the existing addition operator method, and uses it to set the left value to be the left value plus the right value:
+Оскільки оператор додавання вже було визначено раніше, нема потреби повторно реалізовувати процес додавання тут. Замість цього, оператор додавання з присвоєнням використовуює існуючий оператор додавання, і використовує його для присвоєння лівому параметру значення суми лівого та правого параметрів:
 
 ```swift
 var original = Vector2D(x: 1.0, y: 2.0)
 let vectorToAdd = Vector2D(x: 3.0, y: 4.0)
 original += vectorToAdd
-// original now has values of (4.0, 6.0)
+// original тепер має значення (4.0, 6.0)
 ```
 
-> **Note**
+> **Примітка**
 >
-> It isn’t possible to overload the default assignment operator (=). Only the compound assignment operators can be overloaded. Similarly, the ternary conditional operator (a ? b : c) can’t be overloaded.
+> Неможливо перевантажити стандартниий оператор присвоєння (`=`). Перевантажити можна тільки складені оператори присвоєння. Аналогічно, неможливо перевантажити умовний тернарний оператор (`a ? b : c`).
 
 ### Оператори рівності
 
