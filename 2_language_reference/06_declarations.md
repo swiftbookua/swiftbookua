@@ -1,5 +1,7 @@
 ## Оголошення
 
+### Оголошення операторів
+
 ### Operator Declarations
 
 ### Failable Initializers

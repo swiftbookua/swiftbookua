@@ -362,11 +362,9 @@ original += vectorToAdd
 
 ### Оператори рівності
 
-### Equivalence Operators
+За замовчанням, власні класи та структури не мають реалізації операторів еквівалентності, якими є оператор рівності (`==`), та оператор нерівності (`!=`). Зазвичай реалізовується оператор рівності `==`, і використовується реалізація оператору нерівності `!=` зі стандартної бібліотеки, котра інвертує результат оператору `==`. Є два способи реалізувати оператор `==`: реалізувати його самотужки, або, для багатьох типів, можна пропросити Swift синтезувати реалізацію за вас. В обох випадках, потрібно підпорядкувати тип протоколу `Equatable` зі стандартної бібліотеки.
 
-By default, custom classes and structures don’t have an implementation of the equivalence operators, known as the equal to operator (==) and not equal to operator (!=). You usually implement the == operator, and use the standard library’s default implementation of the != operator that negates the result of the == operator. There are two ways to implement the == operator: You can implement it yourself, or for many types, you can ask Swift to synthesize an implementation for you. In both cases, you add conformance to the standard library’s Equatable protocol.
-
-You provide an implementation of the == operator in the same way as you implement other infix operators:
+Реалізувати оператор `==` можна в той же спосіб, що й інші інфіксні оператори:
 
 ```swift
 extension Vector2D: Equatable {
@@ -376,28 +374,28 @@ extension Vector2D: Equatable {
 }
 ```
 
-The example above implements an == operator to check whether two Vector2D instances have equivalent values. In the context of Vector2D, it makes sense to consider “equal” as meaning “both instances have the same x values and y values”, and so this is the logic used by the operator implementation.
+У прикладі вище реалізовано оператор `==` для перевірки двох екземплярів `Vector2D` на рівність. У контексті `Vector2D`, “рівні” означає “обидва екземпляри мають однакові значення `x` та `y`”, і тому ця логіка використовується в реалізації оператору.
 
-You can now use this operator to check whether two Vector2D instances are equivalent:
+Тепер цей оператор можна використовувати для перевірки екземплярів `Vector2D` на рівність:
 
 ```swift
 let twoThree = Vector2D(x: 2.0, y: 3.0)
 let anotherTwoThree = Vector2D(x: 2.0, y: 3.0)
 if twoThree == anotherTwoThree {
-    print("These two vectors are equivalent.")
+    print("Ці два вектори рівні між собою.")
 }
-// Prints "These two vectors are equivalent."
+// Надрукує "Ці два вектори рівні між собою."
 ```
 
-In many simple cases, you can ask Swift to provide synthesized implementations of the equivalence operators for you. Swift provides synthesized implementations for the following kinds of custom types:
+У багатьох простих випадках, можна попросити Swift синтезувати реалізацію оператору рівності за вас. Swift створить синтезовану реалізацію для наступних видів власних типів:
 
-+ Structures that have only stored properties that conform to the Equatable protocol
-+ Enumerations that have only associated types that conform to the Equatable protocol
-+ Enumerations that have no associated types
++ Для структур, що мають лише властивості, що зберігаються, та підпорядковані протоколу `Equatable`.
++ Перечислення, що мають асоційовані значення лишу підпорядкованих протоколу `Equatable`  типів.
++ Перечислення без асоційованих значень.
 
-To receive a synthesized implementation of ==, declare Equatable conformance in the file that contains the original declaration, without implementing an == operator yourself.
+Щоб отримати синтезовану реалізацію оператору `==`, слід оголосити підпорядкованість протоколу `Equatable` у файлі, в котрому міститься початкове оголошення, і не реалізовувати оператор `==` самотужки.
 
-The example below defines a Vector3D structure for a three-dimensional position vector (x, y, z), similar to the Vector2D structure. Because the x, y, and z properties are all of an Equatable type, Vector3D receives synthesized implementations of the equivalence operators.
+У прикладі нижче визначено структуру `Vector3D` для тривимірного вектору `(x, y, z)`, аналогічного до структури `Vector2D`. Оскільки властивості `x`, `y`, та `z` мають підпорядкований протоколу `Equatable` тип,  структура `Vector3D` отримує синтезовані реалізації операторів рівності.
 
 ```swift
 struct Vector3D: Equatable {
@@ -407,22 +405,22 @@ struct Vector3D: Equatable {
 let twoThreeFour = Vector3D(x: 2.0, y: 3.0, z: 4.0)
 let anotherTwoThreeFour = Vector3D(x: 2.0, y: 3.0, z: 4.0)
 if twoThreeFour == anotherTwoThreeFour {
-    print("These two vectors are also equivalent.")
+    print("Ці два вектори є також рівними між собою.")
 }
-// Prints "These two vectors are also equivalent."
+// Надрукує "Ці два вектори є також рівними між собою."
 ```
 
-### Custom Operators
+### Власні оператори
 
-You can declare and implement your own custom operators in addition to the standard operators provided by Swift. For a list of characters that can be used to define custom operators, see [Operators]().
+На додачу до стандартних операторів Swift, можна оголошувати та реалізовувати свої власні оператори. Із повним списком символів, які можна використовувати для створення власних операторів, можна ознайомитись у секції [Оператори](../2_language_reference/02_lexical_structure.md#Operators).
 
-New operators are declared at a global level using the operator keyword, and are marked with the prefix, infix or postfix modifiers:
+Нові оператори оголошуються на глобальному рівні за допомогою ключового слова `operator`, та модифікаторів `prefix`, `infix` або `postfix`:
 
 ```swift
 prefix operator +++
 ```
 
-The example above defines a new prefix operator called +++. This operator does not have an existing meaning in Swift, and so it is given its own custom meaning below in the specific context of working with Vector2D instances. For the purposes of this example, +++ is treated as a new “prefix doubling” operator. It doubles the x and y values of a Vector2D instance, by adding the vector to itself with the addition assignment operator defined earlier. To implement the +++ operator, you add a type method called +++ to Vector2D as follows:
+У прикладі вище визначено префіксний оператор на ім'я `+++`. Цей оператор не має існуючої семантики у Swift, і тому ми можемо надати йому власну семантику нижче у конкретному контексті роботи із екземплярами `Vector2D`. Для цілей даного прикладу, `+++` вважатиметься новим оператором “префіксного подвоєння”. Він подвоюватиме значення `x` та `y` екземпляру `Vector2D`, додаючи вектор сам до себе за допомогою визначеного вище оператора додавання з присвоєнням. Щоб реалізувати оператор `+++`, до структури `Vector2D` ми додаємо метод на ім'я `+++`:
 
 ```swift
 extension Vector2D {
@@ -434,17 +432,17 @@ extension Vector2D {
 
 var toBeDoubled = Vector2D(x: 1.0, y: 4.0)
 let afterDoubling = +++toBeDoubled
-// toBeDoubled now has values of (2.0, 8.0)
-// afterDoubling also has values of (2.0, 8.0)
+// toBeDoubled тепер має значення (2.0, 8.0)
+// afterDoubling тепер також має значення (2.0, 8.0)
 ```
 
-#### Precedence for Custom Infix Operators
+#### Черковість власних інфіксних операторів
 
-Custom infix operators each belong to a precedence group. A precedence group specifies an operator’s precedence relative to other infix operators, as well as the operator’s associativity. See [Precedence and Associativity](#Precedence-and-Associativity) for an explanation of how these characteristics affect an infix operator’s interaction with other infix operators.
+Кожен власний інфіксний оператор належить до певної групи черговості. Група черговості оператору визначає порядок його виконання у виразі із іншими інфіксними операторами, так само як і асоціативність оператору. У секції [Черговість та асоціативність](#Черговість-та-асоціативність) детально пояснено, як ці характеристики вплавають та взаємодію інфіксного оператора із іншими інфіксниими операторами.
 
-A custom infix operator that is not explicitly placed into a precedence group is given a default precedence group with a precedence immediately higher than the precedence of the ternary conditional operator.
+Власні інфіксні оператори, що явно не додані до групи черговості, отримують групу черговості за замовчанням із черговістю, наступною за висотою після черговості тернарного умовного оператора. 
 
-The following example defines a new custom infix operator called +-, which belongs to the precedence group AdditionPrecedence:
+У наступному прикладі визначено новий інфіксний оператор на ім'я `+-`, котрий належить до групи черговості `AdditionPrecedence`:
 
 ```swift
 infix operator +-: AdditionPrecedence
@@ -456,11 +454,11 @@ extension Vector2D {
 let firstVector = Vector2D(x: 1.0, y: 2.0)
 let secondVector = Vector2D(x: 3.0, y: 4.0)
 let plusMinusVector = firstVector +- secondVector
-// plusMinusVector is a Vector2D instance with values of (4.0, -2.0)
+// plusMinusVector є екземпляром Vector2D зі значеннями (4.0, -2.0)
 ```
 
-This operator adds together the x values of two vectors, and subtracts the y value of the second vector from the first. Because it is in essence an “additive” operator, it has been given the same precedence group as additive infix operators such as + and -. For information about the operators provided by the Swift standard library, including a complete list of the operator precedence groups and associativity settings, see [Operator Declarations](https://developer.apple.com/documentation/swift/swift_standard_library/operator_declarations). For more information about precedence groups and to see the syntax for defining your own operators and precedence groups, see [Operator Declaration](../2_language_reference/06_declarations.md#Operator-Declarations).
+Цей оператор додає значення `x`, та від значення `y` лівого вектора віднімає значення `y` правого. Оскільки даний оператор в певному сенсі є оператором “додавання”, йому дається така ж група черговості, як і в інфіксних операторах додавання, таких як `+` та `-`. Детальніше зі списком операторів стандартної бібліотеки `Swift`, включно із повним списком груп черговості та налаштувань асоціативності, можна ознайомитись у секції [Оголошення операторів](../2_language_reference/06_declarations.md#Оголошення-операторів).
 
-> **Note**
+> **Примітка**
 >
-> You do not specify a precedence when defining a prefix or postfix operator. However, if you apply both a prefix and a postfix operator to the same operand, the postfix operator is applied first.
+> Для префіксних та постфіксних операторів черговість не вказується. Однак, якщо до одного й того ж операнду застосувати одночасно префіксний та постфіксний оператори, постфіксний оператор бути застосований першим. 
