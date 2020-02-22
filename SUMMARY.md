@@ -10,7 +10,7 @@
     * [Функції та Замикання](0_welcome_to_swift/swift_tour/functions_and_closures.md)
     * [Об'єкти та Класи](0_welcome_to_swift/swift_tour/обєкти-та-класи.md)
     * [Перечислення і Структури](0_welcome_to_swift/swift_tour/перечислення-і-структури.md)
-    * [Протоколи і Розширення](0_welcome_to_swift/swift_tour/протоколи-і-розширення.md)
+    * [Протоколи та Розширення](0_welcome_to_swift/swift_tour/протоколи-і-розширення.md)
     * [Обробка Помилок](0_welcome_to_swift/swift_tour/error_handling.md)
     * [Шаблони](0_welcome_to_swift/swift_tour/generics.md)
 * [Керівництво з мови](1_language_guide/language_guide.md)
