@@ -22,7 +22,7 @@
   * [Функції](1_language_guide/5_functions.md)
   * [Замикання](1_language_guide/6_closures.md)
   * [Перечислення](1_language_guide/7_enumerations.md)
-  * [Класи і структури](1_language_guide/8_classes_and_structures.md)
+  * [Класи та структури](1_language_guide/8_classes_and_structures.md)
   * [Властивості](1_language_guide/9_properties.md)
   * [Методи](1_language_guide/10_methods.md)
   * [Індекси](1_language_guide/11_subscripts.md)
