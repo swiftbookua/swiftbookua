@@ -35,7 +35,7 @@
   * [Вкладені типи](1_language_guide/18_nested_types.md)
   * [Розширення](1_language_guide/19_extensions.md)
   * [Протоколи](1_language_guide/20_protocols.md)
-  * [Шаблони](1_language_guide/21_generics.md)
+  * [Узагальнення](1_language_guide/21_generics.md)
   * [Непрозорі типи](1_language_guide/22_opaque_types.md)
   * [Автоматичний підрахунок посилань](1_language_guide/23_automatic_reference_counting.md)
   * [Безпека доступу до пам'яті](1_language_guide/24_memory_safety.md)
