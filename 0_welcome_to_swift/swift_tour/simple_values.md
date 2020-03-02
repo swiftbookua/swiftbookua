@@ -25,7 +25,7 @@ let explicitDouble: Double = 70
 Значення ніколи не конвертуються до іншого типу неявно. Якщо вам треба конвертувати значення до іншого типу, створіть екземпляр іншого типу явно.
 
 ```swift
- let label = "The width is "
+ let label = "Ширина дорівнює "
  let width = 94
  let widthLabel = label + String(width)
 ```
@@ -39,25 +39,34 @@ let explicitDouble: Double = 70
 ```swift
  let apples = 3
  let oranges = 5
- let appleSummary = "I have \(apples) apples."
- let fruitSummary = "I have \(apples + oranges) pieces of fruit."
+ let appleSummary = "У мене є \(apples) яблука."
+ let fruitSummary = "У мене є \(apples + oranges) фруктів."
 ```
 
 > **Експеримент**
 >
 > Використайте `\()` щоб включити розрахунок з плаваючою точкою в рядок, а також щоб включити чиєсь ім'я до привітання.
 
+Використовуючи три пари подвійних лапок (`"""`), можна оголошувати рядки, що містять декілька рядків тексту. Відступ на початку кожного рядка тексту видаляється, якщо він співпадає з відступом лапок, котрі закривають оголошення. Наприклад:
+
+```swift
+let quotation = """
+Я сказав "У мене є \(apples) яблука."
+А потім я сказав "У мене є \(apples + oranges) фруктів."
+"""
+```
+
 Створюйте звичайні та асоціативні масиви за допомогою прямокутних дужок \(`[]`\), і отримуйте їх елементи через написання індексу чи ключу в прямокутних дужках. Після останнього елементу дозволяється кома.
 
 ```swift
- var shoppingList = ["catfish", "water", "tulips", "blue paint"]
- shoppingList[1] = "bottle of water"
-
+ var shoppingList = ["курка", "вода", "тюльпани", "синя фарба"]
+ shoppingList[1] = "пляшка води"
+ 
  var occupations = [
- "Malcolm": "Captain",
- "Kaylee": "Mechanic",
+     "Максим": "Майор",
+     "Гануся": "Механік",
  ]
- occupations["Jayne"] = "Public Relations"
+ occupations["Агнєшка"] = "Офіцер розвідки"
 ```
 
 Щоб створити порожній масив, використовуйте синтаксис ініціалізаторів.
