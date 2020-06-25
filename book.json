@@ -1,1 +1,8 @@
-{}
+{
+    "plugins": ["verifications"],
+    "pluginsConfig": {
+        "verifications": {
+            "googleSearchConsoleContent": "Kav9-G4xH-NAU3aTmt9Wwa7mJQuvHe60BcsA2TBGbk8"
+        }
+    }
+}
