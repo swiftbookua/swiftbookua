@@ -1,2 +1,4 @@
-![](/cover.jpg)
+# Мова програмування Swift
+
+![](.gitbook/assets/cover.jpg)
 
