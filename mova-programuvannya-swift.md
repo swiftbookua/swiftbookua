@@ -1,4 +1,12 @@
+---
+title: Мова програмування Swift
+layout: default
+nav_order: 1
+has_children: false
+has_toc: false
+---
+
 # Мова програмування Swift
 
-![](.gitbook/assets/cover.jpg)
+![cover](../assets/cover.jpg)
 
