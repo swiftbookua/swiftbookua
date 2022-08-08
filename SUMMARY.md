@@ -14,7 +14,7 @@
     * [Протоколи та Розширення](welcome_to_swift/swift_tour/protokoli-i-rozshirennya.md)
     * [Обробка Помилок](welcome_to_swift/swift_tour/error_handling.md)
     * [Шаблони](welcome_to_swift/swift_tour/generics.md)
-* [Керівництво з мови](language_guide/README.md)
+* [Посібник з мови](language_guide/README.md)
   * [Основи](language_guide/0_the_basics.md)
   * [Базові оператори](language_guide/1_base_operators.md)
   * [Рядки та cимволи](language_guide/2_strings_and_characters.md)
