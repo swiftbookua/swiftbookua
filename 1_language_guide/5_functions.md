@@ -1,7 +1,7 @@
 ---
 title: Функції
 layout: default
-parent: Керівництво з мови
+parent: Посібник з мови
 nav_order: 6
 has_children: false
 has_toc: false

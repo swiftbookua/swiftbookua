@@ -1,7 +1,7 @@
 ---
 title: Розширені оператори
 layout: default
-parent: Керівництво з мови
+parent: Посібник з мови
 nav_order: 27
 has_children: false
 has_toc: false

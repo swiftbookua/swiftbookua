@@ -1,9 +1,9 @@
 ---
-title: Керівництво з мови
+title: Посібник з мови
 layout: default
 nav_order: 3
 has_children: true
 has_toc: true
 ---
 
-# Керівництво з мови
+# Посібник з мови

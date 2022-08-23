@@ -1,7 +1,7 @@
 ---
 title: Ланцюжки опціоналів
 layout: default
-parent: Керівництво з мови
+parent: Посібник з мови
 nav_order: 16
 has_children: false
 has_toc: false

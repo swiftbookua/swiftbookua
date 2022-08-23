@@ -1,7 +1,7 @@
 ---
 title: Базові оператори
 layout: default
-parent: Керівництво з мови
+parent: Посібник з мови
 nav_order: 2
 has_children: false
 has_toc: true
