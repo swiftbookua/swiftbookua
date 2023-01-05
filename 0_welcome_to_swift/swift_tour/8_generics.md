@@ -52,7 +52,7 @@ func anyCommonElements<T: Sequence, U: Sequence>(_ lhs: T, _ rhs: U) -> Bool
 anyCommonElements([1, 2, 3], [3])
 ```
 
-> **Ексеримент**
+> **Експеримент**
 >
 > Змініть функцію `anyCommonElements(_:_:)` так, щоб вона повертала масив спільних для обох колекцій елементів.
 

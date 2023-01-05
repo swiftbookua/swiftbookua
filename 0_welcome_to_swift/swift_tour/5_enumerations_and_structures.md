@@ -37,7 +37,7 @@ let ace = Rank.ace
 let aceRawValue = ace.rawValue
 ```
 
-> **Ексеримент**
+> **Експеримент**
 >
 > Створіть функцію, що порівнює два елементи `Rank` порівнюючи їх сирі значення \(`rawValue`\).
 
@@ -74,7 +74,7 @@ let hearts = Suit.hearts
 let heartsDescription = hearts.simpleDescription()
 ```
 
-> **Ексеримент**
+> **Експеримент**
 >
 > Додайте метод `color()` до `Suit`, котрий поверне “чорний” для піки та трефи, і "червоний" для бубни і чирви.
 
@@ -99,7 +99,7 @@ case let .failure(message):
 }
 ```
 
-> **Ексеримент**
+> **Експеримент**
 >
 > Додайте третій випадок до перечислення `ServerResponse` і до перемикача `switch`
 
@@ -119,7 +119,7 @@ let threeOfSpades = Card(rank: .three, suit: .spades)
 let threeOfSpadesDescription = threeOfSpades.simpleDescription()
 ```
 
-> **Ексеримент**
+> **Експеримент**
 >
 > Додайте до `Card` метод, що створює повну колоду карт, тобто по одній карті кожної масті і рангу.
 

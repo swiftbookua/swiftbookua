@@ -44,7 +44,7 @@ b.adjust()
 let bDescription = b.simpleDescription
 ```
 
-> **Ексеримент**
+> **Експеримент**
 >
 > Створіть перечислення, що реалізовує цей протокол.
 
@@ -64,7 +64,7 @@ extension Int: ExampleProtocol {
 print(7.simpleDescription)
 ```
 
-> **Ексеримент**
+> **Експеримент**
 >
 > Створіть розширення типу `Double` що додає властвість `absoluteValue` - математичний модуль числа.
 
