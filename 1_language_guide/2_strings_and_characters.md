@@ -35,9 +35,98 @@ let someString = "Some string literal value"
 
 Слід помітити, що Swift визначає тип константи `someString` як `String`, бо вона ініціалізується за допомогою рядкового літерала.
 
-> **Примітка**
->
-> Щоб дізнатися більше про використання спеціальних символів в рядкових літералах, дивіться підрозділ [Спеціальні символи в рядкових літералах]({% link _book/1_language_guide/2_strings_and_characters.md %}#спеціальні-символи-в-рядкових-літералах).
+### Багаторядкові літерали
+
+Якщо вам оголосити текстову константу або змінну, що охоплює декілька рядків, слід використовувати багаторядкові літерали: це послідовність символів, обмежена трійками подвійних лапок:
+
+```swift
+let quotation = """
+The White Rabbit put on his spectacles.  "Where shall I begin,
+please your Majesty?" he asked.
+
+"Begin at the beginning," the King said gravely, "and go on
+till you come to the end; then stop."
+"""
+```
+
+Багаторядковий літерал містить у собі кожен рядок тексту між лапками, що його відкривають, і лапками, що його закривають. Текст літералу починається з першого рядку після лапок, що його відкривають (`"""`), та закінчується на рядку, що передує лапкам, що його закривають. Це означає, що текст літералу не починається і не закінчується символом переносу рядка:
+
+```swift
+let singleLineString = "Ці рядки однакові."
+let multilineString = """
+Ці рядки однакові.
+"""
+```
+
+Якщо ваш код містить символ переносу рядка всередині багаторядкового літералу, цей символ переносу рядка буде також міститись у текстовому значенні літерала. Якщо ви хочете використовувати символи переносу рядка для того, аби легше читати ваш код, але не хочете, щоб ці символи переносу рядка були частиною текстового значення літерала, слід писати бекслеш (`\`) наприкінці кожного з таких рядків:
+
+```swift
+let softWrappedQuotation = """
+The White Rabbit put on his spectacles.  "Where shall I begin, \
+please your Majesty?" he asked.
+
+"Begin at the beginning," the King said gravely, "and go on \
+till you come to the end; then stop."
+"""
+```
+
+Щоб текст багаторядкового літералу починався або закінчувався символом переносу рядка, слід відповідно розпочати або закінчити літерал порожнім рядком. Наприклад:
+
+```swift
+let lineBreaks = """
+
+This string starts with a line break.
+It also ends with a line break.
+
+"""
+```
+
+Багаторядковий літерал може містити відступи, щоб відповідати коду довкола. Кількість пробілів перед трійкою лапок, що закриває літерал (`"""`), вказує компілятору Swift, скільки пробілів ігнорувати перед кожним з решти рядків літералу. Однак, якщо вказати кілька додаткових пробілів на початку якогось рядка, на додачу до кількості пробілів перед лапками, що закривають літерал, то ці додаткові пробіли будуть включені.
+
+![](../../assets/multilineStringWhitespace_2x.png)
+
+У прикладі вище, незважаючи на те, що весь багаторядковий літерал оголошено з відступом, перший і останній рядок його текстового значення не починається з жодних пробілів. Середній же рядок містить більше пробілів, аніж перед лапками, що закривають літерал, тому він починається з відступу довжиною у чорити пробіли. 
+
+### Спеціальні символи у рядкових літералах
+
+String literals can include the following special characters:
+
+The escaped special characters \0 (null character), \\ (backslash), \t (horizontal tab), \n (line feed), \r (carriage return), \" (double quotation mark) and \' (single quotation mark)
+
+An arbitrary Unicode scalar value, written as \u{n}, where n is a 1–8 digit hexadecimal number (Unicode is discussed in Unicode below)
+
+The code below shows four examples of these special characters. The wiseWords constant contains two escaped double quotation marks. The dollarSign, blackHeart, and sparklingHeart constants demonstrate the Unicode scalar format:
+
+```swift
+let wiseWords = "\"Imagination is more important than knowledge\" - Einstein"
+// "Imagination is more important than knowledge" - Einstein
+let dollarSign = "\u{24}"        // $,  Unicode scalar U+0024
+let blackHeart = "\u{2665}"      // ♥,  Unicode scalar U+2665
+let sparklingHeart = "\u{1F496}" // 💖, Unicode scalar U+1F496
+```
+
+Because multiline string literals use three double quotation marks instead of just one, you can include a double quotation mark (") inside of a multiline string literal without escaping it. To include the text `"""` in a multiline string, escape at least one of the quotation marks. For example:
+
+```swift
+let threeDoubleQuotationMarks = """
+Escaping the first quotation mark \"""
+Escaping all three quotation marks \"\"\"
+"""
+```
+
+### Розширені розділювачі рядків
+
+You can place a string literal within extended delimiters to include special characters in a string without invoking their effect. You place your string within quotation marks (") and surround that with number signs (#). For example, printing the string literal #"Line 1\nLine 2"# prints the line feed escape sequence (\n) rather than printing the string across two lines.
+
+If you need the special effects of a character in a string literal, match the number of number signs within the string following the escape character (\). For example, if your string is #"Line 1\nLine 2"# and you want to break the line, you can use #"Line 1\#nLine 2"# instead. Similarly, ###"Line1\###nLine2"### also breaks the line.
+
+String literals created using extended delimiters can also be multiline string literals. You can use extended delimiters to include the text """ in a multiline string, overriding the default behavior that ends the literal. For example:
+
+```swift
+let threeMoreDoubleQuotationMarks = #"""
+Here are three more double quotes: """
+"""#
+```
 
 ## Ініціалізація порожнього рядка
 

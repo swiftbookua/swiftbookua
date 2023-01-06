@@ -196,10 +196,8 @@
 
 - Оновлено до Swift 4.0.
 - Додано інформацію про виключний доступ до пам'яті [Безпека доступу до пам'яті](language_guide/24_memory_safety.md).
-- Added the <doc:Generics#Associated-Types-with-a-Generic-Where-Clause> section,
-  now that you can use generic `where` clauses
-  to constrain associated types.
-- Added information about multiline string literals
+- Додано розділ [Associated Types with a Generic Where Clause](https://docs.swift.org/swift-book/LanguageGuide/Generics.html#ID557) [Асоційовані типи з інструкцією узагальнення Where]({% link _book/1_language_guide/21_generics.md %}#Асоційовані-типи-з-інструкцією-узагальнення-Where). Тепер можна використовувати інструкцію узагальнення `where` для накладення обмежень на асоційовані типи.
+- Додано інформацію про багаторядкові літерали Added information about multiline string literals
   to the <doc:StringsAndCharacters#String-Literals> section
   of the <doc:StringsAndCharacters> chapter,
   and to the <doc:LexicalStructure#String-Literals> section
