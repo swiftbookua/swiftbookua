@@ -134,9 +134,7 @@
 **2019-03-25**
 
 - Updated for Swift 5.0.
-- Added the <doc:StringsAndCharacters#Extended-String-Delimiters> section
-  and updated the <doc:LexicalStructure#String-Literals> section
-  with information about extended string delimiters.
+- Додано розділ [Розширені розділювачі рядків]({% link _book/1_language_guide/2_strings_and_characters.md %}#Розширені-розділювачі-рядків) та додано інформацію про розширені розділювачі рядків у розділ [Рядкові літерали]({% link _book/1_language_guide/2_strings_and_characters.md %}#рядкові-літерали).
 - Added the <doc:Attributes#dynamicCallable> section
   with information about dynamically calling instances as functions
   using the `dynamicCallable` attribute.
@@ -197,9 +195,7 @@
 - Оновлено до Swift 4.0.
 - Додано інформацію про виключний доступ до пам'яті [Безпека доступу до пам'яті](language_guide/24_memory_safety.md).
 - Додано розділ [Associated Types with a Generic Where Clause](https://docs.swift.org/swift-book/LanguageGuide/Generics.html#ID557) [Асоційовані типи з інструкцією узагальнення Where]({% link _book/1_language_guide/21_generics.md %}#Асоційовані-типи-з-інструкцією-узагальнення-Where). Тепер можна використовувати інструкцію узагальнення `where` для накладення обмежень на асоційовані типи.
-- Додано інформацію про багаторядкові літерали Added information about multiline string literals
-  to the <doc:StringsAndCharacters#String-Literals> section
-  of the <doc:StringsAndCharacters> chapter,
+- Додано інформацію про багаторядкові літерали до розділу [Рядкові літерали]({% link _book/1_language_guide/2_strings_and_characters.md %}#рядкові-літерали) глави [Рядки та символи]({% link _book/1_language_guide/2_strings_and_characters.md %}) 
   and to the <doc:LexicalStructure#String-Literals> section
   of the <doc:LexicalStructure> chapter.
 - Updated the discussion of the `objc` attribute
