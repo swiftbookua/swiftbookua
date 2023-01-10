@@ -171,8 +171,7 @@
 **2018-03-29**
 
 - Updated for Swift 4.1.
-- Added information about synthesized implementations of equivalence operators
-  to the <doc:AdvancedOperators#Equivalence-Operators> section.
+- Додано інформацію про синтезовані реалізації операторів рівності до розділу [Оператори рівності]({% link _book/1_language_guide/26_advanced_operators.md %}#Оператори-рівності).
 - Added information about conditional protocol conformance
   to the <doc:Declarations#Extension-Declaration> section
   of the <doc:Declarations> chapter,
@@ -201,8 +200,7 @@
 - Updated the discussion of the `objc` attribute
   in <doc:Attributes#Declaration-Attributes>,
   now that this attribute is inferred in fewer places.
-- Added the <doc:Generics#Generic-Subscripts> section,
-  now that subscripts can be generic.
+- Додано розділ [Узагальнені індекси]({% link _book/1_language_guide/21_generics.md %}#Узагальнені-індекси), оскільки індекси тепер можуть бути узагальненими.
 - Updated the discussion
   in the <doc:Protocols#Protocol-Composition> section
   of the <doc:Protocols> chapter,
