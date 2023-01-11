@@ -150,8 +150,7 @@
 **2018-09-17**
 
 - Updated for Swift 4.2.
-- Added information about accessing all of an enumeration's cases
-  to the <doc:Enumerations#Iterating-over-Enumeration-Cases> section.
+- Додано інформацію про доступ до всіх елементів перечислення у розділ [Ітерування по елементах перечислення]({% link _book/1_language_guide/7_enumerations.md %}#Ітерування-по-елементах-перечислення).
 - Added information about `#error` and `#warning`
   to the <doc:Statements#Compile-Time-Diagnostic-Statement> section.
 - Added information about inlining
@@ -170,7 +169,7 @@
 
 **2018-03-29**
 
-- Updated for Swift 4.1.
+- Оновлено до Swift 4.1.
 - Додано інформацію про синтезовані реалізації операторів рівності до розділу [Оператори рівності]({% link _book/1_language_guide/26_advanced_operators.md %}#Оператори-рівності).
 - Added information about conditional protocol conformance
   to the <doc:Declarations#Extension-Declaration> section
