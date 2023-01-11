@@ -176,8 +176,7 @@
   to the <doc:Declarations#Extension-Declaration> section
   of the <doc:Declarations> chapter,
   та до розділу [Умовне підпорядкування до протоколу]({% link _book/1_language_guide/20_protocols.md %}#Умовне підпорядкування до протоколу) глави [Протоколи]({% link _book/1_language_guide/20_protocols.md %}).
-- Added information about recursive protocol constraints
-  to the <doc:Generics#Using-a-Protocol-in-Its-Associated-Type's-Constraints> section.
+- Додано інформацію про рекурсивні обмеження протоколів до розділу [Використання протоколів з обмеженнями асоційованих типів]({% link _book/1_language_guide/21_generics.md %}#Використання-протоколів-з-обмеженнями-асоційованих-типів).
 - Added information about
   the `canImport()` and `targetEnvironment()` platform conditions
   to <doc:Statements#Conditional-Compilation-Block>.
