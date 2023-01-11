@@ -175,8 +175,7 @@
 - Added information about conditional protocol conformance
   to the <doc:Declarations#Extension-Declaration> section
   of the <doc:Declarations> chapter,
-  and to the <doc:Protocols#Conditionally-Conforming-to-a-Protocol> section
-  of the <doc:Protocols> chapter.
+  та до розділу [Умовне підпорядкування до протоколу]({% link _book/1_language_guide/20_protocols.md %}#Умовне підпорядкування до протоколу) глави [Протоколи]({% link _book/1_language_guide/20_protocols.md %}).
 - Added information about recursive protocol constraints
   to the <doc:Generics#Using-a-Protocol-in-Its-Associated-Type's-Constraints> section.
 - Added information about
