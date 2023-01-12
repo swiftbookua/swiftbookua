@@ -150,8 +150,7 @@
 **2018-09-17**
 
 - Updated for Swift 4.2.
-- Added information about accessing all of an enumeration's cases
-  to the <doc:Enumerations#Iterating-over-Enumeration-Cases> section.
+- Додано інформацію про доступ до всіх елементів перечислення у розділ [Ітерування по елементах перечислення]({% link _book/1_language_guide/7_enumerations.md %}#Ітерування-по-елементах-перечислення).
 - Added information about `#error` and `#warning`
   to the <doc:Statements#Compile-Time-Diagnostic-Statement> section.
 - Added information about inlining
@@ -170,16 +169,13 @@
 
 **2018-03-29**
 
-- Updated for Swift 4.1.
-- Added information about synthesized implementations of equivalence operators
-  to the <doc:AdvancedOperators#Equivalence-Operators> section.
+- Оновлено до Swift 4.1.
+- Додано інформацію про синтезовані реалізації операторів рівності до розділу [Оператори рівності]({% link _book/1_language_guide/26_advanced_operators.md %}#Оператори-рівності).
 - Added information about conditional protocol conformance
   to the <doc:Declarations#Extension-Declaration> section
   of the <doc:Declarations> chapter,
-  and to the <doc:Protocols#Conditionally-Conforming-to-a-Protocol> section
-  of the <doc:Protocols> chapter.
-- Added information about recursive protocol constraints
-  to the <doc:Generics#Using-a-Protocol-in-Its-Associated-Type's-Constraints> section.
+  та до розділу [Умовне підпорядкування до протоколу]({% link _book/1_language_guide/20_protocols.md %}#Умовне підпорядкування до протоколу) глави [Протоколи]({% link _book/1_language_guide/20_protocols.md %}).
+- Додано інформацію про рекурсивні обмеження протоколів до розділу [Використання протоколів з обмеженнями асоційованих типів]({% link _book/1_language_guide/21_generics.md %}#Використання-протоколів-з-обмеженнями-асоційованих-типів).
 - Added information about
   the `canImport()` and `targetEnvironment()` platform conditions
   to <doc:Statements#Conditional-Compilation-Block>.
@@ -201,8 +197,7 @@
 - Updated the discussion of the `objc` attribute
   in <doc:Attributes#Declaration-Attributes>,
   now that this attribute is inferred in fewer places.
-- Added the <doc:Generics#Generic-Subscripts> section,
-  now that subscripts can be generic.
+- Додано розділ [Узагальнені індекси]({% link _book/1_language_guide/21_generics.md %}#Узагальнені-індекси), оскільки індекси тепер можуть бути узагальненими.
 - Updated the discussion
   in the <doc:Protocols#Protocol-Composition> section
   of the <doc:Protocols> chapter,
