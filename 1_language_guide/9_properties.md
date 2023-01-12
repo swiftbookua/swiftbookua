@@ -162,9 +162,9 @@ print("square.origin тепер знаходиться в точці (\(square.o
 ![](../../assets/computedProperties_2x.png)  
 ￼
 
-### Shorthand Setter Declaration
+### Скорочене оголошення сетера
 
-If a computed property’s setter does not define a name for the new value to be set, a default name of `newValue` is used. Here’s an alternative version of the `Rect` structure, which takes advantage of this shorthand notation:
+Якщо у сетері властивості, що обчислюється, не вказано назви нового значення, що присвоюється, використовується назва за замовчанням `newValue`. Ось приклад альтернативної версії структури `Rect`, котра користується перевагами цієї скороченої нотації:
 
 ```swift
 struct AlternativeRect {
