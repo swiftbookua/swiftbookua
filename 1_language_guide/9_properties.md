@@ -312,9 +312,9 @@ print(rectangle.height)
 // Надрукує "12"
 ```
 
-The `height` and `width` properties get their initial values from the definition of `TwelveOrLess`, which sets `TwelveOrLess.number` to zero. The setter in `TwelveOrLess` treats 10 as a valid value so storing the number 10 in `rectangle.height` proceeds as written. However, 24 is larger than `TwelveOrLess` allows, so trying to store 24 end up setting `rectangle.height` to 12 instead, the largest allowed value.
+Властивості `height` та `width` отримують свої початкові значення із визначення структури `TwelveOrLess`, котра присвоює властивості `TwelveOrLess.number` значення нуль. Сетер у `TwelveOrLess` вважає число `10` доречним значенням і тому збереження числа `10` у властивості  `rectangle.height` проходить, як описано вище. Однак число `24` є більшим, аніж дозволяє структура `TwelveOrLess`, тому спроба зберегти число `24` завершується натомість присвоєнням властивості `rectangle.height` значення 12, тобто найбільшого дозволеного значення.
 
-When you apply a wrapper to a property, the compiler synthesizes code that provides storage for the wrapper and code that provides access to the property through the wrapper. (The property wrapper is responsible for storing the wrapped value, so there's no synthesized code for that.) You could write code that uses the behavior of a property wrapper, without taking advantage of the special attribute syntax. For example, here's a version of `SmallRectangle` from the previous code listing that wraps its properties in the `TwelveOrLess` structure explicitly, instead of writing `@TwelveOrLess` as an attribute:
+При застосуванні обгортки до властивості, компілятор синтезує код, що відповідає за зберігання обгортки, та код, що надає доступ до властивості через обгортку. (Обгортка властивості відповідає за зберігання значення, що обгортається, тому код для зберігання цього значення не синтезується). Ви можете писати код, який використовує поведінку обгортки властивості, не користуючись спеціальним синтаксисом з атрибутом. Наприклад, ось версія структури `SmallRectangle` із прикладу вище, котра обгортає свої властивості у структуру `TwelveOrLess` явно, без використання атрибуту `@TwelveOrLess`:
 
 ```swift
 struct SmallRectangle {
@@ -331,7 +331,7 @@ struct SmallRectangle {
 }
 ```
 
-The `_height` and `_width` properties store an instance of the property wrapper, `TwelveOrLess`. The getter and setter for `height` and `width` wrap access to the `wrappedValue` property.
+Властивості `_height` та `_width` зберігають екземпляр обгортки властивості, `TwelveOrLess`. Гетери та сетери властивостей `height` та `width` обгортають доступ до властивості `wrappedValue`.
 
 ### Setting Initial Values for Wrapped Properties
 
