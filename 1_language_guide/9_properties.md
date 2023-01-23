@@ -184,6 +184,29 @@ struct AlternativeRect {
 }
 ```
 
+### Shorthand Getter Declaration
+
+If the entire body of a getter is a single expression, the getter implicitly returns that expression. Here's an another version of the `Rect` structure that takes advantage of this shorthand notation and the shorthand notation for setters:
+
+```swift
+struct CompactRect {
+    var origin = Point()
+    var size = Size()
+    var center: Point {
+        get {
+            Point(x: origin.x + (size.width / 2),
+                  y: origin.y + (size.height / 2))
+        }
+        set {
+            origin.x = newValue.x - (size.width / 2)
+            origin.y = newValue.y - (size.height / 2)
+        }
+    }
+}
+```
+
+Omitting the `return` from a getter follows the same rules as omitting `return` from a function, as described in <doc:Functions#Functions-With-an-Implicit-Return>.
+
 ### Властивості тільки для читання
 
 Властивість, що має гетер, але не має сетера, називають _властивістю тільки для читання_. Тільки властивості, що обчислюються, можуть бути властивостями тільки для читання. Такі властивості завжди повертають значення, яке можна дістати шляхом використання синтаксису крапки, але їм не можна присвоїти інше значення.
