@@ -436,11 +436,11 @@ print(mixedRectangle.height)
 
 Екземпляр `SmallNumber`, що обгортає властивість `height`, створюється за допомогою виклику ініціалізатору `SmallNumber(wrappedValue: 1)`, котрий використовує максимальне значення за замовчанням – 12. Екземпляр, що обгортає властивість `width`, створюється за допомогою виклику ініціалізатору `SmallNumber(wrappedValue: 2, maximum: 9)`.
 
-### Projecting a Value From a Property Wrapper
+### Проєктування значення з обгортки властивості
 
-In addition to the wrapped value, a property wrapper can expose additional functionality by defining a *projected value* --- for example, a property wrapper that manages access to a database can expose a `flushDatabaseConnection()` method on its projected value. The name of the projected value is the same as the wrapped value, except it begins with a dollar sign (`$`). Because your code can't define properties that start with `$` the projected value never interferes with properties you define.
+Окрім обгорнутого значення, обгортка властивості може видавати додаткову функціональність шляхом визначання *проєктованого значення*. Наприклад, обгортка властивості, що керує доступом до бази даних, може видавати метод `flushDatabaseConnection()` на своєму проєктованому значенні (цей метод міг би записувати дані у базу). Ім'я проєктованого значення таке ж, як і у обгорнутого значення, але воно починаєтсья зі знаку долара (`$`). Оскільки ви не можете оголошувати властивостей, назва яких починається з `$`, проєктовані значення ніколи не перетинаються із вашими властивостями.
 
-In the `SmallNumber` example above, if you try to set the property to a number that's too large, the property wrapper adjusts the number before storing it. The code below adds a `projectedValue` property to the `SmallNumber` structure to keep track of whether the property wrapper adjusted the new value for the property before storing that new value.
+У прикладі зі `SmallNumber` вище, при спробі зберегти у властивості завелике число, обгортка властивості корегує це число перед збереженням. У коді нижче до структури `SmallNumber` додається властивість `projectedValue`, котра дозволяє відслідковувати, чи було число скореговане при його збереженні.
 
 ```swift
 @propertyWrapper
@@ -480,11 +480,11 @@ print(someStructure.$someNumber)
 // Надрукує "true"
 ```
 
-Writing `someStructure.$someNumber` accesses the wrapper's projected value. After storing a small number like four, the value of `someStructure.$someNumber` is `false`. However, the projected value is `true` after trying to store a number that's too large, like 55.
+Синтаксис `someStructure.$someNumber` дає доступ до проєктованого значення обгортки. Після збереження невеликого числа на кшталт чотирьох, значення `someStructure.$someNumber` дорівнює `false`. Однак проєктоване значення дорівнює `true` після спроби збереження завеликого числа, на кшталт 55.
 
-A property wrapper can return a value of any type as its projected value. In this example, the property wrapper exposes only one piece of information --- whether the number was adjusted --- so it exposes that Boolean value as its projected value. A wrapper that needs to expose more information can return an instance of some other data type, or it can return `self` to expose the instance of the wrapper as its projected value.
+Обгортка властивості може повертати значення будь-якого типу, так само як і проєктоване значення. У цьому прикладі, обгортка властивості надає лише одну частинку інформації – чи було число скорегованим – тому вона повертає Булеве значення як проєктоване значення. Обгортка, в якій потрібно видати більше інформації, може повертати будь-який екземпляр якось іншого типу даних, або вона може повернути `self`, щоб надати екземпляр самої обгортки властивості як проєктоване значення. 
 
-When you access a projected value from code that's part of the type, like a property getter or an instance method, you can omit `self.` before the property name, just like accessing other properties. The code in the following example refers to the projected value of the wrapper around `height` and `width` as `$height` and `$width`:
+При доступі до проєктованого значення із коду, що є частиною типу, на кшталт гетера властивості або методу екземпляру, можна пропусткати `self.` перед назвою властивості, так само як і при доступі до інших властивостей. Код у прикладі нижче звертається до проєктованих значень обгорткок властивостей `height` та  `width` як до `$height` та `$width`:
 
 ```swift
 enum Size {
@@ -509,7 +509,7 @@ struct SizedRectangle {
 }
 ```
 
-Because property wrapper syntax is just syntactic sugar for a property with a getter and a setter, accessing `height` and `width` behaves the same as accessing any other property. For example, the code in `resize(to:)` accesses `height` and `width` using their property wrapper. If you call `resize(to: .large)`, the switch case for `.large` sets the rectangle's height and width to 100. The wrapper prevents the value of those properties from being larger than 12, and it sets the projected value to `true`, to record the fact that it adjusted their values. At the end of `resize(to:)`, the return statement checks `$height` and `$width` to determine whether the property wrapper adjusted either `height` or `width`.
+Оскільки синтаксис обгорток властивостей є лише синтаксичним цукром для сетера та гетера властивості, доступ до властивостей  `height` та `width` поводиться так само, як і доступ до будь-якої іншої властивості. Наприклад, код у методі `resize(to:)` звертається до `height` та `width` через обгортку властивості. Якщо викликати метод `resize(to: .large)`, інструкція `switch`-`case` для `.large` присвоїть властивостям `height` та `width` значення `100`. Обгортка запобігає присвоєнню цим властивостям значень, більших від 12, і присвоює проєктованим значенням `true`, щоб занотувати факт, що вона скорегували значення властивостей. Наприкінці методу `resize(to:)`, інструкція `return` перевіряє значення `$height` та `$width`, аби визначити, чи були значення `height` та `width` скорегованими в обгортці.
 
 ## Глобальні та локальні змінні
 

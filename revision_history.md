@@ -106,8 +106,7 @@
 
 - До розділу [Непрозорі типи]({% link _book/1_language_guide/22_opaque_types.md %}#Непрозорі-типи) додано інформацію про функції, котрі замість явного зазначення типу, що повертається, визначають лише протокол, до якого підпорядковане значення, що повертається.
   
-- Added information about property wrappers
-  to the <doc:Properties#Property-Wrappers> section.
+- До розділу [Обгортки властивостей]({% link _book/1_language_guide/9_properties.md %}#Обгортки-властивостей) додано інформацію про обгортки властивостей.
   
 - Added information about enumerations and structures
   that are frozen for library evolution
