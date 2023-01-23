@@ -211,6 +211,42 @@ if let bounds = minMax(array: [8, -6, 2, 109, 3, 71]) {
 // Надрукує "min = -6; max = 109"
 ```
 
+### Functions With an Implicit Return
+
+If the entire body of the function is a single expression,
+the function implicitly returns that expression.
+For example,
+both functions below have the same behavior:
+
+```swift
+func greeting(for person: String) -> String {
+    "Hello, " + person + "!"
+}
+print(greeting(for: "Dave"))
+// Prints "Hello, Dave!"
+
+func anotherGreeting(for person: String) -> String {
+    return "Hello, " + person + "!"
+}
+print(anotherGreeting(for: "Dave"))
+// Prints "Hello, Dave!"
+```
+
+The entire definition of the `greeting(for:)` function
+is the greeting message that it returns,
+which means it can use this shorter form.
+The `anotherGreeting(for:)` function returns the same greeting message,
+using the `return` keyword like a longer function.
+Any function that you write as just one `return` line can omit the `return`.
+
+As you'll see in <doc:Properties#Shorthand-Getter-Declaration>,
+property getters can also use an implicit return.
+
+> **Note**: 
+> 
+> The code you write as an implicit return value needs to return some value.
+> For example, you can't use `print(13)` as an implicit return value. However, you can use a function that never returns  like `fatalError("Oh no!")`  as an implicit return value, because Swift knows that the implicit return doesn't happen.
+
 ## Мітки аргументів функцій та імена їх параметрів
 
 Кожен параметр функції має як _мітку аргументу_, так і _ім'я параметра_. Мітка аргументу використовується при виклику функції; кожен аргумент у виклику функції записується після мітки аргументу. Ім'я параметра використовується в реалізації функції. За замовчанням, імена параметрів використовуються як мітки аргументів.
