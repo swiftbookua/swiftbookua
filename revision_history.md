@@ -110,17 +110,10 @@
 - Додано інформацію про використання індексів у типах у розділ [Індекси типів]({% link _book/1_language_guide/11_subscripts.md %}#Індекси-типів).
 - Updated the <doc:Patterns#Enumeration-Case-Pattern> section,
   now that an enumeration case pattern can match an optional value.
-- Updated the <doc:Initialization#Memberwise-Initializers-for-Structure-Types> section,
-  now that memberwise initializers support
-  omitting parameters for properties that have a default value.
-- Added information about dynamic members
-  that are looked up by key path at runtime
-  to the <doc:Attributes#dynamicMemberLookup> section.
-- Added `macCatalyst` to the list of target environments
-  in <doc:Statements#Conditional-Compilation-Block>.
-- Updated the <doc:Types#Self-Type> section,
-  now that `Self` can be used to refer to the type
-  introduced by the current class, structure, or enumeration declaration.
+- Оновлено розділ [Почленні ініціалізатори для структур]({% link _book/1_language_guide/13_initialization.md %}#Почленні-ініціалізатори-для-структур): додано інформацію про опускання параметрів для властивостей зі значенням за замовчанням.
+- Added information about dynamic members that are looked up by key path at runtime to the <doc:Attributes#dynamicMemberLookup> section.
+- Added `macCatalyst` to the list of target environments in <doc:Statements#Conditional-Compilation-Block>.
+- Updated the <doc:Types#Self-Type> section, now that `Self` can be used to refer to the type introduced by the current class, structure, or enumeration declaration.
 
 **2019-03-25**
 
