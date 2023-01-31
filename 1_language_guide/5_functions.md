@@ -211,41 +211,31 @@ if let bounds = minMax(array: [8, -6, 2, 109, 3, 71]) {
 // Надрукує "min = -6; max = 109"
 ```
 
-### Functions With an Implicit Return
+### Функції з неявним поверненням
 
-If the entire body of the function is a single expression,
-the function implicitly returns that expression.
-For example,
-both functions below have the same behavior:
+Якщо все тіло функції складається з єдиного виразу, то функція неявно повертає цей вираз. Наприклад, обидві функції нижче поводяться однаково:
 
 ```swift
 func greeting(for person: String) -> String {
-    "Hello, " + person + "!"
+    "Вітаю, " + person + "!"
 }
-print(greeting(for: "Dave"))
-// Prints "Hello, Dave!"
+print(greeting(for: "Дмитро"))
+// Надрукує "Вітаю, Дмитро!"
 
 func anotherGreeting(for person: String) -> String {
-    return "Hello, " + person + "!"
+    return "Вітаю, " + person + "!"
 }
-print(anotherGreeting(for: "Dave"))
-// Prints "Hello, Dave!"
+print(anotherGreeting(for: "Дмитро"))
+// Надрукує "Вітаю, Дмитро!"
 ```
 
-The entire definition of the `greeting(for:)` function
-is the greeting message that it returns,
-which means it can use this shorter form.
-The `anotherGreeting(for:)` function returns the same greeting message,
-using the `return` keyword like a longer function.
-Any function that you write as just one `return` line can omit the `return`.
+Все визначення функції `greeting(for:)` є привітальним повідомленням, яке вона повертає, а тому ця функція може послуговуватись цією скороченою формою запису. Функція `anotherGreeting(for:)` повертає те ж саме привітальне повідомлення, використовуючи ключове слово `return` як довша функція. У кожній функції, котру можна записати як єдиний рядок з інструкцією `return`, можна пропускати ключове слово `return`.
 
-As you'll see in <doc:Properties#Shorthand-Getter-Declaration>,
-property getters can also use an implicit return.
+Як буде видно у розділі [Скорочене оголошення гетерів]({% link _book/1_language_guide/9_properties.md %}#Скорочене-оголошення-гетерів), у гетерах властивостей також можна послуговуватись неявним поверненням.
 
-> **Note**: 
-> 
-> The code you write as an implicit return value needs to return some value.
-> For example, you can't use `print(13)` as an implicit return value. However, you can use a function that never returns  like `fatalError("Oh no!")`  as an implicit return value, because Swift knows that the implicit return doesn't happen.
+> **Примітка**
+>
+> Код, котрий ви пишете у якості значення, котре повертається неявно, повинен повертати якесь значення. Наприклад, не можна вказати `print(13)` як значення, що повертається неявно. Однак, можна використовувати функції, з яких ніколи не відбувається повернення, на кшталт `fatalError("Oh no!")`, як значення, що повертається неявно: Swift розуміє, що неявне повернення не стається. 
 
 ## Мітки аргументів функцій та імена їх параметрів
 

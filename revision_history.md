@@ -103,36 +103,23 @@
 **2019-09-10**
 
 - Updated for Swift 5.1.
-
 - До розділу [Непрозорі типи]({% link _book/1_language_guide/22_opaque_types.md %}#Непрозорі-типи) додано інформацію про функції, котрі замість явного зазначення типу, що повертається, визначають лише протокол, до якого підпорядковане значення, що повертається.
-  
 - До розділу [Обгортки властивостей]({% link _book/1_language_guide/9_properties.md %}#Обгортки-властивостей) додано інформацію про обгортки властивостей.
-  
 - Added information about enumerations and structures
   that are frozen for library evolution
   to the <doc:Attributes#frozen> section.
-  
-- Added the <doc:Functions#Functions-With-an-Implicit-Return>
-  and <doc:Properties#Shorthand-Getter-Declaration> sections
-  with information about functions that omit `return`.
-  
-- Added information about using subscripts on types
-  to the <doc:Subscripts#Type-Subscripts> section.
-  
+- Додано розділи [Функції з неявним поверненням]({% link _book/1_language_guide/5_functions.md %}#Функції-з-неявним-поверненням) та [Скорочене оголошення гетерів]({% link _book/1_language_guide/9_properties.md %}#Скорочене-оголошення-гетерів) з інформацією про функції та гетери, в яких пропущено `return`.
+- Added information about using subscripts on types to the <doc:Subscripts#Type-Subscripts> section.
 - Updated the <doc:Patterns#Enumeration-Case-Pattern> section,
   now that an enumeration case pattern can match an optional value.
-  
 - Updated the <doc:Initialization#Memberwise-Initializers-for-Structure-Types> section,
   now that memberwise initializers support
   omitting parameters for properties that have a default value.
-  
 - Added information about dynamic members
   that are looked up by key path at runtime
   to the <doc:Attributes#dynamicMemberLookup> section.
-  
 - Added `macCatalyst` to the list of target environments
   in <doc:Statements#Conditional-Compilation-Block>.
-  
 - Updated the <doc:Types#Self-Type> section,
   now that `Self` can be used to refer to the type
   introduced by the current class, structure, or enumeration declaration.

@@ -184,9 +184,9 @@ struct AlternativeRect {
 }
 ```
 
-### Shorthand Getter Declaration
+### Скорочене оголошення гетерів
 
-If the entire body of a getter is a single expression, the getter implicitly returns that expression. Here's an another version of the `Rect` structure that takes advantage of this shorthand notation and the shorthand notation for setters:
+Якщо тіло гетера складається лише з одного виразу, то гетер неявно повертає цей вираз. Ось ще одна версія структури `Rect`, що користується перевагою цієї скороченої нотації та скороченої нотації для сетерів:
 
 ```swift
 struct CompactRect {
@@ -205,7 +205,7 @@ struct CompactRect {
 }
 ```
 
-Omitting the `return` from a getter follows the same rules as omitting `return` from a function, as described in <doc:Functions#Functions-With-an-Implicit-Return>.
+Опускання інструкції `return` у гетері працює за тими ж правилами, що й опускання інструкції `return` у функції, як описано у розділі [Функції з неявним поверненням]({% link _book/1_language_guide/5_functions.md %}#Функції-з-неявним-поверненням).
 
 ### Властивості тільки для читання
 
