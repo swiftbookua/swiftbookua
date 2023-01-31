@@ -105,11 +105,9 @@
 - Updated for Swift 5.1.
 - До розділу [Непрозорі типи]({% link _book/1_language_guide/22_opaque_types.md %}#Непрозорі-типи) додано інформацію про функції, котрі замість явного зазначення типу, що повертається, визначають лише протокол, до якого підпорядковане значення, що повертається.
 - До розділу [Обгортки властивостей]({% link _book/1_language_guide/9_properties.md %}#Обгортки-властивостей) додано інформацію про обгортки властивостей.
-- Added information about enumerations and structures
-  that are frozen for library evolution
-  to the <doc:Attributes#frozen> section.
+- Added information about enumerations and structures that are frozen for library evolution to the <doc:Attributes#frozen> section.
 - Додано розділи [Функції з неявним поверненням]({% link _book/1_language_guide/5_functions.md %}#Функції-з-неявним-поверненням) та [Скорочене оголошення гетерів]({% link _book/1_language_guide/9_properties.md %}#Скорочене-оголошення-гетерів) з інформацією про функції та гетери, в яких пропущено `return`.
-- Added information about using subscripts on types to the <doc:Subscripts#Type-Subscripts> section.
+- Додано інформацію про використання індексів у типах у розділ [Індекси типів]({% link _book/1_language_guide/11_subscripts.md %}#Індекси-типів).
 - Updated the <doc:Patterns#Enumeration-Case-Pattern> section,
   now that an enumeration case pattern can match an optional value.
 - Updated the <doc:Initialization#Memberwise-Initializers-for-Structure-Types> section,
