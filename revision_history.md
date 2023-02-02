@@ -92,8 +92,7 @@
 - Added the <doc:Declarations#Methods-with-Special-Names> section
   with information about syntactic sugar the lets instances of
   classes, structures, and enumerations be used with function call syntax.
-- Updated the <doc:Subscripts#Subscript-Options> section,
-  now that subscripts support parameters with default values.
+- Оновлено розділ [Опції індексів]({% link _book/1_language_guide/11_subscripts.md %}#Опції-індексів): тепер індекси підтримують параметри зі значеннями за замовчанням.
 - Updated the <doc:Types#Self-Type> section,
   now that the `Self` can be used in more contexts.
 - Updated the <doc:TheBasics#Implicitly-Unwrapped-Optionals> section
