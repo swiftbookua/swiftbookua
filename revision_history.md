@@ -93,11 +93,8 @@
   with information about syntactic sugar the lets instances of
   classes, structures, and enumerations be used with function call syntax.
 - Оновлено розділ [Опції індексів]({% link _book/1_language_guide/11_subscripts.md %}#Опції-індексів): тепер індекси підтримують параметри зі значеннями за замовчанням.
-- Updated the <doc:Types#Self-Type> section,
-  now that the `Self` can be used in more contexts.
-- Updated the <doc:TheBasics#Implicitly-Unwrapped-Optionals> section
-  to make it clearer that an implicitly unwrapped optional value
-  can be used as either an optional or non-optional value.
+- Updated the <doc:Types#Self-Type> section, now that the `Self` can be used in more contexts.
+- Оновлено розділ [Опціонали, що розгортаються неявно]({% link _book/1_language_guide/0_the_basics.md %}#Опціонали-що-розгортаються-неявно), щоб зрозуміліше пояснити, що опціонали, що розгортаються неявно, можуть використовуватися або як опціональні, або як неопціональні значення. 
 
 **2019-09-10**
 
