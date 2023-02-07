@@ -53,10 +53,7 @@
 **2020-09-16**
 
 - Updated for Swift 5.3.
-- Added information about multiple trailing closures
-  to the <doc:Closures#Trailing-Closures> section,
-  and added information about how trailing closures are matched to parameters
-  to the <doc:Expressions#Function-Call-Expression> section.
+- Додано інформацію про функції з декількома прикінцевими замиканнями до розділу [Синтаксис прикінцевих замикань]({% link _book/1_language_guide/6_closures.md %}#Синтаксис-прикінцевих-замикань), and added information about how trailing closures are matched to parameters to the <doc:Expressions#Function-Call-Expression> section.
 - Added information about synthesized implementations
   of `Comparable` for enumerations
   to the <doc:Protocols#Adopting-a-Protocol-Using-a-Synthesized-Implementation> section.
