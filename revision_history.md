@@ -56,8 +56,7 @@
 - Додано інформацію про функції з декількома прикінцевими замиканнями до розділу [Синтаксис прикінцевих замикань]({% link _book/1_language_guide/6_closures.md %}#Синтаксис-прикінцевих-замикань), and added information about how trailing closures are matched to parameters to the <doc:Expressions#Function-Call-Expression> section.
 - До розділу [Підпорядкування протоколу за допомогою синтезованої реалізації]({% link _book/1_language_guide/20_protocols.md %}#Підпорядкування-протоколу-за-допомогою-синтезованої-реалізації) додано інформацію про синтезовані реалізації протоколу `Comparable` для перечислень.
 - До розділу [Контекстуальна інструкція узагальнення Where]({% link _book/1_language_guide/21_generics.md %}#Контекстуальна-інструкція-узагальнення-Where) додано інформацію про нові місця, де можна застосувати інстукцію узагальнення `where`.
-- Added the <doc:AutomaticReferenceCounting#Unowned-Optional-References> section
-  with information about using unowned references with optional values.
+- Додано розділ [Безхазяйні опціональні посилання]({% link _book/1_language_guide/23_automatic_reference_counting.md %}#Безхазяйні-опціональні-посилання) з інформацією про використання безхазяйних посилань із опціональними значеннями.
 - Added information about the `@main` attribute
   to the <doc:Attributes#main> section.
 - Added `#filePath` to the <doc:Expressions#Literal-Expression> section,
