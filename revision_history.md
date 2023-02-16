@@ -61,8 +61,7 @@
   to the <doc:Attributes#main> section.
 - Added `#filePath` to the <doc:Expressions#Literal-Expression> section,
   and updated the discussion of `#file`.
-- Updated the <doc:Closures#Escaping-Closures> section,
-  now that closures can refer to `self` implicitly in more scenarios.
+- Оновлено розділ [Замикання-емігранти]({% link _book/1_language_guide/6_closures.md %}#Замикання-емігранти), оскільки тепер замикання можуть неявно посилатись на `self` у нових сценаріях.
 - Updated the <doc:ErrorHandling#Handling-Errors-Using-Do-Catch>
   and <doc:Statements#Do-Statement> sections,
   now that a `catch` clause can match against multiple errors.
