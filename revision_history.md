@@ -65,12 +65,9 @@
 - Оновлено розділи [Обробка помилок за допомогою інструкції Do-Catch]({% link _book/1_language_guide/16_error_handling.md %}#Обробка-помилок-за-допомогою-інструкції-Do-Catch) та [Do-Statement]({% link _book/2_language_reference/05_statements.md %}#Do-Statement), оскільки тепер пункт `catch` може співпадати із кількома помилками.
 - Added more information about `Any` and moved it into the new <doc:Types#Any-Type> section.
 - Оновлено розділ [Спостерігачі за властивостями]({% link _book/1_language_guide/9_properties.md %}#Спостерігачі-за-властивостями), оскільки тепер ліниві властивості можуть мати спостерігачі.
-- Updated the <doc:Declarations#Protocol-Declaration> section,
-  now that members of an enumeration can satisfy protocol requirements.
-- Updated the <doc:Declarations#Stored-Variable-Observers-and-Property-Observers> section
-  to describe when the getter is called before the observer.
-- Updated the <doc:MemorySafety> chapter
-  to mention atomic operations.
+- Updated the <doc:Declarations#Protocol-Declaration> section, now that members of an enumeration can satisfy protocol requirements.
+- Updated the <doc:Declarations#Stored-Variable-Observers-and-Property-Observers> section to describe when the getter is called before the observer.
+- Оновлено розділ [Безпека пам'яті]({% link _book/1_language_guide/24_memory_safety.md %}) згадками про атомарні операції.
 
 **2020-03-24**
 

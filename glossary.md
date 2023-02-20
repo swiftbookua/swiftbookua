@@ -95,4 +95,5 @@
 * Обгортки властивостей - Property Wrappers
 * Проєктоване значення - Projected Value (of Property Wrapper)
 * Concurrency - Паралелізм https://uk.wikipedia.org/wiki/Рівночасність_(інформатика)
+* Atomic operations - Атомарні операції [Вікіпедія](https://uk.wikipedia.org/wiki/Атомарна_операція)
 
