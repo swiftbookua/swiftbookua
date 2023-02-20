@@ -63,10 +63,8 @@
   and updated the discussion of `#file`.
 - Оновлено розділ [Замикання-емігранти]({% link _book/1_language_guide/6_closures.md %}#Замикання-емігранти), оскільки тепер замикання можуть неявно посилатись на `self` у нових сценаріях.
 - Оновлено розділи [Обробка помилок за допомогою інструкції Do-Catch]({% link _book/1_language_guide/16_error_handling.md %}#Обробка-помилок-за-допомогою-інструкції-Do-Catch) та [Do-Statement]({% link _book/2_language_reference/05_statements.md %}#Do-Statement), оскільки тепер пункт `catch` може співпадати із кількома помилками.
-- Added more information about `Any`
-  and moved it into the new <doc:Types#Any-Type> section.
-- Updated the <doc:Properties#Property-Observers> section,
-  now that lazy properties can have observers.
+- Added more information about `Any` and moved it into the new <doc:Types#Any-Type> section.
+- Оновлено розділ [Спостерігачі за властивостями]({% link _book/1_language_guide/9_properties.md %}#Спостерігачі-за-властивостями), оскільки тепер ліниві властивості можуть мати спостерігачі.
 - Updated the <doc:Declarations#Protocol-Declaration> section,
   now that members of an enumeration can satisfy protocol requirements.
 - Updated the <doc:Declarations#Stored-Variable-Observers-and-Property-Observers> section
