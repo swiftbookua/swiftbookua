@@ -451,3 +451,148 @@ let plusMinusVector = firstVector +- secondVector
 >
 > Для префіксних та постфіксних операторів черговість не вказується. Однак, якщо до одного й того ж операнду застосувати одночасно префіксний та постфіксний оператори, постфіксний оператор бути застосований першим.
 
+## Будівельники результатів
+
+*Будівельник результатів* – це тип, котрий ви оголошуєте для того, щоб додати синтаксис для створення вкладених даних, на кшталт списку чи дерева, у природній, декларативний спосіб. Код, що використовує будівельник результатів, може включати звичайний синтаксис мови, Swift, зокрема інструкції `if` та `for`, щоб обробляти умовні або повторювані частини даних. 
+
+У коді нижче визначено декілька типів для [малювання в один текстовий рядок](https://uk.wikipedia.org/wiki/ASCII-графіка), використовуючи зірочки та текст. 
+
+```swift
+protocol Drawable {
+    func draw() -> String
+}
+struct Line: Drawable {
+    var elements: [Drawable]
+    func draw() -> String {
+        return elements.map { $0.draw() }.joined(separator: "")
+    }
+}
+struct Text: Drawable {
+    var content: String
+    init(_ content: String) { self.content = content }
+    func draw() -> String { return content }
+}
+struct Space: Drawable {
+    func draw() -> String { return " " }
+}
+struct Stars: Drawable {
+    var length: Int
+    func draw() -> String { return String(repeating: "*", count: length) }
+}
+struct AllCaps: Drawable {
+    var content: Drawable
+    func draw() -> String { return content.draw().uppercased() }
+}
+```
+
+Протокол `Drawable` визначає вимогу здатності до малювання чогось, на кшталт рядка або фігури: підпорядкований тип повинен реалізовувати метод `draw()`. Структура `Line` репрезентує однорядковий малюнок і слугує найвищим контейнером для більшості малюнків. Щоб намалювати рядок, структура `Line` викликає метод `draw()`  на кожному з компонентів рядка, після чого конкатенує рядки-результати цих викликів у єдиний рядок. Структура `Text` обгортає рядок, щоб зробити його частиною малюнка. Структура `AllCaps` обгортає та модифікує інший малюнок, перетворюючи будь-який текст у ньому до верхнього регістру.
+
+Створити малюнок з цими типами, викликаючи їх ініціалізатори, можна:
+
+```swift
+let name: String? = "Ravi Patel"
+let manualDrawing = Line(elements: [
+     Stars(length: 3),
+     Text("Hello"),
+     Space(),
+     AllCaps(content: Text((name ?? "World") + "!")),
+     Stars(length: 2),
+])
+print(manualDrawing.draw())
+// Надрукує "***Hello RAVI PATEL!**"
+```
+
+Цей код працює, однак він трошки незручний. Глибоко вкладені круглі дужки після `AllCaps` важко читати. Логіка використовувати `"World"`, коли `name` дорівнює `nil`, повинна реалізовуватись у цьому ж рядку за допомогою оператора `??`, що було би складно з будь-чим складнішим. Якщо вам знадобиться включити інструкцію `switch` або `for`, щоб побудувати частину малюнка, то це буде неможливо втілити. Будівельники результатів дозволяють вам переписати код у подібних випадках так, щоб він виглядав як звичайний код мовою Swift.
+
+Щоб оголосити будівельник результатів, слід вказати атрибут `@resultBuilder`  під час оголошення типу. Наприклад, цей код визначає будівельник результатів на ім'я  `DrawingBuilder`, котрий дозволяє вам користуватись декларативним синтаксисом для опису малюнків:
+
+```swift
+@resultBuilder
+struct DrawingBuilder {
+    static func buildBlock(_ components: Drawable...) -> Drawable {
+        return Line(elements: components)
+    }
+    static func buildEither(first: Drawable) -> Drawable {
+        return first
+    }
+    static func buildEither(second: Drawable) -> Drawable {
+        return second
+    }
+}
+```
+
+Структура `DrawingBuilder` визначає три методи, що реалізовують частини синтаксису будівельника результатів. Метод `buildBlock(_:)` додає підтримку написання послідовності рядків у блоці коду. Він об'єднує компоненти у цьому блоці в екземпляр `Line`. Методи `buildEither(first:)` та `buildEither(second:)` додають підтримку інструкції `if`-`else`.
+
+Тепер можна застосувати атрибут `@DrawingBuilder` до параметра функції, котрий перетворить замикання, котре передається до функції, на значення, котре будівельник результатів створить з цього замикання. Наприклад:
+
+```swift
+func draw(@DrawingBuilder content: () -> Drawable) -> Drawable {
+    return content()
+}
+func caps(@DrawingBuilder content: () -> Drawable) -> Drawable {
+    return AllCaps(content: content())
+}
+
+func makeGreeting(for name: String? = nil) -> Drawable {
+    let greeting = draw {
+        Stars(length: 3)
+        Text("Hello")
+        Space()
+        caps {
+            if let name = name {
+                Text(name + "!")
+            } else {
+                Text("World!")
+            }
+        }
+        Stars(length: 2)
+    }
+    return greeting
+}
+let genericGreeting = makeGreeting()
+print(genericGreeting.draw())
+// Надрукує "***Hello WORLD!**"
+
+let personalGreeting = makeGreeting(for: "Ravi Patel")
+print(personalGreeting.draw())
+// Надрукує "***Hello RAVI PATEL!**"
+```
+
+Функція `makeGreeting(for:)` приймає параметр `name` та використовує його, щоб намалювати персоналізоване привітання. Функції `draw(_:)` та `caps(_:)` обидві приймають єдине замикання як аргумент, котрий позначено атрибутом `@DrawingBuilder`. Виклакаючи ці функції, ви послуговуєтесь спеціальним синтаксисом, котрий визначає `DrawingBuilder`. Swift перетворює це декларативне описання малюнка у послідовність викликів методів `DrawingBuilder`, щоб побудувати значення, що передається як аргумент функції. Наприклад, Swift перетворює виклик  `caps(_:)` у цьому прикладі на код схожий на наступний:
+
+```swift
+let capsDrawing = caps {
+    let partialDrawing: Drawable
+    if let name = name {
+        let text = Text(name + "!")
+        partialDrawing = DrawingBuilder.buildEither(first: text)
+    } else {
+        let text = Text("World!")
+        partialDrawing = DrawingBuilder.buildEither(second: text)
+    }
+    return partialDrawing
+}
+```
+
+Swift перетворює блок `if`-`else` на виклики методів  `buildEither(first:)` та `buildEither(second:)`. Хоч ви і не викликаєте ці методі у вашому власному коді, приклад результату трансформації вище дозволяє легше побачити, як Swift трансформує ваш код при використанні синтаксису `DrawingBuilder`.
+
+Для підтримки написання циклів `for`  у спеціальному синтаксисі малювання, слід додати метод  `buildArray(_:)`.
+
+```swift
+extension DrawingBuilder {
+    static func buildArray(_ components: [Drawable]) -> Drawable {
+        return Line(elements: components)
+    }
+}
+let manyStars = draw {
+    Text("Stars:")
+    for length in 1...3 {
+        Space()
+        Stars(length: length)
+    }
+}
+```
+
+У коді вище, цикл `for` створює масив малюнків, а метод `buildArray(_:)` перетворює цей масив у екземпляр `Line`.
+
+Повний список перетворень синтаксису будівельників у виклики методів типу будівельника можна знайти у розділі [resultBuilder]({% link _book/2_language_reference/07_attributes.md %}#resultBuilder).
