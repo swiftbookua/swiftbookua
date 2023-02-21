@@ -379,7 +379,7 @@ department.courses = [intro, intermediate, advanced]
 
 У коді вище створюється відділ `department` та три курси (`intro`, `intermediate` та `advanced`). Перші два курси `intro` та `intermediate` мають рекомендовані наступні курси, що зберігається в їхніх властивостях `nextCourse`, котра зберігає безхазяйне опціональне посилання на курс, який учню потрібно пройти після завершення даного. 
 
-![](/Users/slava.volodko/Projects/OpenSource/swift-book/Sources/TSPL/TSPL.docc/LanguageGuide/unownedOptionalReference)
+![](../../assets/unownedOptionalReference@2x.png)
 
 Безхазяйне опціональне посилання не тримає екземпляр класу, який воно обгортає, сильно, і таким чином воно не перешкоджає ARC деалокувати цей екземпляр. Воно поводиться точно так само, як безхазяйне посилання ARC, лише за винятком того, що безхазяйне опціональне посилання може мати значення `nil`.
 

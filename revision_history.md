@@ -38,17 +38,10 @@
 **2021-04-26**
 
 - Updated for Swift 5.4.
-- Added the <doc:AdvancedOperators#Result-Builders>
-  and <doc:Attributes#resultBuilder> sections
-  with information about result builders.
-- Added the <doc:Expressions#Implicit-Conversion-to-a-Pointer-Type> section
-  with information about how in-out parameters
-  can be implicitly converted to unsafe pointers in a function call.
-- Updated the <doc:Functions#Variadic-Parameters>
-  and <doc:Declarations#Function-Declaration> sections,
-  now that a function can have multiple variadic parameters.
-- Updated the <doc:Expressions#Implicit-Member-Expression> section,
-  now that implicit member expressions can be chained together.
+- Added the <doc:AdvancedOperators#Result-Builders> and <doc:Attributes#resultBuilder> sections with information about result builders.
+- Added the <doc:Expressions#Implicit-Conversion-to-a-Pointer-Type> section with information about how in-out parameters can be implicitly converted to unsafe pointers in a function call.
+- Updated the <doc:Functions#Variadic-Parameters> and <doc:Declarations#Function-Declaration> sections, now that a function can have multiple variadic parameters.
+- Updated the <doc:Expressions#Implicit-Member-Expression> section, now that implicit member expressions can be chained together.
 
 **2020-09-16**
 
