@@ -40,7 +40,7 @@
 - Оновлено до Swift 5.4.
 - Додано розділи [Будівельники результатів]({% link _book/1_language_guide/26_advanced_operators.md %}#Будівельники-результатів) та  <doc:Attributes#resultBuilder> з інформацією про будівельники результатів.
 - Added the <doc:Expressions#Implicit-Conversion-to-a-Pointer-Type> section with information about how in-out parameters can be implicitly converted to unsafe pointers in a function call.
-- Updated the <doc:Functions#Variadic-Parameters> and <doc:Declarations#Function-Declaration> sections, now that a function can have multiple variadic parameters.
+- Оновлено розділи [Варіативні функції]({% link _book/1_language_guide/5_functions.md %}#Варіативні-функції) та  <doc:Declarations#Function-Declaration> оскільки тепер функції можуть мати декілька варіативних параметрів.
 - Updated the <doc:Expressions#Implicit-Member-Expression> section, now that implicit member expressions can be chained together.
 
 **2020-09-16**
