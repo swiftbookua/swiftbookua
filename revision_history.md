@@ -38,51 +38,29 @@
 **2021-04-26**
 
 - Updated for Swift 5.4.
-- Added the <doc:AdvancedOperators#Result-Builders>
-  and <doc:Attributes#resultBuilder> sections
-  with information about result builders.
-- Added the <doc:Expressions#Implicit-Conversion-to-a-Pointer-Type> section
-  with information about how in-out parameters
-  can be implicitly converted to unsafe pointers in a function call.
-- Updated the <doc:Functions#Variadic-Parameters>
-  and <doc:Declarations#Function-Declaration> sections,
-  now that a function can have multiple variadic parameters.
-- Updated the <doc:Expressions#Implicit-Member-Expression> section,
-  now that implicit member expressions can be chained together.
+- Added the <doc:AdvancedOperators#Result-Builders> and <doc:Attributes#resultBuilder> sections with information about result builders.
+- Added the <doc:Expressions#Implicit-Conversion-to-a-Pointer-Type> section with information about how in-out parameters can be implicitly converted to unsafe pointers in a function call.
+- Updated the <doc:Functions#Variadic-Parameters> and <doc:Declarations#Function-Declaration> sections, now that a function can have multiple variadic parameters.
+- Updated the <doc:Expressions#Implicit-Member-Expression> section, now that implicit member expressions can be chained together.
 
 **2020-09-16**
 
 - Updated for Swift 5.3.
-- Added information about multiple trailing closures
-  to the <doc:Closures#Trailing-Closures> section,
-  and added information about how trailing closures are matched to parameters
-  to the <doc:Expressions#Function-Call-Expression> section.
-- Added information about synthesized implementations
-  of `Comparable` for enumerations
-  to the <doc:Protocols#Adopting-a-Protocol-Using-a-Synthesized-Implementation> section.
-- Added the <doc:Generics#Contextual-Where-Clauses> section
-  now that you can write a generic `where` clause in more places.
-- Added the <doc:AutomaticReferenceCounting#Unowned-Optional-References> section
-  with information about using unowned references with optional values.
+- Додано інформацію про функції з декількома прикінцевими замиканнями до розділу [Синтаксис прикінцевих замикань]({% link _book/1_language_guide/6_closures.md %}#Синтаксис-прикінцевих-замикань), and added information about how trailing closures are matched to parameters to the <doc:Expressions#Function-Call-Expression> section.
+- До розділу [Підпорядкування протоколу за допомогою синтезованої реалізації]({% link _book/1_language_guide/20_protocols.md %}#Підпорядкування-протоколу-за-допомогою-синтезованої-реалізації) додано інформацію про синтезовані реалізації протоколу `Comparable` для перечислень.
+- До розділу [Контекстуальна інструкція узагальнення Where]({% link _book/1_language_guide/21_generics.md %}#Контекстуальна-інструкція-узагальнення-Where) додано інформацію про нові місця, де можна застосувати інстукцію узагальнення `where`.
+- Додано розділ [Безхазяйні опціональні посилання]({% link _book/1_language_guide/23_automatic_reference_counting.md %}#Безхазяйні-опціональні-посилання) з інформацією про використання безхазяйних посилань із опціональними значеннями.
 - Added information about the `@main` attribute
   to the <doc:Attributes#main> section.
 - Added `#filePath` to the <doc:Expressions#Literal-Expression> section,
   and updated the discussion of `#file`.
-- Updated the <doc:Closures#Escaping-Closures> section,
-  now that closures can refer to `self` implicitly in more scenarios.
-- Updated the <doc:ErrorHandling#Handling-Errors-Using-Do-Catch>
-  and <doc:Statements#Do-Statement> sections,
-  now that a `catch` clause can match against multiple errors.
-- Added more information about `Any`
-  and moved it into the new <doc:Types#Any-Type> section.
-- Updated the <doc:Properties#Property-Observers> section,
-  now that lazy properties can have observers.
-- Updated the <doc:Declarations#Protocol-Declaration> section,
-  now that members of an enumeration can satisfy protocol requirements.
-- Updated the <doc:Declarations#Stored-Variable-Observers-and-Property-Observers> section
-  to describe when the getter is called before the observer.
-- Updated the <doc:MemorySafety> chapter
-  to mention atomic operations.
+- Оновлено розділ [Замикання-емігранти]({% link _book/1_language_guide/6_closures.md %}#Замикання-емігранти), оскільки тепер замикання можуть неявно посилатись на `self` у нових сценаріях.
+- Оновлено розділи [Обробка помилок за допомогою інструкції Do-Catch]({% link _book/1_language_guide/16_error_handling.md %}#Обробка-помилок-за-допомогою-інструкції-Do-Catch) та [Do-Statement]({% link _book/2_language_reference/05_statements.md %}#Do-Statement), оскільки тепер пункт `catch` може співпадати із кількома помилками.
+- Added more information about `Any` and moved it into the new <doc:Types#Any-Type> section.
+- Оновлено розділ [Спостерігачі за властивостями]({% link _book/1_language_guide/9_properties.md %}#Спостерігачі-за-властивостями), оскільки тепер ліниві властивості можуть мати спостерігачі.
+- Updated the <doc:Declarations#Protocol-Declaration> section, now that members of an enumeration can satisfy protocol requirements.
+- Updated the <doc:Declarations#Stored-Variable-Observers-and-Property-Observers> section to describe when the getter is called before the observer.
+- Оновлено розділ [Безпека пам'яті]({% link _book/1_language_guide/24_memory_safety.md %}) згадками про атомарні операції.
 
 **2020-03-24**
 
