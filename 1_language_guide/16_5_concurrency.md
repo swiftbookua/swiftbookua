@@ -53,43 +53,33 @@ let photo = await downloadPhoto(named: name)
 show(photo)
 ```
 
-Because the `listPhotos(inGallery:)` and `downloadPhoto(named:)` functions both need to make network requests, they could take a relatively long time to complete. Making them both asynchronous by writing `async` before the return arrow lets the rest of the app's code keep running while this code waits for the picture to be ready.
+Оскільки функції `listPhotos(inGallery:)` та `downloadPhoto(named:)` обидві мають зробити мережеві запити, вони можуть виконуватись відносно тривалий час. Перетворення їх обох на асинхронні функції шляхом додавання ключового слова `async` перед стрілочкою повернення дозволяє решті коду додатка виконуватись, в той час, як цей код чекає, поки зображення не стане готовим. 
 
-To understand the concurrent nature of the example above, here's one possible order of execution:
+Для кращого розуміння конкурентної природи прикладу вище, розглянемо один з можливих порядків виконання:
 
-- The code starts running from the first line and runs up to the first `await`. It calls the `listPhotos(inGallery:)` function and suspends execution while it waits for that function to return.
-- While this code's execution is suspended, some other concurrent code in the same program runs. For example, maybe a long-running background task continues updating a list of new photo galleries. That code also runs until the next suspension point, marked by `await`, or until it completes.
-- After `listPhotos(inGallery:)` returns, this code continues execution starting at that point. It assigns the value that was returned to `photoNames`.
-- The lines that define `sortedNames` and `name` are regular, synchronous code. Because nothing is marked `await` on these lines,
-  there aren't any possible suspension points.
-- The next `await` marks the call to the `downloadPhoto(named:)` function. This code pauses execution again until that function returns, giving other concurrent code an opportunity to run.
-- After `downloadPhoto(named:)` returns, its return value is assigned to `photo` and then passed as an argument when calling `show(_:)`.
+1. Код розпочинає виконуватись з першого рядка і виконується до першого `await`. Він викликає функцію `listPhotos(inGallery:)` і призупиняє своє виконання допоки він очікує на вихід цієї функції. 
+2. Допоки виконання цього коду призупинене, якийсь інший конкурентний код у цій же програмі виконується. Наприклад, можливо якесь довгоривале фонове завдання продовжує оновлювати список нових фотогалерей. Це завдання також виконується до наступної точки призупинення, позначеної за допомогою `await`, або до свого завершення. 
+3. Після виходу з методу `listPhotos(inGallery:)`, код у прикладі продовжує виконуватись, починаючи з цієї точки. Він присвоює значення, що було повернуто, константі `photoNames`.
+4. Рядки, що визначають константи `sortedNames` та `name`, є звичайним, синхронним кодом. Оскільки ніщо не позначено ключовим словом `await` у цих рядках, в них нема жодних можливих точок призупинення. 
+5. Наступний `await` позначає виклик функції `downloadPhoto(named:)`. Цей код знову призупиняє виконання, допоки не відбудеться повернення з цієї функції, що дає можливість виконуватись конкурентному коду.
+6. Після повернення з функції `downloadPhoto(named:)`, значення, котра вона повернула, присвоюється константі `photo` і після цього передається як аргумент для виклику функції `show(_:)`.
 
-The possible suspension points in your code marked with `await` indicate that the current piece of code might pause execution while waiting for the asynchronous function or method to return. This is also called *yielding the thread* because, behind the scenes, Swift suspends the execution of your code on the current thread and runs some other code on that thread instead. Because code with `await` needs to be able to suspend execution, only certain places in your program can call asynchronous functions or methods:
+Можливі точки призупинення у вашому коді, позначені за допомогою `await`, вказують на те, що поточна частина коду може призупинити виконання, допоки вона чекає на завершення виконання асинхронної функції чи методу. Це також називають *поступкою потоком*, оскільки за лаштунками, Swift призупиняє виконання вашого коду на даному потоці, та натомість виконує якийсь інший код на цьому ж потоці. Оскільки код з `await` повинен бути здатним призупинити виконання, лише певні місця у вашій програмі можуть викликати асинхронні функції чи методи:
 
-- Code in the body of an asynchronous function, method, or property.
-- Code in the static `main()` method of
-  a structure, class, or enumeration that's marked with `@main`.
-- Code in an unstructured child task, as shown in <doc:Concurrency#Unstructured-Concurrency> below.
+ - Код у тілі асинхронної функції, методу чи властивості.
+ - Код у статичному методі `main()` структури, класу чи перечислення, що позначається атрибутом `@main`.
+ - Код у неструктурованій дочірній задачі, як описано у розділі [Неструктурована конкурентність]({% link _book/1_language_guide/16_5_concurrency.md %}#Неструктурована-конкурентність) нижче.
 
-<!--
-  SE-0296 specifically calls out that top-level code is *not* an async context,
-  contrary to what you might expect.
-  If that gets changed, add this bullet to the list above:
-
-  - Code at the top level that forms an implicit main function.
-    -->
-
-Code in between possible suspension points runs sequentially, without the possibility of interruption from other concurrent code. For example, the code below moves a picture from one gallery to another.
+Код поміж можливими точками призупинення виконується послідовно, без можливості переривання з іншого конкурентного коду. Наприклад, код нижче переносить зображення з однієї галереї до іншої. 
 
 ```swift
 let firstPhoto = await listPhotos(inGallery: "Літня відпустка")[0]
-add(firstPhoto, toGallery: "Road Trip")
+add(firstPhoto, toGallery: "Поїздка")
 // At this point, firstPhoto is temporarily in both galleries.
 remove(firstPhoto, fromGallery: "Літня відпустка")
 ```
 
-There's no way for other code to run in between the call to `add(_:toGallery:)` and `remove(_:fromGallery:)`. During that time, the first photo appears in both galleries, temporarily breaking one of the app's invariants. To make it even clearer that this chunk of code must not have `await` added to it in the future, you can refactor that code into a synchronous function:
+Між викликами `add(_:toGallery:)` та `remove(_:fromGallery:)` не може виконуватись жоден інший код. В цей час, перше фото `firstPhoto` одночасно знаходиться у двох галереях, що тимчасово ламає один з інваріантів нашого додатка. Щоб зробити ще більш зрозумілим те, що до цієї частини коду не можна додавати `await` у майбутньому, можна винести його в одну синхронну функцію:
 
 ```swift
 func move(_ photoName: String, from source: String, to destination: String) {
@@ -98,14 +88,14 @@ func move(_ photoName: String, from source: String, to destination: String) {
 }
 // ...
 let firstPhoto = await listPhotos(inGallery: "Літня відпустка")[0]
-move(firstPhoto, from: "Літня відпустка", to: "Road Trip")
+move(firstPhoto, from: "Літня відпустка", to: "Поїздка")
 ```
 
-In the example above, because the `move(_:from:to:)` function is synchronous, you guarantee that it can never contain possible suspension points. In the future, if you try to add concurrent code to this function, introducing a possible suspension point, you'll get compile-time error instead of introducing a bug.
+У прикладі вище, оскільки функція `move(_:from:to:)` є синхронною, гарантується, що вона ніколи не буде містити можливих точок призупинення. У майбутньому, якщо ви спробуєте додати конкурентний код до цієї функції шляхом додавання точки призупинення, ви отримаєте помилку часу компіляції, а не привнесете баг. 
 
-> **Note** 
+> **Примітка** 
 >
-> The [`Task.sleep(until:tolerance:clock:)`](https://developer.apple.com/documentation/swift/task/sleep(until:tolerance:clock:)) method is useful when writing simple code to learn how concurrency works. This method does nothing, but waits at least the given number of nanoseconds before it returns. Here's a version of the `listPhotos(inGallery:)` function that uses `sleep(until:tolerance:clock:)` to simulate waiting for a network operation:
+> Метод [`Task.sleep(until:tolerance:clock:)`](https://developer.apple.com/documentation/swift/task/sleep(until:tolerance:clock:)) може бути дуже зручним при написанні простого коду для вивчення того, як працює конкурентність. Цей метод не робить нічого, але чекає як мінімум задану кількість наносекунд перед поверненням. Ось версія функції `listPhotos(inGallery:)`, що за допомогою `sleep(until:tolerance:clock:)` симулює очікування на завершення мережевої операції:
 >
 > ```swift
 > func listPhotos(inGallery name: String) async throws -> [String] {
@@ -185,6 +175,7 @@ await withTaskGroup(of: Data.self) { taskGroup in
 
 For more information about task groups, see [`TaskGroup`](https://developer.apple.com/documentation/swift/taskgroup).
 
+### Неструктурована конкурентність
 ### Unstructured Concurrency
 
 In addition to the structured approaches to concurrency described in the previous sections, Swift also supports unstructured concurrency. Unlike tasks that are part of a task group, an *unstructured task* doesn't have a parent task. You have complete flexibility to manage unstructured tasks in whatever way your program needs, but you're also completely responsible for their correctness. To create an unstructured task that runs on the current actor, call the [`Task.init(priority:operation:)`](https://developer.apple.com/documentation/swift/task/3856790-init) initializer. To create an unstructured task that's not part of the current actor, known more specifically as a *detached task*, call the [`Task.detached(priority:operation:)`](https://developer.apple.com/documentation/swift/task/3856786-detached) class method. Both of these operations return a task that you can interact with --- for example, to wait for its result or to cancel it.
