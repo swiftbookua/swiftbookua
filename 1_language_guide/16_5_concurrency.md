@@ -104,9 +104,9 @@ move(firstPhoto, from: "Літня відпустка", to: "Поїздка")
 > }
 > ```
 
-## Asynchronous Sequences
+## Асинхронні послідовності
 
-The `listPhotos(inGallery:)` function in the previous section asynchronously returns the whole array at once, after all of the array's elements are ready. Another approach is to wait for one element of the collection at a time using an *asynchronous sequence*. Here's what iterating over an asynchronous sequence looks like:
+Функція `listPhotos(inGallery:)` у попередньому розділі асинхронно повертає весь масив одразу, після того, як всі елементи масиву готові. Іншим підходом є очікування на готовність кожного елементу колекції окремо за допомогою *асинхронної послідовності*. Ось як виглядає ітерування по асинхронній послідовності: 
 
 ```swift
 import Foundation
@@ -117,13 +117,13 @@ for try await line in handle.bytes.lines {
 }
 ```
 
-Instead of using an ordinary `for`-`in` loop, the example above writes `for` with `await` after it. Like when you call an asynchronous function or method, writing `await` indicates a possible suspension point. A `for`-`await`-`in` loop potentially suspends execution at the beginning of each iteration, when it's waiting for the next element to be available.
+Замість використання звичайного циклу `for`-`in`, у прикладі вище пишемо `for` з `await` після нього. Як і при виклику асинхронної функції чи методу, написання `await` позначає можливу точку призупинення. Цикл `for`-`await`-`in` потенційно призупиняє виконання на початку кожної ітерації, очікуючи на готовність кожного наступного елементу. 
 
-In the same way that you can use your own types in a `for`-`in` loop by adding conformance to the [`Sequence`](https://developer.apple.com/documentation/swift/sequence) protocol, you can use your own types in a `for`-`await`-`in` loop by adding conformance to the [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence) protocol.
+Аналогічно до того, як ви можете використовувати ваші власні типи у циклі `for`-`in` за допомогою підпорядкування їх до протоколу [`Sequence`](https://developer.apple.com/documentation/swift/sequence), ви можете використовувати ваші власні типи у циклі `for`-`await`-`in` за допомогою підпорядкування їх до протоколу [`AsyncSequence`](https://developer.apple.com/documentation/swift/asyncsequence).
 
-## Calling Asynchronous Functions in Parallel
+## Паралельний виклик асинхронних функцій
 
-Calling an asynchronous function with `await` runs only one piece of code at a time. While the asynchronous code is running, the caller waits for that code to finish before moving on to run the next line of code. For example, to fetch the first three photos from a gallery, you could await three calls to the `downloadPhoto(named:)` function as follows:
+Виклик асинхронної функції за допомогою `await` виконує лише одну частину коду в момент часу. Допоки асинхронний код виконується, ми очікуємо на його завершення перед тим, як перейти до виконання наступного рядка коду. Наприклад, щоб отримати перші три фото з галереї, можна очікувати на три виклики функції `downloadPhoto(named:)`, як написано нижче:
 
 ```swift
 let firstPhoto = await downloadPhoto(named: photoNames[0])
@@ -134,9 +134,9 @@ let photos = [firstPhoto, secondPhoto, thirdPhoto]
 show(photos)
 ```
 
-This approach has an important drawback: Although the download is asynchronous and lets other work happen while it progresses, only one call to `downloadPhoto(named:)` runs at a time. Each photo downloads completely before the next one starts downloading. However, there's no need for these operations to wait --- each photo can download independently, or even at the same time.
+Цей підхід має одну важливу ваду: хоч завантаження і є асинхронним та дозволяє іншим задачам виконуватись під час своєї роботи, у будь-який момент виконується лише один з викликів `downloadPhoto(named:)`. Кожне фото повністю завантажується перед тим, як почне завантажуватись наступне. Однак, цим операціям необов'язково очікувати: кожне фото можна завантажувати незалежно одне від одного, і навіть одночасно.
 
-To call an asynchronous function and let it run in parallel with code around it, write `async` in front of `let` when you define a constant, and then write `await` each time you use the constant.
+Щоб викликати асинхронну функцію і дати їй можливість виконуватись паралельно із кодом довкола неї, слід писати `async` перед `let` при визначенні константи, і потім писати `await` при кожному використанні константи. 
 
 ```swift
 async let firstPhoto = downloadPhoto(named: photoNames[0])
@@ -147,22 +147,22 @@ let photos = await [firstPhoto, secondPhoto, thirdPhoto]
 show(photos)
 ```
 
-In this example, all three calls to `downloadPhoto(named:)` start without waiting for the previous one to complete. If there are enough system resources available, they can run at the same time. None of these function calls are marked with `await` because the code doesn't suspend to wait for the function's result. Instead, execution continues until the line where `photos` is defined --- at that point, the program needs the results from these asynchronous calls, so you write `await` to pause execution until all three photos finish downloading.
+У цьому прикладі, всі три виклики функції `downloadPhoto(named:)` розпочинаються не очікуючи на завершення попереднього. Якщо у системі доступно достатньо ресурсів, вони можуть виконуватись одночасно. Жоден з цих викликів не позначено `await`, оскільки код не призупиняється в очікуванні на результат виклику. Натомість виконання продовжується до рядка з визначенням масиву `photos`. В цей момент програма потребує результатів від цих асинхронних викликів, тому слід писати `await` для призупинення виконання допоки всі три фотографії не будуть завантажені. 
 
-Here's how you can think about the differences between these two approaches:
+Ось як можна думати про різницю між цими двома підходами:
 
-- Call asynchronous functions with `await` when the code on the following lines depends on that function's result. This creates work that is carried out sequentially.
-- Call asynchronous functions with `async`-`let` when you don't need the result until later in your code. This creates work that can be carried out in parallel.
-- Both `await` and `async`-`let` allow other code to run while they're suspended.
-- In both cases, you mark the possible suspension point with `await` to indicate that execution will pause, if needed, until an asynchronous function has returned.
+ - Асинхронну функцію слід викликати за допомогою `await` тоді, коли код на наступних рядках залежить від результату виконання цієї функції. This creates work that is carried out sequentially. 
+ - Асинхронну функцію слід викликати за допомогою `async`-`let` тоді, коли результат її виконання не потрібен одразу, а потрібен десь пізніше. Це створює задачі, котрі можуть виконуватись паралельно. 
+- Як `await`, так і `async`-`let` дозволяє виконуватись іншому коду під час призупинення.
+- В обох випадках можливу точку призупинення слід відмічати за допомогою `await`, щоб позначити, що виконання може призупинитись, якщо потрібно, допоки асинхронна функція не поверне результат.
 
-You can also mix both of these approaches in the same code.
+Обидва ці підходи можна змішувати в одному коді. 
 
-## Tasks and Task Groups
+## Таски та таск-групи
 
-A *task* is a unit of work that can be run asynchronously as part of your program. All asynchronous code runs as part of some task. The `async`-`let` syntax described in the previous section creates a child task for you. You can also create a task group and add child tasks to that group, which gives you more control over priority and cancellation, and lets you create a dynamic number of tasks.
+*Таска*, або задача – це одиниця роботи, що може виконуватись асинхронно як частина вашої програми. Весь асинхронний код виконується як частина якоїсь таски. Описаний у розділі вище синтаксис `async`-`let` створює для вас дочірню таску. Ви також можете створити таск-групу та додавати дочірні таски до цієї групи, що дає вам більше контролю щодо пріоритетів та скасування, а також дозволяє створювати динамічну кількість задач. 
 
-Tasks are arranged in a hierarchy. Each task in a task group has the same parent task, and each task can have child tasks. Because of the explicit relationship between tasks and task groups, this approach is called *structured concurrency*. Although you take on some of the responsibility for correctness, the explicit parent-child relationships between tasks let Swift handle some behaviors like propagating cancellation for you, and lets Swift detect some errors at compile time.
+Таски впорядковуються в ієрархію. Кожна таска у таск-групі має одну й ту ж батьківську таску, а кожна таска може мати дочірні таски. Оскільки зв'язок між тасками та таск-групами є явним, цей підхід називається *структурованою конкурентністю*. Хоч на вас і лежить певна частина відповідальності за коректність коду, явні ієрархічні зв'язки між тасками дозволяють Swift керувати певними поведінками на кшталт поширення скасування за вас, і дозволяє Swift відловлювати деякі помилки під час компіляції. 
 
 ```swift
 await withTaskGroup(of: Data.self) { taskGroup in
@@ -173,40 +173,39 @@ await withTaskGroup(of: Data.self) { taskGroup in
 }
 ```
 
-For more information about task groups, see [`TaskGroup`](https://developer.apple.com/documentation/swift/taskgroup).
+Детальніше з таск-групами можна ознайомитись в документації: [`TaskGroup`](https://developer.apple.com/documentation/swift/taskgroup).
 
 ### Неструктурована конкурентність
-### Unstructured Concurrency
 
-In addition to the structured approaches to concurrency described in the previous sections, Swift also supports unstructured concurrency. Unlike tasks that are part of a task group, an *unstructured task* doesn't have a parent task. You have complete flexibility to manage unstructured tasks in whatever way your program needs, but you're also completely responsible for their correctness. To create an unstructured task that runs on the current actor, call the [`Task.init(priority:operation:)`](https://developer.apple.com/documentation/swift/task/3856790-init) initializer. To create an unstructured task that's not part of the current actor, known more specifically as a *detached task*, call the [`Task.detached(priority:operation:)`](https://developer.apple.com/documentation/swift/task/3856786-detached) class method. Both of these operations return a task that you can interact with --- for example, to wait for its result or to cancel it.
+На додачу до описаних у розділах вище структурованих підходів до конкурентності, Swift також підтримує неструктуровану конкурентність. На відміну від тасків, що є частиною таск-групи, *неструктурована задача* не має батьківської задачі. Ви маєте повну гнучкість в управлінні неструктурованими тасками у будь-який потрібний у вашій програмі спосіб, але ви також повністю відповідаєте за їх коректність. Щоб створити неструктуровану таску, що виконується на поточному акторі, слід викликати ініціалізатор [`Task.init(priority:operation:)`](https://developer.apple.com/documentation/swift/task/3856790-init). Щоб створити неструктуровану таску, що не є частиною поточного актора, більш відому як *відокремлена таска*, слід викликати метод класу [`Task.detached(priority:operation:)`](https://developer.apple.com/documentation/swift/task/3856786-detached). Обидві ці операції повертають таску, з якою ви можете взаємодіяти: наприклад, почекати на її результат або скасувати її.
 
 ```swift
 let newPhoto = // ... some photo data ...
 let handle = Task {
-    return await add(newPhoto, toGalleryNamed: "Spring Adventures")
+    return await add(newPhoto, toGalleryNamed: "Весняні пригоди")
 }
 let result = await handle.value
 ```
 
-For more information about managing detached tasks, see [`Task`](https://developer.apple.com/documentation/swift/task).
+Більше інформації про керування відокремленими тасками можна знайти у документації: [`Task`](https://developer.apple.com/documentation/swift/task).
 
-### Task Cancellation
+### Скасування тасків
 
-Swift concurrency uses a cooperative cancellation model. Each task checks whether it has been canceled at the appropriate points in its execution, and responds to cancellation in whatever way is appropriate. Depending on the work you're doing, that usually means one of the following:
+Конкурентність у Swift використовує кооперативну модель скасування. Кожна таска перевіряє, чи не було його скасовано у доречні моменти під час його виконання та відповідає на скасування у будь-який доречний спосіб. В залежності від того, яку роботу виконує таска, це як правило означає одне з наступного:
 
-- Throwing an error like `CancellationError`
-- Returning `nil` or an empty collection
-- Returning the partially completed work
+ - Викидання помилки на кшталт `CancellationError`
+ - Повернення `nil` або порожньої колекції
+ - Повернення частково завершеної роботи
 
-To check for cancellation, either call [`Task.checkCancellation()`](https://developer.apple.com/documentation/swift/task/3814826-checkcancellation), which throws `CancellationError` if the task has been canceled, or check the value of [`Task.isCancelled`](https://developer.apple.com/documentation/swift/task/3814832-iscancelled) and handle the cancellation in your own code. For example, a task that's downloading photos from a gallery might need to delete partial downloads and close network connections.
+Щоб перевірити чи не було скасовано поточну таску, слід викликати метод [`Task.checkCancellation()`](https://developer.apple.com/documentation/swift/task/3814826-checkcancellation), котрий викидає помилку `CancellationError` у випадку, якщо задачу було скасовано, або перевірити значення [`Task.isCancelled`](https://developer.apple.com/documentation/swift/task/3814832-iscancelled), та опрацювати скасування у вашому коді. Наприклад, таска, що завантажує фото з галереї, може потребувати видалення частково завантажених фотографій та закриття мережевих з'єднань. 
 
-To propagate cancellation manually, call [`Task.cancel()`](https://developer.apple.com/documentation/swift/task/3851218-cancel).
+Щоб поширити скасування вручну, слід викликати метод [`Task.cancel()`](https://developer.apple.com/documentation/swift/task/3851218-cancel).
 
-## Actors
+## Актори
 
-You can use tasks to break up your program into isolated, concurrent pieces. Tasks are isolated from each other, which is what makes it safe for them to run at the same time, but sometimes you need to share some information between tasks. Actors let you safely share information between concurrent code.
+Ви можете використовувати таски для розділення вашої програми на ізольовані, конкурентні частини. Таски є ізольованими одна від одної, і саме це робить безпечним їх одночасне виконання. Втім, іноді вам може бути потрібно передавати інформацію між тасками. Актори дозволяють вам безпечно ділитись інформацією між конкурентним кодом. 
 
-Like classes, actors are reference types, so the comparison of value types and reference types in <doc:ClassesAndStructures#Classes-Are-Reference-Types> applies to actors as well as classes. Unlike classes, actors allow only one task to access their mutable state at a time, which makes it safe for code in multiple tasks to interact with the same instance of an actor. For example, here's an actor that records temperatures:
+Як і класи, актори є типами-посиланнями, тому порівняння типів-значень та типів-посилань у розділі [Класи як типи-посилання]({% link _book/1_language_guide/8_classes_and_structures.mdк%}#класи-як-типи-посилання) є справедливим і для них. На відміну від класів, актори дозволяють звертатись до їх змінюваного стану лише одній тасці за раз, що дозволяє для коду в кількох тасках взаємодіяти з одним і тим же екземпляром актору безпечно. Наприклад, ось актор, що записує значення вимірювання температури:
 
 ```swift
 actor TemperatureLogger {
@@ -222,19 +221,19 @@ actor TemperatureLogger {
 }
 ```
 
-You introduce an actor with the `actor` keyword, followed by its definition in a pair of braces. The `TemperatureLogger` actor has properties that other code outside the actor can access, and restricts the `max` property so only code inside the actor can update the maximum value.
+Актори оголошуються за допомогою ключового слова `actor`, після чого йде його назва та оголошення у парі фігурних дужок. Актор `TemperatureLogger` має властивості, до котрих може звертатись код ззовні актора, та обмежує властивість `max` таким чином, що лише код всередині актора може оновлювати максимальне значення. 
 
-You create an instance of an actor using the same initializer syntax as structures and classes. When you access a property or method of an actor, you use `await` to mark the potential suspension point. For example:
+Екземпляр актора створюється за допомогою такого ж синтаксису ініціалізації, як і для класів та структур. При доступі до властивості чи методу актора, слід використовувати `await` для позначення потенційної точки призупинення. Наприклад:
 
 ```swift
 let logger = TemperatureLogger(label: "Outdoors", measurement: 25)
 print(await logger.max)
-// Prints "25"
+// Надрукує "25"
 ```
 
-In this example, accessing `logger.max` is a possible suspension point. Because the actor allows only one task at a time to access its mutable state, if code from another task is already interacting with the logger, this code suspends while it waits to access the property.
+У цьому прикладі, доступ до `logger.max` є можливою точкою призупинення. Оскільки актор дозволяє лише одній задачі за раз звертатись до свого змінюваного стану, якщо код з іншої таски вже взаємодіє з `logger`, цей код повинен призупинитись в очікуванні доступу до властивості. 
 
-In contrast, code that's part of the actor doesn't write `await` when accessing the actor's properties. For example, here's a method that updates a `TemperatureLogger` with a new temperature:
+Натомість код, що є частиною актора, не повинен використовувати `await` для доступу до властивостей актора. Наприклад, ось метод, що оновлює `TemperatureLogger` з новим виміром температури:
 
 ```swift
 extension TemperatureLogger {
