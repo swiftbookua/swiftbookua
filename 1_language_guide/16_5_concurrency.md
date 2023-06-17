@@ -246,21 +246,21 @@ extension TemperatureLogger {
 }
 ```
 
-The `update(with:)` method is already running on the actor, so it doesn't mark its access to properties like `max` with `await`. This method also shows one of the reasons why actors allow only one task at a time to interact with their mutable state: Some updates to an actor's state temporarily break invariants. The `TemperatureLogger` actor keeps track of a list of temperatures and a maximum temperature, and it updates the maximum temperature when you record a new measurement. In the middle of an update, after appending the new measurement but before updating `max`, the temperature logger is in a temporary inconsistent state. Preventing multiple tasks from interacting with the same instance simultaneously prevents problems like the following sequence of events:
+Оскільки метод `update(with:)` уже виконується на акторі, всередині його непотрібно відмічати доступ до властивостей на кшталт `max` за допомогою `await`. Цей метод також показує одну з причин, чому актори в кожен момент часу дозволяють лише одній тасці взаємодіяти із їхнім змінюваним станом: деякі оновлення стану актора тимчасово ламають інваріанти. Актор `TemperatureLogger` відстежує список вимірів температури та максимальну температуру; він оновлює максимальну температуру при записі нового вимірювання. Під час цього оновлення, після додавання виміру до масиву `measurements` і перед оновленням `max`, екземпляр `TemperatureLogger` тимчасово знаходиться у неконсистентному стані. Забороняючи декільком таскам одночасно взаємодіяти з одним екземпляром, Swift запобігає таким проблемам, як наступна послідовність подій:
 
-1. Your code calls the `update(with:)` method. It updates the `measurements` array first.
-2. Before your code can update `max`, code elsewhere reads the maximum value and the array of temperatures.
-3. Your code finishes its update by changing `max`.
+1. Ваш код викликає метод `update(with:)`. Він спершу оновлює масив `measurements`.
+2. Перед тим, як ваш код зможе оновити `max`, код в іншому місці читає максимальне значення `max` та масив вимірів температури.
+3. Ваш код завершує оновлення, змінюючи `max`.
 
-In this case, the code running elsewhere would read incorrect information because its access to the actor was interleaved in the middle of the call to `update(with:)` while the data was temporarily invalid. You can prevent this problem when using Swift actors because they only allow one operation on their state at a time, and because that code can be interrupted only in places where `await` marks a suspension point. Because `update(with:)` doesn't contain any suspension points, no other code can access the data in the middle of an update.
+У цьому випадку, код, що виконується десь в іншому місці, прочитає некоректну інформацію, оскільки його доступ до актора прийшовся на середину виклику `update(with:)`, в момент коли інформація була тимчасово некоректною. Цій проблемі можна запобігти, використовуючи акторів у Swift, оскільки вони кожної миті дозволяють лише одну операцію з їх станом, і оскільки цей код може перериватись лише у місцях, відмічених точками призупинення `await`. Оскільки `update(with:)` не містить жодних точок призупинення, жоден інший код не може звертатись до даних в момент їх оновлення. 
 
-If you try to access those properties from outside the actor, like you would with an instance of a class, you'll get a compile-time error. For example:
+Якщо ви спробуєте звернутись до цих властивостей зовні актора, так же як ви б звертались до властивостей екземпляра класу, ви отримаєте помилку часу компіляції. Наприклад:
 
 ```swift
-print(logger.max)  // Error
+print(logger.max)  // Помилка
 ```
 
-Accessing `logger.max` without writing `await` fails because the properties of an actor are part of that actor's isolated local state. Swift guarantees that only code inside an actor can access the actor's local state. This guarantee is known as *actor isolation*.
+Доступ до `logger.max` без написання `await` неможливий, оскільки властивості актора є частиною його ізольованого локального стану. Swift гарантує, що лише код всередині актора може звертатись до локального стану актора. Цю гарантію називають *ізоляцією актора*.
 
 ## Sendable Types
 
