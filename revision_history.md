@@ -27,7 +27,7 @@
 **2021-09-20**
 
 - Оновлено до Swift 5.5.
-- Додано інформацію про асинхронні функції, таски та актори до розділу [Конкурентність]({% link _book/1_language_guide/16_5_concurrency.md %}), and to the <doc:Declarations#Actor-Declaration>, <doc:Declarations#Asynchronous-Functions-and-Methods> and <doc:Expressions#Await-Operator> sections.
+- Додано інформацію про асинхронні функції, задачі та актори до розділу [Конкурентність]({% link _book/1_language_guide/16_5_concurrency.md %}), and to the <doc:Declarations#Actor-Declaration>, <doc:Declarations#Asynchronous-Functions-and-Methods> and <doc:Expressions#Await-Operator> sections.
 - Updated the <doc:LexicalStructure#Identifiers> section
   with information about identifiers that start with an underscore.
 
