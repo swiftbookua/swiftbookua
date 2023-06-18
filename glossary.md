@@ -87,14 +87,18 @@
 * Параметри типів - Type Parameters
 * Обмеження типів - Type Constraints
 * Стек - [Стек](https://uk.wikipedia.org/wiki/Стек), push - заштовхнути, pop - виштовхнути. 
-* Рівночасні обчислeння \(Concurrent computing\) [Вікіпедія](https://uk.wikipedia.org/wiki/Рівночасні_обчислення)
+* Рівночасні обчислeння / Конкурентність \(Concurrent computing\) [Вікіпедія](https://uk.wikipedia.org/wiki/Рівночасні_обчислення)
 * Багатопоточні обчислення \(Multithreading\) [Вікіпедія](https://uk.wikipedia.org/wiki/Багатонитковість)
 * Черговість операторів - Operator precedence [Вікіпедія](https://uk.wikipedia.org/wiki/Черговість_операцій)
 * Складені оператори присвоєння - Compound Assignment Operators [Вікіпедія](https://uk.wikipedia.org/wiki/Оператори_в_C_та_C%2B%2B#Складені_оператори_присвоєння)
 * Розширені розділювачі рядків Extended String Delimiters
 * Обгортки властивостей - Property Wrappers
 * Проєктоване значення - Projected Value (of Property Wrapper)
-* Concurrency - Паралелізм https://uk.wikipedia.org/wiki/Рівночасність_(інформатика)
+* Concurrency - Конкурентність https://uk.wikipedia.org/wiki/Рівночасність_(інформатика) (Паралелізм недостатньо точно описує поняття, рівночасність не є співзвучним до англомовного оригіналу)
 * Atomic operations - Атомарні операції [Вікіпедія](https://uk.wikipedia.org/wiki/Атомарна_операція)
 * Result builders - Будівельник результатів, від: https://uk.wikipedia.org/wiki/Результат_(шаблон_проєктування) https://uk.wikipedia.org/wiki/Будівник_(шаблон_проєктування)
-
+* Task / Task Group - Задача / група задач
+* Detached Task – відокремлена задача
+* Actors - актори
+* Типи, які можна надсилати – Sendable Types
+* домен конкурентності - concurrency domain
