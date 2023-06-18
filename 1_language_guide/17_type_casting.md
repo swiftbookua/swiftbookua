@@ -2,7 +2,7 @@
 title: Приведення типів
 layout: default
 parent: Посібник з мови
-nav_order: 18
+nav_order: 19
 has_children: false
 has_toc: false
 ---

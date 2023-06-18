@@ -2,7 +2,7 @@
 title: Непрозорі типи
 layout: default
 parent: Посібник з мови
-nav_order: 23
+nav_order: 24
 has_children: false
 has_toc: false
 ---

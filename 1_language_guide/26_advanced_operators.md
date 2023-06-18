@@ -2,7 +2,7 @@
 title: Розширені оператори
 layout: default
 parent: Посібник з мови
-nav_order: 27
+nav_order: 28
 has_children: false
 has_toc: false
 ---
