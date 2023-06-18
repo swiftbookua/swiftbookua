@@ -32,6 +32,7 @@
   * [Деініціалізація](language_guide/14_deinitialization.md)
   * [Ланцюжки опціоналів](language_guide/15_optional_chaining.md)
   * [Обробка помилок](language_guide/16_error_handling.md)
+  * [Конкурентність](language_guide/16_5_concurrency.md)
   * [Приведення типів](language_guide/17_type_casting.md)
   * [Вкладені типи](language_guide/18_nested_types.md)
   * [Розширення](language_guide/19_extensions.md)
