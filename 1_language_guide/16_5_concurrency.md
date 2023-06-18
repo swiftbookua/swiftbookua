@@ -262,21 +262,21 @@ print(logger.max)  // Помилка
 
 Доступ до `logger.max` без написання `await` неможливий, оскільки властивості актора є частиною його ізольованого локального стану. Swift гарантує, що лише код всередині актора може звертатись до локального стану актора. Цю гарантію називають *ізоляцією актора*.
 
-## Sendable Types
+## Типи, які можна надсилати
 
-Tasks and actors let you divide a program into pieces that can safely run concurrently. Inside of a task or an instance of an actor, the part of a program that contains mutable state, like variables and properties, is called a *concurrency domain*. Some kinds of data can't be shared between concurrency domains, because that data contains mutable state, but it doesn't protect against overlapping access.
+Таски та актори дозволяють вам розділити вашу програму на частини, що можуть безпечно виконуватись паралельно. Частина програми, що містить змінюваний стан, на кшталт змінних чи властивостей, всередині таски або екземпляра актора, називається *доменом конкурентності*. Деякі види даних не можуть поширюватись поміж різними доменами конкурентності, оскільки ці дані місять змінюваний стан, який не є захищеним від перехресного доступу.
 
-A type that can be shared from one concurrency domain to another is known as a *sendable* type. For example, it can be passed as an argument when calling an actor method or be returned as the result of a task. The examples earlier in this chapter didn't discuss sendability because those examples use simple value types that are always safe to share for the data being passed between concurrency domains. In contrast, some types aren't safe to pass across concurrency domains. For example, a class that contains mutable properties and doesn't serialize access to those properties can produce unpredictable and incorrect results when you pass instances of that class between different tasks.
+Тип, котрий можна поширити з одного домену конкурентності до іншого, називають *типом, який можна надсилати* (*sendable type*). Наприклад, його можна передати як аргумент при виклику методу актора, або повернути як результат виконання таски. Приклади вище у цьому розділі не торкались можливості надсилання, оскільки у цих прикладах використовувались прості типи-значення, котрі завжди можна безпечно використовувати для передачі даних між різними доменами конкурентності. Однак, деякі типи не можна безпечно передавати поміж різними доменами конкурентності. Наприклад, клас, що містить змінювані властивості, та не серіалізує доступ до цих властивостей, може спричинити непередбачувані та некоректні результати при передачі екземплярів цього класу між різними тасками. 
 
-You mark a type as being sendable by declaring conformance to the `Sendable` protocol. That protocol doesn't have any code requirements, but it does have semantic requirements that Swift enforces. In general, there are three ways for a type to be sendable:
+Щоб позначити тип як тип, що можна надсилати, слід оголосити підпорядкування до протоколу `Sendable`. Цей протокол не має жодних вимог до коду, але він має семантичні вимоги, виконання яких забезпечує Swift. Загалом, тип може надсилатись, якщо виконується одна з трьох умов:
+ 
+ - Тип є типом-значенням, і його змінюваний стан складається з інших типів, що можна надсилати: наприклад, структурою, усі властивості якої можуть надсилатись, або перечисленням з асоційованими типами, що можуть надсилатись. 
+ - Тип не має жодного змінюваного стану, а його незмінюваний стан складається з даних, що можуть надсилатись: наприклад, структурою або класом, що мають лише властивості для читання.
+ - Тип має код, що забезпечує безпеку його внутрішнього стану, на кшталт класу, позначеного атрибутом `@MainActor`, або класом, що серіалізовує доступ до своїх властивостей на певному потоці або черзі. 
 
-- The type is a value type, and its mutable state is made up of other sendable data --- for example, a structure with stored properties that are sendable or an enumeration with associated values that are sendable.
-- The type doesn't have any mutable state, and its immutable state is made up of other sendable data --- for example, a structure or class that has only read-only properties.
-- The type has code that ensures the safety of its mutable state, like a class that's marked `@MainActor` or a class that serializes access to its properties on a particular thread or queue.
+Детальніше зі списком семантичних вимог протоколу `Sendable` можна ознайомитись на сторінці з його документацією: [`Sendable`](https://developer.apple.com/documentation/swift/sendable).
 
-For a detailed list of the semantic requirements, see the [`Sendable`](https://developer.apple.com/documentation/swift/sendable) protocol reference.
-
-Some types are always sendable, like structures that have only sendable properties and enumerations that have only sendable associated values. For example:
+Деякі типи завжди можна надсилати, такі як структури, що мають лише властивості, котрі можуть надсилатись, або перечислення, котрі мають лише асоційовані значення типів, що можуть надсилатись. Наприклад:
 
 ```swift
 struct TemperatureReading: Sendable {
@@ -294,7 +294,7 @@ let reading = TemperatureReading(measurement: 45)
 await logger.addReading(from: reading)
 ```
 
-Because `TemperatureReading` is a structure that has only sendable properties, and the structure isn't marked `public` or `@usableFromInline`, it's implicitly sendable. Here's a version of the structure where conformance to the `Sendable` protocol is implied:
+Оскільки `TemperatureReading` є структурою, що містить лише властивості, які можуть надсилатись, і ця структура не є позначеною модифікатором `public` чи атрибутом `@usableFromInline`, вона є неявно типом, що може надсилатись. Ось версія цієї структури, де підпорядкування протоколу `Sendable` є неявним:
 
 ```swift
 struct TemperatureReading {
