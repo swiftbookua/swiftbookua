@@ -2,7 +2,7 @@
 title: Вкладені типи
 layout: default
 parent: Посібник з мови
-nav_order: 19
+nav_order: 20
 has_children: false
 has_toc: false
 ---

@@ -2,7 +2,7 @@
 title: Автоматичний підрахунок посилань
 layout: default
 parent: Посібник з мови
-nav_order: 24
+nav_order: 25
 has_children: false
 has_toc: false
 ---
