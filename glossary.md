@@ -102,3 +102,4 @@
 * Actors - актори
 * Типи, які можна надсилати – Sendable Types
 * домен конкурентності - concurrency domain
+* Макроси - Macros
