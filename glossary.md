@@ -105,3 +105,6 @@
 * Макроси - Macros
 * Окремо стоячі макроси – Freestanding Macros
 * Прив'язані макроси – Attached macros
+* Множина опцій – option set
+* Абстрактне синтаксичне дерево (АСД) – abstract syntax tree (AST) https://uk.wikipedia.org/wiki/Абстрактне_синтаксичне_дерево
+* середовище пісочниці – sandboxed environment (аналогія з польським https://pl.wikipedia.org/wiki/Piaskownica_(środowisko_testowe))

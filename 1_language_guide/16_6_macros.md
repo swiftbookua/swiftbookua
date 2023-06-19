@@ -165,136 +165,70 @@ public macro OptionSet<RawType>() =
 
 Детальніше зі списком ролей макросу можна ознайомитись у секціях [attached]({% link _book/2_language_reference/07_attributes.md %}#attached) та [freestanding]({% link _book/2_language_reference/07_attributes.md %}#freestanding) розділу [Атрибути]({% link _book/2_language_reference/07_attributes.md %}).
 
-## Macro Expansion
+## Розгортання макросів
 
-When building Swift code that uses macros, the compiler calls the macros' implementation to expand them.
+Коли Swift збирає код, що використовує макроси, компілятор викликає реалізацію макросу для його розгортання.
 
-![Diagram showing the four steps of expanding macros.  The input is Swift source code.  This becomes a tree, representing the code's structure.  The macro implementation adds branches to the tree.  The result is Swift source with additional code.](../../assets/macro-expansion-full@2x.png)
+![Діаграма ілюсрує чотири кроки розгортання макросів.  Входом є вихідний код Swift.  Він стає деревом, що представляє структуру коду.  Реалізація макросу додає гілки до дерева.  Результатом є додатковий вихідний код Swift.](../../assets/macro-expansion-full@2x.png)
 
-Specifically, Swift expands macros in the following way:
+Зокрема, Swift розгортає макрос наступним способом:
 
-1. The compiler reads the code,
-   creating an in-memory representation of the syntax.
+1. Компілятор читає код, створюючи репрезентацію синтаксису у пам'яті. 
+2. Компілятор надсилає частину репрезентації синтаксису до реалізації макросу, котра розгортає макрос. 
+3. Компілятор заміняє виклик макросу його розгорнутою формою.
+4. Компілятор продовжує збірку, використовуючи розгорнутий вихідний код.
 
-1. The compiler sends part of the in-memory representation
-   to the macro implementation,
-   which expands the macro.
-
-1. The compiler replaces the macro call with its expanded form.
-
-1. The compiler continues with compilation,
-   using the expanded source code.
-
-To go through the specific steps, consider the following:
+Щоб пройтись конкретними кроками, розглянемо наступне:
 
 ```swift
 let magicNumber = #fourCharacterCode("ABCD")
 ```
 
-The `#fourCharacterCode` macro takes a string that's four characters long
-and returns an unsigned 32-bit integer
-that corresponds to the ASCII values in the string joined together.
-Some file formats use integers like this to identify data
-because they're compact but still readable in a debugger.
-The <doc:Macros#Implementing-a-Macro> section below
-shows how to implement this macro.
+Макрос `#fourCharacterCode` приймає рядок довжиною у чотири символи та повертає беззнакове 32-бітне ціле, що відповідає значенням ASCII у рядку, поєднаних разом. Деякі файлові формати використовують цілі числа на кшталт цього для ідентифікації даних, оскільки вони є компактнішими, але їх все ще можна прочитати у дебагері. Розділ [Реалізація макросів][] нижче пояснює, як реалізувати цей макрос. 
 
-To expand the macros in the code above,
-the compiler reads the Swift file
-and creates an in-memory representation of that code
-known an as *abstract syntax tree*, or AST.
-The AST makes the code's structure explicit,
-which makes it easier to write code that interacts with that structure ---
-like a compiler or a macro implementation.
-Here's a representation of the AST for the code above,
-slightly simplified by omitting some extra detail:
+[Реалізація макросів]: {% link _book/1_language_guide/16_6_macros.md %}#Реалізація-макросів
 
-![A tree diagram, with a constant as the root element.  The constant has a name, magic number, and a value.  The constant's value is a macro call.  The macro call has a name, fourCharacterCode, and arguments.  The argument is a string literal, ABCD.](../../assets/macro-ast-original@2x.png)
+Щоб розгорнути макрос у коді вище, компілятор читає файл Swift та створює репрезентацію цього коду у пам'яті, відому як [абстрактне синтаксичне дерево][], або АСД. АСД робить структуру коду явною, що дозволяє простіше писати код, що взаємодіє з цією структурою – наприклад, код компілятора або реалізації макросу. Ось репрезентація АСД для коду вище, трошки спрощена за кошт опускання зайвих деталей. 
 
-The diagram above shows how the structure of this code
-is represented in memory.
-Each element in the AST
-corresponds to a part of the source code.
-The "Constant declaration" AST element
-has two child elements under it,
-which represent the two parts of a constant declaration:
-its name and its value.
-The "Macro call" element has child elements
-that represent the macro's name
-and the list of arguments being passed to the macro.
+[абстрактне синтаксичне дерево]: https://uk.wikipedia.org/wiki/Абстрактне_синтаксичне_дерево
 
-As part of constructing this AST,
-the compiler checks that the source code is valid Swift.
-For example, `#fourCharacterCode` takes a single argument,
-which must be a string.
-If you tried to pass an integer argument,
-or forgot the quotation mark (`"`) at the end of the string literal,
-you'd get an error at this point in the process.
+![Діаграма, що зображує дерево, із кореневим елементом constant.  Константа має назву magic number, та значення.  Значенням константи є виклик макросу.  Виклик макросу має назву, fourCharacterCode, та аргументи.  Єдиним аргументом є рядковий літерал, ABCD.](../../assets/macro-ast-original@2x.png)
 
-The compiler finds the places in the code where you call a macro,
-and loads the external binary that implements those macros.
-For each macro call,
-the compiler passes part of the AST to that macro's implementation.
-Here's a representation of that partial AST:
+Діаграма вище ілюструє, як структура цього коду представляється у пам'яті. Кожен елемент АСД відповідає частині вихідного коду. Елемент АСД "Constant declaration" містить два дочірні елементи, котрі репрезентують дві частини оголошення константи: її назву та її значення. Елемент "Macro call" має два дочірні елементи, що репрезентують назву макросу та список аргументів, що передаються до макросу.
 
-![A tree diagram, with a macro call as the root element.  The macro call has a name, fourCharacterCode, and arguments.  The argument is a string literal, ABCD.](../../assets/macro-ast-input@2x.png)
+У ході побудови АСД, компілятор перевіряє, що вихідний код є коректним кодом на Swift. Наприклад, `#fourCharacterCode` приймає єдиний аргумент, що має бути рядком. При спробі передати цілочисельний аргумент, або якщо забути поставити лапки (`"`) наприкінці рядкового літерала, ми отримаємо помилку на цьому етапі процесу компіляції.
 
-The implementation of the `#fourCharacterCode` macro
-reads this partial AST as its input when expanding the macro.
-A macro's implementation
-operates only on the partial AST that it receives as its input,
-meaning a macro always expands the same way
-regardless of what code comes before and after it.
-This limitation helps make macro expansion easier to understand,
-and helps your code build faster
-because Swift can avoid expanding macros that haven't changed.
+Компілятор знаходить місця у коді, де викликається макрос, і завантажує зовнішній модуль, у якому реалізовується цей макрос. Для кожного виклику макросу, компілятор передає частину АСД до реалізації цього макросу. Ось репрезентація цієї частини АСД:
+
+![Діаграма, що зображує дерево, із викликом макросу як кореневий елемент.  Виклик макросу має назву, fourCharacterCode, та аргументи. Аргументом є рядковий літерал, ABCD](../../assets/macro-ast-input@2x.png)
+
+Реалізація макросу `#fourCharacterCode` вичитує цю частину АСД як свій вхід при розгортанні макросу. Реалізація макросу опрацьовує лише частину АСД, котру отримує на вході, що означає, що макрос завжди розгортається в один і той же спосіб незалежно від того, який код йде перед ним або після нього. Це обмеження допомагає зробити розгортання макросу легшим для розуміння, і допомагає вашому коду збиратися швидше, оскільки Swift може уникнути розгортання макросу, котрий не змінився. 
+
 <!-- TODO TR: Confirm -->
-Swift helps macro authors avoid accidentally reading other input
-by restricting the code that implements macros:
+Swift допомагає авторам макросу уникнути випадкового вичитування інших вхідних даних, обмежуючи код, що реалізовує макрос. 
 
-- The AST passed to a macro implementation
-  contains only the AST elements that represent the macro,
-  not any of the code that comes before or after it.
+ - АСД, що передається до реалізації макросу, містить лише ті елементи АСД, що представляють лише сам макрос, але не стосуються жодного коду перед ним або після нього. 
+ - Реалізація макросу виконується у середовищі пісочниці, що запобігає доступу до файлової системи та мережі. 
 
-- The macro implementation runs in a sandboxed environment
-  that prevents it from accessing the file system or the network.
+На додачу до цих механізмів безпеки, автор макросу є відповідальним за те, щоб не вичитувати або модифікувати будь-що за межами входу макросу. Наприклад, розгортання макросу не повинно залежати від поточного часу доби. 
 
-In addition to these safeguards,
-the macro's author is responsible for not reading or modifying anything
-outside of the macro's inputs.
-For example, a macro's expansion must not depend on the current time of day.
+Реалізація макросу `#fourCharacterCode` генерує нове АСД, котре містить розгорнутий код. Ось що цей код повертає до компілятора:
 
-The implementation of `#fourCharacterCode`
-generates a new AST containing the expanded code.
-Here's what that code returns to the compiler:
+![Діаграма, що зображає дерево з єдиним елементом, що є цілочисельним літералом 1145258561.](../../assets/macro-ast-output@2x.png)
 
-![A tree diagram with a sigle node, the integer literal 1145258561.](../../assets/macro-ast-output@2x.png)
+Коли компілятор отримує це розгортання, він заміняє елемент АСД, що містить виклик макросу, елементом, що містить розгортання макросу. Після розгортання макросу, компілятор знову перевіряє код розширення, щоб упевнитись, що програма все ще є синтаксично коректним кодом на Swift, і що всі типи є коректними. Це продукує фінальне АСД, що тепер може бути скомпільовано, як зазвичай:
 
-When the compiler receives this expansion,
-it replaces the AST element that contains the macro call
-with the element that contains the macro's expansion.
-After macro expansion,
-the compiler checks again to ensure
-the program is still syntactically valid Swift
-and all the types are correct.
-That produces a final AST that can be compiled as usual:
+![Діаграма, що зображає дерево з константою у корені.  Константа має назву magic number, та значення.  Значення константи є цілочисельним літералом зі значенням 1145258561](../../assets/macro-ast-result@2x.png)
 
-![A tree diagram, with a constant as the root element.  The constant has a name, magic number, and a value.  The constant's value is the integer literal 1145258561](../../assets/macro-ast-result@2x.png)
+Це АСД відповідає коду на кшталт цього: 
 
-This AST corresponds to Swift code like this:
-
-```
+```swift
 let magicNumber = 1145258561
 ```
 
-In this example, the input source code has only one macro,
-but a real program could have several instances of the same macro
-and several calls to different macros.
-The compiler expands macros one at a time.
+У цьому прикладі, вихідний код на початку містить лише один макрос, але у реальній програмі може бути декілька екземплярів одного макросу, і декілька викликів до різних макросів. Компілятор розгортає макроси по одному за раз. 
 
-If one macro appears inside another,
-the outer macro is expanded first ---
-this lets the outer macro modify the inner macro before it's expanded.
+Якщо один макрос з'являється всередині іншого, зовнішній макрос розгорнеться першим – це дозволяє зовнішньому макросу змінити внутрішній макрос до того, як він розгорнеться. 
 
 <!-- OUTLINE
 
@@ -317,7 +251,7 @@ this lets the outer macro modify the inner macro before it's expanded.
   (TR: Likely need to iterate on details here)
 -->
 
-## Implementing a Macro
+## Реалізація макросів
 
 To implement a macro, you make two components:
 A type that performs the macro expansion,
