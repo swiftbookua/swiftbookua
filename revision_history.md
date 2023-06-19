@@ -2,6 +2,28 @@
 
 Останні [зміни у оригіналі книги](https://docs.swift.org/swift-book/RevisionHistory/RevisionHistory.html). Перекладені оновлення є перекладеними у списку нижче.
 
+**2023-06-05**
+
+- Updated for Swift 5.9.
+- Added information about `if` and `switch` expressions
+  to the <doc:ControlFlow> chapter
+  and the <doc:Expressions#Conditional-Expression> section.
+- Added the <doc:Macros> chapter,
+  with information about generating code at compile time.
+- Added information about boxed protocol types
+  to the <doc:OpaqueTypes> chapter.
+- Updated the <doc:Attributes#Result-Building-Methods> section
+  with information about the `buildPartialBlock(first:)`
+  and `buildPartialBlock(accumulated:next:)` methods.
+
+**2023-03-30**
+
+- Updated for Swift 5.8.
+- Added the <doc:ControlFlow#Deferred-Actions> section,
+  showing `defer` outside of error handling.
+- Adopted Swift-DocC for publication.
+- Minor corrections and additions throughout.
+
 **2022-06-06**
 
 - Updated for Swift 5.7.
