@@ -1,2 +1,5 @@
 # Атрибути
 
+### attached
+
+### freestanding

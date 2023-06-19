@@ -105,28 +105,30 @@ extension SundaeToppings: OptionSet { }
 
 Весь код після приватного перечислення з'являється з макросу `@OptionSet`. Версія `SundaeToppings`, що використовує макрос для генерації всіх статичних змінних, є простішою для читання та підтримки, аніж попередня версія, оголошена повністю вручну. 
 
-## Macro Declarations
+## Оголошення макросів
 
-In most Swift code, when you implement a symbol, like a function or type, there's no separate declaration. However, for macros, the declaration and implementation are separate. A macro's declaration contains its name, the parameters it takes, where it can be used, and what kind of code it generates. A macro's implementation contains the code that expands the macro by generating Swift code.
+У більшості коду Swift, якщо вам треба оголосити символ, такий як функцію чи тип, вам не потрібне окреме його оголошення. Однак, для макросів, оголошення та реалізація є розділеними. Оголошення макросу містить його назву, параметри, що він приймає, місце, де його можна застосувати, та якого виду код він генерує. Реалізація макросу містить код, що розгортає макрос, генеруючи код мовою Swift.
 
-You introduce a macro declaration with the `macro` keyword. For example, here's part of the declaration for the `@OptionSet` macro used in the previous example:
+Оголошення макросу вводиться за допомогою ключового слова `macro`. Наприклад, ось частина оголошення макросу `@OptionSet`, що використовувався у попередньому прикладі: 
 
 ```swift
 public macro OptionSet<RawType>() =
         #externalMacro(module: "SwiftMacros", type: "OptionSetMacro")
 ```
 
-The first line specifies the macro's name and its arguments --- the name is `OptionSet`, and it doesn't take any arguments. The second line uses the [`externalMacro(module:type:)`][] macro from the Swift standard library to tell Swift where the macro's implementation is located. In this case, the `SwiftMacros` module contains a type named `OptionSetMacro`, which implements the `@OptionSet` macro.
+Перший рядок визначає назву макросу та його аргументи: назвою є `OptionSet`, і він не приймає жодних аргументів. Другий рядок використовує макрос [`externalMacro(module:type:)`][] зі стандартної бібліотеки Swift, і за допомогою його вказує Swift, де буде знаходитись реалізація цього макросу. У цьому випадку, модуль `SwiftMacros` містить тип на ім'я `OptionSetMacro`, що реалізовує макрос `@OptionSet`.
 
 [`externalMacro(module:type:)`]: https://developer.apple.com/documentation/swift/externalmacro(module:type:)
 
-Because `OptionSet` is an attached macro, its name uses upper camel case, like the names for structures and classes. Freestanding macros have lower camel case names, like the names for variables and functions.
+Оскільки макрос `OptionSet` є прив'язаним, його назва використовує [ВерхнійВерблюдячийРегістр][], так само як назви структур та класів. Окремо стоячі макроси мають нижнійВерблюдячийРегістр, як назви змінних та функцій.
 
-> **Note**:
+[ВерхнійВерблюдячийРегістр]: https://uk.wikipedia.org/wiki/Верблюдячий_регістр
+
+> **Примітка**:
 >
-> Macros are always declared as `public`. Because the code that declares a macro is in a different module from code that uses that macro, there isn't anywhere you could apply a non-public macro.
+> Макроси завжди оголошуються публічними (`public`). Оскільки код, що оголошує макрос, та код, що його використовує, знаходяться у різних модулях, непублічні макроси неможливо застосувати будь-де.
 
-A macro declaration defines the macro's *roles* --- the places in source code where that macro can be called, and the kinds of code the macro can generate. Every macro has one or more roles, which you write as part of the attributes at the beginning of the macro declaration. Here's a bit more of the declaration for `@OptionSet`, including the attributes for its roles:
+Оголошення макросу визначає його *роль* – місця у вихідному коді, в яких можна викликати цей макрос, і різновиди коду, що може згенерувати цей макрос. Кожен макрос має одну або декілька ролей, які записуються як частина атрибутів на початку оголошення макросу. Ось ще трошки оголошення макросу `@OptionSet`, включно з атрибутами, що визначають його ролі:
 
 ```swift
 @attached(member)
@@ -135,40 +137,33 @@ public macro OptionSet<RawType>() =
         #externalMacro(module: "SwiftMacros", type: "OptionSetMacro")
 ```
 
-The `@attached` attribute appears twice in this declaration, once for each macro role. The first use, `@attached(member)`, indicates that the macro adds new members to the type you apply it to. The `@OptionSet` macro adds an `init(rawValue:)` initializer that's required by the `OptionSet` protocol, as well as some additional members. The second use, `@attached(conformance)`, tells you that `@OptionSet` adds one or more protocol conformances. The `@OptionSet` macro extends the type that you apply the macro to, to add conformance to the `OptionSet` protocol.
+Атрибут `@attached` використовується у цьому оголошенні двічі, по одному разу на кожну роль макросу. У першому використанні, `@attached(member)` вказує, що макрос додає нові члени до типу, на якому його застосовують. Макрос `@OptionSet` додає ініціалізатор `init(rawValue:)`, наявність якого вимагається протоколом `OptionSet`, так само як і додаткові члени. Друге використання – `@attached(conformance)` – вказує, що `@OptionSet` додає одне або декілька підпорядкувань протоколу. Макрос `@OptionSet` розширює тип, до якого він застосовується, додаючи до нього підпорядкування протоколу `OptionSet`.
 
-For a freestanding macro, you write the `@freestanding` attribute to specify its role:
-
-```
-@freestanding(expression)
-public macro line<T: ExpressibleByIntegerLiteral>() -> T =
-        /* ... location of the macro implementation... */
-```
-
-<!--
-Elided the implementation of #line above
-because it's a compiler built-in:
-
-public macro line<T: ExpressibleByIntegerLiteral>() -> T = Builtin.LineMacro
--->
-
-The `#line` macro above has the `expression` role. An expression macro produces a value, or performs a compile-time action like generating a warning.
-
-In addition to the macro's role, a macro's declaration provides information about the names of the symbols that the macro generates. When a macro declaration provides a list of names, it's guaranteed to produce only declarations that use those names, which helps you understand and debug the generated code. Here's the full declaration of `@OptionSet`:
+Для окремо стоячого макросу, слід писати атрибут `@freestanding`, щоб вказати його роль:
 
 ```swift
-@attached(member, names: named(RawValue), named(rawValue),
+@freestanding(expression)
+public macro line<T: ExpressibleByIntegerLiteral>() -> T =
+        /* ... місцезнаходження реалізації макроса... */
+```
+
+Макрос `#line` вище має роль `expression`, тобто він є виразом. Макроси-вирази продукують значення, або виконують дії часу компіляції, на кшталт генерації попередження. 
+
+На додачу до ролі макросу, оголошення макросу надає інформацію про назви символів, котрі генерує макрос. Коли оголошення макросу має список імен, гарантується, що він створить лише оголошення, що використовують ці імена. Це допомагає зрозуміти та зневадити згенерований код. Ось повне оголошення макросу `@OptionSet`:
+
+```swift
+@attached(member, names: named(RawValue), named(rawValue), 
         named(`init`), arbitrary)
 @attached(conformance)
 public macro OptionSet<RawType>() =
         #externalMacro(module: "SwiftMacros", type: "OptionSetMacro")
 ```
 
-In the declaration above, the `@attached(member)` macro includes arguments after the `named:` label for each of the symbols that the `@OptionSet` macro generates. The macro adds declarations for symbols named `RawValue`, `rawValue`, and `init` --- because those names are known ahead of time, the macro declaration lists them explicitly.
+У оголошенні вище, атрибут `@attached(member)` включає аргументи після мітки `named:` для кожного символу, що генерує макрос `@OptionSet`. Макрос додає оголошення для символів з назвами `RawValue`, `rawValue`, та `init`: оскільки ці імена є відомими наперед, оголошення макросу перечислює їх явно.
 
-The macro declaration also includes `arbitrary` after the list of names, allowing the macro to generate declarations whose names aren't known until you use the macro. For example, when the `@OptionSet` macro is applied to the `SundaeToppings` above, it generates type properties that correspond to the enumeration cases, `nuts`, `cherry`, and `fudge`.
+Оголошення макросу також включає `arbitrary` після списку назв, що дозволяє макросу генерувати оголошення, чиї назви є невідомими до використання макросу. Наприклад, коли макрос `@OptionSet` застосовується до структури `SundaeToppings` вище, він генерує властивості типу, що відповідають елементам перечислення `nuts`, `cherry`, та `fudge`.
 
-For more information, including a full list of macro roles, see <doc:Attributes#attached> and <doc:Attributes#freestanding> in <doc:Attributes>.
+Детальніше зі списком ролей макросу можна ознайомитись у секціях [attached]({% link _book/2_language_reference/07_attributes.md %}#attached) та [freestanding]({% link _book/2_language_reference/07_attributes.md %}#freestanding) розділу [Атрибути]({% link _book/2_language_reference/07_attributes.md %}).
 
 ## Macro Expansion
 
