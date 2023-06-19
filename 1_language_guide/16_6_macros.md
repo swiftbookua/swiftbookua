@@ -253,29 +253,15 @@ let magicNumber = 1145258561
 
 ## Реалізація макросів
 
-To implement a macro, you make two components:
-A type that performs the macro expansion,
-and a library that declares the macro to expose it as API.
-These parts are built separately from code that uses the macro,
-even if you're developing the macro and its clients together,
-because the macro implementation runs
-as part of building the macro's clients.
+Щоб реалізувати макрос, слід створити два компоненти: тип, що виконує розгортання макросу, та бібліотеку, що оголошує макрос та надає його як свій API. Ці частини збираються окремо від коду, що використовує макрос, навіть якщо ви працюєте над макросом та його клієнтами разом, тому що реалізація макросу виконується як частина збірки клієнтів макросу. 
 
-To create a new macro using Swift Package Manager,
-run `swift package init --type macro` ---
-this creates several files,
-including a template for a macro implementation and declaration.
+Щоб створити новий макрос за допомогою Swift Package Manager, слід запустити команду `swift package init --type macro`: це створить декілька файлів, включно з шаблоном для реалізації та оголошення макросу.
 
-To add macros to an existing project,
-add a target for the macro implementation
-and a target for the macro library.
-For example,
-you can add something like the following to your `Package.swift` file,
-changing the names to match your project:
+Щоб додати макрос до наявного проєкту, слід додати таргет з реалізацією макросу, та таргет для бібліотеки макросу. Наприклад, можна додати щось схоже на цей приклад коду до вашого файлу `Package.swift`, змінюючи назви, щоб вони відповідали вашому проєкту:
 
 ```swift
 targets: [
-    // Macro implementation that performs the source transformations.
+    // Реалізація макросу, що виконує трансформації вихідного коду.
     .macro(
         name: "MyProjectMacros",
         dependencies: [
@@ -284,25 +270,16 @@ targets: [
         ]
     ),
 
-    // Library that exposes a macro as part of its API.
+    // Бібліотека, що надає макрос як частину свого публічного API.
     .target(name: "MyProject", dependencies: ["MyProjectMacros"]),
 ]
 ```
 
-The code above defines two targets:
-`MyProjectMacros` contains the implementation of the macros,
-and `MyProject` makes those macros available.
+Код вище визначає два таргети: `MyProjectMacros`, котрий містить реалізацію макросу, та `MyProject`, що робить цей макрос доступним.
 
-The implementation of a macro
-uses the [SwiftSyntax][] module to interact with Swift code
-in a structured way, using an AST.
-If you created a new macro package with Swift Package Manager,
-the generated `Package.swift` file
-automatically includes a dependency on SwiftSyntax.
-If you're adding macros to an existing project,
-add a dependency on SwiftSyntax in your `Package.swift` file:
+Реалізація макросу використовує модуль [`SwiftSyntax`][] для взаємодії з кодом Swift у структурований спосіб, використовуючи АСД. Якщо ви створили новий пакет з макросом за допомогою Swift Package Manager, згенерований файл `Package.swift` автоматично включає залежність на `SwiftSyntax`. Якщо ви додаєте макрос до наявного проєкту, слід додати залежність на `SwiftSyntax` до вашого файлу `Package.swift`:
 
-[SwiftSyntax]: http://github.com/apple/swift-syntax/
+[`SwiftSyntax`]: http://github.com/apple/swift-syntax/
 
 ```swift
 dependencies: [
@@ -310,15 +287,9 @@ dependencies: [
 ],
 ```
 
-Replace the `some-tag` placeholder in the code above
-with the Git tag for the version of SwiftSyntax you want to use.
+Замініть `some-tag` у коді вище на тег Git для версії `SwiftSyntax`, з якою ви хочете працювати. 
 
-Depending on your macro's role,
-there's a corresponding protocol from SwiftSystem
-that the macro implementation conforms to.
-For example,
-consider `#fourCharacterCode` from the previous section.
-Here's a structure that implements that macro:
+В залежності від ролі вашого макросу, слід обрати відповідний протокол з модуля `SwiftSystem`, до котрого має бути підпорядкована реалізація макросу. Наприклад, розглянемо макрос `#fourCharacterCode` із попереднього розділу. Ось структура, що реалізовує цей макрос:
 
 ```swift
 public struct FourCharacterCode: ExpressionMacro {
@@ -331,12 +302,12 @@ public struct FourCharacterCode: ExpressionMacro {
               segments.count == 1,
               case .stringSegment(let literalSegment)? = segments.first
         else {
-            throw CustomError.message("Need a static string")
+            throw CustomError.message("Необхідний статичний рядок")
         }
 
         let string = literalSegment.content.text
         guard let result = fourCharacterCode(for: string) else {
-            throw CustomError.message("Invalid four-character code")
+            throw CustomError.message("Некоректний чотирьохсимвольний код")
         }
 
         return "\(raw: result)"
@@ -357,130 +328,17 @@ private func fourCharacterCode(for characters: String) -> UInt32? {
 enum CustomError: Error { case message(String) }
 ```
 
-The `#fourCharacterCode` macro
-is a freestanding macro that produces an expression,
-so the `FourCharacterCode` type that implements it
-conforms to the `ExpressionMacro` protocol.
-The `ExpressionMacro` protocol has one requirement,
-a `expansion(of:in:)` method that expands the AST.
-For the list of macro roles and their corresponding SwiftSystem protocols,
-see <doc:Attributes#attached> and <doc:Attributes#freestanding>
-in <doc:Attributes>
+Макрос `#fourCharacterCode` є окремо стоячим макросом, що продукує вираз (expression), тому тип `FourCharacterCode`, що його реалізує, підпорядковується до протоколу `ExpressionMacro`. Протокол `ExpressionMacro` містить єдину вимогу, а саме метод `expansion(of:in:)`, що розгортає АСД. Зі списком ролей макросів та їх відповідних протоколів у `SwiftSystem`, можна ознайомитись у секціях [attached]({% link _book/2_language_reference/07_attributes.md %}#attached) та [freestanding]({% link _book/2_language_reference/07_attributes.md %}#freestanding) розділу [Атрибути]({% link _book/2_language_reference/07_attributes.md %}).
 
-To expand the `#fourCharacterCode` macro,
-Swift sends the AST for the code that uses this macro
-to the library that contains the macro implementation.
-Inside the library, Swift calls `FourCharacterCode.expansion(of:in:)`,
-passing in the AST and the context as arguments to the method.
-The implementation of `expansion(of:in:)`
-finds the string that was passed as an argument to `#fourCharacterCode`
-and calculates the corresponding integer literal value.
+Щоб розгорнути макрос `#fourCharacterCode`, Swift надсилає АСД для коду, що використовує цей макрос, що бібліотеки, що містить реалізацію макросу. Всередині бібліотеки, Swift викликає метод `FourCharacterCode.expansion(of:in:)`, і передає до нього АСД та контекст як аргумент. Реалізація методу `expansion(of:in:)` спершу шукає рядок, який було передано як аргумент до макросу `#fourCharacterCode`, та вираховує відповідний цілочисельний літерал.
 
-In the example above,
-the first `guard` block extracts the string literal from the AST,
-assigning that AST element to `literalSegment`.
-The second `guard` block
-calls the private `FourCharacterCode(for:)` function.
-Both of these blocks throw an error if the macro is used incorrectly ---
-the error message becomes a compiler error
-at the malformed call site.
-For example,
-if you try to call the macro as `#fourCharacterCode("AB" + "CD")`
-the compiler shows the error "Need a static string".
+У прикладі вище, перший блок `guard` витягує рядковий літерал з АСД, присвоюючи цей елемент АСД константі `literalSegment`. Другий блок `guard` викликає приватну функцію `FourCharacterCode(for:)`. Обидві ці блоки викидують помилку, якщо макрос було використано неправильно: повідомлення про помилку стає помилкою компіляції, що відобразиться у місці вжитку помилкового коду. Наприклад, якщо ви спробуєте викликати макрос як `#fourCharacterCode("AB" + "CD")`, компілятор покаже помилку "Необхідний статичний рядок".
 
-The `expansion(of:in:)` method returns an instance of `ExprSyntax`,
-a type from SwiftSyntax that represents an expression in an AST.
-Because this type conforms to the `StringLiteralConvertible` protocol,
-the macro implementation uses a string literal
-as a lightweight syntax to create its result.
-All of the SwiftSyntax types that you return from a macro implementation
-conform to `StringLiteralConvertible`,
-so you can use this approach when implementing any kind of macro.
+Метод `expansion(of:in:)` повертає екземпляр `ExprSyntax`, типу з модуля `SwiftSyntax`, що репрезентує вираз у АСД. Оскільки цей тип підпорядковано до протоколу `StringLiteralConvertible`, реалізація макросу використовує рядковий літерал як спрощений синтаксис для створення свого результату. Усі типи в модулі `SwiftSyntax`, що можна повертати у реалізації макросів, є підпорядкованими до протоколу `StringLiteralConvertible`, тому ви можете використовувати цей підхід при реалізації будь-якого макросу. 
 
-<!-- TODO contrast the `\(raw:)` and non-raw version.  -->
+## Розробка та зневадження макросів
 
-<!--
-The return-a-string APIs come from here
-
-https://github.com/apple/swift-syntax/blob/main/Sources/SwiftSyntaxBuilder/Syntax%2BStringInterpolation.swift
--->
-
-
-<!-- OUTLINE:
-
-- Note:
-  Behind the scenes, Swift serializes and deserializes the AST,
-  to pass the data across process boundaries,
-  but your macro implementation doesn't need to deal with any of that.
-
-- This method is also passed a macro-expansion context, which you use to:
-
-    + Generate unique symbol names
-    + Produce diagnostics (`Diagnostic` and `SimpleDiagnosticMessage`)
-    + Find a node's location in source
-
-- Macro expansion happens in their surrounding context.
-  A macro can affect that environment if it needs to —
-  and a macro that has bugs can interfere with that environment.
-  (Give guidance on when you'd do this.  It should be rare.)
-
-- Generated symbol names let a macro
-  avoid accidentally interacting with symbols in that environment.
-  To generate a unique symbol name,
-  call the `MacroExpansionContext.makeUniqueName()` method.
-
-- Ways to create a syntax node include
-  Making an instance of the `Syntax` struct,
-  or `SyntaxToken`
-  or `ExprSyntax`.
-  (Need to give folks some general ideas,
-  and enough guidance so they can sort through
-  all the various `SwiftSyntax` node types and find the right one.)
-
-- Attached macros follow the same general model as expression macros,
-  but with more moving parts.
-
-- Pick the subprotocol of `AttachedMacro` to conform to,
-  depending on which kind of attached macro you're making.
-  [This is probably a table]
-
-  + `AccessorMacro` goes with `@attached(accessor)`
-  + `ConformanceMacro` goes with `@attached(conformance)`
-    [missing from the list under Declaring a Macro]
-  + `MemberMacro` goes with `@attached(member)`
-  + `PeerMacro` goes with `@attached(peer)`
-  + `MemberAttributeMacro` goes with `@member(memberAttribute)`
-
-- Code example of conforming to `MemberMacro`.
-
-  ```
-  static func expansion<
-    Declaration: DeclGroupSyntax,
-    Context: MacroExpansionContext
-  >(
-    of node: AttributeSyntax,
-    providingMembersOf declaration: Declaration,
-    in context: Context
-  ) throws -> [DeclSyntax]
-  ```
-
-- Adding a new member by making an instance of `Declaration`,
-  and returning it as part of the `[DeclSyntax]` list.
-
--->
-
-## Developing and Debugging Macros
-
-Macros are well suited to development using tests:
-They transform one AST into another AST
-without depending on any external state,
-and without making changes to any external state.
-In addition, you can create syntax nodes from a string literal,
-which simplifies setting up the input for a test.
-You can also read the `description` property of an AST
-to get a string to compare against an expected value.
-For example,
-here's a test of the `#fourCharacterCode` macro from previous sections:
+Макроси дуже добре підходять для розробки через тести: вони трансформують АСД в інше АСД, не залежачи від жодного зовнішнього стану, і без внесення змін до жодного зовнішнього стану. Крім того, ви можете створювати елементи АСД прямо з рядкових літералів, що спрощує налаштування вхідних даних для тесту. Ви також можете читати властивість `description` елементів АСД, щоб порівнювати рядок з очікуваним значенням. Наприклад, ось тести для макросу `#fourCharacterCode` з попередніх розділів:
 
 ```swift
 let source: SourceFileSyntax =
@@ -508,38 +366,4 @@ let expectedDescription =
 precondition(transformedSF.description == expectedDescription)
 ```
 
-The example above tests the macro using a precondition,
-but you could use a testing framework instead.
-
-<!-- OUTLINE:
-
-- Ways to view the macro expansion while debugging.
-  The SE prototype provides `-Xfrontend -dump-macro-expansions` for this.
-  [TR: Is this flag what we should suggest folks use,
-  or will there be better command-line options coming?]
-
-- Use diagnostics for macros that have constraints/requirements
-  so your code can give a meaningful error to users when those aren't met,
-  instead of letting the compiler try & fail to build the generated code.
-
-Additional APIs and concepts to introduce in the future,
-in no particular order:
-
-- Using `SyntaxRewriter` and the visitor pattern for modifying the AST
-
-- Adding a suggested correction using `FixIt`
-
-- concept of trivia
-
-- `TokenSyntax`
--->
-
-<!--
-This source file is part of the Swift.org open source project
-
-Copyright (c) 2014 - 2023 Apple Inc. and the Swift project authors
-Licensed under Apache License v2.0 with Runtime Library Exception
-
-See https://swift.org/LICENSE.txt for license information
-See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
--->
+У прикладі вище макрос тестується за допомогою передумови `precondition`, але ви можете використовувати натомість будь-який фреймворк для тестування.
