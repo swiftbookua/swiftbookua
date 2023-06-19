@@ -22,35 +22,34 @@ has_toc: false
 Як вхідні дані макросу, так і результат розгортання макросу перевіряються, щоб гарантувати синтаксичну правильність цього коду на Swift. Аналогічно перевіряється коректність типів значень, що ви передаєте до макросу, та значення у коді, згенерованому макросом. На додачу, якщо реалізація макросу під час розгортання макросу стикається з помилкою, компілятор вважає це помилкою компіляції. Ці гарантії дозволяють легше розмірковувати про код, що використовує макроси, а також дозволяють легше ідентифікувати проблеми на кшталт некоректного використання макросу, чи реалізації макросу, що містить баг. 
 
 У Swift є два види макросів:
+ - *Окремо стоячий макрос* з'являється в коді самостійно, без прив'язки до оголошення.
+ - *Прив'язаний макрос* змінює оголошення, до якого він прив'язаний.
 
- - *Freestanding macros* appear on their own, without being attached to a declaration.
- - *Attached macros* modify the declaration that they're attached to.
+Прив'язані та окремо стоячі макроси викликаються дещо по-різному, але обидва ці види макросів слідують одній і тій же моделі розгортання макросів, і їх реалізовують за допомогою одного і того ж підходу. Наступні розділи детально описують кожен вид макросів.
 
-You call attached and freestanding macros slightly differently, but they both follow the same model for macro expansion, and you implement them both using the same approach. The following sections describe both kinds of macros in more detail.
+## Окремо стоячі макроси
 
-## Freestanding Macros
-
-To call a freestanding macro, you write a number sign (`#`) before its name, and you write any arguments to the macro in parentheses after its name. For example:
+Щоб викликати окремо стоячий макрос, слід написати знак решітки (`#`) перед його назвою, і слід також вказати всі його аргументи, якщо вони є, у дужках після його назви. Наприклад:
 
 ```swift
 func myFunction() {
-    print("Currently running \(#function)")
-    #warning("Something's wrong")
+    print("Наразі виконується \(#function)")
+    #warning("Щось не так")
 }
 ```
 
-In the first line, `#function` calls the [`function`][] macro from the Swift standard library. When you compile this code, Swift calls that macro's implementation, which replaces `#function` with the name of the current function. When you run this code and call `myFunction()`, it prints "Currently running myFunction()". In the second line, `#warning` calls the [`warning(_:)`][] macro from the Swift standard library to produce a custom compile-time warning.
+У першому рядку, запис `#function` викликає макрос [`function`][] зі стандартної бібліотеки Swift. Під час компіляції цього коду, Swift викликає реалізацію цього макросу, котра замінює вираз `#function` назвою поточної функції. Якщо запустити цей код та викликати функцію `myFunction()`, вона надрукує "Наразі виконується myFunction()". На другому рядку, вираз `#warning` викликає макрос [`warning(_:)`][] зі стандартної бібліотеки Swift, що створює ваше власне попередження компілятора.
 
 [`function`]: https://developer.apple.com/documentation/swift/function
 [`warning(_:)`]: https://developer.apple.com/documentation/swift/warning(_:)
 
-Freestanding macros can produce a value, like `#function` does,
-or they can perform an action at compile time, like `#warning` does.
-<!-- SE-0397: or they can generate new declarations.  -->
+Окремо стоячі макроси можуть створювати значення, як робить макрос `#function`, або вони можуть виконувати дію під час компіляції, як робить макрос `#warning`.
 
-## Attached Macros
+## Прив'язані макроси
 
-To call an attached macro, you write an at sign (`@`) before its name, and you write any arguments to the macro in parentheses after its name.
+Щоб викликати прив'язаний макрос, слід написати знак (`@`) перед його назвою, та вказати аргументи макроса, якщо вони є, у дужках після його назви. 
+
+Прив'язані макроси змінюють оголошення, до якого вони прив'язані. 
 
 Attached macros modify the declaration that they're attached to. They add code to that declaration, like defining a new method or adding conformance to a protocol.
 

@@ -103,3 +103,5 @@
 * Типи, які можна надсилати – Sendable Types
 * домен конкурентності - concurrency domain
 * Макроси - Macros
+* Окремо стоячі макроси – Freestanding Macros
+* Прив'язані макроси – Attached macros
