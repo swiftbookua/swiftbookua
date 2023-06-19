@@ -17,7 +17,7 @@ has_toc: false
 
 ![Діаграма, що зображає розгортання макросу. Зліва – стилізована репрезентація коду Swift. Справа – цей же код з кількома рядками, які додались за допомогою макросу.](../../assets/macro-expansion@2x.png)
 
-Розгортання макросу є завжди адитивною операцією: макроси додають новий код, але вони ніколи не видаляють і не змінюють вже нявний код.
+Розгортання макросу є завжди адитивною операцією: макроси додають новий код, але вони ніколи не видаляють і не змінюють вже наявний код.
 
 Як вхідні дані макросу, так і результат розгортання макросу перевіряються, щоб гарантувати синтаксичну правильність цього коду на Swift. Аналогічно перевіряється коректність типів значень, що ви передаєте до макросу, та значення у коді, згенерованому макросом. На додачу, якщо реалізація макросу під час розгортання макросу стикається з помилкою, компілятор вважає це помилкою компіляції. Ці гарантії дозволяють легше розмірковувати про код, що використовує макроси, а також дозволяють легше ідентифікувати проблеми на кшталт некоректного використання макросу, чи реалізації макросу, що містить баг. 
 
@@ -49,11 +49,9 @@ func myFunction() {
 
 Щоб викликати прив'язаний макрос, слід написати знак (`@`) перед його назвою, та вказати аргументи макроса, якщо вони є, у дужках після його назви. 
 
-Прив'язані макроси змінюють оголошення, до якого вони прив'язані. 
+Прив'язані макроси змінюють оголошення, до якого вони прив'язані. Вони додають код до цього оголошення, на кшталт додавання нового методу або додавання підпорядкування до протоколу. 
 
-Attached macros modify the declaration that they're attached to. They add code to that declaration, like defining a new method or adding conformance to a protocol.
-
-For example, consider the following code that doesn't use macros:
+Наприклад, розглянемо наступний код, що не використовує макросів:
 
 ```swift
 struct SundaeToppings: OptionSet {
@@ -64,10 +62,9 @@ struct SundaeToppings: OptionSet {
 }
 ```
 
-In this code, each of the options in the `SundaeToppings` option set includes a call to the initializer, which is repetitive and manual. It would be easy to make a mistake when adding a new option,
-like typing the wrong number at the end of the line.
+У цьому коді, оголошення кожної опції із множини опцій `SundaeToppings` містить виклик ініціалізатора, котрий є повторюваним кодом, написаним вручну. У такому коді легко зробити помилку при додаванні нової опції, набравши неправильне число наприкінці рядка. 
 
-Here's a version of this code that uses a macro instead:
+Ось версія цього коду, що натомість використовує макрос:
 
 ```swift
 @OptionSet<Int>
@@ -80,12 +77,12 @@ struct SundaeToppings {
 }
 ```
 
-This version of `SundaeToppings` calls the [`@OptionSet`][] macro from the Swift standard library. The macro reads the list of cases in the private enumeration, generates the list of constants for each option, and adds a conformance to the [`OptionSet`][] protocol.
+Ця версія `SundaeToppings` викликає макрос [`@OptionSet`][] зі стандартної бібліотеки Swift. Цей макрос вичитує список елементів приватного перечислення, генерує список констант для кожної опції, та додає підпорядкування до протоколу [`OptionSet`][].
 
 [`@OptionSet`]: https://developer.apple.com/documentation/swift/optionset-swift.macro
 [`OptionSet`]: https://developer.apple.com/documentation/swift/optionset-swift.protocol
 
-For comparison, here's what the expanded version of the `@OptionSet` macro looks like. You don't write this code, and you would see it only if you specifically asked Swift to show the macro's expansion.
+Для порівняння, ось як виглядає цей код після розгортання макросу `@OptionSet`. Вам не доведеться писати такий код, і ви його побачите лише якщо ви спеціально попросите Swift показати розгортання макросу. 
 
 ```swift
 struct SundaeToppings {
@@ -106,7 +103,7 @@ struct SundaeToppings {
 extension SundaeToppings: OptionSet { }
 ```
 
-All of the code after the private enumeration comes from the `@OptionSet` macro. The version of `SundaeToppings` that uses a macro to generate all of the static variables is easier to read and easier to maintain than the manually coded version, earlier.
+Весь код після приватного перечислення з'являється з макросу `@OptionSet`. Версія `SundaeToppings`, що використовує макрос для генерації всіх статичних змінних, є простішою для читання та підтримки, аніж попередня версія, оголошена повністю вручну. 
 
 ## Macro Declarations
 
